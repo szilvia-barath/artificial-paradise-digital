@@ -20,7 +20,7 @@ npm run preview    # serve dist/
 - `public/video/`: short loops of the artist's videos played on the screens, with the videos' own sound where they have one, played from the screen's place in the rooms (`scripts/make_videos.sh`, `src/audio/ambience.js`); the full videos and the video documentation stay on Google Drive and play in the artwork viewer (`video.full` in `exhibition.json`).
 - `scripts/make_river.py`: rebuilds the melted plastic river of Let it Flow from the artist's top-down image.
 - `src/world/layout.js`: floor plan (wall blocks, doorways, ceilings).
-- `npm run images` re-cuts the images listed in `scripts/crops.json`: the reproductions and installation photos from `reproductions/` (the room folders from the exhibition's Drive folder, not in git), the rest from the original photos (DSC_*.JPG must be in the repo root).
+- `npm run images` re-cuts the images listed in `scripts/crops.json`: the reproductions and installation photos from `reproductions/` (the room folders from the exhibition's Drive folder, not in git), the rest from the original installation photos (`DSC_*.JPG`, `_01_panorama.jpg` and `room_1/`). Those are not in this repository: they are kept in the private folder `artificial-paradise-photos`, which is not shared. To re-cut, copy its contents into the repo root first (they are git-ignored, so they can't be committed by mistake).
 - `npm run textures -- <folder>` makes the brick wall textures from the redrawn patterns (the Drive folder's `brick-*-color.png` / `-bump.png`), sized for 7.7 cm courses, and their KTX2 versions.
 - `npm run plant -- <file.glb>` prepares the artist's 3D model of the Paradise Factory plant (`public/models/paradise-factory-plant.glb`).
 
@@ -36,4 +36,4 @@ Every push to `main` (or a `claude/**` branch) runs `.github/workflows/deploy.ym
 
 Artist: Kristóf Szabó / KristofLab. Curator and text: Luca Cserhalmi. Opening speech: Barnabás Zemlényi-Kovács. Gallery: MAMŰ, Budapest. Supported by the National Cultural Fund of Hungary, the Hungarian Academy of Arts and the Municipality of Budapest District VII. Photography: Kristóf Szabó. Digital exhibition: Szilvia Barath.
 
-All artworks © Kristóf Szabó / KristofLab, shown in the artist's reproductions and in installation photographs for documentation purposes. The code is separate from the artworks, which are not licensed for reuse.
+The code is MIT-licensed (`LICENSE`). The artworks, photographs, videos, sound, 3D model, textures and texts are not: they remain © their authors (`NOTICE`). All artworks © Kristóf Szabó / KristofLab; the installation photographs and documentation videos were taken by Kristóf Szabó.

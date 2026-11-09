@@ -1,0 +1,26 @@
+Artificial Paradise: digital exhibition
+=======================================
+
+The MIT License in LICENSE covers the source code only. Everything else in this
+repository is NOT covered by it, is not licensed for reuse, and remains © its authors:
+
+- The artworks, their reproductions and the artist's videos, with their sound, and the
+  3D model of the Paradise Factory plant: © Kristóf Szabó / KristofLab.
+  (public/img, public/video, public/models)
+- The installation photographs and the documentation videos: © Kristóf Szabó.
+  (public/img, public/video)
+- The artist's texts about the works and the exhibition text: © their authors.
+  (src/i18n/*.json: "text", "descriptions" and related content)
+- The exhibition's key visual and logo: © Kristóf Szabó / KristofLab.
+  (public/brand/key-visual*.webp, public/brand/logo-blue.webp, public/og.jpg)
+- The MAMŰ logo: © MAMŰ Society. (public/brand/mamu-logo.svg)
+- The wall and river textures, cut or redrawn from the installation photographs and the
+  artist's material. (public/tex)
+
+Please ask the authors before reusing any of it.
+
+Third-party code included in the built site, under its own licence:
+- three.js: MIT License, © three.js authors
+- postprocessing: Zlib License, © Raoul van Rüschen
+- Basis Universal transcoder (public/basis): Apache License 2.0, © Binomial LLC
+- meshoptimizer decoder (via three.js): MIT License, © Arseny Kapoulkine

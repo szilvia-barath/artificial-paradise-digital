@@ -5,3 +5,9 @@ dist
 .vite
 __pycache__
 /reproductions/
+# the original installation photos live in the private folder artificial-paradise-photos,
+# never in this public repository (copy them here to run npm run images)
+/DSC_*.JPG
+/DSC_*.jpg
+/_01_panorama.jpg
+/room_1/
