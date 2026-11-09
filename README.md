@@ -36,4 +36,6 @@ Every push to `main` (or a `claude/**` branch) runs `.github/workflows/deploy.ym
 
 Artist: Kristóf Szabó / KristofLab. Curator and text: Luca Cserhalmi. Opening speech: Barnabás Zemlényi-Kovács. Gallery: MAMŰ, Budapest. Supported by the National Cultural Fund of Hungary, the Hungarian Academy of Arts and the Municipality of Budapest District VII. Photography: Kristóf Szabó. Digital exhibition: Szilvia Barath.
 
-The code is MIT-licensed (`LICENSE`). The artworks, photographs, videos, sound, 3D model, textures and texts are not: they remain © their authors (`NOTICE`). All artworks © Kristóf Szabó / KristofLab; the installation photographs and documentation videos were taken by Kristóf Szabó.
+**The artworks, photographs, videos and texts are © Kristóf Szabó / KristofLab and the respective authors; all rights reserved. The MIT licence covers the source code only.**
+
+See `LICENSE` (MIT, code only) and `NOTICE` (what is not covered: also the sound, the 3D model and the textures). The installation photographs and documentation videos were taken by Kristóf Szabó.
