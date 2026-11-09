@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { wallFrame, ROOMS } from './layout.js';
+import { wallFrame } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
@@ -27,14 +27,6 @@ function radialTexture(inner = 'rgba(255,255,255,1)', outer = 'rgba(255,255,255,
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
-}
-
-// Shortens text with an ellipsis until it fits maxW at the current font.
-function fit(g, text, maxW) {
-  if (g.measureText(text).width <= maxW) return text;
-  let s = text;
-  while (s.length > 1 && g.measureText(`${s}…`).width > maxW) s = s.slice(0, -1);
-  return `${s.trimEnd()}…`;
 }
 
 // The in-world texts are canvases redrawn on a language switch (see relabel()).
@@ -143,39 +135,6 @@ function drawTextSheet(g, data) {
   wrapText(g, data.textCredit, 36, y + 4, 440, (size - 1) * 1.3);
 }
 
-// The sheet on the wall by the bar: the plan with numbered spots and the works list.
-function drawRoomSheet(g, data) {
-  g.fillStyle = '#f7f6f2';
-  g.fillRect(0, 0, 512, 724);
-  g.fillStyle = '#222';
-  g.font = '22px "Courier New", monospace';
-  g.fillText('|Artificial Paradise|KristofLab|', 28, 52);
-  // plan
-  const ox = 30;
-  const oy = 80;
-  const s = 17;
-  g.strokeStyle = '#333';
-  g.lineWidth = 2;
-  for (const r of ROOMS) g.strokeRect(ox + r.x0 * s, oy + r.z0 * s, (r.x1 - r.x0) * s, (r.z1 - r.z0) * s);
-  g.font = 'bold 11px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#111';
-  for (const w of data.works) {
-    const p = w.hang ? { x: w.hang.face.includes('x') ? w.hang.at : w.hang.along, z: w.hang.face.includes('z') ? w.hang.at : w.hang.along } : w.anchor;
-    if (!p || w.id.endsWith('-screen')) continue;
-    g.fillText(String(w.no), ox + p.x * s - 4, oy + p.z * s + 4);
-  }
-  // list
-  g.font = '12.5px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#222';
-  let y = oy + 7.6 * s + 30;
-  for (const w of data.works) {
-    if (w.id.endsWith('-screen')) continue;
-    const bits = [w.title, w.size, w.medium.split(':')[0], w.year].filter(Boolean);
-    g.fillText(fit(g, `${w.no} · ${bits.join(', ')}`, 456), 28, y);
-    y += 21;
-  }
-}
-
 export function buildGallery(data, materials, manager, renderer, { hdBudget = 6, videoBudget = 3 } = {}) {
   const group = new THREE.Group();
   group.name = 'gallery';
@@ -190,8 +149,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
   const wallTexts = [];
-  // the sheets are drawn at 3x (2x on phones) so the letters stay sharp up close
-  const TEXT_SCALE = hdBudget > 3 ? 3 : 2;
+  // the sheets are drawn at 4x (2.5x on phones) so the letters stay sharp up close
   const SHEET_SCALE = hdBudget > 3 ? 4 : 2.5;
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
@@ -347,18 +305,15 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     }
   }
 
-  // Exhibition texts and the room sheet (works list + plan), pinned up as in the photos
+  // Exhibition texts, pinned up as in the photos: 50 x 71 cm sheets drawn at 4x on desktop
+  // so their small type stays sharp
   for (const sh of data.sheets || []) {
-    // the long exhibition text gets a bigger sheet (50 x 71 cm) drawn at 4x on desktop so its
-    // small type stays sharp; the room sheet keeps its size to fit the bar's pillar
-    const big = sh.kind !== 'roomsheet';
-    const k = big ? SHEET_SCALE : TEXT_SCALE;
+    const k = SHEET_SCALE;
     const tex = wallText(Math.round(512 * k), Math.round(724 * k), (g) => {
       g.setTransform(k, 0, 0, k, 0, 0);
-      if (sh.kind === 'roomsheet') drawRoomSheet(g, data);
-      else drawTextSheet(g, data);
+      drawTextSheet(g, data);
     }, 16);
-    const panel = new THREE.Mesh(new THREE.PlaneGeometry(big ? 0.5 : 0.39, big ? 0.707 : 0.55), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.707), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;

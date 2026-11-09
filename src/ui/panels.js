@@ -69,7 +69,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p>${esc(data.behindTheScenes)}</p>
     <div class="stack">
       <span>Three.js</span><span>postprocessing</span><span>Web Audio API</span><span>NumPy photo textures</span>
-      <span>Vite</span><span>sharp → WebP</span><span>Pointer Lock</span><span>GitHub Pages</span>
+      <span>Vite</span><span>sharp → WebP</span><span>Netlify</span>
     </div>
     <h3>${esc(t('panels.controls'))}</h3>
     <p class="note">${esc(t('panels.controlsDesk'))}<br />${esc(t('panels.controlsTouch'))}</p>

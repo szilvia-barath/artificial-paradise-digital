@@ -49,7 +49,6 @@
       "toolbar": "Kiállítás vezérlői",
       "clickToLook": "Húzd az egeret a körülnézéshez",
       "promptText": "Kattints a kiállítási szöveg elolvasásához",
-      "promptSheet": "Kattints a műlista megnyitásához",
       "promptWork": "Kattints a megtekintéshez · {no} {title}",
       "minimap": "Térkép: kattints egy teremre az odaugráshoz",
       "north": "É",
@@ -341,12 +340,12 @@
       {
         "h": "Tárhelyszolgáltató",
         "p": [
-          "GitHub Pages, a GitHub, Inc. szolgáltatása (88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA)."
+          "Netlify, Inc. (101 2nd Street, San Francisco, CA 94105, USA)."
         ],
         "links": [
           {
-            "href": "https://pages.github.com",
-            "text": "pages.github.com"
+            "href": "https://www.netlify.com",
+            "text": "netlify.com"
           }
         ]
       },
@@ -375,14 +374,14 @@
         ]
       },
       {
-        "h": "Tárhely (GitHub)",
+        "h": "Tárhely (Netlify)",
         "p": [
-          "Az oldalt a GitHub Pages szolgálja ki. Ehhez a GitHub technikai adatokat, például az IP-címedet kezeli a szervernaplóiban."
+          "Az oldalt a Netlify szolgálja ki. Ehhez a Netlify technikai adatokat, például az IP-címedet kezeli a szervernaplóiban."
         ],
         "links": [
           {
-            "href": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
-            "text": "A GitHub adatvédelmi nyilatkozata"
+            "href": "https://www.netlify.com/privacy/",
+            "text": "A Netlify adatvédelmi nyilatkozata"
           }
         ]
       },
@@ -407,7 +406,7 @@
       {
         "h": "Jogaid",
         "p": [
-          "A GDPR alapján bármely adatkezelőtől kérhetsz hozzáférést az adataidhoz, azok helyesbítését vagy törlését. Ez az oldal nem tárol adatot a látogatóiról; a GitHub vagy a Google által kezelt adatokkal kapcsolatban hozzájuk fordulhatsz. Kérdés esetén használd a Kapcsolat oldalt. Panasszal a Nemzeti Adatvédelmi és Információszabadság Hatósághoz (NAIH) is fordulhatsz."
+          "A GDPR alapján bármely adatkezelőtől kérhetsz hozzáférést az adataidhoz, azok helyesbítését vagy törlését. Ez az oldal nem tárol adatot a látogatóiról; a Netlify vagy a Google által kezelt adatokkal kapcsolatban hozzájuk fordulhatsz. Kérdés esetén használd a Kapcsolat oldalt. Panasszal a Nemzeti Adatvédelmi és Információszabadság Hatósághoz (NAIH) is fordulhatsz."
         ],
         "links": [
           {

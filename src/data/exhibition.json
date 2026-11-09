@@ -518,14 +518,6 @@
       "at": 1.73,
       "along": 8.395,
       "y": 1.5
-    },
-    {
-      "id": "roomsheet",
-      "kind": "roomsheet",
-      "face": "-x",
-      "at": 7.481,
-      "along": 5.502,
-      "y": 1.5
     }
   ],
   "contacts": [

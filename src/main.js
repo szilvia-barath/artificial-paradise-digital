@@ -262,14 +262,12 @@ function updateHover() {
     promptEl.classList.toggle('show', !!hovered);
     canvas.style.cursor = hovered ? 'pointer' : '';
     if (hovered === 'text') setText(promptEl, 'hud.promptText');
-    else if (hovered === 'roomsheet') setText(promptEl, 'hud.promptSheet');
     else if (hovered) setText(promptEl, 'hud.promptWork', { no: hovered.no, title: hovered.title });
   }
 }
 function activate(ud) {
   if (!ud) return false;
   if (ud.work) { viewer.open(ud.work); return true; }
-  if (ud.text === 'roomsheet') { ui.works(); return true; }
   if (ud.text) { ui.about(); return true; }
   return false;
 }

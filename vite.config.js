@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
-// Relative base so the build works on GitHub Pages (/artificial-paradise/),
-// Netlify, Cloudflare Pages or any static host without changes.
+// Relative base so the build works on Netlify (where it is hosted), in a subfolder
+// or on any other static host without changes.
 export default defineConfig({
   base: './',
   // Only serve/build the app; the original DSC_*.JPG photos stay out of the bundle.
