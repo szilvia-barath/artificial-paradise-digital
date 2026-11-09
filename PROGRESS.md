@@ -40,7 +40,7 @@
 - The stair top continues into an invented dark shaft (not photographed).
 - The papier-mâché trees (#6 on the measured plan) were not exhibited in the end, so they are not modelled. The Let it Flow video was projected on the floor over the plastic river (confirmed by the owner). Wiena Wrong Landscape I/II: the cyan video is #8 in Room 3, the red one #15 in Room 4 (room sheet and photos).
 - Website texts follow the owner's spreadsheet where they edited them (Behind the scenes, the works-list note, the MAMŰ link label). Where the sheet still held values from before the Word files (credits order, the text credit, the Hungarian exhibition text, the address with the entrance, the video captions), the Word files' versions are kept. Behind the scenes says "the screens play the artist's videos with their own sound" where the sheet said they "show the frames caught on camera" (true before the videos arrived).
-- GitHub Pages publishes the `gh-pages` branch, built by the workflow on every push to `main` or a `claude/**` branch (the last push wins, so an old branch pushed later would overwrite the live site).
+- Hosting: Netlify builds `main` (`netlify.toml`). The site moved from the earlier GitHub Pages repository (artificial-paradise) to this one (artificial-paradise-digital), without the original photos in its history; the GitHub Pages workflow was removed.
 
 ## How to continue
 `npm install && npm run dev` → http://localhost:5173. Floor plan + walls: `src/world/layout.js`. Texts (EN/HU): `src/i18n/*.json`. Works data and hang: `src/data/exhibition.json`. Furniture: `src/world/props.js`. Installations: `src/world/paradiseFactory.js`, `src/world/letItFlow.js`.

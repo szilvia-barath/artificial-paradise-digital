@@ -30,7 +30,7 @@ English and Hungarian, switched from the navbar without reloading (the in-world 
 
 ## Deploy
 
-Every push to `main` (or a `claude/**` branch) runs `.github/workflows/deploy.yml`, which builds the site and publishes `dist/` to the `gh-pages` branch. Once, in the repository settings: **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**. The site is then at `https://<user>.github.io/artificial-paradise/`.
+Netlify builds and publishes the site on every push to `main`, with the settings in `netlify.toml` (`npm run build`, publish `dist/`, Node 22). The build uses relative paths, so it works on any domain or sub-path.
 
 ## Credits
 
