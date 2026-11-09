@@ -75,6 +75,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
   touch-action: auto;
 }
 #loader.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+/* The key visual and its grain sit in a fixed, clipped backdrop: the drifting image and
+   the jittering grain overhang their box on purpose, and inside the scrollable loader that
+   overhang used to add scroll room, showing the bare grey background at the bottom. */
+.loader-backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #eceef0;
+}
 .loader-bg, .loader-bg img, .loader-grain {
   position: absolute;
   inset: 0;
@@ -308,6 +318,10 @@ body.touch #toolbar { bottom: calc(16px + var(--safe-b)); }
   #site-nav .nav-links button { text-align: left; padding: 12px; }
   .nav-toggle { display: grid; place-items: center; width: 36px; height: 36px; padding: 0 !important; opacity: 1 !important; }
   #site-foot .wide { display: none; }
+  /* the footer wraps on phones: spacing instead of dots, so no "·" is left hanging at
+     the end of a line */
+  #site-foot .sep { display: none; }
+  #site-foot { column-gap: 14px; }
 }
 @media (max-width: 440px) {
   .brand span { display: none; }
