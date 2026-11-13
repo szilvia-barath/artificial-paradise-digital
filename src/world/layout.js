@@ -1,9 +1,9 @@
-// Floor plan of the MAMŰ basement, in metres. Room sizes are the gallery's measured
-// plan ("Alaprajz_ok new.jpg"): Room 1 5.0 × 7.0 m, Room 2 4.0 m wide, Room 3 5.4 m and
-// Room 4 9.5 m long, Rooms 2–4 4.0 m deep. Openings, recesses and where things stand
-// were traced from the exhibition's room sheet (DSC_0049) and checked against the
-// photos: the Room 1 panorama (camera solved from the corner bearings), brick courses,
-// floor tiles and the canvas sizes on the works list. Cross-check with OpenStreetMap:
+// Floor plan of the MAMŰ basement, in metres, traced from the gallery's measured plan
+// ("Alaprajz_ok new.jpg") at 0.026 m per plan pixel, not from the room sheet seen in
+// DSC_0049: Room 1 5.0 × 7.0 m, Room 2 4.0 m wide, Room 3 5.4 m and Room 4 9.5 m long,
+// Rooms 2–4 4.0 m deep. Openings, recesses and where things stand were checked against
+// the photos: the Room 1 panorama (camera solved from the corner bearings), brick
+// courses, floor tiles and the listed canvas sizes. Cross-check with OpenStreetMap:
 // the gallery is in the basement of Damjanich utca 39, a corner building whose wing
 // along Murányi utca is 26.5 m from the street front to the back; this basement
 // measures 26.35 m from the outer face of Room 1's west wall to the outer face of
