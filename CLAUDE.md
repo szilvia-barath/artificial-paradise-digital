@@ -40,6 +40,10 @@ This repo is `szilvia-barath/artificial-paradise-digital`. The private `artifici
 - The `legal` and `privacy` sections are legal text. Change them only when I ask, and keep the update date.
 - My voice: plain, concrete, first person where it fits. No AI phrasing (delve, crucial, seamless, robust, showcase, "at the intersection of", "not X but Y", em dashes). Use the szilvia-voice skill if it's installed.
 
+## Design rules
+
+- No animation on the loading screen. It's a still image for everyone, with or without `prefers-reduced-motion`: no moving or glitching picture, no animated grain, no animated card or logo.
+
 ## Roadmap (ask before starting any of these)
 
 Done: the raw photos are out of the repo and its history, `LICENSE` and `NOTICE` are in, and the contacts in `exhibition.json` are filled in.

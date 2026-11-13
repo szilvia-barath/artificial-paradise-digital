@@ -21,7 +21,7 @@
         if (l !== 'en') document.documentElement.classList.add('i18n-wait');
       })();
     </script>
-    <link rel="preload" as="image" href="./brand/key-visual.webp" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" href="./brand/key-visual.avif" type="image/avif" media="(min-aspect-ratio: 4/5)" />
     <link rel="preload" as="image" href="./brand/logo-blue.webp" />
     <link rel="stylesheet" href="/src/style.css" />
     <link rel="alternate" hreflang="en" href="https://artificial-paradise.netlify.app/?lang=en" />
@@ -69,7 +69,10 @@
     <section id="loader" aria-live="polite">
       <div class="loader-backdrop" aria-hidden="true">
         <picture class="loader-bg">
+          <!-- AVIF first (about 40% of the WebP's weight); the WebP files are the fallback -->
+          <source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset="./brand/key-visual-portrait.avif" />
           <source media="(max-aspect-ratio: 4/5)" srcset="./brand/key-visual-portrait.webp" />
+          <source type="image/avif" srcset="./brand/key-visual.avif" />
           <img src="./brand/key-visual.webp" alt="" fetchpriority="high" />
         </picture>
         <div class="loader-grain"></div>
