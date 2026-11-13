@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import data from './data/exhibition.json';
 import { ROOMS, EYE, roomAt, roomById } from './world/layout.js';
-import { DOORS } from './world/route.js';
+import { DOORS, visitOrder } from './world/route.js';
 import { createMaterials } from './world/materials.js';
 import { buildArchitecture } from './world/architecture.js';
 import { buildProps } from './world/props.js';
@@ -92,7 +92,8 @@ function poseAtWork(w) {
   const d = Math.hypot(f.look[0] - f.x, f.look[2] - f.z);
   controls.setPose(f.x, f.z, 0);
   controls.lookAt(f.look[0], f.look[2]);
-  controls.pitch = Math.atan2(f.look[1] - EYE, d) * 0.8;
+  // setPose again, so the camera itself turns now and not at the next frame
+  controls.setPose(f.x, f.z, controls.yaw, Math.atan2(f.look[1] - EYE, d) * 0.8);
 }
 // A link to a work (?work=<id>, as the text edition's links carry): the walk opens at
 // that work instead of at the foot of the stairs. An unknown id is ignored.
@@ -191,12 +192,13 @@ function teleport(x, z, lookX, lookZ, pitch = 0) {
   controls.resetZoom(true);
   controls.setPose(x, z, 0);
   controls.lookAt(lookX, lookZ);
-  controls.pitch = pitch;
+  controls.setPose(x, z, controls.yaw, pitch);
   post.trigger(0.9);
 }
 function jumpToRoom(id) {
   const r = roomById(id);
   teleport(r.spawn.x, r.spawn.z, r.spawn.look.x, r.spawn.look.z);
+  if (entered) announceRoom(id);
 }
 function gotoWork(w) {
   const f = w._focus;
@@ -281,6 +283,7 @@ canvas.addEventListener('mouseleave', () => { mouseInside = false; });
 
 function pick(x, y) {
   raycaster.far = 7.5 * controls.zoom; // zoomed in, works further away can be opened
+  camera.updateMatrixWorld(); // the pose may have changed since the last frame was drawn (a jump to a work)
   raycaster.setFromCamera(tmpV2.set(x, y), camera);
   const hit = raycaster.intersectObjects(gallery.hitMeshes, false)[0];
   return hit ? hit.object.userData : null;
@@ -297,7 +300,10 @@ function updateFront(dt) {
   frontAcc += dt;
   if (frontAcc < 0.2) return;
   frontAcc = 0;
-  const ud = controls.enabled && keyNav ? pick(0, 0) : null;
+  // While a panel, the viewer or the tour has the controls, the work in front stays what
+  // it was: coming back to the same work is not a change and is not announced again.
+  if (!controls.enabled && keyNav) return;
+  const ud = keyNav ? pick(0, 0) : null;
   const target = (ud && (ud.work || ud.text)) || null;
   if (target === front) return;
   front = target;
@@ -365,15 +371,47 @@ function updateRoom() {
     }
   }
 }
-function announceRoom() {
-  const r = data.rooms[currentRoomId];
+let roomSaid = null;
+function announceRoom(id = currentRoomId) {
+  if (id === roomSaid) return; // already said for this entry (a jump announces it ahead of the frame that notices it)
+  roomSaid = id;
+  const r = data.rooms[id];
   announce(t('announce.room', { name: r.name, subtitle: r.subtitle.replaceAll(' · ', ', ') }), 'room');
 }
+
+// Page Down / Page Up: on to the next / back to the previous work in visiting order (the
+// tour's order), with the same jump as "Walk to this work", and the work is announced.
+// Counted from the work in front of you, else from the last one reached this way; from
+// nowhere, Page Down starts at no. 1 and Page Up at the last work. Past either end it
+// carries on round. Not character keys, so they clash with no typed shortcut (WCAG 2.1.4)
+// and sit in the same place on every keyboard layout.
+const visit = visitOrder(data.works);
+let visitAt = -1;
+function stepWork(d) {
+  const here = front && front !== 'text' ? visit.indexOf(front) : -1;
+  const base = here >= 0 ? here : visitAt;
+  visitAt = base < 0 ? (d > 0 ? 0 : visit.length - 1) : (base + d + visit.length) % visit.length;
+  const w = visit[visitAt];
+  announceRoom(w.room);
+  gotoWork(w);
+  keyNav = true;
+  front = w;
+  announceFront(w);
+  focusScene();
+}
+window.addEventListener('keydown', (e) => {
+  if (e.code !== 'PageDown' && e.code !== 'PageUp') return;
+  if (!entered || viewer.isOpen() || ui.isOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+  e.preventDefault();
+  stepWork(e.code === 'PageDown' ? 1 : -1);
+});
 // On coming in: the room, and the work a link brought you to.
 function announceArrival() {
   announceRoom();
   if (!linkedWork) return;
   front = linkedWork;
+  keyNav = true;
+  visitAt = visit.indexOf(linkedWork);
   announceFront(linkedWork);
   linkedWork = null;
 }
@@ -530,4 +568,4 @@ onLangChange(() => {
 });
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit };

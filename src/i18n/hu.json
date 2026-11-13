@@ -103,7 +103,7 @@
       "btsEyebrow": "A kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre vagy E: megnyitás, T: tárlatvezetés, M: némítás. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
+      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
       "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás.",
       "linkFacebook": "A MAMŰ a Facebookon",
       "linkMamuInstagram": "A MAMŰ az Instagramon",

@@ -22,8 +22,7 @@ function flush() {
 export function announce(text, topic = 'general') {
   text = (text || '').trim();
   if (!text) return;
-  pending.delete(topic);
-  pending.set(topic, text);
+  pending.set(topic, text); // a topic keeps its place in the queue when its text is replaced
   if (!timer) timer = setTimeout(flush, Math.max(0, lastAt + GAP - performance.now()));
 }
 
