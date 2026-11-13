@@ -33,6 +33,10 @@
 5. For the artist to confirm: the English of Human as Error is our translation. (The "3.5 million" question is answered: 3.5 billion, see the decision log.) (All photographs, the `_artificial paradise` photos included, are by Kristóf Szabó. The documentation videos are named 2025 because they were recorded during the exhibition; the works are dated 2024. Neither is a question any more.)
 6. The curator's text on the sheets and in the About panel is a placeholder from the exhibition announcement. Replace it once the curator has signed.
 
+## References and the Concept page (planned, not built)
+- 13 Nov 2026: reference table settled in the Google Sheet `references` (Drive folder `csv`). 21 references from the exhibition's texts, chosen by the owner, and 17 concepts proposed by Claude and accepted by the owner. English and Hungarian Wikipedia links and Wikidata identifiers checked through the Wikipedia and Wikidata APIs. R20 links the Hungarian Academy of Arts itself; R16's link (Gardens by the Bay) was sent by the artist. Places carry a subtype (the Tisza is a river; the Eden Project and Gardens by the Bay are visitor attractions). Six themes proposed by Claude; T1 (Greenhouse effect / Üvegházhatás) confirmed by the owner, the other five wait for the owner's reading of the texts.
+- Prompt 2 (references in the texts and the Concept page) restores the three footnotes of the original opening speech, keeping the Hungarian citations in both languages, and adds a network view whose layout is computed at build time. The links in the network come from the owner's reading of the texts; the position of a node carries no meaning.
+
 ## Known issues / assumptions
 - The R2/R3 doorway width and pass-through were fitted to DSC_0098/0130 rather than the plan (the plan's north pillar looked too wide against the photos), then rescaled with Room 2.
 - The English exhibition text in the owner's Word file has editing leftovers (repeated words); the site keeps a cleaned version of it. The Hungarian is the original.
