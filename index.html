@@ -66,7 +66,7 @@
     </header>
 
     <!-- Loading / title screen, styled after the exhibition's key visual -->
-    <section id="loader" aria-live="polite">
+    <section id="loader">
       <div class="loader-backdrop" aria-hidden="true">
         <picture class="loader-bg">
           <!-- AVIF first (about 40% of the WebP's weight); the WebP files are the fallback -->
@@ -81,7 +81,7 @@
         <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
         <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
         <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10-31.01.2025</span></p>
-        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading the exhibition" data-i18n-attr="aria-label:loader.progress"><span id="progress-bar"></span></div>
         <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
         <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
         <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound: headphones recommended</p>
@@ -126,14 +126,14 @@
       <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
       <canvas id="minimap" width="220" height="150" role="img" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
       <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
-        <button data-action="tour" title="Guided tour (T)" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
+        <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
         <div class="rooms-wrap">
           <button data-action="rooms" title="Jump to room" aria-expanded="false" aria-controls="rooms-menu" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
           <div id="rooms-menu" hidden></div>
         </div>
-        <button data-action="sound" title="Sound on/off (M)" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
+        <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
       </nav>
-      <div id="tour-caption" aria-live="polite"></div>
+      <div id="tour-caption"></div>
       <div id="joystick"><div id="joystick-knob"></div></div>
       <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
       <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
@@ -187,6 +187,9 @@
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div id="panel-body"></div>
     </section>
+
+    <!-- The one live region: rooms, the work in front, tour captions (src/ui/announce.js) -->
+    <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <noscript><p class="noscript">This exhibition needs JavaScript and WebGL. · A kiállításhoz JavaScript és WebGL szükséges.</p></noscript>
     <script type="module" src="/src/boot.js"></script>

@@ -31,7 +31,8 @@
       "hint": "Sound: headphones recommended",
       "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
       "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
-      "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."
+      "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.",
+      "progress": "Loading the exhibition"
     },
     "footer": {
       "rights": "Artworks © Kristóf Szabó / KristofLab",
@@ -64,7 +65,9 @@
         "zoomIn": "Zoom in (+)",
         "zoomOut": "Zoom out (−)",
         "zoomReset": "Reset zoom (0)"
-      }
+      },
+      "promptWorkKey": "Enter to view · {no} {title}",
+      "promptTextKey": "Enter to read the exhibition text"
     },
     "viewer": {
       "artistSite": "On the artist's website",
@@ -171,6 +174,13 @@
         "floorMid": "On the floor, in the middle of the room.",
         "floorFar": "On the floor, at the far end of the room."
       }
+    },
+    "announce": {
+      "room": "{name}. {subtitle}.",
+      "work": "No. {no}, {title}. Press Enter to open.",
+      "text": "Exhibition text. Press Enter to read.",
+      "tourWork": "No. {no}, {title}. {meta}.",
+      "tourStopped": "Tour stopped."
     }
   },
   "meta": {

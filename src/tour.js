@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { EYE } from './world/layout.js';
+import { t } from './i18n.js';
 
 // Guided tour: flies the camera along the stops in exhibition.json ("tour"), easing
 // between positions and turning to face each work while its caption fades in.
@@ -14,6 +15,7 @@ export class Tour {
     this.caption = captionEl;
     this.active = false;
     this.onEnd = null;
+    this.onCaption = null; // (plain text) => void, as each stop's caption appears
     this.byId = Object.fromEntries(data.works.map((w) => [w.id, w]));
   }
 
@@ -61,6 +63,13 @@ export class Tour {
     return s.intro ? `<span class="t">Artificial Paradise</span>${esc(this.data.tourIntro)}` : '';
   }
 
+  // The caption as one plain sentence, for the screen reader.
+  _plain(s) {
+    const w = s.work ? this.byId[s.work] : null;
+    if (w) return [t('announce.tourWork', { no: w.no, title: w.title, meta: [w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', ') }), w.caption || ''].join(' ');
+    return s.intro ? `Artificial Paradise. ${this.data.tourIntro}` : '';
+  }
+
   // After a language switch: re-render the caption on screen.
   refresh() {
     if (!this.active) return;
@@ -89,6 +98,7 @@ export class Tour {
       this.caption.innerHTML = this.text;
       this.caption.classList.add('show');
       this.shown = true;
+      if (this.onCaption) this.onCaption(this._plain(this.data.tour[this.i]));
     }
     if (this.t >= this.travel + this.dwell) this._next();
   }

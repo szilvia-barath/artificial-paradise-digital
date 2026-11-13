@@ -31,7 +31,8 @@
       "hint": "Hanggal: fejhallgatóval izgalmasabb",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
-      "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."
+      "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel.",
+      "progress": "A kiállítás betöltése"
     },
     "footer": {
       "rights": "A műalkotások © Szabó Kristóf / KristofLab",
@@ -64,7 +65,9 @@
         "zoomIn": "Nagyítás (+)",
         "zoomOut": "Kicsinyítés (−)",
         "zoomReset": "Nagyítás visszaállítása (0)"
-      }
+      },
+      "promptWorkKey": "Enter: megtekintés · {no} {title}",
+      "promptTextKey": "Enter: a kiállítási szöveg elolvasása"
     },
     "viewer": {
       "artistSite": "A művész honlapján",
@@ -171,6 +174,13 @@
         "floorMid": "A padlón, a terem közepén. [HU: confirm]",
         "floorFar": "A padlón, a terem túlsó végében. [HU: confirm]"
       }
+    },
+    "announce": {
+      "room": "{name}. {subtitle}.",
+      "work": "{no}. mű, {title}. Megnyitás: Enter. [HU: confirm]",
+      "text": "Kiállítási szöveg. Elolvasás: Enter. [HU: confirm]",
+      "tourWork": "{no}. mű, {title}. {meta}.",
+      "tourStopped": "A tárlatvezetés leállt. [HU: confirm]"
     }
   },
   "meta": {

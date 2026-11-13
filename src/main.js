@@ -20,7 +20,8 @@ import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
 import { setupKeypad } from './ui/keypad.js';
 import { focusDialog } from './ui/dialog.js';
-import { localize, onLangChange, setText } from './i18n.js';
+import { localize, onLangChange, setText, t } from './i18n.js';
+import { announce, unannounce } from './ui/announce.js';
 
 localize(data);
 
@@ -61,6 +62,7 @@ manager.onProgress = (_url, loaded, total) => {
   // Late files after the 12 s safety net must not overwrite "Ready".
   if (worldReady) return;
   progressBar.style.width = `${Math.round(p * 100)}%`;
+  progressBar.parentElement.setAttribute('aria-valuenow', String(Math.round(p * 100)));
   setText(progressLabel, 'loader.loading', { loaded, total });
 };
 
@@ -139,6 +141,7 @@ const tour = new Tour(data, controls, document.getElementById('tour-caption'));
 const tourBtn = document.querySelector('[data-action="tour"]');
 const syncTourBtn = () => {
   tourBtn.classList.toggle('on', tour.active);
+  tourBtn.setAttribute('aria-pressed', String(tour.active));
   setText(tourBtn.querySelector('.lbl'), tour.active ? 'hud.stop' : 'hud.tour');
   tourBtn.querySelector('.ico').textContent = tour.active ? '■' : '▶';
 };
@@ -147,7 +150,9 @@ tour.onEnd = () => {
   document.body.classList.remove('touring');
   syncTourBtn();
   syncEnabled();
+  announce(t('announce.tourStopped'), 'tour');
 };
+tour.onCaption = (text) => announce(text, 'tour');
 function toggleTour() {
   if (tour.active) { tour.stop(); return; }
   viewer.close();
@@ -160,8 +165,7 @@ function toggleTour() {
 
 const soundBtn = document.querySelector('[data-action="sound"]');
 function toggleSound() {
-  audio.setMuted(!audio.muted);
-  soundBtn.classList.toggle('muted', audio.muted);
+  setSound(audio.muted);
 }
 
 function teleport(x, z, lookX, lookZ, pitch = 0) {
@@ -241,8 +245,16 @@ const promptEl = document.getElementById('prompt');
 const crosshair = document.getElementById('crosshair');
 let hovered = null;
 let mouseInside = false;
+// Is the visitor walking by keyboard? Set by the walking and turning keys, cleared by the
+// mouse, the wheel or a touch on the view. While it is set, the work in the middle of the
+// view (the one Enter opens) is named on screen and to screen readers.
+let keyNav = false;
+const MOVE_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
+window.addEventListener('keydown', (e) => { if (MOVE_KEYS.has(e.code)) keyNav = true; });
+for (const type of ['pointerdown', 'wheel']) canvas.addEventListener(type, () => { keyNav = false; }, { passive: true });
 canvas.addEventListener('mousemove', (e) => {
   mouseInside = true;
+  keyNav = false;
   ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
 });
 canvas.addEventListener('mouseleave', () => { mouseInside = false; });
@@ -253,19 +265,42 @@ function pick(x, y) {
   const hit = raycaster.intersectObjects(gallery.hitMeshes, false)[0];
   return hit ? hit.object.userData : null;
 }
+// The work (or text sheet) in the middle of the view, looked up a few times a second
+// while walking by keyboard, and announced when it changes.
+let front = null;
+let frontAcc = 0;
+function announceFront(target) {
+  if (target === 'text') announce(t('announce.text'), 'work');
+  else announce(t('announce.work', { no: target.no, title: target.title }), 'work');
+}
+function updateFront(dt) {
+  frontAcc += dt;
+  if (frontAcc < 0.2) return;
+  frontAcc = 0;
+  const ud = controls.enabled && keyNav ? pick(0, 0) : null;
+  const target = (ud && (ud.work || ud.text)) || null;
+  if (target === front) return;
+  front = target;
+  if (target) announceFront(target);
+  else unannounce('work');
+}
+let hoveredByKey = false;
 function updateHover() {
   let ud = null;
+  let byKey = false;
   if (controls.enabled && !isTouch) {
-    if (mouseInside) ud = pick(ndc.x, ndc.y);
+    if (keyNav) byKey = true;
+    else if (mouseInside) ud = pick(ndc.x, ndc.y);
   }
-  const target = ud && (ud.work || ud.text || null);
-  if (target !== hovered) {
+  const target = byKey ? front : ud && (ud.work || ud.text || null);
+  if (target !== hovered || byKey !== hoveredByKey) {
     hovered = target;
+    hoveredByKey = byKey;
     crosshair.classList.toggle('active', !!hovered);
     promptEl.classList.toggle('show', !!hovered);
-    canvas.style.cursor = hovered ? 'pointer' : '';
-    if (hovered === 'text') setText(promptEl, 'hud.promptText');
-    else if (hovered) setText(promptEl, 'hud.promptWork', { no: hovered.no, title: hovered.title });
+    canvas.style.cursor = hovered && !byKey ? 'pointer' : '';
+    if (hovered === 'text') setText(promptEl, byKey ? 'hud.promptTextKey' : 'hud.promptText');
+    else if (hovered) setText(promptEl, byKey ? 'hud.promptWorkKey' : 'hud.promptWork', { no: hovered.no, title: hovered.title });
   }
 }
 function activate(ud) {
@@ -304,8 +339,13 @@ function updateRoom() {
     setText(roomSub, `rooms.${r.id}.subtitle`);
     if (!first) {
       post.trigger(0.75);
+      if (entered) announceRoom();
     }
   }
+}
+function announceRoom() {
+  const r = data.rooms[currentRoomId];
+  announce(t('announce.room', { name: r.name, subtitle: r.subtitle.replaceAll(' · ', ', ') }), 'room');
 }
 
 // ---------------------------------------------------------------- enter
@@ -317,6 +357,7 @@ const soundDialog = focusDialog(soundAsk, { initial: () => soundAsk.querySelecto
 function setSound(on) {
   audio.setMuted(!on);
   soundBtn.classList.toggle('muted', !on);
+  soundBtn.setAttribute('aria-pressed', String(on));
 }
 soundAsk.addEventListener('click', (e) => {
   const b = e.target.closest('[data-sound]');
@@ -326,6 +367,7 @@ soundAsk.addEventListener('click', (e) => {
   blockers.panel = false;
   syncEnabled();
   soundDialog.closed();
+  announceRoom();
 });
 soundAsk.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') soundAsk.click();
@@ -347,7 +389,10 @@ function enter(ask = true) {
     soundAsk.hidden = false;
     blockers.panel = true;
     soundDialog.opened();
-  } else focusScene();
+  } else {
+    focusScene();
+    announceRoom();
+  }
   syncEnabled();
   post.trigger(1);
 }
@@ -409,6 +454,7 @@ function frame() {
   for (const fn of props.anim) fn(t, dt);
   gallery.update(t, dt, camera, controls.zoom);
   letItFlow.update(t, lights.proj, camera.position);
+  updateFront(dt);
   updateHover();
   if (entered) {
     minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
@@ -428,7 +474,9 @@ function markReady() {
   document.body.dataset.state = 'ready';
   progressLabel.classList.remove('error');
   progressBar.style.width = '100%';
+  progressBar.parentElement.setAttribute('aria-valuenow', '100');
   setText(progressLabel, 'loader.ready');
+  announce(t('loader.ready'), 'loader');
   enterBtn.disabled = false;
   enterBtn.focus({ preventScroll: true });
 }
@@ -445,6 +493,7 @@ onLangChange(() => {
   tour.refresh();
   gallery.relabel();
   hovered = null;
+  front = null;
 });
 
 // Debug handle for screenshots / tinkering in the console.

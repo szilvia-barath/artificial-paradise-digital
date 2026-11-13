@@ -1,4 +1,5 @@
-import { applyStatic, setLang, setText } from './i18n.js';
+import { applyStatic, setLang, setText, t } from './i18n.js';
+import { announce } from './ui/announce.js';
 
 // Entry point. Translates the title screen, navbar and footer straight away (this chunk
 // is a few kB), then loads the 3D exhibition, which is the heavy part.
@@ -42,6 +43,7 @@ function showFailure() {
   const label = document.getElementById('progress-label');
   setText(label, 'loader.failure');
   label.classList.add('error');
+  announce(t('loader.failure'), 'loader');
 }
 window.addEventListener('error', showFailure);
 window.addEventListener('unhandledrejection', showFailure);
