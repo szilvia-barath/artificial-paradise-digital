@@ -102,12 +102,13 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // sections with optional links, external or to another panel (`nav`).
   const noticeHTML = (key) => () => {
     const n = t(key);
-    // `contact` names a group in exhibition.json's contacts: its e-mail address is the link
+    // A section's `link` is put where its paragraph says {link}: words that open an e-mail
+    // to the address of a group in exhibition.json's contacts (no address is written here).
+    const inline = (l) => {
+      const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
+      return mail ? `<a href="${esc(mail.href)}">${esc(l.text)}</a>` : esc(l.text);
+    };
     const link = (l) => {
-      if (l.contact) {
-        const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
-        return mail ? `<a href="${esc(mail.href)}">${esc(mail.text)}</a>` : '';
-      }
       return l.nav
         ? `<button class="link mono" data-nav="${esc(l.nav)}">${esc(l.text)}</button>`
         : `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`;
@@ -117,7 +118,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <h2 id="panel-title">${esc(n.title)}</h2>
     ${n.sections.map((s) => `
       <h3>${esc(s.h)}</h3>
-      ${s.p.map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${s.p.map((p) => `<p>${esc(p).replace('{link}', s.link ? inline(s.link) : '')}</p>`).join('')}
       ${s.links ? `<p class="notice-links">${s.links.map(link).join(' · ')}</p>` : ''}`).join('')}
     ${n.updated ? `<p class="note">${esc(n.updated)}</p>` : ''}
   `;

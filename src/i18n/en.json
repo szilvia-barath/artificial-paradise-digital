@@ -538,13 +538,12 @@
       {
         "h": "Contact",
         "p": [
-          "If something here does not work for you, or you need the exhibition in another form, write to me."
+          "If something does not work, please tell {link}."
         ],
-        "links": [
-          {
-            "contact": "Digital"
-          }
-        ]
+        "link": {
+          "contact": "Digital",
+          "text": "the creator of the digital exhibition"
+        }
       }
     ],
     "updated": "Statement of 13 November 2026"

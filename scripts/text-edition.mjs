@@ -159,9 +159,12 @@ ${inRoom.map(workHTML).join('\n')}
   ];
   // The accessibility statement, the same text as the walk's panel.
   const statement = t('accessibility');
-  const mail = data.contacts.find((g) => g.id === 'Digital')?.items.find((c) => c.type === 'email' && c.href);
+  const inline = (l) => {
+    const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
+    return mail ? `<a href="${esc(mail.href)}">${esc(l.text)}</a>` : esc(l.text);
+  };
   const statementHTML = statement.sections.map((sec) => `<dt>${esc(sec.h)}</dt>
-<dd>${sec.p.map((p) => `<p>${esc(p)}</p>`).join('')}${sec.links?.some((l) => l.contact) && mail ? `<p><a href="${esc(mail.href)}">${esc(mail.text)}</a></p>` : ''}</dd>`).join('\n');
+<dd>${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : '')}</p>`).join('')}</dd>`).join('\n');
   const other = lang === 'en'
     ? '<a href="hu/?lang=hu" lang="hu" hreflang="hu">Magyar</a>'
     : '<a href="../?lang=en" lang="en" hreflang="en">English</a>';

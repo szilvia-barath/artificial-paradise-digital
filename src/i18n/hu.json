@@ -3,7 +3,7 @@
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
     "docDescription": "Nézd meg Szabó Kristóf - KristofLab Artificial Paradise című kiállítását fotókból rekonstruálva, bejárható 3D kiállításként a böngészőben. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.",
-    "sceneLabel": "A kiállítás 3D nézete: a nyílbillentyűkkel sétálhatsz, az Enter megnyitja az előtted lévő művet. A szöveges változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt. [HU: confirm]",
+    "sceneLabel": "A kiállítás 3D nézete: a nyílbillentyűkkel lehet sétálni, az Enter megnyitja a nézet közepén lévő művet. A szöveges változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt.",
     "nav": {
       "main": "Fő menü",
       "about": "A kiállításról",
@@ -142,10 +142,10 @@
         "dates": "Időpont",
         "curator": "Kurátor"
       },
-      "enterStairs": "A lépcsőn lefelé érkezel. [HU: confirm]",
-      "enterFrom": "Innen érkezel: {room}. [HU: confirm]",
+      "enterStairs": "Ide a lépcsőn lefelé lehet bejutni.",
+      "enterFrom": "Ide innen lehet bejutni: {room}.",
       "roomCount": "Ebben a teremben {n} mű van.",
-      "sheet": "A kiállítási szöveg ebben a teremben is ott van a falon. {where} [HU: confirm]",
+      "sheet": "A kiállítási szöveg ebben a teremben van, a falon. {where}",
       "label": {
         "medium": "Technika",
         "size": "Méret",
@@ -153,14 +153,14 @@
         "where": "Hol"
       },
       "openInWalk": "{no}. mű, {title}: megnyitás a 3D bejárásban [HU: confirm]",
-      "textAbove": "A műhöz tartozó szöveg feljebb olvasható, itt: {ref}. [HU: confirm]",
-      "part": "A műhöz tartozó kis képernyő külön van. {where} [HU: confirm]",
+      "textAbove": "A művész ehhez a műhöz írt szövege feljebb olvasható, itt: {ref}.",
+      "part": "A műhöz tartozó kis képernyő külön helyen van. {where}",
       "rights": "Jogok",
       "pos": {
         "left": "Belépéskor a bal oldali falon. [HU: confirm]",
         "right": "Belépéskor a jobb oldali falon. [HU: confirm]",
         "ahead": "Belépéskor a szemközti falon. [HU: confirm]",
-        "behind": "Belépéskor a hátad mögötti falon. [HU: confirm]",
+        "behind": "A bejárat felőli falon.",
         "only": "Ezen a falon ez az egyetlen mű. [HU: confirm]",
         "orderSide": "Ezen a falon {n} mű van. Sorszáma a bejárat felőli végtől számolva: {i}. [HU: confirm]",
         "orderFacing": "Ezen a falon {n} mű van. Sorszáma balról számolva, a fallal szemben állva: {i}. [HU: confirm]",
@@ -169,8 +169,8 @@
         "alongFar": "A fal túlsó vége felé van. [HU: confirm]",
         "doorAheadLeft": "A következő terembe ({room}) vezető átjárótól balra van. [HU: confirm]",
         "doorAheadRight": "A következő terembe ({room}) vezető átjárótól jobbra van. [HU: confirm]",
-        "doorBehindLeft": "A bejárat mellett van, belépéskor a bal kezed felől. [HU: confirm]",
-        "doorBehindRight": "A bejárat mellett van, belépéskor a jobb kezed felől. [HU: confirm]",
+        "doorBehindLeft": "A bejárat mellett van, belépve bal kéz felől.",
+        "doorBehindRight": "A bejárat mellett van, belépve jobb kéz felől.",
         "floorNear": "A padlón, a bejárat közelében. [HU: confirm]",
         "floorMid": "A padlón, a terem közepén. [HU: confirm]",
         "floorFar": "A padlón, a terem túlsó végében. [HU: confirm]"
@@ -183,7 +183,7 @@
       "work": "{no}. mű, {title}. Megnyitás: Enter. [HU: confirm]",
       "text": "Kiállítási szöveg. Elolvasás: Enter. [HU: confirm]",
       "tourWork": "{no}. mű, {title}. {meta}.",
-      "tourStopped": "A tárlatvezetés leállt. [HU: confirm]"
+      "tourStopped": "A tárlatvezetés leállt."
     }
   },
   "meta": {
@@ -508,9 +508,9 @@
         "h": "Mi működik",
         "p": [
           "A szöveges változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása. [HU: confirm]",
-          "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül oda, ahol voltál. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja az előtted lévő művet. [HU: confirm]",
+          "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja a nézet közepén lévő művet.",
           "Képernyőolvasóknak a bejárás egyszerre egy sort ír egy élő régióba: a termet, ahová belépsz, az előtted lévő művet és a tárlatvezetés minden feliratát. A 3D nézetnek neve van, amely a szöveges változatra mutat. [HU: confirm]",
-          "Ha a rendszeredben be van kapcsolva a csökkentett mozgás, a bejárásban nincs glitch-átmenet, nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép. [HU: confirm]"
+          "Ha a rendszerben be van kapcsolva a csökkentett mozgás, a bejárásban nincs glitch-átmenet, nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép."
         ]
       },
       {
@@ -522,7 +522,7 @@
           "Érintőképernyős telefonon a 3D bejárás képernyőolvasóval nem használható. A szöveges változat igen. [HU: confirm]",
           "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja. [HU: confirm]",
           "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani. [HU: confirm]",
-          "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható. [HU: confirm]",
+          "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 másodperc után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.",
           "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem. [HU: confirm]",
           "Az új részek magyar szövege még megerősítésre vár. [HU: confirm]"
         ]
@@ -536,13 +536,12 @@
       {
         "h": "Kapcsolat",
         "p": [
-          "Ha itt valami nem működik nálad, vagy más formában lenne szükséged a kiállításra, írj nekem. [HU: confirm]"
+          "Ha valami nem működik, kérem, jelezze {link}."
         ],
-        "links": [
-          {
-            "contact": "Digital"
-          }
-        ]
+        "link": {
+          "contact": "Digital",
+          "text": "a digitális kiállítás alkotójának"
+        }
       }
     ],
     "updated": "A nyilatkozat kelte: 2026. november 13. [HU: confirm]"
