@@ -1,5 +1,6 @@
 import en from './i18n/en.json';
 import hu from './i18n/hu.json';
+import { localizeData, translator } from './localize.js';
 
 // Two languages. Every text a visitor reads lives in src/i18n/<lang>.json: "ui" holds
 // the interface strings, the rest is exhibition content (texts, room names, captions)
@@ -14,14 +15,9 @@ const listeners = new Set();
 
 export const lang = () => current;
 
-const lookup = (obj, key) => key.split('.').reduce((v, k) => (v == null ? v : v[k]), obj);
-
 // t('hud.tour') reads ui.hud.tour; keys outside "ui" (e.g. 'rooms.r1.name') read content.
 export function t(key, vars) {
-  const loc = LOCALES[current];
-  let s = lookup(loc.ui, key) ?? lookup(loc, key) ?? lookup(en.ui, key) ?? lookup(en, key) ?? key;
-  if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
-  return s;
+  return translator(LOCALES[current], en)(key, vars);
 }
 
 // Sets an element's text from a key and remembers it, so a language switch re-renders it.
@@ -55,16 +51,7 @@ export function applyStatic(root = document) {
 // Copies the current language's content onto the exhibition data in place, so code that
 // reads data.text, data.rooms or work.caption always sees the current language.
 export function localize(data) {
-  const loc = LOCALES[current];
-  data.meta = { ...data.meta, ...en.meta, ...loc.meta };
-  for (const k of ['text', 'textCredit', 'credits', 'behindTheScenes', 'source', 'tourIntro', 'openingSpeech', 'descriptions']) data[k] = loc[k] ?? en[k];
-  data.rooms = {};
-  for (const id of Object.keys(en.rooms)) data.rooms[id] = { ...en.rooms[id], ...loc.rooms?.[id] };
-  for (const w of data.works) {
-    w.officialTitle ??= w.title;
-    Object.assign(w, { title: w.officialTitle }, en.works[w.id], loc.works?.[w.id]);
-  }
-  return data;
+  return localizeData(data, en, LOCALES[current]);
 }
 
 export function onLangChange(fn) {

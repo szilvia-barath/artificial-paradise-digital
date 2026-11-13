@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import data from './data/exhibition.json';
 import { ROOMS, EYE, roomAt, roomById } from './world/layout.js';
+import { DOORS } from './world/route.js';
 import { createMaterials } from './world/materials.js';
 import { buildArchitecture } from './world/architecture.js';
 import { buildProps } from './world/props.js';
@@ -110,11 +111,6 @@ const viewer = setupViewer(data, {
 });
 
 // Guided tour: the works in catalogue order, routed through the doorways.
-const DOORS = {
-  'r1>r2': [[4.95, 4.12], [6.35, 4.12]],
-  'r2>r3': [[9.382, 3.317], [10.65, 3.317]],
-  'r3>r4': [[15.2, 3.792], [16.283, 3.792]],
-};
 function buildTourStops() {
   const r1 = roomById('r1');
   const stops = [{ x: r1.spawn.x, z: r1.spawn.z, look: [r1.spawn.look.x, 1.5, r1.spawn.look.z], intro: true, dwell: 4 }];

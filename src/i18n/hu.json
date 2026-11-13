@@ -121,6 +121,54 @@
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10-31."
+    },
+    "textEdition": {
+      "name": "Szöveges változat",
+      "docTitle": "Artificial Paradise: szöveges változat",
+      "docDescription": "Szabó Kristóf / KristofLab: Artificial Paradise (MAMŰ Galéria, Budapest, 2025. január 10–31.) szövegként: a négy terem a bejárás sorrendjében, a 17 mű és az, hogy melyik hol volt. 3D grafika nélkül is olvasható.",
+      "intro": "Ez az oldal szövegként adja vissza a kiállítást: a négy termet a bejárás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik. [HU: confirm]",
+      "positionsNote": "Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik. [HU: confirm]",
+      "toWalk": "Tovább a 3D bejáráshoz [HU: confirm]",
+      "onThisPage": "Ezen az oldalon",
+      "facts": {
+        "artist": "Művész",
+        "venue": "Helyszín",
+        "dates": "Időpont",
+        "curator": "Kurátor"
+      },
+      "enterStairs": "A lépcsőn lefelé érkezel. [HU: confirm]",
+      "enterFrom": "Innen érkezel: {room}. [HU: confirm]",
+      "roomCount": "Ebben a teremben {n} mű van.",
+      "sheet": "A kiállítási szöveg ebben a teremben is ott van a falon. {where} [HU: confirm]",
+      "label": {
+        "medium": "Technika",
+        "size": "Méret",
+        "year": "Év",
+        "where": "Hol"
+      },
+      "openInWalk": "{no}. mű, {title}: megnyitás a 3D bejárásban [HU: confirm]",
+      "textAbove": "A műhöz tartozó szöveg feljebb olvasható, itt: {ref}. [HU: confirm]",
+      "part": "A műhöz tartozó kis képernyő külön van. {where} [HU: confirm]",
+      "rights": "Jogok",
+      "pos": {
+        "left": "Belépéskor a bal oldali falon. [HU: confirm]",
+        "right": "Belépéskor a jobb oldali falon. [HU: confirm]",
+        "ahead": "Belépéskor a szemközti falon. [HU: confirm]",
+        "behind": "Belépéskor a hátad mögötti falon. [HU: confirm]",
+        "only": "Ezen a falon ez az egyetlen mű. [HU: confirm]",
+        "orderSide": "Ezen a falon {n} mű van. Sorszáma a bejárat felőli végtől számolva: {i}. [HU: confirm]",
+        "orderFacing": "Ezen a falon {n} mű van. Sorszáma balról számolva, a fallal szemben állva: {i}. [HU: confirm]",
+        "alongNear": "A fal bejárat felőli végénél van. [HU: confirm]",
+        "alongMid": "Nagyjából a fal közepén van. [HU: confirm]",
+        "alongFar": "A fal túlsó vége felé van. [HU: confirm]",
+        "doorAheadLeft": "A következő terembe ({room}) vezető átjárótól balra van. [HU: confirm]",
+        "doorAheadRight": "A következő terembe ({room}) vezető átjárótól jobbra van. [HU: confirm]",
+        "doorBehindLeft": "A bejárat mellett van, belépéskor a bal kezed felől. [HU: confirm]",
+        "doorBehindRight": "A bejárat mellett van, belépéskor a jobb kezed felől. [HU: confirm]",
+        "floorNear": "A padlón, a bejárat közelében. [HU: confirm]",
+        "floorMid": "A padlón, a terem közepén. [HU: confirm]",
+        "floorFar": "A padlón, a terem túlsó végében. [HU: confirm]"
+      }
     }
   },
   "meta": {

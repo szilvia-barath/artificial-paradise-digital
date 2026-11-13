@@ -121,6 +121,54 @@
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31.01.2025"
+    },
+    "textEdition": {
+      "name": "Text edition",
+      "docTitle": "Artificial Paradise: text edition",
+      "docDescription": "Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.",
+      "intro": "This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.",
+      "positionsNote": "The positions given here follow the 3D reconstruction and its decision log.",
+      "toWalk": "Go to the 3D walk",
+      "onThisPage": "On this page",
+      "facts": {
+        "artist": "Artist",
+        "venue": "Venue",
+        "dates": "Dates",
+        "curator": "Curator"
+      },
+      "enterStairs": "You come in down the stairs.",
+      "enterFrom": "You come in from {room}.",
+      "roomCount": "{n} works in this room.",
+      "sheet": "The exhibition text is on a wall in this room. {where}",
+      "label": {
+        "medium": "Medium",
+        "size": "Size",
+        "year": "Year",
+        "where": "Where"
+      },
+      "openInWalk": "Open No. {no}, {title}, in the 3D walk",
+      "textAbove": "The artist's text that goes with this work is printed above, under {ref}.",
+      "part": "A small screen that belongs to the work hangs apart from it. {where}",
+      "rights": "Rights",
+      "pos": {
+        "left": "On the left wall as you enter.",
+        "right": "On the right wall as you enter.",
+        "ahead": "On the wall facing you as you enter.",
+        "behind": "On the wall behind you as you enter.",
+        "only": "It is the only work on this wall.",
+        "orderSide": "It is work {i} of {n} on this wall, counting from the end you enter at.",
+        "orderFacing": "It is work {i} of {n} on this wall, counting from the left as you face it.",
+        "alongNear": "It hangs near the end you enter at.",
+        "alongMid": "It hangs about halfway along the wall.",
+        "alongFar": "It hangs towards the far end of the wall.",
+        "doorAheadLeft": "It hangs to the left of the way through to {room}.",
+        "doorAheadRight": "It hangs to the right of the way through to {room}.",
+        "doorBehindLeft": "It hangs beside the doorway you came through, on your left as you walk in.",
+        "doorBehindRight": "It hangs beside the doorway you came through, on your right as you walk in.",
+        "floorNear": "On the floor, near the entrance.",
+        "floorMid": "On the floor, in the middle of the room.",
+        "floorFar": "On the floor, at the far end of the room."
+      }
     }
   },
   "meta": {
