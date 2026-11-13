@@ -69,7 +69,8 @@ enc_loop() { # file, output name, start s, duration s, filter, fps, crf, sound g
     [join][rest]concat=n=2:v=0:a=1[a]" -map '[v]' -map '[a]'     -c:a aac -b:a 96k -ar 48000 -ac 2     -c:v libx264 -profile:v high -preset slow -crf "$7"     -x264-params "bframes=0:no-fast-pskip=1:no-dct-decimate=1:aq-mode=3"     -movflags +faststart "$OUT/$2.mp4"
 }
 # with sound: Singapore and The Eden Project as they are (about -24 and -26 LUFS), the
-# quiet Natural life and Siluett (about -47 and -46 LUFS) raised by 15 dB
+# quiet Natural life and Siluett (about -47 and -46 LUFS) raised by 15 dB; the wall loop
+# (siluett_short.mp4, about -54 LUFS) by 21.5 dB, to match the earlier Siluett loop (-32 LUFS)
 enc "artifical paradise_singapore.mp4" w06-artificial-paradise-singapore 30 40 "scale=960:540" 30 30 -2
 enc "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-eden-project 0 58 "scale=960:540" 30 30 0
 # silent: the Wiena files have no sound track, Paradise Factory and Let it flow a silent one
@@ -82,8 +83,9 @@ enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:
 # the Paradise Factory monitor stands on its side: the footage turned counter-clockwise is
 # upright on it, as in the documentation video, and cropped to the panel (0.831 wide to 1 high)
 enc "paradise factory_.mp4" w03-screen 20 45 "transpose=2,crop=1024:1232,scale=532:640" 25 30
-# the trees on the end wall: the owner's 10 s cut of the projection (Drive file 12Oa73Oi...)
-enc_loop "trees_new.mp4" w16-projection 0 9 "scale=1600:900:flags=lanczos" 25 24 0
+# the trees on the end wall: the reconstructor's 10 s cut of Siluett where it moves most
+# (siluett_short.mp4, Drive file 12Oa73Oi...)
+enc_loop "siluett_short.mp4" w16-projection 0 9 "scale=1600:900:flags=lanczos" 25 24 21.5
 # shown in the artwork viewer: the documentation video of the installation
 enc "Let it flow 2025 MAMU.mp4" w16-documentation 0 8.8 "scale=1280:720:flags=lanczos" 25 25 0
 # shown in the artwork viewer for Paradise Factory: its documentation video, whole, with sound
