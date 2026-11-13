@@ -60,7 +60,7 @@
         "back": "Hátra (↓ / S)",
         "left": "Fordulás balra (←)",
         "right": "Fordulás jobbra (→)",
-        "run": "Futás (Shift): kattintásra be/ki",
+        "run": "Shift: futás, kattintásra be/ki",
         "wheel": "görgess a sétához",
         "zoom": "Nagyítás",
         "zoomIn": "Nagyítás (+)",

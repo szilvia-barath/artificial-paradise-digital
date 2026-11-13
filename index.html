@@ -47,10 +47,49 @@
   </head>
   <body>
     <!-- First thing Tab reaches: the exhibition as text (text/, built from the same data) -->
-    <a class="skip-link" href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Text version of the exhibition</a>
-    <!-- The 3D view. role="application": it is driven by keys, so a screen reader passes them
-         through. Hidden from assistive technology until the visitor has entered (main.js). -->
-    <canvas id="scene" role="application" aria-hidden="true" aria-label="3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys." data-i18n-attr="aria-label:sceneLabel"></canvas>
+    <nav class="skip-nav" aria-label="Text version" data-i18n-attr="aria-label:textEdition.name">
+      <a class="skip-link" href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Text version of the exhibition</a>
+    </nav>
+    <!-- The exhibition itself: the 3D view and, once inside, its controls. They come first
+         in the page, so Tab goes from the view straight to the toolbar and the keys. -->
+    <main id="stage">
+      <!-- The 3D view. role="application": it is driven by keys, so a screen reader passes them
+           through. Hidden from assistive technology until the visitor has entered (main.js). -->
+      <canvas id="scene" role="application" aria-hidden="true" aria-label="3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys." data-i18n-attr="aria-label:sceneLabel"></canvas>
+
+      <!-- In-world HUD -->
+      <div id="hud" hidden>
+        <div id="crosshair"></div>
+        <div id="prompt" class="mono"></div>
+        <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
+        <canvas id="minimap" width="220" height="150" role="img" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
+        <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
+          <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
+          <div class="rooms-wrap">
+            <button data-action="rooms" title="Jump to room" aria-expanded="false" aria-controls="rooms-menu" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
+            <div id="rooms-menu" hidden></div>
+          </div>
+          <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
+        </nav>
+        <div id="tour-caption"></div>
+        <div id="joystick"><div id="joystick-knob"></div></div>
+        <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
+        <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
+          <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (↑ / W)" data-i18n-attr="title:hud.keys.forward;aria-label:hud.keys.forward"><i>W</i><span class="glyph" data-glyph="↑" aria-hidden="true"></span></button>
+          <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Shift: run, click to switch on or off" aria-pressed="false" data-i18n-attr="title:hud.keys.run;aria-label:hud.keys.run"><i>Shift</i><span class="glyph" data-glyph="⇧" aria-hidden="true"></span></button>
+          <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
+          <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i><span class="glyph" data-glyph="↓" aria-hidden="true"></span></button>
+          <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
+          <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">scroll to walk</span></span>
+        </div>
+        <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
+          <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn;aria-label:hud.keys.zoomIn"><i>+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
+          <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
+        </div>
+        <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
+        <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag to look around</div>
+      </div>
+    </main>
 
     <!-- Navbar: brand, site sections, language switch. Fades out while walking. -->
     <header id="site-nav">
@@ -70,7 +109,7 @@
     </header>
 
     <!-- Loading / title screen, styled after the exhibition's key visual -->
-    <section id="loader">
+    <section id="loader" aria-labelledby="loader-title">
       <div class="loader-backdrop" aria-hidden="true">
         <picture class="loader-bg">
           <!-- AVIF first (about 40% of the WebP's weight); the WebP files are the fallback -->
@@ -82,7 +121,7 @@
         <div class="loader-grain"></div>
       </div>
       <div class="loader-card">
-        <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
+        <h1 class="sr-only" id="loader-title">Artificial Paradise · KristofLab · Digital Exhibition</h1>
         <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
         <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10-31.01.2025</span></p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading the exhibition" data-i18n-attr="aria-label:loader.progress"><span id="progress-bar"></span></div>
@@ -128,39 +167,6 @@
         </div>
       </div>
     </div>
-    <!-- In-world HUD -->
-    <div id="hud" hidden>
-      <div id="crosshair"></div>
-      <div id="prompt" class="mono"></div>
-      <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
-      <canvas id="minimap" width="220" height="150" role="img" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
-      <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
-        <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
-        <div class="rooms-wrap">
-          <button data-action="rooms" title="Jump to room" aria-expanded="false" aria-controls="rooms-menu" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
-          <div id="rooms-menu" hidden></div>
-        </div>
-        <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
-      </nav>
-      <div id="tour-caption"></div>
-      <div id="joystick"><div id="joystick-knob"></div></div>
-      <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
-      <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
-        <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (↑ / W)" data-i18n-attr="title:hud.keys.forward;aria-label:hud.keys.forward"><i>W</i>↑</button>
-        <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Run (Shift)" aria-pressed="false" data-i18n-attr="title:hud.keys.run;aria-label:hud.keys.run"><i>Shift</i>⇧</button>
-        <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
-        <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i>↓</button>
-        <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
-        <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">scroll to walk</span></span>
-      </div>
-      <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
-        <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn;aria-label:hud.keys.zoomIn"><i>+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
-        <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
-      </div>
-      <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
-      <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag to look around</div>
-    </div>
-
     <!-- Artwork viewer -->
     <section id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>

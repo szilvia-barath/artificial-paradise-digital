@@ -542,6 +542,8 @@ body.touch #keypad { display: none; }
   letter-spacing: 0.04em;
   color: var(--muted);
 }
+/* the arrow on a keycap is drawn here, so the key's letter is its only text */
+.cap .glyph::before { content: attr(data-glyph); }
 .cap:hover { border-color: rgba(255, 255, 255, 0.35); }
 .cap.pressed {
   background: rgba(157, 255, 106, 0.2);

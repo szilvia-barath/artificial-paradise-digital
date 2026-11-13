@@ -60,7 +60,7 @@
         "back": "Back (↓ / S)",
         "left": "Turn left (←)",
         "right": "Turn right (→)",
-        "run": "Run (Shift): click to switch on or off",
+        "run": "Shift: run, click to switch on or off",
         "wheel": "scroll to walk",
         "zoom": "Zoom",
         "zoomIn": "Zoom in (+)",
