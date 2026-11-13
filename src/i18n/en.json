@@ -83,7 +83,9 @@
       "loop": "Back to the loop",
       "documentation": "Video documentation",
       "photo": "Back to the photo",
-      "situNext": "Next installation photo"
+      "situNext": "Next installation photo",
+      "pause": "Pause the video",
+      "play": "Play the video"
     },
     "panels": {
       "credits": "Credits",

@@ -26,6 +26,13 @@ export function setupKeypad(el, controls) {
     cap.addEventListener('pointerup', up);
     cap.addEventListener('pointercancel', up);
     cap.addEventListener('lostpointercapture', up);
+    // Enter or Space on a focused keycap, or a click sent by a screen reader or voice
+    // control (no pointer, so detail is 0): one short press, a step or a small turn.
+    cap.addEventListener('click', (e) => {
+      if (e.detail !== 0) return;
+      controls.press(code);
+      setTimeout(up, code.startsWith('Zoom') ? 120 : 350);
+    });
   }
 
   const lit = (code) => {

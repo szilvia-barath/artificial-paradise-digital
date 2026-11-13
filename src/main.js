@@ -19,6 +19,7 @@ import { setupPanels } from './ui/panels.js';
 import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
 import { setupKeypad } from './ui/keypad.js';
+import { focusDialog } from './ui/dialog.js';
 import { localize, onLangChange, setText } from './i18n.js';
 
 localize(data);
@@ -94,17 +95,24 @@ const syncEnabled = () => {
   document.body.classList.toggle('overlay', blockers.panel || blockers.viewer);
 };
 
+// Where keyboard focus goes when a dialog closes and the control that opened it is gone:
+// the 3D view once inside, the Enter button on the title screen.
+const focusFallback = () => (entered ? canvas : enterBtn.disabled ? null : enterBtn);
+const focusScene = () => { if (entered) canvas.focus({ preventScroll: true }); };
+
 const ui = setupPanels(data, {
   onOpenWork: (w) => { ui.close(); viewer.open(w); },
   onOpenPanel: () => { blockers.panel = true; syncEnabled(); },
   onClosePanel: () => { blockers.panel = false; syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
+  focusFallback,
 });
 
 const viewer = setupViewer(data, {
   onOpen: () => { blockers.viewer = true; if (tour.active) tour.stop(); syncEnabled(); },
   onClose: () => { blockers.viewer = false; audio.setFocus(1); syncEnabled(); },
-  onGoto: (w) => gotoWork(w),
+  onGoto: (w) => { gotoWork(w); focusScene(); },
+  focusFallback,
   // the viewer plays a video's sound itself, so the walk's mix steps aside
   onMedia: (isVideo) => audio.setFocus(isVideo ? 0 : 0.4),
   isMuted: () => audio.muted,
@@ -269,6 +277,8 @@ function activate(ud) {
 controls.onTap = (x, y) => activate(pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1));
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
+  // Enter on a focused button or link belongs to that control, not to the work in view.
+  if (e.code === 'Enter' && e.target.closest?.('button, a, summary, video, iframe')) return;
   if (e.code === 'KeyE' || e.code === 'Enter') activate(pick(0, 0));
 });
 // During the tour (controls disabled) a click / tap opens the work in view
@@ -301,6 +311,9 @@ function updateRoom() {
 // ---------------------------------------------------------------- enter
 // The walk starts without sound; a pop-up after entering offers to switch it on.
 const soundAsk = document.getElementById('sound-ask');
+// The sound question was opened by the Enter button, which is gone by the time it is
+// answered, so focus goes on to the 3D view.
+const soundDialog = focusDialog(soundAsk, { initial: () => soundAsk.querySelector('[data-sound="off"]'), fallback: () => canvas });
 function setSound(on) {
   audio.setMuted(!on);
   soundBtn.classList.toggle('muted', !on);
@@ -312,6 +325,7 @@ soundAsk.addEventListener('click', (e) => {
   soundAsk.hidden = true;
   blockers.panel = false;
   syncEnabled();
+  soundDialog.closed();
 });
 soundAsk.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') soundAsk.click();
@@ -320,8 +334,11 @@ function enter(ask = true) {
   entered = true;
   setSound(false);
   document.body.classList.add('entered');
-  document.getElementById('loader').classList.add('gone');
+  const loader = document.getElementById('loader');
+  loader.classList.add('gone');
+  loader.inert = true; // nothing on the title screen can be reached any more
   document.getElementById('hud').hidden = false;
+  canvas.tabIndex = 0; // the 3D view takes keyboard focus once you are inside
   audio.start();
   audio.setMuted(true);
   // the videos' own sound, played from their screens
@@ -329,8 +346,8 @@ function enter(ask = true) {
   if (ask) {
     soundAsk.hidden = false;
     blockers.panel = true;
-    soundAsk.querySelector('[data-sound="off"]').focus({ preventScroll: true });
-  }
+    soundDialog.opened();
+  } else focusScene();
   syncEnabled();
   post.trigger(1);
 }

@@ -28,6 +28,13 @@ document.addEventListener('pointerdown', (e) => {
   if (!nav.contains(e.target)) closeMenu();
 });
 
+// The footer wraps onto more lines in a narrow window. Everything placed above it (the
+// toolbar, the on-screen keys, the focus frame) reads its real height from --foot-h, so
+// the footer never covers a control or its focus ring.
+const foot = document.getElementById('site-foot');
+const syncFoot = () => document.documentElement.style.setProperty('--foot-h', `${foot.offsetHeight}px`);
+if ('ResizeObserver' in window) new ResizeObserver(syncFoot).observe(foot);
+
 // If the scene can't start (no WebGL, very old browser), say so on the title screen
 // instead of leaving it on "Preparing the basement…" for ever.
 function showFailure() {

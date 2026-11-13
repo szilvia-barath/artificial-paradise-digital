@@ -83,7 +83,9 @@
       "loop": "Vissza a loophoz",
       "documentation": "Videódokumentáció",
       "photo": "Vissza a fotóhoz",
-      "situNext": "Következő installációs fotó"
+      "situNext": "Következő installációs fotó",
+      "pause": "Videó szüneteltetése",
+      "play": "Videó lejátszása"
     },
     "panels": {
       "credits": "Közreműködők",

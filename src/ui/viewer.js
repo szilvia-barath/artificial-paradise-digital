@@ -1,4 +1,5 @@
 import { t, lang } from '../i18n.js';
+import { focusDialog } from './dialog.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
 // request the full video or video documentation from Google Drive), caption, the artist's
@@ -12,8 +13,11 @@ const situPhotos = (w) => w.situ || [`${w.image}-situ`];
 
 // onMedia(isVideo) tells the sound mix whether a video (with its own sound) is showing;
 // isMuted() is the site's sound switch.
-export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted }) {
+export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, focusFallback }) {
   const el = document.getElementById('viewer');
+  const closeBtn = el.querySelector('[data-close]');
+  // Focus goes to the Close button on opening and back to the opener on closing.
+  const dialog = focusDialog(el, { initial: () => closeBtn, fallback: focusFallback });
   const img = document.getElementById('viewer-img');
   const video = document.getElementById('viewer-video');
   const frame = document.getElementById('viewer-frame');
@@ -44,6 +48,31 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
   situBtn.style.marginTop = '0';
   caption.after(situBtn);
 
+  // The loop's own player controls show under the mouse, and always on touch screens.
+  // While keyboard focus is inside them Chromium keeps every key press to itself, Esc and
+  // Tab included, so they stay out of the tab order and a Pause / Play button stands in.
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const mediaBox = el.querySelector('.viewer-media');
+  video.controls = coarse;
+  if (!coarse) {
+    mediaBox.addEventListener('pointerenter', () => { video.controls = true; });
+    mediaBox.addEventListener('pointerleave', () => { video.controls = false; });
+  }
+  const playBtn = document.createElement('button');
+  playBtn.className = 'link mono';
+  playBtn.style.marginTop = '0';
+  videoBtns.before(playBtn);
+  const syncPlay = () => {
+    playBtn.hidden = video.hidden;
+    playBtn.textContent = t(video.paused ? 'viewer.play' : 'viewer.pause');
+  };
+  video.addEventListener('play', syncPlay);
+  video.addEventListener('pause', syncPlay);
+  playBtn.addEventListener('click', () => {
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
+  });
+
   const renderInfo = () => {
     const w = works[index];
     img.alt = `${w.title}, ${w.medium}`;
@@ -70,6 +99,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     videoBtns.innerHTML = vids
       .map((v, i) => `<button class="link mono" data-full="${i}">${esc(t(full === i ? back : `viewer.${v.label}`))}</button>`)
       .join('');
+    syncPlay();
   };
 
   // Which medium fills the left side: Drive player, video loop, or the photograph.
@@ -99,6 +129,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     const moving = !!(loop || drive);
     img.hidden = moving;
     loading.hidden = moving || img.classList.contains('ready');
+    syncPlay();
     if (onMedia) onMedia(moving);
   };
 
@@ -127,6 +158,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     show();
     el.hidden = false;
     onOpen();
+    dialog.opened();
   };
   const close = () => {
     if (el.hidden) return;
@@ -135,6 +167,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     full = -1;
     showMedia({});
     onClose();
+    dialog.closed();
   };
   const step = (d) => {
     index = (index + d + works.length) % works.length;
@@ -155,8 +188,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     full = full === i ? -1 : i;
     showMedia(works[index]);
     renderInfo();
+    // the buttons were rebuilt: keep focus on the one just pressed
+    videoBtns.querySelector(`[data-full="${i}"]`)?.focus({ preventScroll: true });
   });
-  el.querySelector('[data-close]').addEventListener('click', close);
+  closeBtn.addEventListener('click', close);
   document.getElementById('viewer-prev').addEventListener('click', () => step(-1));
   document.getElementById('viewer-next').addEventListener('click', () => step(1));
   document.getElementById('viewer-goto').addEventListener('click', () => {

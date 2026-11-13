@@ -124,11 +124,11 @@
       <div id="crosshair"></div>
       <div id="prompt" class="mono"></div>
       <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
-      <canvas id="minimap" width="220" height="150" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
+      <canvas id="minimap" width="220" height="150" role="img" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
       <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
         <button data-action="tour" title="Guided tour (T)" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
         <div class="rooms-wrap">
-          <button data-action="rooms" title="Jump to room" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
+          <button data-action="rooms" title="Jump to room" aria-expanded="false" aria-controls="rooms-menu" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
           <div id="rooms-menu" hidden></div>
         </div>
         <button data-action="sound" title="Sound on/off (M)" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
@@ -157,7 +157,7 @@
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div class="viewer-media">
         <img id="viewer-img" alt="" />
-        <video id="viewer-video" hidden loop playsinline controls></video>
+        <video id="viewer-video" hidden loop playsinline></video>
         <iframe id="viewer-frame" hidden title="" allow="autoplay; fullscreen"></iframe>
         <div class="viewer-loading mono" data-i18n="viewer.loading">loading…</div>
       </div>
@@ -183,7 +183,7 @@
     </section>
 
     <!-- About / Behind the scenes panel -->
-    <section id="panel" hidden role="dialog" aria-modal="true">
+    <section id="panel" hidden role="dialog" aria-modal="true" aria-labelledby="panel-title">
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div id="panel-body"></div>
     </section>

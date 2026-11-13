@@ -1,21 +1,26 @@
 import { t } from '../i18n.js';
+import { focusDialog, shown } from './dialog.js';
 
 // About / Works / Behind-the-scenes panels and the "jump to room" menu.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork }) {
+export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, focusFallback }) {
   const panel = document.getElementById('panel');
   const body = document.getElementById('panel-body');
   const roomsMenu = document.getElementById('rooms-menu');
   const navButtons = document.querySelectorAll('#site-nav [data-nav]');
+  const roomsBtn = document.querySelector('[data-action="rooms"]');
+  const closeBtn = panel.querySelector('[data-close]');
+  // Focus goes to the Close button on opening and back to the opener on closing.
+  const dialog = focusDialog(panel, { initial: () => closeBtn, fallback: focusFallback });
   let current = null;
 
   const aboutHTML = () => {
     const m = data.meta;
     return `
     <p class="eyebrow">${esc(m.artist)} · ${esc(m.venue)} · ${esc(m.dates)}</p>
-    <h2>${esc(m.title)}</h2>
+    <h2 id="panel-title">${esc(m.title)}</h2>
     ${data.text.map((p) => `<p>${esc(p)}</p>`).join('')}
     <p class="note">${esc(data.textCredit)}</p>
     <h3>${esc(t('panels.credits'))}</h3>
@@ -53,7 +58,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
 
   const worksHTML = () => `
     <p class="eyebrow">${esc(data.meta.artist)} · ${esc(data.meta.venue)}</p>
-    <h2>${esc(t('panels.worksTitle'))}</h2>
+    <h2 id="panel-title">${esc(t('panels.worksTitle'))}</h2>
     <ol class="works-list">
       ${data.works.filter((w) => !w.id.endsWith('-screen')).map((w) => `
         <li><button data-work="${esc(w.id)}"><span class="no">${w.no}</span>
@@ -65,7 +70,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
 
   const btsHTML = () => `
     <p class="eyebrow">${esc(t('panels.btsEyebrow'))}</p>
-    <h2>${esc(t('panels.btsTitle'))}</h2>
+    <h2 id="panel-title">${esc(t('panels.btsTitle'))}</h2>
     <p>${esc(data.behindTheScenes)}</p>
     <div class="stack">
       <span>Three.js</span><span>postprocessing</span><span>Web Audio API</span><span>NumPy photo textures</span>
@@ -79,7 +84,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // group with none left says they are on the way.
   const contactHTML = () => `
     <p class="eyebrow">${esc(data.meta.title)}</p>
-    <h2>${esc(t('panels.contactTitle'))}</h2>
+    <h2 id="panel-title">${esc(t('panels.contactTitle'))}</h2>
     ${data.contacts.map((g) => {
       const items = g.items.filter((c) => c.href);
       return `
@@ -101,7 +106,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       : `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`);
     return `
     <p class="eyebrow">${esc(data.meta.title)}</p>
-    <h2>${esc(n.title)}</h2>
+    <h2 id="panel-title">${esc(n.title)}</h2>
     ${n.sections.map((s) => `
       <h3>${esc(s.h)}</h3>
       ${s.p.map((p) => `<p>${esc(p)}</p>`).join('')}
@@ -120,12 +125,13 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     current = name;
     body.innerHTML = PAGES[name]();
     panel.hidden = false;
-    roomsMenu.hidden = true;
+    setRooms(false);
     markNav();
+    panel.scrollTop = 0;
     if (!wasOpen) {
-      panel.scrollTop = 0;
       onOpenPanel();
-    }
+      dialog.opened();
+    } else dialog.rebuilt(); // moved from one panel to another through a link inside it
   };
   const close = () => {
     if (panel.hidden) return;
@@ -133,8 +139,9 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     current = null;
     markNav();
     onClosePanel();
+    dialog.closed();
   };
-  panel.querySelector('[data-close]').addEventListener('click', close);
+  closeBtn.addEventListener('click', close);
   body.addEventListener('click', (e) => {
     const n = e.target.closest('[data-nav]');
     if (n) {
@@ -158,11 +165,26 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       .join('');
   };
   buildRoomsMenu();
+  // The rooms menu: the button says whether it is open; Esc or a choice closes it and
+  // hands focus back to the button if it was inside the menu.
+  const setRooms = (open) => {
+    const inside = roomsMenu.contains(document.activeElement);
+    roomsMenu.hidden = !open;
+    roomsBtn.setAttribute('aria-expanded', String(open));
+    if (!open && inside && shown(roomsBtn)) roomsBtn.focus({ preventScroll: true });
+  };
+  setRooms(false);
   roomsMenu.addEventListener('click', (e) => {
     const b = e.target.closest('[data-room]');
     if (!b) return;
-    roomsMenu.hidden = true;
+    setRooms(false);
     onJumpRoom(b.dataset.room);
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || roomsMenu.hidden) return;
+    const within = roomsMenu.contains(document.activeElement) || document.activeElement === roomsBtn;
+    setRooms(false);
+    if (within) roomsBtn.focus({ preventScroll: true });
   });
 
   return {
@@ -170,7 +192,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     about: () => show('about'),
     works: () => show('works'),
     bts: () => show('bts'),
-    toggleRooms: () => { roomsMenu.hidden = !roomsMenu.hidden; },
+    toggleRooms: () => setRooms(roomsMenu.hidden),
     // After a language switch: rebuild what is on screen.
     refresh: () => {
       buildRoomsMenu();
