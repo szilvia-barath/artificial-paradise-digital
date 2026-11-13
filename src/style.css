@@ -610,9 +610,6 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   0%, 100% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(5px); opacity: 0.3; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .wheel b::after { animation: none; }
-}
 
 /* ---------------- Viewer & panel ---------------- */
 #viewer, #panel {
@@ -753,4 +750,12 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   body.touch #tour-caption { bottom: calc(210px + var(--safe-b)); }
   #panel-body .credits { grid-template-columns: 1fr; gap: 2px; }
   #panel-body .credits dd { margin-bottom: 10px; }
+}
+
+/* ---------------- Reduced motion ----------------
+   With prefers-reduced-motion nothing in the interface fades, slides or pulses: panels,
+   captions and the title screen appear and go at once. (The 3D effects are switched off
+   in src/fx/post.js, the tour's flight in src/tour.js.) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

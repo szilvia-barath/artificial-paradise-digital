@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { EYE } from './world/layout.js';
 import { t } from './i18n.js';
+import { reducedMotion } from './motion.js';
 
 // Guided tour: flies the camera along the stops in exhibition.json ("tour"), easing
 // between positions and turning to face each work while its caption fades in.
@@ -40,6 +41,9 @@ export class Tour {
   _next() {
     this.i++;
     const stops = this.data.tour;
+    // Reduced motion: the tour jumps from stop to stop, so the doorway waypoints (stops
+    // with nothing to look at, there only to route the flight) are passed over.
+    if (reducedMotion()) while (this.i < stops.length && !stops[this.i].look) this.i++;
     if (this.i >= stops.length) {
       this.stop();
       return;
@@ -80,8 +84,9 @@ export class Tour {
   update(dt) {
     if (!this.active) return;
     const c = this.controls;
+    const jump = reducedMotion();
     this.t += dt;
-    const k = Math.min(1, this.t / this.travel);
+    const k = jump ? 1 : Math.min(1, this.t / this.travel);
     const e = k * k * (3 - 2 * k);
     c.pos.set(this.from.x + (this.to.x - this.from.x) * e, this.from.y + (this.to.y - this.from.y) * e);
     c.vel.set(0, 0);
@@ -91,15 +96,15 @@ export class Tour {
     const targetYaw = Math.atan2(-dx, -dz);
     let dy = targetYaw - c.yaw;
     dy = Math.atan2(Math.sin(dy), Math.cos(dy));
-    c.yaw += dy * Math.min(1, dt * 2.2);
+    c.yaw += jump ? dy : dy * Math.min(1, dt * 2.2);
     const targetPitch = Math.atan2(this.look.y - EYE, Math.hypot(dx, dz)) * 0.85;
-    c.pitch += (targetPitch - c.pitch) * Math.min(1, dt * 2);
+    c.pitch += jump ? targetPitch - c.pitch : (targetPitch - c.pitch) * Math.min(1, dt * 2);
     if (k >= 1 && !this.shown && this.text) {
       this.caption.innerHTML = this.text;
       this.caption.classList.add('show');
       this.shown = true;
       if (this.onCaption) this.onCaption(this._plain(this.data.tour[this.i]));
     }
-    if (this.t >= this.travel + this.dwell) this._next();
+    if (this.t >= (jump ? 0 : this.travel) + this.dwell) this._next();
   }
 }

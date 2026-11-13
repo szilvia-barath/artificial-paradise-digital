@@ -91,15 +91,36 @@ export function createPost(renderer, scene, camera, { lowPower }) {
   composer.addPass(new EffectPass(camera, ca));
 
   let pulse = 0;
+  let calm = false;
   const baseCA = new THREE.Vector2(0.00035, 0.00025);
   return {
     composer,
     bloom,
+    // Reduced motion: no glitch pulse, no grain, no chromatic aberration. Bloom, tone
+    // mapping and the vignette do not move and stay.
+    setCalm(on) {
+      calm = !!on;
+      noise.blendMode.opacity.value = calm ? 0 : 0.12;
+      if (calm) {
+        pulse = 0;
+        glitch.uniforms.get('pulse').value = 0;
+        ca.offset.set(0, 0);
+      }
+    },
+    get calm() {
+      return calm;
+    },
+    // for the checks: what the effects are doing right now
+    state() {
+      return { calm, pulse: glitch.uniforms.get('pulse').value, grain: noise.blendMode.opacity.value, aberration: [ca.offset.x, ca.offset.y] };
+    },
     trigger(strength = 1) {
+      if (calm) return;
       pulse = Math.max(pulse, strength);
       glitch.uniforms.get('seed').value = Math.random() * 100;
     },
     update(dt, audio) {
+      if (calm) return;
       pulse = Math.max(0, pulse - dt * 1.8);
       const p = pulse * pulse;
       glitch.uniforms.get('pulse').value = p;

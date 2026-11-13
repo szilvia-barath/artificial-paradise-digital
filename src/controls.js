@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { EYE, OBSTACLES } from './world/layout.js';
+import { reducedMotion } from './motion.js';
 
 // First-person controls: drag with the mouse to look on desktop (the cursor stays free for
 // the menus and other tabs, nothing to escape from); W/S or ↑/↓ to walk, ←/→ to
@@ -302,7 +303,8 @@ export class FirstPersonControls {
     this.zoomHeld = zd ? this.zoomHeld + dt : 0;
     if (zd && this.zoomHeld > 0.3) this.zoomTarget = Math.max(1, Math.min(MAX_ZOOM, this.zoomTarget * Math.exp(zd * dt * 1.4)));
     this.zoom = Math.exp(Math.log(this.zoom) + (Math.log(this.zoomTarget) - Math.log(this.zoom)) * (1 - Math.exp(-dt * 10)));
-    if (Math.abs(this.zoom - this.zoomTarget) < 0.002) this.zoom = this.zoomTarget;
+    // reduced motion: the zoom steps, it does not glide
+    if (Math.abs(this.zoom - this.zoomTarget) < 0.002 || reducedMotion()) this.zoom = this.zoomTarget;
 
     if (this.enabled) {
       const { f, s, turn, speed, run } = this._input();
@@ -337,7 +339,8 @@ export class FirstPersonControls {
   _apply(dt) {
     const speed = this.vel.length();
     this.bob += dt * speed * 5.2;
-    const bobY = Math.sin(this.bob) * 0.018 * Math.min(1, speed / WALK);
+    // the walking bob of the camera; none with reduced motion
+    const bobY = reducedMotion() ? 0 : Math.sin(this.bob) * 0.018 * Math.min(1, speed / WALK);
     this.camera.position.set(this.pos.x, EYE + bobY, this.pos.y);
     this.camera.rotation.set(this.pitch, this.yaw, 0, 'YXZ');
   }

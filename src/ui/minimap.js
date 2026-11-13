@@ -1,5 +1,6 @@
 import { ROOMS } from '../world/layout.js';
 import { t } from '../i18n.js';
+import { reducedMotion } from '../motion.js';
 
 // Corner minimap: walls (from the collision segments), works, current room highlight
 // and the visitor as a view cone. Click a room on the map to jump there.
@@ -103,7 +104,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     ctx.fill();
     ctx.fillStyle = '#9dff6a';
     ctx.beginPath();
-    ctx.arc(X(px), Y(pz), 2.6 + Math.sin(time * 4) * 0.4, 0, Math.PI * 2);
+    ctx.arc(X(px), Y(pz), 2.6 + (reducedMotion() ? 0 : Math.sin(time * 4) * 0.4), 0, Math.PI * 2); // the dot pulses, unless motion is reduced
     ctx.fill();
   };
 }

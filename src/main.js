@@ -22,6 +22,7 @@ import { setupKeypad } from './ui/keypad.js';
 import { focusDialog } from './ui/dialog.js';
 import { localize, onLangChange, setText, t } from './i18n.js';
 import { announce, unannounce } from './ui/announce.js';
+import { reducedMotion, onMotionChange } from './motion.js';
 
 localize(data);
 
@@ -86,6 +87,9 @@ controls.setPose(r1.spawn.x, r1.spawn.z, 0);
 controls.lookAt(r1.spawn.look.x, r1.spawn.look.z);
 
 const post = createPost(renderer, scene, camera, { lowPower });
+// prefers-reduced-motion switches the moving effects off, also when it changes mid-visit
+post.setCalm(reducedMotion());
+onMotionChange((on) => post.setCalm(on));
 const audio = new Ambience();
 
 // ---------------------------------------------------------------- UI
