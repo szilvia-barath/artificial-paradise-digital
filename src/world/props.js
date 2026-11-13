@@ -504,7 +504,7 @@ export function buildProps(materials) {
     }
     obstacle(7.481, 9.87, 4.628, 5.73);
 
-    // round black café table and the folding wire chairs under Artificial Paradise II
+    // round black café table and the folding wire chairs under Artificial Paradise – The Eden project (no. 7)
     const table = new THREE.Group();
     // (DSC_0059, DSC_0083: a glossy black round top on a single black column and round foot)
     const gloss = new THREE.MeshStandardMaterial({ color: 0x0d0d0f, roughness: 0.22, metalness: 0.2 });
