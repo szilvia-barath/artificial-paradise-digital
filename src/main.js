@@ -167,7 +167,6 @@ function teleport(x, z, lookX, lookZ, pitch = 0) {
   controls.lookAt(lookX, lookZ);
   controls.pitch = pitch;
   post.trigger(0.9);
-  audio.glitchBurst();
 }
 function jumpToRoom(id) {
   const r = roomById(id);
@@ -299,7 +298,6 @@ function updateRoom() {
     setText(roomSub, `rooms.${r.id}.subtitle`);
     if (!first) {
       post.trigger(0.75);
-      audio.glitchBurst();
     }
   }
 }

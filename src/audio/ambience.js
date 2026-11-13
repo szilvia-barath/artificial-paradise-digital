@@ -1,30 +1,11 @@
 // The sound of the walk is the videos' own sound: the videos with a sound track play it
 // from their screen (attachVideos), louder the closer you stand and quieter from the next
-// room. Nothing else is synthesised for the rooms (the drone, room tone, bar murmur and
-// projector fan added on 22 Oct 2026 were invented and are gone).
+// room. Nothing else is synthesised (the drone, room tone, bar murmur, projector fan and
+// the noise burst between rooms, added on 22 Oct 2026, were invented and are gone).
 // An AnalyserNode on the master bus exposes bass/mid/high/level; the post chain reads
 // only `glitch` from it.
 
 import { roomAt } from '../world/layout.js';
-
-function noiseBuffer(ctx, seconds = 4, pink = true) {
-  const len = ctx.sampleRate * seconds;
-  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-  const d = buf.getChannelData(0);
-  let b0 = 0;
-  let b1 = 0;
-  let b2 = 0;
-  for (let i = 0; i < len; i++) {
-    const w = Math.random() * 2 - 1;
-    if (pink) {
-      b0 = 0.99765 * b0 + w * 0.099046;
-      b1 = 0.963 * b1 + w * 0.2965164;
-      b2 = 0.57 * b2 + w * 1.0526913;
-      d[i] = (b0 + b1 + b2 + w * 0.1848) * 0.18;
-    } else d[i] = w;
-  }
-  return buf;
-}
 
 export class Ambience {
   constructor() {
@@ -80,27 +61,6 @@ export class Ambience {
     this.space.connect(d1);
     d1.connect(d2).connect(damp).connect(fb).connect(d1);
     damp.connect(this.master);
-  }
-
-  // Short digital burst used when crossing between rooms.
-  glitchBurst() {
-    if (!this.ctx || this.muted) return;
-    const ctx = this.ctx;
-    const t = ctx.currentTime;
-    const src = ctx.createBufferSource();
-    src.buffer = noiseBuffer(ctx, 0.3, false);
-    const bp = ctx.createBiquadFilter();
-    bp.type = 'bandpass';
-    bp.frequency.value = 1800;
-    bp.Q.value = 3;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    for (let i = 0; i < 4; i++) {
-      g.gain.setValueAtTime(0.09 * Math.random(), t + i * 0.045);
-      g.gain.setValueAtTime(0, t + i * 0.045 + 0.02);
-    }
-    src.connect(bp).connect(g).connect(this.master);
-    src.start(t);
   }
 
   // Routes the in-world videos with a sound track through the mix (once, after start()).
