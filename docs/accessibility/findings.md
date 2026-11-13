@@ -1,6 +1,35 @@
 # Accessibility pilot: findings
 
-13 November 2026, branch `wip/a11y-pilot`. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings waiting for confirmation are in `hu-confirm.md`.
+Branch `wip/a11y-pilot`; first written 13 November 2026, brought up to date 14 November 2026. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings waiting for confirmation are in `hu-confirm.md`, those that still address the reader in `hu-address-forms.md`.
+
+## Flashing on a room change and WCAG 2.3.1
+
+WCAG 2.3.1 Three Flashes or Below Threshold (level A): nothing flashes more than three times in any one second, unless the flash is small and dim. A flash is a pair of opposing changes in relative luminance of at least 10% of full luminance, where the darker picture is below 0.80.
+
+How it was measured: the render loop was stopped and the frames drawn at a fixed step (60 a second, once 144), so the count does not depend on this machine's speed. Each frame was read back and cut into a 16 × 12 grid; the luminance of every cell was followed and its flashes counted over one second. The view was a white wall of Room 1, where a flash shows most. Window 640 × 360, three runs of each case.
+
+**The glitch pulse (blocky band displacement and a colour tear, fired on a room change or a jump), as it was on 13 November:**
+
+| Case | Most flashes in one cell in a second | Screen flashing more than 3 times a second |
+|---|---|---|
+| one room change, 60 frames a second | 1 | 0% |
+| one room change, 144 frames a second | 1 | 0% |
+| one jump to a room or a work | 3 | 0% |
+| walking to and fro through a doorway, 2 crossings a second | 2 | 0% |
+| pulse fired 30 times in a second, as a held Page Down would | 10 | 22% |
+
+A single room change stayed within the limit; one jump reached it exactly; jumps in quick succession went well over, on more than a fifth of the screen. The held Page Down that produced them came with this pilot, but any quick run of jumps would do the same. **It can flash more than three times a second, so it is removed for everyone** (decided by the reconstructor, 14 November 2026): `src/fx/post.js` no longer has the effect, and nothing replaces it. Page Down and Page Up also stopped repeating while held, because a cut from view to view thirty times a second would flash without any effect.
+
+**After the removal** (the script now presses Page Down, so what it sees is the cut from one view to the next):
+
+| Case | Most flashes in one cell in a second | Screen flashing more than 3 times a second |
+|---|---|---|
+| one press of Page Down | 0 | 0% |
+| Page Down held for a second | 0 | 0% |
+| Page Down pressed three times a second | 1 | 0% |
+| Page Down pressed six times a second | 2 | 0% |
+
+Limits of this measurement: software rendering at a small window; the grid cells are coarser than the "small safe area" of the criterion, which errs on the strict side; the videos on the screens (the works themselves) and the film grain were in the picture but not singled out; no measurement on a real display.
 
 ## The single-key shortcuts and WCAG 2.1.4
 
@@ -46,7 +75,7 @@ Still true: the keys are read by position (`event.code`), so on a French AZERTY 
 | 4.13 Orientation and navigation | in part | Landmarks: room names announced and shown, a map with a compass, positions in words in the text version (REQ 13c). Jumping to a work or a room resets the view (13a in part). Field of view is not a setting (13b). By keyboard you cannot look up or down. |
 | 4.14 Second screen devices | does not meet | Nothing built. The live region and the text version are plain text, which a braille display can show, but this was not tested. |
 | 4.15 Interaction speed | in part | Clear start and stop for the tour (REQ 15d), walking speed has two steps (walk, run). The tour's timing cannot be slowed or paused (15b), there is no help mode (15c), and turning speed is fixed (15a in part). |
-| 4.16 Avoiding sickness triggers | in part | With reduced motion: no glitch flashes, no grain, no camera bob, no eased zoom, and the tour jumps where it would fly (REQ 16a, 16b). Without the setting the glitch pulse on a room change stays; its flash rate was not measured against the three-per-second threshold. The system setting is the only switch. |
+| 4.16 Avoiding sickness triggers | in part | No glitch flashes for anyone. With reduced motion: no grain, no camera bob, no eased zoom, and the tour jumps where it would fly (REQ 16a, 16b). The glitch pulse on a room change was measured, could flash more than three times a second, and is removed for everyone; what is left stays at 2 flashes a second or fewer in the measurement above (16b). Grain and colour fringes go with the system setting, which is the only switch. |
 | 4.17 Spatial audio tracks and alternatives | in part | The videos' sound is placed in the rooms (REQ 17a). No text description of the sound, no captions (17b). |
 | 4.18 Spatial orientation: mono audio option | does not meet | No mono switch. |
 | 4.19 Captioning, subtitling and text | does not meet | The videos have no captions or subtitles. The tour's captions are text, but their size and timing cannot be changed. |

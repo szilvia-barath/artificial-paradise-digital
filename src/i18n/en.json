@@ -512,7 +512,7 @@
           "The text version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.",
           "Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. Page Down and Page Up go to the next and the previous work. Enter opens the work in front of you.",
           "For screen readers the walk writes one line at a time into a live region: the room you enter, the work in front of you, each caption of the tour. The 3D view has a name that points to the text version.",
-          "With reduced motion switched on in your system, the walk has no glitch transition, no grain, no colour fringes and no pulsing, and the tour jumps from stop to stop. The loading screen is a still image for everyone."
+          "With reduced motion switched on in your system, the walk has no grain, no colour fringes and no pulsing, and the tour jumps from stop to stop. The loading screen is a still image for everyone."
         ]
       },
       {

@@ -4,8 +4,8 @@
 // fan, the noise burst between rooms and the echo on the videos, added on 22 Oct 2026,
 // were invented and are gone). What is left sets only level and place: each video's
 // gain and stereo pan, the master gain and a compressor on the master bus.
-// An AnalyserNode on the master bus exposes bass/mid/high/level; the post chain reads
-// only `glitch` from it.
+// An AnalyserNode on the master bus exposes bass/mid/high/level/glitch; nothing reads them
+// since the glitch pulse was removed (14 November 2026).
 
 import { roomAt } from '../world/layout.js';
 

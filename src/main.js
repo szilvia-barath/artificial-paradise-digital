@@ -193,7 +193,6 @@ function teleport(x, z, lookX, lookZ, pitch = 0) {
   controls.setPose(x, z, 0);
   controls.lookAt(lookX, lookZ);
   controls.setPose(x, z, controls.yaw, pitch);
-  post.trigger(0.9);
 }
 function jumpToRoom(id) {
   const r = roomById(id);
@@ -207,7 +206,6 @@ function gotoWork(w) {
   if (tour.active) tour.stop();
   controls.resetZoom(true);
   poseAtWork(w);
-  post.trigger(0.9);
 }
 
 document.getElementById('toolbar').addEventListener('click', (e) => {
@@ -378,10 +376,7 @@ function updateRoom() {
     currentRoomId = r.id;
     setText(roomName, `rooms.${r.id}.name`);
     setText(roomSub, `rooms.${r.id}.subtitle`);
-    if (!first) {
-      post.trigger(0.75);
-      if (entered) announceRoom();
-    }
+    if (!first && entered) announceRoom();
   }
 }
 let roomSaid = null;
@@ -416,6 +411,9 @@ window.addEventListener('keydown', (e) => {
   if (e.code !== 'PageDown' && e.code !== 'PageUp') return;
   if (!entered || viewer.isOpen() || ui.isOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
   e.preventDefault();
+  // One jump for each press. A held key repeats about thirty times a second, and cutting
+  // from view to view that fast would flash (WCAG 2.3.1).
+  if (e.repeat) return;
   stepWork(e.code === 'PageDown' ? 1 : -1);
 });
 // On coming in: the room, and the work a link brought you to.
@@ -476,7 +474,6 @@ function enter(ask = true) {
     announceArrival();
   }
   syncEnabled();
-  post.trigger(1);
 }
 enterBtn.addEventListener('click', () => enter());
 // the "drag to look" hint goes once the visitor has looked around
@@ -542,7 +539,7 @@ function frame() {
     minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
     updateKeypad();
   }
-  post.update(dt, bands);
+  post.update();
   post.render(dt);
   if (entered && !window.__apNoAdapt) adapt(dt);
 }

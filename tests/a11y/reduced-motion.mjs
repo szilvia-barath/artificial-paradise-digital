@@ -1,5 +1,6 @@
-// Reduced motion: with prefers-reduced-motion the walk has no glitch transition, no grain,
-// no chromatic aberration and no pulses, and the tour jumps from stop to stop. The same
+// Reduced motion: with prefers-reduced-motion the walk has no grain, no chromatic
+// aberration and no pulses, and the tour jumps from stop to stop. (The glitch transition
+// is gone for everyone.) The same
 // run without the setting shows the effects are otherwise on, so the test can tell.
 // Usage: npm run build && npm run preview &   then   node tests/a11y/reduced-motion.mjs
 import { launch, openWalk } from './lib.mjs';
@@ -15,10 +16,9 @@ for (const mode of ['reduce', 'no-preference']) {
   const r = (report[mode] = {});
   r.mediaQuery = await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
   r.effectsAtRest = await page.evaluate(() => window.__ap.post.state());
-  // a jump to another room fires the glitch transition
-  r.afterRoomJump = await page.evaluate(() => { window.__ap.jumpToRoom('r2'); return window.__ap.post.state(); });
+  // the glitch pulse on a room change was removed for everyone (WCAG 2.3.1)
+  r.glitchPulseExists = await page.evaluate(() => { window.__ap.jumpToRoom('r2'); return typeof window.__ap.post.trigger === 'function' || 'pulse' in window.__ap.post.state(); });
   await page.waitForTimeout(600);
-  r.pulseHalfASecondLater = await page.evaluate(() => window.__ap.post.state().pulse);
   // interface: does anything animate or ease?
   r.cssAnimatedOrEased = await page.evaluate(() => {
     document.querySelector('#site-nav [data-nav="about"]').click();
@@ -70,14 +70,14 @@ const checks = [
   ['reduced: effects report calm', on.effectsAtRest.calm === true],
   ['reduced: no grain', on.effectsAtRest.grain === 0],
   ['reduced: no chromatic aberration', on.effectsAtRest.aberration.every((v) => v === 0)],
-  ['reduced: no glitch pulse on a room change', on.afterRoomJump.pulse === 0 && on.pulseHalfASecondLater === 0],
+  ['reduced: there is no glitch pulse', on.glitchPulseExists === false],
   ['reduced: no CSS animation or transition', on.cssAnimatedOrEased.length === 0],
   ['reduced: a still view does not change between frames', on.twoFramesOfAStillViewIdentical],
   ['reduced: the tour is never between two stops', on.tour.framesBetweenStops === 0 && on.tour.finished],
   ['reduced: the tour reaches every stop', on.tour.stopsVisited === on.tour.stopsToVisit],
   ['default: grain is on', off.effectsAtRest.grain > 0],
   ['default: chromatic aberration is on', off.effectsAtRest.aberration.some((v) => v > 0)],
-  ['default: a room change fires the glitch pulse', off.pulseHalfASecondLater > 0],
+  ['default: there is no glitch pulse either (removed for everyone)', off.glitchPulseExists === false],
   ['default: the tour flies between stops', off.tour.framesBetweenStops > 0],
   ['no console errors', on.consoleErrors.length === 0 && off.consoleErrors.length === 0],
 ];
