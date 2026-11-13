@@ -3,7 +3,7 @@
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
     "docDescription": "Nézd meg Szabó Kristóf - KristofLab Artificial Paradise című kiállítását fotókból rekonstruálva, bejárható 3D kiállításként a böngészőben. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.",
-    "sceneLabel": "3D kiállítási nézet",
+    "sceneLabel": "A kiállítás 3D nézete: a nyílbillentyűkkel sétálhatsz, az Enter megnyitja az előtted lévő művet. A szöveges változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt. [HU: confirm]",
     "nav": {
       "main": "Fő menü",
       "about": "A kiállításról",

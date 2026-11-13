@@ -3,7 +3,7 @@
   "ui": {
     "docTitle": "Artificial Paradise: Digital Exhibition",
     "docDescription": "Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser.",
-    "sceneLabel": "3D exhibition view",
+    "sceneLabel": "3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys.",
     "nav": {
       "main": "Main",
       "about": "About",

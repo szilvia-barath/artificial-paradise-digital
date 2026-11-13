@@ -385,6 +385,7 @@ function enter(ask = true) {
   loader.inert = true; // nothing on the title screen can be reached any more
   document.getElementById('hud').hidden = false;
   canvas.tabIndex = 0; // the 3D view takes keyboard focus once you are inside
+  canvas.removeAttribute('aria-hidden');
   audio.start();
   audio.setMuted(true);
   // the videos' own sound, played from their screens
