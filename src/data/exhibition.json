@@ -177,13 +177,13 @@
       }
     },
     {
-      "id": "w06-artificial-paradise-i",
+      "id": "w06-artificial-paradise-singapore",
       "no": 6,
       "room": "r2",
       "type": "video",
       "title": "Artificial Paradise – Singapore",
       "year": "2025",
-      "image": "img/w06-artificial-paradise-i",
+      "image": "img/w06-artificial-paradise-singapore",
       "photo": "DSC_0053",
       "hang": {
         "face": "+x",
@@ -194,7 +194,7 @@
         "h": 0.53
       },
       "video": {
-        "loop": "video/w06-artificial-paradise-i.mp4",
+        "loop": "video/w06-artificial-paradise-singapore.mp4",
         "full": [
           {
             "drive": "1HnBVZR0aTIM-EsjxCZsk0q-MmbJH68Gd",
@@ -206,17 +206,17 @@
       "desc": "artificial-paradise-videos"
     },
     {
-      "id": "w07-artificial-paradise-ii",
+      "id": "w07-artificial-paradise-eden-project",
       "no": 7,
       "room": "r2",
       "type": "video",
       "title": "Artificial Paradise – The Eden project",
       "year": "2025",
-      "image": "img/w07-artificial-paradise-ii",
+      "image": "img/w07-artificial-paradise-eden-project",
       "photo": "DSC_0056",
       "frames": [
-        "img/w07-artificial-paradise-ii",
-        "img/w07-artificial-paradise-ii-b"
+        "img/w07-artificial-paradise-eden-project",
+        "img/w07-artificial-paradise-eden-project-b"
       ],
       "hang": {
         "face": "+z",
@@ -227,7 +227,7 @@
         "h": 0.53
       },
       "video": {
-        "loop": "video/w07-artificial-paradise-ii.mp4",
+        "loop": "video/w07-artificial-paradise-eden-project.mp4",
         "full": [
           {
             "drive": "1ZtXyfb9kdgpmvFMggiM9p0MeKkwqzpdO",
@@ -239,13 +239,13 @@
       "desc": "artificial-paradise-videos"
     },
     {
-      "id": "w08-wiena-wrong-landscape-ii",
+      "id": "w08-wiena-wrong-landscape-i",
       "no": 8,
       "room": "r3",
       "type": "video",
       "title": "Wiena Wrong Landscape I",
       "year": "2023",
-      "image": "img/w08-wiena-wrong-landscape-ii",
+      "image": "img/w08-wiena-wrong-landscape-i",
       "photo": "DSC_0089",
       "hang": {
         "face": "+z",
@@ -256,7 +256,7 @@
         "h": 0.68
       },
       "video": {
-        "loop": "video/w08-wiena-wrong-landscape-ii.mp4",
+        "loop": "video/w08-wiena-wrong-landscape-i.mp4",
         "full": [
           {
             "drive": "1iwGauzuP_sOdcIbcs9J8F7Aa-qffDfqW",
@@ -403,13 +403,13 @@
       }
     },
     {
-      "id": "w15-wiena-wrong-landscape-i",
+      "id": "w15-wiena-wrong-landscape-ii",
       "no": 15,
       "room": "r4",
       "type": "video",
       "title": "Wiena Wrong Landscape II",
       "year": "2023",
-      "image": "img/w15-wiena-wrong-landscape-i",
+      "image": "img/w15-wiena-wrong-landscape-ii",
       "photo": "DSC_0120",
       "hang": {
         "face": "-z",
@@ -420,7 +420,7 @@
         "h": 0.68
       },
       "video": {
-        "loop": "video/w15-wiena-wrong-landscape-i.mp4",
+        "loop": "video/w15-wiena-wrong-landscape-ii.mp4",
         "full": [
           {
             "drive": "1RCL-S3kwpjcpTsVgCWZxLheWWjFYPBOt",
