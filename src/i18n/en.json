@@ -13,7 +13,8 @@
       "language": "Language",
       "contact": "Contact",
       "legal": "Legal notice",
-      "privacy": "Privacy"
+      "privacy": "Privacy",
+      "accessibility": "Accessibility"
     },
     "soundAsk": {
       "question": "Visit with sound?",
@@ -485,5 +486,67 @@
       }
     ],
     "updated": "Last updated: 9 November 2026"
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "sections": [
+      {
+        "h": "Status",
+        "p": [
+          "This is a pilot: the first accessible version of the walk. It does not claim conformance with WCAG. I worked from WCAG 2.2 and the W3C's XR Accessibility User Requirements, and this page says what was tested, what works and what does not work yet."
+        ]
+      },
+      {
+        "h": "What was tested, and how",
+        "p": [
+          "Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 13 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.",
+          "Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu and the language switch. All 29 steps passed.",
+          "Reduced motion: with the system setting emulated in Chromium.",
+          "Phone width: the text version at 375 pixels, with and without JavaScript.",
+          "Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, browser zoom at 200% or more, the Google Drive video player, and visits by people with disabilities."
+        ]
+      },
+      {
+        "h": "What works",
+        "p": [
+          "The text version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.",
+          "Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. Page Down and Page Up go to the next and the previous work. Enter opens the work in front of you.",
+          "For screen readers the walk writes one line at a time into a live region: the room you enter, the work in front of you, each caption of the tour. The 3D view has a name that points to the text version.",
+          "With reduced motion switched on in your system, the walk has no glitch transition, no grain, no colour fringes and no pulsing, and the tour jumps from stop to stop. The loading screen is a still image for everyone."
+        ]
+      },
+      {
+        "h": "Known gaps",
+        "p": [
+          "The live announcements were checked as text only. How a screen reader reads them in the 3D walk is not known yet.",
+          "The single-key shortcuts T, M, E and W, A, S, D cannot be switched off or changed. This fails WCAG 2.1.4, which matters most to people who use speech input.",
+          "The works have no descriptions of what they show, and the videos have no captions, transcripts or audio description. The text version gives each work's data, its place and the artist's text.",
+          "On a touch phone the 3D walk cannot be used with a screen reader. The text version can.",
+          "By keyboard you can walk and turn left and right, but not look up or down. The map can only be clicked; the rooms menu does the same by keyboard.",
+          "Walking means holding a key down. Page Down and Page Up, the rooms menu and the tour move you without holding anything.",
+          "The tour's captions change by themselves: after 5 seconds, or 14 at the videos with sound. The tour can be stopped (T or Esc) but not paused or slowed.",
+          "The contrast of the small labels over the 3D view depends on the wall behind them and was not measured.",
+          "The Hungarian wording of the new parts is still to be confirmed."
+        ]
+      },
+      {
+        "h": "Planned",
+        "p": [
+          "An audio description of the space. A view that shows what in the reconstruction was measured and what was guessed. A test with the NVDA screen reader on Windows."
+        ]
+      },
+      {
+        "h": "Contact",
+        "p": [
+          "If something here does not work for you, or you need the exhibition in another form, write to me."
+        ],
+        "links": [
+          {
+            "contact": "Digital"
+          }
+        ]
+      }
+    ],
+    "updated": "Statement of 13 November 2026"
   }
 }

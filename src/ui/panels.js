@@ -97,13 +97,21 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="notice-links"><button class="link mono" data-nav="legal">${esc(t('nav.legal'))}</button> · <button class="link mono" data-nav="privacy">${esc(t('nav.privacy'))}</button></p>
   `;
 
-  // Legal notice and privacy (texts in src/i18n/*.json "legal" / "privacy"): headed
+  // Legal notice, privacy and the accessibility statement (texts in src/i18n/*.json
+  // "legal" / "privacy" / "accessibility"): headed
   // sections with optional links, external or to another panel (`nav`).
   const noticeHTML = (key) => () => {
     const n = t(key);
-    const link = (l) => (l.nav
-      ? `<button class="link mono" data-nav="${esc(l.nav)}">${esc(l.text)}</button>`
-      : `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`);
+    // `contact` names a group in exhibition.json's contacts: its e-mail address is the link
+    const link = (l) => {
+      if (l.contact) {
+        const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
+        return mail ? `<a href="${esc(mail.href)}">${esc(mail.text)}</a>` : '';
+      }
+      return l.nav
+        ? `<button class="link mono" data-nav="${esc(l.nav)}">${esc(l.text)}</button>`
+        : `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`;
+    };
     return `
     <p class="eyebrow">${esc(data.meta.title)}</p>
     <h2 id="panel-title">${esc(n.title)}</h2>
@@ -115,7 +123,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   `;
   };
 
-  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy') };
+  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy'), accessibility: noticeHTML('accessibility') };
 
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));

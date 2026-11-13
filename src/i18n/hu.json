@@ -13,7 +13,8 @@
       "language": "Nyelv",
       "contact": "Kapcsolat",
       "legal": "Impresszum",
-      "privacy": "Adatkezelés"
+      "privacy": "Adatkezelés",
+      "accessibility": "Akadálymentesség"
     },
     "soundAsk": {
       "question": "Hanggal nézed a kiállítást?",
@@ -483,5 +484,67 @@
       }
     ],
     "updated": "Utolsó frissítés: 2026. november 9."
+  },
+  "accessibility": {
+    "title": "Akadálymentesség",
+    "sections": [
+      {
+        "h": "Állapot",
+        "p": [
+          "Ez egy pilot: a bejárás első akadálymentesített változata. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még. [HU: confirm]"
+        ]
+      },
+      {
+        "h": "Mit teszteltem, és hogyan",
+        "p": [
+          "Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 13-án: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját. [HU: confirm]",
+          "Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü és a nyelvváltó. Mind a 29 lépés sikeres volt. [HU: confirm]",
+          "Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva. [HU: confirm]",
+          "Telefonszélesség: a szöveges változat 375 képpont szélesen, JavaScripttel és anélkül. [HU: confirm]",
+          "Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal. [HU: confirm]"
+        ]
+      },
+      {
+        "h": "Mi működik",
+        "p": [
+          "A szöveges változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása. [HU: confirm]",
+          "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül oda, ahol voltál. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja az előtted lévő művet. [HU: confirm]",
+          "Képernyőolvasóknak a bejárás egyszerre egy sort ír egy élő régióba: a termet, ahová belépsz, az előtted lévő művet és a tárlatvezetés minden feliratát. A 3D nézetnek neve van, amely a szöveges változatra mutat. [HU: confirm]",
+          "Ha a rendszeredben be van kapcsolva a csökkentett mozgás, a bejárásban nincs glitch-átmenet, nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép. [HU: confirm]"
+        ]
+      },
+      {
+        "h": "Ismert hiányosságok",
+        "p": [
+          "Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a 3D bejárásban. [HU: confirm]",
+          "Az egybillentyűs parancsok (T, M, E és W, A, S, D) nem kapcsolhatók ki és nem állíthatók át. Ez nem felel meg a WCAG 2.1.4-nek, ami leginkább a beszédvezérlést használókat érinti. [HU: confirm]",
+          "A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. A szöveges változat minden mű adatait, helyét és a művész szövegét adja meg. [HU: confirm]",
+          "Érintőképernyős telefonon a 3D bejárás képernyőolvasóval nem használható. A szöveges változat igen. [HU: confirm]",
+          "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja. [HU: confirm]",
+          "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani. [HU: confirm]",
+          "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható. [HU: confirm]",
+          "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem. [HU: confirm]",
+          "Az új részek magyar szövege még megerősítésre vár. [HU: confirm]"
+        ]
+      },
+      {
+        "h": "Tervezett",
+        "p": [
+          "A tér hangos leírása (audionarráció). Egy nézet, amely megmutatja, mi mért és mi becsült a rekonstrukcióban. Teszt az NVDA képernyőolvasóval, Windowson. [HU: confirm]"
+        ]
+      },
+      {
+        "h": "Kapcsolat",
+        "p": [
+          "Ha itt valami nem működik nálad, vagy más formában lenne szükséged a kiállításra, írj nekem. [HU: confirm]"
+        ],
+        "links": [
+          {
+            "contact": "Digital"
+          }
+        ]
+      }
+    ],
+    "updated": "A nyilatkozat kelte: 2026. november 13. [HU: confirm]"
   }
 }

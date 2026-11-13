@@ -44,6 +44,9 @@ a:focus-visible{outline:3px solid var(--link);outline-offset:3px;border-radius:2
 dl{display:grid;grid-template-columns:minmax(5.5rem,max-content) 1fr;gap:.25rem 1rem;margin:.6rem 0}
 dt{font-weight:600}
 dd{margin:0}
+dl.stacked{grid-template-columns:1fr;gap:0}
+dl.stacked dt{margin-top:1rem}
+dd p:first-child{margin-top:.2rem}
 .top{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;margin:0}
 .sub,.note{color:var(--muted)}
 .note{font-size:.95rem}
@@ -151,8 +154,14 @@ ${inRoom.map(workHTML).join('\n')}
     ...(speech ? [['opening-speech', t('panels.speech')]] : []),
     ['controls', t('panels.controls')],
     ['credits', t('panels.credits')],
+    ['accessibility', t('nav.accessibility')],
     ['rights', t('textEdition.rights')],
   ];
+  // The accessibility statement, the same text as the walk's panel.
+  const statement = t('accessibility');
+  const mail = data.contacts.find((g) => g.id === 'Digital')?.items.find((c) => c.type === 'email' && c.href);
+  const statementHTML = statement.sections.map((sec) => `<dt>${esc(sec.h)}</dt>
+<dd>${sec.p.map((p) => `<p>${esc(p)}</p>`).join('')}${sec.links?.some((l) => l.contact) && mail ? `<p><a href="${esc(mail.href)}">${esc(mail.text)}</a></p>` : ''}</dd>`).join('\n');
   const other = lang === 'en'
     ? '<a href="hu/?lang=hu" lang="hu" hreflang="hu">Magyar</a>'
     : '<a href="../?lang=en" lang="en" hreflang="en">English</a>';
@@ -214,6 +223,13 @@ ${speech.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${speech.note ? `\n<p cl
 <dl>
 ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('\n')}
 </dl>
+</section>
+<section id="accessibility" aria-labelledby="accessibility-h">
+<h2 id="accessibility-h">${esc(statement.title)}</h2>
+<dl class="stacked">
+${statementHTML}
+</dl>
+<p class="note">${esc(statement.updated)}</p>
 </section>
 <section id="rights" aria-labelledby="rights-h">
 <h2 id="rights-h">${esc(t('textEdition.rights'))}</h2>
