@@ -1,6 +1,6 @@
 # Hungarian wording to confirm
 
-Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 40 strings on 14 November 2026 (53 at first; 14 were settled by the reconstructor, one was added with the 2.1.4 change). To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. Rule: the Hungarian addresses no one where it can (see `hu-address-forms.md`).
+Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 41 strings on 14 November 2026 (53 at first; 14 were settled by the reconstructor; two came with the changes of 14 November: the sentence on the letter keys in the controls text and the paragraph on flashing in the statement). To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. Rule: the Hungarian addresses no one where it can (see `hu-address-forms.md`).
 
 `python3 tests/tools/hu-confirm.py` prints the current list and checks that both language files have the same keys.
 
@@ -74,11 +74,11 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 40 str
   - HU: Ez egy pilot: a bejárás első akadálymentesített változata. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még.
   - EN: This is a pilot: the first accessible version of the walk. It does not claim conformance with WCAG. I worked from WCAG 2.2 and the W3C's XR Accessibility User Requirements, and this page says what was tested, what works and what does not work yet.
 - `accessibility.sections[1].p[0]`
-  - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 13-án: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját.
-  - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 13 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.
+  - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját.
+  - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 14 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.
 - `accessibility.sections[1].p[1]`
-  - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü és a nyelvváltó. Mind a 29 lépés sikeres volt.
-  - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu and the language switch. All 29 steps passed.
+  - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (14 lépésből 14 sikeres).
+  - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, and the letter keys with and without focus on the 3D view. All 31 steps passed. A second run checked the mouse: after a click on the map, the toolbar, the rooms menu, the language switch or a Close button, the letter keys still work (14 of 14 steps).
 - `accessibility.sections[1].p[2]`
   - HU: Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva.
   - EN: Reduced motion: with the system setting emulated in Chromium.
@@ -86,6 +86,9 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 40 str
   - HU: Telefonszélesség: a szöveges változat 375 képpont szélesen, JavaScripttel és anélkül.
   - EN: Phone width: the text version at 375 pixels, with and without JavaScript.
 - `accessibility.sections[1].p[4]`
+  - HU: Villogás: a képkockák rögzített, másodpercenként 60-as ütemben kirajzolva és cellánként összevetve. A teremváltást jelző glitch-effekt gyorsan egymást követő ugrásoknál másodpercenként akár 10-szer is villoghatott, ezért mindenkinél megszűnt. Nélküle a legtöbb mért érték 2 villanás volt egy másodperc alatt, másodpercenként hatszor lenyomott Page Down mellett.
+  - EN: Flashing: frames drawn at a fixed 60 a second and compared cell by cell. The glitch effect that marked a room change could flash up to 10 times a second when jumps followed each other quickly, so it is removed for everyone. Without it, the most measured was 2 flashes in a second, with Page Down pressed six times a second.
+- `accessibility.sections[1].p[5]`
   - HU: Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal.
   - EN: Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, browser zoom at 200% or more, the Google Drive video player, and visits by people with disabilities.
 - `accessibility.sections[2].p[0]`
@@ -122,5 +125,5 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 40 str
   - HU: A tér hangos leírása (audionarráció). Egy nézet, amely megmutatja, mi mért és mi becsült a rekonstrukcióban. Teszt az NVDA képernyőolvasóval, Windowson.
   - EN: An audio description of the space. A view that shows what in the reconstruction was measured and what was guessed. A test with the NVDA screen reader on Windows.
 - `accessibility.updated`
-  - HU: A nyilatkozat kelte: 2026. november 13.
-  - EN: Statement of 13 November 2026
+  - HU: A nyilatkozat kelte: 2026. november 14.
+  - EN: Statement of 14 November 2026

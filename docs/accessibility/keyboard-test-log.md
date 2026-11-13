@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-13: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 29 of 29 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-13: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
@@ -132,10 +132,20 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: switches the sound; does not also open the work in view
 - What happened: sound button pressed: true; viewer open: false
 
-## PASS: 7.1 T starts the tour
+## PASS: 7.0a T, M, E, W and + while focus is on a button (Sound)
+
+- Expected: nothing happens: no tour, sound unchanged, no viewer, no walking, no zoom
+- What happened: before {"tour":false,"muted":true,"zoom":1}, after {"tour":false,"muted":true,"zoom":1}; W registered: false; viewer open: false
+
+## PASS: 7.0b Pressing the mouse on the 3D view gives it focus; then M, + and W work
+
+- Expected: focus on the 3D view; M switches the sound; + zooms; W is taken as walking
+- What happened: focus on the view: true; sound after M: true; zoom after +: 1.25; W registered: true
+
+## PASS: 7.1 Tab back to the 3D view (25 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the opening caption and the first work's caption are announced
-- What happened: aria-pressed: true; announced: "Artificial Paradise. Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025. | No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | Room 1. Paintings, Paradise Factory."
+- What happened: aria-pressed: true; announced: "Artificial Paradise. Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025. | Room 1. Paintings, Paradise Factory. | No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023."
 
 ## PASS: 7.2 Esc stops the tour
 

@@ -497,10 +497,11 @@
       {
         "h": "Mit teszteltem, és hogyan",
         "p": [
-          "Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 13-án: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját. [HU: confirm]",
-          "Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü és a nyelvváltó. Mind a 29 lépés sikeres volt. [HU: confirm]",
+          "Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját. [HU: confirm]",
+          "Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (14 lépésből 14 sikeres). [HU: confirm]",
           "Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva. [HU: confirm]",
           "Telefonszélesség: a szöveges változat 375 képpont szélesen, JavaScripttel és anélkül. [HU: confirm]",
+          "Villogás: a képkockák rögzített, másodpercenként 60-as ütemben kirajzolva és cellánként összevetve. A teremváltást jelző glitch-effekt gyorsan egymást követő ugrásoknál másodpercenként akár 10-szer is villoghatott, ezért mindenkinél megszűnt. Nélküle a legtöbb mért érték 2 villanás volt egy másodperc alatt, másodpercenként hatszor lenyomott Page Down mellett. [HU: confirm]",
           "Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal. [HU: confirm]"
         ]
       },
@@ -544,6 +545,6 @@
         }
       }
     ],
-    "updated": "A nyilatkozat kelte: 2026. november 13. [HU: confirm]"
+    "updated": "A nyilatkozat kelte: 2026. november 14. [HU: confirm]"
   }
 }

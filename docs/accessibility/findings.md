@@ -2,6 +2,17 @@
 
 Branch `wip/a11y-pilot`; first written 13 November 2026, brought up to date 14 November 2026. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings waiting for confirmation are in `hu-confirm.md`, those that still address the reader in `hu-address-forms.md`.
 
+## Results on 14 November 2026
+
+Rerun on the final code of 14 November 2026, after the changes for WCAG 2.1.4 and 2.3.1 and the fixes from the review.
+
+- axe-core 4.14 (`tests/a11y/axe.mjs`): 34 states, no violations of any severity. axe could not judge the contrast of text over the 3D view or the title picture.
+- Keyboard only (`tests/a11y/keyboard.mjs`): 31 of 31 steps passed, among them all 17 works by Page Down, and the letter keys with and without focus on the 3D view.
+- Mouse and focus (`tests/a11y/focus-mouse.mjs`, new): 14 of 14 steps passed.
+- Reduced motion (`tests/a11y/reduced-motion.mjs`): 13 of 13 checks passed.
+- Flashing (`tests/a11y/flash.mjs`): no more than 2 flashes a second; see the next section.
+- Also passed: the built site loads all four rooms with no console errors on desktop and phone sizes (`smoke.mjs`); the text edition, 28 of 28 checks (`text-edition.mjs`).
+
 ## Flashing on a room change and WCAG 2.3.1
 
 WCAG 2.3.1 Three Flashes or Below Threshold (level A): nothing flashes more than three times in any one second, unless the flash is small and dim. A flash is a pair of opposing changes in relative luminance of at least 10% of full luminance, where the darker picture is below 0.80.

@@ -499,10 +499,11 @@
       {
         "h": "What was tested, and how",
         "p": [
-          "Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 13 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.",
-          "Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu and the language switch. All 29 steps passed.",
+          "Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 14 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.",
+          "Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, and the letter keys with and without focus on the 3D view. All 31 steps passed. A second run checked the mouse: after a click on the map, the toolbar, the rooms menu, the language switch or a Close button, the letter keys still work (14 of 14 steps).",
           "Reduced motion: with the system setting emulated in Chromium.",
           "Phone width: the text version at 375 pixels, with and without JavaScript.",
+          "Flashing: frames drawn at a fixed 60 a second and compared cell by cell. The glitch effect that marked a room change could flash up to 10 times a second when jumps followed each other quickly, so it is removed for everyone. Without it, the most measured was 2 flashes in a second, with Page Down pressed six times a second.",
           "Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, browser zoom at 200% or more, the Google Drive video player, and visits by people with disabilities."
         ]
       },
@@ -546,6 +547,6 @@
         }
       }
     ],
-    "updated": "Statement of 13 November 2026"
+    "updated": "Statement of 14 November 2026"
   }
 }
