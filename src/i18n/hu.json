@@ -173,7 +173,9 @@
         "floorNear": "A padlón, a bejárat közelében. [HU: confirm]",
         "floorMid": "A padlón, a terem közepén. [HU: confirm]",
         "floorFar": "A padlón, a terem túlsó végében. [HU: confirm]"
-      }
+      },
+      "skip": "A kiállítás szöveges változata [HU: confirm]",
+      "href": "./text/hu/?lang=hu"
     },
     "announce": {
       "room": "{name}. {subtitle}.",

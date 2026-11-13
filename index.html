@@ -46,6 +46,8 @@
     <meta name="twitter:image" content="https://artificial-paradise.netlify.app/og.jpg" />
   </head>
   <body>
+    <!-- First thing Tab reaches: the exhibition as text (text/, built from the same data) -->
+    <a class="skip-link" href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Text version of the exhibition</a>
     <!-- The 3D view. role="application": it is driven by keys, so a screen reader passes them
          through. Hidden from assistive technology until the visitor has entered (main.js). -->
     <canvas id="scene" role="application" aria-hidden="true" aria-label="3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys." data-i18n-attr="aria-label:sceneLabel"></canvas>
@@ -91,6 +93,7 @@
           <span class="desk" data-i18n="loader.howtoDesk">↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run</span>
           <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · pinch to zoom · tap a work to view</span>
         </div>
+        <p class="text-link"><a href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Text version of the exhibition</a></p>
       </div>
     </section>
 
@@ -105,6 +108,8 @@
       <a href="https://www.instagram.com/p/DFH19tjo3ph/" target="_blank" rel="noopener">Instagram ↗</a>
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="contact" data-i18n="nav.contact">Contact</button>
+      <span class="sep" aria-hidden="true">·</span>
+      <a href="./text/" data-i18n="textEdition.name" data-i18n-attr="href:textEdition.href">Text version</a>
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="legal" data-i18n="nav.legal">Legal notice</button>
       <span class="sep" aria-hidden="true">·</span>
@@ -193,7 +198,7 @@
     <!-- The one live region: rooms, the work in front, tour captions (src/ui/announce.js) -->
     <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
-    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL. · A kiállításhoz JavaScript és WebGL szükséges.</p></noscript>
+    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL. <a href="./text/">Text version of the exhibition</a> · <span lang="hu">A kiállításhoz JavaScript és WebGL szükséges. <a href="./text/hu/">A kiállítás szöveges változata</a></span></p></noscript>
     <script type="module" src="/src/boot.js"></script>
   </body>
 </html>

@@ -86,6 +86,20 @@ const r1 = roomById('r1');
 controls.setPose(r1.spawn.x, r1.spawn.z, 0);
 controls.lookAt(r1.spawn.look.x, r1.spawn.look.z);
 
+// Stand at a work's viewing point, facing it.
+function poseAtWork(w) {
+  const f = w._focus;
+  const d = Math.hypot(f.look[0] - f.x, f.look[2] - f.z);
+  controls.setPose(f.x, f.z, 0);
+  controls.lookAt(f.look[0], f.look[2]);
+  controls.pitch = Math.atan2(f.look[1] - EYE, d) * 0.8;
+}
+// A link to a work (?work=<id>, as the text edition's links carry): the walk opens at
+// that work instead of at the foot of the stairs. An unknown id is ignored.
+const linkedId = new URLSearchParams(location.search).get('work');
+let linkedWork = (linkedId && data.works.find((w) => w.id === linkedId && w._focus)) || null;
+if (linkedWork) poseAtWork(linkedWork);
+
 const post = createPost(renderer, scene, camera, { lowPower });
 // prefers-reduced-motion switches the moving effects off, also when it changes mid-visit
 post.setCalm(reducedMotion());
@@ -188,8 +202,10 @@ function gotoWork(w) {
   const f = w._focus;
   if (!f) return;
   if (!entered && worldReady) enter();
-  const d = Math.hypot(f.look[0] - f.x, f.look[2] - f.z);
-  teleport(f.x, f.z, f.look[0], f.look[2], Math.atan2(f.look[1] - EYE, d) * 0.8);
+  if (tour.active) tour.stop();
+  controls.resetZoom(true);
+  poseAtWork(w);
+  post.trigger(0.9);
 }
 
 document.getElementById('toolbar').addEventListener('click', (e) => {
@@ -318,7 +334,9 @@ window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
   // Enter on a focused button or link belongs to that control, not to the work in view.
   if (e.code === 'Enter' && e.target.closest?.('button, a, summary, video, iframe')) return;
-  if (e.code === 'KeyE' || e.code === 'Enter') activate(pick(0, 0));
+  // preventDefault: opening moves focus to the dialog's Close button, and without it the
+  // same Enter press would go on to click that button and shut the dialog again.
+  if ((e.code === 'KeyE' || e.code === 'Enter') && activate(pick(0, 0))) e.preventDefault();
 });
 // During the tour (controls disabled) a click / tap opens the work in view
 canvas.addEventListener('pointerup', (e) => {
@@ -351,6 +369,14 @@ function announceRoom() {
   const r = data.rooms[currentRoomId];
   announce(t('announce.room', { name: r.name, subtitle: r.subtitle.replaceAll(' · ', ', ') }), 'room');
 }
+// On coming in: the room, and the work a link brought you to.
+function announceArrival() {
+  announceRoom();
+  if (!linkedWork) return;
+  front = linkedWork;
+  announceFront(linkedWork);
+  linkedWork = null;
+}
 
 // ---------------------------------------------------------------- enter
 // The walk starts without sound; a pop-up after entering offers to switch it on.
@@ -371,7 +397,7 @@ soundAsk.addEventListener('click', (e) => {
   blockers.panel = false;
   syncEnabled();
   soundDialog.closed();
-  announceRoom();
+  announceArrival();
 });
 soundAsk.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') soundAsk.click();
@@ -396,7 +422,7 @@ function enter(ask = true) {
     soundDialog.opened();
   } else {
     focusScene();
-    announceRoom();
+    announceArrival();
   }
   syncEnabled();
   post.trigger(1);
@@ -483,7 +509,9 @@ function markReady() {
   setText(progressLabel, 'loader.ready');
   announce(t('loader.ready'), 'loader');
   enterBtn.disabled = false;
-  enterBtn.focus({ preventScroll: true });
+  // Enter gets focus when loading is done, unless the visitor has already tabbed
+  // somewhere (to the skip link, the navbar, a panel): then focus stays where it is.
+  if (document.activeElement === document.body || !document.activeElement) enterBtn.focus({ preventScroll: true });
 }
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.

@@ -128,8 +128,8 @@
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31.01.2025"
     },
     "textEdition": {
-      "name": "Text edition",
-      "docTitle": "Artificial Paradise: text edition",
+      "name": "Text version",
+      "docTitle": "Artificial Paradise: text version",
       "docDescription": "Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.",
       "intro": "This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.",
       "positionsNote": "The positions given here follow the 3D reconstruction and its decision log.",
@@ -173,7 +173,9 @@
         "floorNear": "On the floor, near the entrance.",
         "floorMid": "On the floor, in the middle of the room.",
         "floorFar": "On the floor, at the far end of the room."
-      }
+      },
+      "skip": "Text version of the exhibition",
+      "href": "./text/?lang=en"
     },
     "announce": {
       "room": "{name}. {subtitle}.",

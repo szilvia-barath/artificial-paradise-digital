@@ -51,6 +51,22 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
   outline: none;
 }
 
+/* The skip link: off screen until Tab reaches it, then at the top left above everything. */
+.skip-link {
+  position: fixed;
+  left: 8px;
+  top: 8px;
+  z-index: 90;
+  padding: 10px 14px;
+  background: #fbfbf9;
+  color: var(--ap-blue);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; outline: 2px solid var(--ap-blue); outline-offset: 2px; }
+
 /* ---------------- Loader ----------------
    Styled after the exhibition's key visual: a grainy collage of the Supertrees in
    vertical strips, a white panel, the logotype in electric blue monospace. */
@@ -178,6 +194,8 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
 .hint { font-family: var(--mono); font-size: 11px; opacity: 0.75; margin: 14px 0 0; }
 .howto { font-family: var(--mono); margin-top: 22px; font-size: 11px; opacity: 0.75; line-height: 1.7; }
 .howto .touch { display: none; }
+.text-link { font-family: var(--mono); font-size: 11px; margin: 14px 0 0; }
+.text-link a, .noscript a { color: inherit; text-underline-offset: 3px; }
 @media (pointer: coarse) {
   .howto .desk { display: none; }
   .howto .touch { display: inline; }
