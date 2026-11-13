@@ -106,13 +106,18 @@ export class FirstPersonControls {
     let moved = 0;
     this.dom.addEventListener('mousedown', (e) => {
       if (this.isTouch || e.button !== 0) return;
-      e.preventDefault(); // no text selection while dragging...
-      this.dom.focus({ preventScroll: true }); // ...and the view takes focus, so its letter keys work
+      // The browser's own click gives the view focus (it has tabindex once you are inside),
+      // so its letter keys work. That counts as a mouse focus, so the keyboard frame
+      // (:focus-visible) does not show; if the keyboard had put focus here, let go first so
+      // the click takes it again as a mouse focus.
+      if (document.activeElement === this.dom) this.dom.blur();
       dragging = true;
       moved = 0;
       lastX = e.clientX;
       lastY = e.clientY;
     });
+    // no text selection while dragging to look
+    document.addEventListener('selectstart', (e) => { if (dragging) e.preventDefault(); });
     window.addEventListener('mousemove', (e) => {
       if (!dragging || !this.enabled) return;
       const dx = e.clientX - lastX;

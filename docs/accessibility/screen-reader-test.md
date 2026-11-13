@@ -67,6 +67,7 @@ You are standing in front of No. 6, where the link from the text version put you
 | 5.4 | Tab to Sound, press Enter twice. | "Sound, toggle button, not pressed"; "pressed"; "not pressed". The work in view does not open. | |
 | 5.5 | Tab on. | "Movement keys, grouping": "Forward (↑ / W), button", "Shift: run, click to switch on or off, toggle button, not pressed", "Turn left (←)", "Back (↓ / S)", "Turn right (→)"; then "Zoom, grouping": "Zoom in (+)", "Zoom out (−)". | |
 | 5.6 | Press Enter on "Forward". | You take one step. If a work comes into view it is announced. | |
+| 5.7 | Still on a button, press T, then M, then W. | Nothing: no tour, no change of sound, no step. The letter keys work only while the 3D view has focus. | |
 
 ## 6. The tour
 
@@ -99,9 +100,9 @@ You are standing in front of No. 6, where the link from the text version put you
 | # | Do | You should see | Seen |
 |---|---|---|---|
 | 9.1 | Windows Settings → Accessibility → Visual effects → Animation effects off. Reload, enter. | No grain shimmer on the picture, no colour fringes at the edges. | |
-| 9.2 | Walk from Room 1 into Room 2. | No glitch flash as you cross. | |
-| 9.3 | Press T. | The view jumps from stop to stop; it does not fly. Captions appear at once. | |
-| 9.4 | Switch Animation effects back on, reload. | The loading screen is still a still picture; the effects are back inside. | |
+| 9.2 | Walk from Room 1 into Room 2. | Nothing flashes as you cross (the glitch effect is gone for everyone). | |
+| 9.3 | Click the 3D view, press T. | The view jumps from stop to stop; it does not fly. Captions appear at once. | |
+| 9.4 | Switch Animation effects back on, reload. | The loading screen is still a still picture; inside, the grain and the colour fringes are back, the tour flies again, and a room change still does not flash. | |
 
 ## What to send back
 

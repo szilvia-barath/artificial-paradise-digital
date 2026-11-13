@@ -118,8 +118,14 @@ const syncEnabled = () => {
 
 // Where keyboard focus goes when a dialog closes and the control that opened it is gone:
 // the 3D view once inside, the Enter button on the title screen.
-const focusFallback = () => (entered ? canvas : enterBtn.disabled ? null : enterBtn);
-const focusScene = () => { if (entered) canvas.focus({ preventScroll: true }); };
+// A dialog closed with the mouse goes to the 3D view only once inside; on the title screen
+// it goes back to its opener like a keyboard close.
+const focusFallback = (why) => (entered ? canvas : why === 'mouse' || enterBtn.disabled ? null : enterBtn);
+// Never while the sound question is open: it is a modal dialog and keeps focus.
+const focusScene = () => {
+  if (entered && document.getElementById('sound-ask').hidden) canvas.focus({ preventScroll: true });
+};
+const soundAsking = () => !document.getElementById('sound-ask').hidden;
 
 const ui = setupPanels(data, {
   onOpenWork: (w) => { ui.close(); viewer.open(w); },
@@ -220,13 +226,18 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
 for (const bar of ['site-nav', 'site-foot']) {
   document.getElementById(bar).addEventListener('click', (e) => {
     const b = e.target.closest('[data-nav]');
-    if (!b) return;
+    if (!b) {
+      // EN / HU opens nothing: a mouse click on it hands focus back to the view (boot.js
+      // has already switched the language); a keyboard press leaves focus on the button.
+      if (e.detail > 0 && e.target.closest('[data-lang]')) focusScene();
+      return;
+    }
     viewer.close();
     ui.show(b.dataset.nav);
   });
 }
 window.addEventListener('keydown', (e) => {
-  if (!entered || viewer.isOpen() || ui.isOpen()) return;
+  if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking()) return;
   // T, M (and E, W/A/S/D below and in controls.js) type a character, so they work only
   // while the 3D view has focus (WCAG 2.1.4). A click on the view, or Tab, gives it focus.
   const inView = document.activeElement === canvas;
@@ -236,8 +247,11 @@ window.addEventListener('keydown', (e) => {
 });
 // A mouse click on the toolbar hands focus back to the view afterwards, so the letter keys
 // go on working (a keyboard press leaves focus on the button, where it was put).
+// Opening the rooms menu leaves focus by it; closing it with the mouse, like any other
+// mouse click on the toolbar, sends focus back to the view. (The listener that toggles the
+// menu runs first, so aria-expanded already shows the new state.)
 document.getElementById('toolbar').addEventListener('click', (e) => {
-  if (e.detail > 0 && !e.target.closest('[data-action="rooms"]')) focusScene();
+  if (e.detail > 0 && !e.target.closest('[data-action="rooms"][aria-expanded="true"]')) focusScene();
 });
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
@@ -246,9 +260,9 @@ const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
 
 // Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.
 const zoomLevel = document.getElementById('zoom-level');
-zoomLevel.addEventListener('click', (e) => {
+zoomLevel.addEventListener('click', () => {
   controls.resetZoom();
-  if (e.detail > 0) focusScene(); // clicked with the mouse: back to the view
+  focusScene(); // the readout hides itself on the next frame, so focus goes back to the view
 });
 document.getElementById('rooms-menu').addEventListener('click', (e) => { if (e.detail > 0) focusScene(); });
 let shownZoom = 1;
@@ -266,7 +280,11 @@ function updateZoom() {
   }
 }
 
-const minimap = setupMinimap(document.getElementById('minimap'), arch.segments, data.works, (id) => jumpToRoom(id));
+const minimapEl = document.getElementById('minimap');
+const minimap = setupMinimap(minimapEl, arch.segments, data.works, (id) => jumpToRoom(id));
+// The map can only be clicked and cannot take focus itself: a click on it hands focus back
+// to the view, like the toolbar, so the letter keys go on working.
+minimapEl.addEventListener('click', focusScene);
 
 // ---------------------------------------------------------------- picking
 const raycaster = new THREE.Raycaster();
@@ -347,7 +365,7 @@ function activate(ud) {
 }
 controls.onTap = (x, y) => activate(pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1));
 window.addEventListener('keydown', (e) => {
-  if (!entered || viewer.isOpen() || ui.isOpen()) return;
+  if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking()) return;
   // Enter on a focused button or link belongs to that control, not to the work in view.
   if (e.code === 'Enter' && e.target.closest?.('button, a, summary, video, iframe')) return;
   // preventDefault: opening moves focus to the dialog's Close button, and without it the
@@ -409,7 +427,7 @@ function stepWork(d) {
 }
 window.addEventListener('keydown', (e) => {
   if (e.code !== 'PageDown' && e.code !== 'PageUp') return;
-  if (!entered || viewer.isOpen() || ui.isOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking() || e.ctrlKey || e.metaKey || e.altKey) return;
   e.preventDefault();
   // One jump for each press. A held key repeats about thirty times a second, and cutting
   // from view to view that fast would flash (WCAG 2.3.1).
@@ -529,7 +547,7 @@ function frame() {
   updateZoom();
   updateRoom();
   audio.spotlight = tour.work;
-  const bands = audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
+  audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
   gallery.update(t, dt, camera, controls.zoom);
   letItFlow.update(t, lights.proj, camera.position);

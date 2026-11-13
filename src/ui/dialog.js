@@ -4,16 +4,20 @@
 
 const FOCUSABLE = 'a[href], button:not([disabled]), summary, video[controls], iframe, [tabindex]:not([tabindex="-1"])';
 
-// Was the last thing the visitor used a pointer (mouse, touch) or the keyboard?
+// Was the last thing the visitor used a mouse, or the keyboard? Taps (and the taps a
+// screen reader sends on a phone) count as neither, so they keep "back to the opener".
 let byPointer = false;
-document.addEventListener('pointerdown', () => { byPointer = true; }, true);
+document.addEventListener('pointerdown', (e) => { byPointer = e.pointerType === 'mouse'; }, true);
 document.addEventListener('keydown', () => { byPointer = false; }, true);
 
 // Can this element take focus right now? (.gone is the title screen fading out.)
 export const shown = (n) => !!n && n.isConnected && !n.closest('[hidden], [inert], .gone') && n.getClientRects().length > 0;
 
 // el: the dialog. initial(): the element to focus on opening (default: the first control).
-// fallback(): where focus goes on closing if the opener is gone or hidden by then.
+// fallback(why): where focus goes on closing if the opener is gone or hidden by then.
+// Called with 'mouse' when the dialog was closed with the mouse: if it returns an element
+// then (main.js returns the 3D view once inside), focus goes there even though the opener
+// is still on screen, so the view's letter keys work again without another click.
 export function focusDialog(el, { initial, fallback } = {}) {
   let opener = null;
   let open = false;
@@ -57,10 +61,9 @@ export function focusDialog(el, { initial, fallback } = {}) {
     closed() {
       if (!open) return;
       open = false;
-      // Keyboard: back to the control that opened it. Mouse: to the fallback (the 3D view
-      // once inside), so the view's letter keys work again without another click.
-      const there = fallback && fallback();
-      const target = byPointer && there ? there : shown(opener) ? opener : there;
+      // Keyboard: back to the control that opened it. Mouse, inside the walk: to the 3D view.
+      const viaMouse = byPointer && fallback && fallback('mouse');
+      const target = viaMouse || (shown(opener) ? opener : fallback && fallback());
       opener = null;
       target?.focus({ preventScroll: true });
     },

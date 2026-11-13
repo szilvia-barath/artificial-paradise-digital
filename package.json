@@ -11,7 +11,7 @@
     "images": "node scripts/optimize-images.mjs",
     "textures": "node scripts/make_bricks.mjs",
     "plant": "node scripts/make_plant.mjs",
-    "check:a11y": "node tests/a11y/smoke.mjs && node tests/a11y/loader-weight.mjs && node tests/a11y/text-edition.mjs && node tests/a11y/reduced-motion.mjs && node tests/a11y/flash.mjs && node tests/a11y/keyboard.mjs && node tests/a11y/axe.mjs && python3 tests/tools/hu-confirm.py"
+    "check:a11y": "node tests/a11y/smoke.mjs && node tests/a11y/loader-weight.mjs && node tests/a11y/text-edition.mjs && node tests/a11y/reduced-motion.mjs && node tests/a11y/flash.mjs && node tests/a11y/keyboard.mjs && node tests/a11y/focus-mouse.mjs && node tests/a11y/axe.mjs && python3 tests/tools/hu-confirm.py"
   },
   "dependencies": {
     "postprocessing": "^6.39.5",
