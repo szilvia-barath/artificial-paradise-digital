@@ -104,7 +104,7 @@
       "btsEyebrow": "A kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
+      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek. A betűbillentyűk és a nagyítás billentyűi akkor működnek, ha a 3D nézeten van a fókusz: a nézetre kattintva vagy a Tab billentyűvel vihető rá. [HU: confirm]",
       "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás.",
       "linkFacebook": "A MAMŰ a Facebookon",
       "linkMamuInstagram": "A MAMŰ az Instagramon",
@@ -517,7 +517,7 @@
         "h": "Ismert hiányosságok",
         "p": [
           "Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a 3D bejárásban. [HU: confirm]",
-          "Az egybillentyűs parancsok (T, M, E és W, A, S, D) nem kapcsolhatók ki és nem állíthatók át. Ez nem felel meg a WCAG 2.1.4-nek, ami leginkább a beszédvezérlést használókat érinti. [HU: confirm]",
+          "A T, M, E, W, A, S, D betűbillentyűk és a nagyítás billentyűi csak akkor működnek, ha a 3D nézeten van a fókusz, ahogy a WCAG 2.1.4 kéri; a fókusz a nézetre kattintva vagy a Tab billentyűvel vihető rá. Nem kapcsolhatók ki és nem állíthatók át. [HU: confirm]",
           "A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. A szöveges változat minden mű adatait, helyét és a művész szövegét adja meg. [HU: confirm]",
           "Érintőképernyős telefonon a 3D bejárás képernyőolvasóval nem használható. A szöveges változat igen. [HU: confirm]",
           "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja. [HU: confirm]",

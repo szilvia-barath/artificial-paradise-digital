@@ -13,7 +13,7 @@ import { VIDEOS, enableVideoSound } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
 import { Ambience } from './audio/ambience.js';
-import { FirstPersonControls } from './controls.js';
+import { FirstPersonControls, LETTER_KEYS } from './controls.js';
 import { Tour } from './tour.js';
 import { setupPanels } from './ui/panels.js';
 import { setupViewer } from './ui/viewer.js';
@@ -229,9 +229,17 @@ for (const bar of ['site-nav', 'site-foot']) {
 }
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
-  if (e.code === 'KeyT') toggleTour();
-  else if (e.code === 'KeyM') toggleSound();
-  else if (tour.active && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'].includes(e.code)) tour.stop();
+  // T, M (and E, W/A/S/D below and in controls.js) type a character, so they work only
+  // while the 3D view has focus (WCAG 2.1.4). A click on the view, or Tab, gives it focus.
+  const inView = document.activeElement === canvas;
+  if (e.code === 'KeyT' && inView) toggleTour();
+  else if (e.code === 'KeyM' && inView) toggleSound();
+  else if (tour.active && ((LETTER_KEYS.has(e.code) && inView) || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'].includes(e.code))) tour.stop();
+});
+// A mouse click on the toolbar hands focus back to the view afterwards, so the letter keys
+// go on working (a keyboard press leaves focus on the button, where it was put).
+document.getElementById('toolbar').addEventListener('click', (e) => {
+  if (e.detail > 0 && !e.target.closest('[data-action="rooms"]')) focusScene();
 });
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
@@ -240,7 +248,11 @@ const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
 
 // Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.
 const zoomLevel = document.getElementById('zoom-level');
-zoomLevel.addEventListener('click', () => controls.resetZoom());
+zoomLevel.addEventListener('click', (e) => {
+  controls.resetZoom();
+  if (e.detail > 0) focusScene(); // clicked with the mouse: back to the view
+});
+document.getElementById('rooms-menu').addEventListener('click', (e) => { if (e.detail > 0) focusScene(); });
 let shownZoom = 1;
 function updateZoom() {
   const fov = baseFov / controls.zoom;
@@ -272,7 +284,7 @@ let mouseInside = false;
 // view (the one Enter opens) is named on screen and to screen readers.
 let keyNav = false;
 const MOVE_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
-window.addEventListener('keydown', (e) => { if (MOVE_KEYS.has(e.code)) keyNav = true; });
+window.addEventListener('keydown', (e) => { if (MOVE_KEYS.has(e.code) && (!LETTER_KEYS.has(e.code) || document.activeElement === canvas)) keyNav = true; });
 for (const type of ['pointerdown', 'wheel']) canvas.addEventListener(type, () => { keyNav = false; }, { passive: true });
 canvas.addEventListener('mousemove', (e) => {
   mouseInside = true;
@@ -342,6 +354,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Enter' && e.target.closest?.('button, a, summary, video, iframe')) return;
   // preventDefault: opening moves focus to the dialog's Close button, and without it the
   // same Enter press would go on to click that button and shut the dialog again.
+  if (e.code === 'KeyE' && document.activeElement !== canvas) return; // E is a character key: only in the 3D view
   if ((e.code === 'KeyE' || e.code === 'Enter') && activate(pick(0, 0))) e.preventDefault();
 });
 // During the tour (controls disabled) a click / tap opens the work in view

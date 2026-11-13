@@ -4,6 +4,11 @@
 
 const FOCUSABLE = 'a[href], button:not([disabled]), summary, video[controls], iframe, [tabindex]:not([tabindex="-1"])';
 
+// Was the last thing the visitor used a pointer (mouse, touch) or the keyboard?
+let byPointer = false;
+document.addEventListener('pointerdown', () => { byPointer = true; }, true);
+document.addEventListener('keydown', () => { byPointer = false; }, true);
+
 // Can this element take focus right now? (.gone is the title screen fading out.)
 export const shown = (n) => !!n && n.isConnected && !n.closest('[hidden], [inert], .gone') && n.getClientRects().length > 0;
 
@@ -52,7 +57,10 @@ export function focusDialog(el, { initial, fallback } = {}) {
     closed() {
       if (!open) return;
       open = false;
-      const target = shown(opener) ? opener : fallback && fallback();
+      // Keyboard: back to the control that opened it. Mouse: to the fallback (the 3D view
+      // once inside), so the view's letter keys work again without another click.
+      const there = fallback && fallback();
+      const target = byPointer && there ? there : shown(opener) ? opener : there;
       opener = null;
       target?.focus({ preventScroll: true });
     },

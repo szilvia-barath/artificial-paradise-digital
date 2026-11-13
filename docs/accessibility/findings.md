@@ -2,29 +2,28 @@
 
 13 November 2026, branch `wip/a11y-pilot`. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings waiting for confirmation are in `hu-confirm.md`.
 
-## The existing single-key shortcuts against WCAG 2.1.4
+## The single-key shortcuts and WCAG 2.1.4
 
 WCAG 2.1.4 Character Key Shortcuts (level A) says: if a shortcut uses only letter, number, punctuation or symbol keys, the visitor must be able to turn it off, or remap it to include a modifier key, or it must be active only while the component it belongs to has focus. The point is speech input: dictated words arrive as key presses, and a stray "t" should not start something.
 
-What the code does (not changed in this pilot, as asked):
+**As found (13 November 2026, first run):** T, M, E, W/A/S/D and the zoom keys (+ − = _ 0) listened on `window` and were active whenever you were inside with no panel open, whatever had focus, with no way to switch them off or remap them. That failed the criterion.
 
-| Keys | What they do | Where they listen | Active when | Turn off / remap | 2.1.4 |
-|---|---|---|---|---|---|
-| T | start or stop the tour | `window`, `src/main.js` | inside the walk, no panel or viewer open, whatever has focus (also a button or a link) | no | fails |
-| M | sound on or off | `window`, `src/main.js` | same | no | fails |
-| E | open the work in the middle of the view | `window`, `src/main.js` | same | no | fails |
-| W, S | walk forward, back | `window`, `src/controls.js` | same; they act while held | no | fails (↑ and ↓ do the same, but an alternative key does not meet the criterion) |
-| A, D | step sideways | `window`, `src/controls.js` | same | no | fails; no other key does this |
-| + − = _ 0 | zoom in, out, reset | `window`, `src/controls.js` | inside the walk, also during the tour | no | fails (not on your list, same pattern) |
+**Changed on 14 November 2026 (decided by the reconstructor, who reversed her earlier "do not redesign"):** the criterion's third option. These keys now work only while the 3D view has focus.
 
-Details that matter for the fix:
+| Keys | What they do | Active when | 2.1.4 |
+|---|---|---|---|
+| T | start or stop the tour | the 3D view has focus | meets (focus-scoped) |
+| M | sound on or off | the 3D view has focus | meets |
+| E | open the work in the middle of the view | the 3D view has focus | meets |
+| W, A, S, D | walk, step sideways | the 3D view has focus | meets |
+| + − = _ 0 | zoom in, out, reset | the 3D view has focus | meets |
+| Page Down, Page Up, Enter, Esc, Tab, arrows, Shift | next / previous work, open, close, move focus, walk and turn, run | as before | outside the criterion: none types a character |
 
-- The keys are read by position (`event.code`), not by letter. On a Hungarian QWERTZ keyboard they sit where the legend says; on a French AZERTY keyboard "W" is the key labelled Z. Speech input sends the letter, so "t", "m" and "e" hit T, M and E.
-- They are off on the title screen and while a panel, the viewer or the sound question is open, and the site has no text field, which limits the damage. It does not meet the criterion.
-- T, M and E fire even when focus is on a button. Enter no longer does (fixed in this pilot), because Enter on a button has to belong to the button.
-- The keys this pilot added are outside 2.1.4, because none is a character key: Page Down and Page Up (next and previous work), Enter (open), Esc (close), Tab, the arrows.
+How the view gets focus: Tab reaches it (it is the second stop on the page, after the skip link); pressing the mouse on it gives it focus (`controls.js`, where it used to give focus up); Page Down, Page Up and "Walk to this work" put focus on it; so does closing the sound question. A mouse click on the toolbar, the rooms menu or the zoom readout hands focus back to the view afterwards, and so does closing a panel or the viewer with the mouse, so someone who walks with W/A/S/D and clicks with the mouse does not lose the keys. A keyboard press on a button leaves focus on the button: the letter keys then do nothing until focus is back on the view, and the arrows still walk.
 
-The smallest fix, for after the pilot: make the letter keys and the zoom keys active only while the 3D view has focus (the criterion's third option). The view already takes focus from the keyboard; it would also have to take focus on a mouse click, where it now gives focus up on purpose (`document.activeElement.blur()` in `controls.js`). A remap or an off switch would need a setting, and a setting needs somewhere to be kept, which the storage rule (only `ap-lang`) does not allow yet.
+Checked by the keyboard run (`keyboard-test-log.md`, steps 7.0a and 7.0b): with focus on a button, T, M, E, W and + do nothing; after pressing the mouse on the view, M, + and W work.
+
+Still true: the keys are read by position (`event.code`), so on a French AZERTY keyboard "W" is the key labelled Z. They cannot be switched off or remapped; the criterion does not ask for that once they are focus-scoped.
 
 ## XR Accessibility User Requirements (XAUR, W3C Note, 25 August 2021)
 
@@ -36,7 +35,7 @@ The smallest fix, for after the pilot: make the letter keys and the zoom keys ac
 | 4.2 Motion agnostic interactions | meets | Nothing needs body movement or a pointer gesture: every control and every work can be reached from the keyboard alone, and mouse, wheel, touch and keyboard work side by side (REQ 2a, 2b, 2c). One limit: by keyboard you cannot look up or down freely; a jump to a work points the view at it. |
 | 4.3 Immersive personalization | in part | Non-critical animation goes with the system's reduced-motion setting, sound is off by default and has a switch (REQ 3b). No symbol sets (3a). |
 | 4.4 Interaction and target customization | in part | No fine pointing is needed: Page Down and Page Up reach every work, Enter opens it, nothing needs two keys at once, the on-screen Shift is a toggle (REQ 4a, 4c, 4d in part). Target sizes are not adjustable; some are small (4b). |
-| 4.5 Voice commands | does not meet | Not built. Controls have names that contain their visible text, which speech software needs, but the single-key shortcuts get in its way (see above). |
+| 4.5 Voice commands | does not meet | No voice commands of our own. What speech software needs from a page is there: controls have names that contain their visible text, and the letter shortcuts act only while the 3D view has focus (see above). Not tested with speech software. |
 | 4.6 Color changes | does not meet | No high-contrast skin. The text version follows the system's light or dark setting. |
 | 4.7 Magnification context and resetting | in part | The view can be zoomed to 4× and reset with 0, the room label and the map show where you are (REQ 7a). Interface elements do not enlarge or reflow in the walk (7b); the text version does. |
 | 4.8 Critical messaging and alerts | in part | The walk has no critical alerts. The messages it has (ready, could not start, room, work) go to a live region that is read without moving focus (REQ 8a). |

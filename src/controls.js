@@ -14,6 +14,7 @@ const WALK = 1.9;
 const RUN = 3.6;
 const TURN = 1.75; // rad/s at full key turn (~100°/s)
 export const MAX_ZOOM = 4;
+export const LETTER_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD']);
 
 export class FirstPersonControls {
   constructor(camera, dom, segments) {
@@ -106,7 +107,7 @@ export class FirstPersonControls {
     this.dom.addEventListener('mousedown', (e) => {
       if (this.isTouch || e.button !== 0) return;
       e.preventDefault(); // no text selection while dragging...
-      document.activeElement?.blur?.(); // ...but still take focus off the last button pressed
+      this.dom.focus({ preventScroll: true }); // ...and the view takes focus, so its letter keys work
       dragging = true;
       moved = 0;
       lastX = e.clientX;
@@ -135,8 +136,15 @@ export class FirstPersonControls {
     window.addEventListener('keydown', (e) => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return; // leave browser shortcuts (Ctrl +/−) alone
+      // Keys that type a character (W, A, S, D and the zoom keys + − = _ 0) work only while
+      // the 3D view has focus (WCAG 2.1.4): elsewhere on the page they do nothing, so words
+      // sent by speech input cannot move or zoom the view. Arrows and Shift are not
+      // character keys and work as before.
+      const inView = document.activeElement === this.dom;
+      if (LETTER_KEYS.has(e.code) && !inView) return;
       this.keys.add(e.code);
       const z = e.key === '+' || e.key === '=' ? 1 : e.key === '-' || e.key === '_' ? -1 : 0;
+      if ((z || e.key === '0') && !inView) return;
       if (z) {
         if (!e.repeat) this.zoomBy(z > 0 ? 1.25 : 0.8);
         this.zoomKeys.set(e.code, z);

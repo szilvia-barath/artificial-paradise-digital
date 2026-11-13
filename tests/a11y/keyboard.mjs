@@ -188,7 +188,36 @@ await wait(500);
 step('6.3 Enter on the Sound button', 'switches the sound; does not also open the work in view', `sound button pressed: ${await page.getAttribute('[data-action="sound"]', 'aria-pressed')}; viewer open: ${await open('#viewer')}`, (await page.getAttribute('[data-action="sound"]', 'aria-pressed')) === 'true' && !(await open('#viewer')));
 await page.keyboard.press('Enter');
 
-// ---------------------------------------------------------------- 7. the tour
+// ---------------------------------------------------------------- 7. letter keys only in the 3D view; the tour
+// Focus is on the Sound button here. T, M, E, W and + are character keys: nothing may happen.
+const before = await page.evaluate(() => ({ tour: window.__ap.tour.active, muted: window.__ap.audio.muted, zoom: window.__ap.controls.zoomTarget }));
+for (const k of ['KeyT', 'KeyM', 'KeyE', '+']) await page.keyboard.press(k);
+await page.keyboard.down('KeyW');
+await wait(300);
+const wHeld = await page.evaluate(() => window.__ap.controls.keys.has('KeyW'));
+await page.keyboard.up('KeyW');
+const after = await page.evaluate(() => ({ tour: window.__ap.tour.active, muted: window.__ap.audio.muted, zoom: window.__ap.controls.zoomTarget }));
+step('7.0a T, M, E, W and + while focus is on a button (Sound)', 'nothing happens: no tour, sound unchanged, no viewer, no walking, no zoom', `before ${JSON.stringify(before)}, after ${JSON.stringify(after)}; W registered: ${wHeld}; viewer open: ${await open('#viewer')}`, JSON.stringify(before) === JSON.stringify(after) && !wHeld && !(await open('#viewer')));
+// press, drag a little, release: a look, not a click on a work
+await page.mouse.move(640, 300);
+await page.mouse.down();
+await page.mouse.move(665, 300, { steps: 3 });
+await page.mouse.up();
+await wait(200);
+const clicked = await isOn('#scene');
+await page.keyboard.press('KeyM');
+const mOn = await page.getAttribute('[data-action="sound"]', 'aria-pressed');
+await page.keyboard.press('KeyM');
+await page.keyboard.press('+');
+const zoomed = await page.evaluate(() => window.__ap.controls.zoomTarget);
+await page.keyboard.press('0');
+await page.keyboard.down('KeyW');
+await wait(300);
+const wNow = await page.evaluate(() => window.__ap.controls.keys.has('KeyW'));
+await page.keyboard.up('KeyW');
+step('7.0b Pressing the mouse on the 3D view gives it focus; then M, + and W work', 'focus on the 3D view; M switches the sound; + zooms; W is taken as walking', `focus on the view: ${clicked}; sound after M: ${mOn}; zoom after +: ${zoomed}; W registered: ${wNow}`, clicked && mOn === 'true' && zoomed > 1 && wNow);
+await page.keyboard.press('Tab'); // off the view, to come back to it by keyboard
+tabs = await tabTo('#scene');
 await wait(1200);
 await said();
 await page.keyboard.press('KeyT');
@@ -204,13 +233,12 @@ await wait(1300);
 await toCaption(1);
 await wait(1300);
 heard = (await said()).join(' | ');
-step('7.1 T starts the tour', 'Tour button reads as pressed; the opening caption and the first work\'s caption are announced', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && heard.includes('Artificial Paradise.') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.'));
+step(`7.1 Tab back to the 3D view (${tabs} presses); T starts the tour`, 'Tour button reads as pressed; the opening caption and the first work\'s caption are announced', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && heard.includes('Artificial Paradise.') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.'));
 await page.keyboard.press('Escape');
 await wait(1500);
 heard = (await said()).join(' | ');
 step('7.2 Esc stops the tour', 'Tour button not pressed; "Tour stopped." announced', `aria-pressed: ${await page.getAttribute('[data-action="tour"]', 'aria-pressed')}; announced: "${heard}"`, (await page.getAttribute('[data-action="tour"]', 'aria-pressed')) === 'false' && heard.includes('Tour stopped.'));
-await page.keyboard.press('Shift+Tab'); // from Sound back to Rooms
-await page.keyboard.press('Shift+Tab'); // Tour
+await tabTo('[data-action="tour"]');
 at = await focusName(page);
 await page.keyboard.press('Enter');
 await wait(600);

@@ -104,7 +104,7 @@
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
-      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse.",
+      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work while the 3D view has focus: click the view or Tab to it.",
       "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work.",
       "linkFacebook": "MAMŰ on Facebook",
       "linkMamuInstagram": "MAMŰ on Instagram",
@@ -519,7 +519,7 @@
         "h": "Known gaps",
         "p": [
           "The live announcements were checked as text only. How a screen reader reads them in the 3D walk is not known yet.",
-          "The single-key shortcuts T, M, E and W, A, S, D cannot be switched off or changed. This fails WCAG 2.1.4, which matters most to people who use speech input.",
+          "The letter keys T, M, E, W, A, S, D and the zoom keys work only while the 3D view has focus, which is what WCAG 2.1.4 asks; a click on the view or Tab gives it focus. They cannot be switched off or changed.",
           "The works have no descriptions of what they show, and the videos have no captions, transcripts or audio description. The text version gives each work's data, its place and the artist's text.",
           "On a touch phone the 3D walk cannot be used with a screen reader. The text version can.",
           "By keyboard you can walk and turn left and right, but not look up or down. The map can only be clicked; the rooms menu does the same by keyboard.",
