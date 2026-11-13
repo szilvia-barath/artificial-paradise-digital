@@ -172,7 +172,7 @@
       "© OpenStreetMap-közreműködők (ODbL)"
     ]
   ],
-  "behindTheScenes": "Az alaprajz a galéria saját alaprajza (Alaprajz_ok new.jpg) alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falakon újrarajzolt téglaminták láthatók, a galériában mért 7,7 cm-es téglasorokhoz méretezve. A festmények és a nyomatok a művész saját reprodukciói, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory növénye a művész saját 3D-modellje; az installáció többi része és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; az egyetlen hang a videók saját hangja, amelyet a Web Audio a képernyőjükről szólaltat meg.",
+  "behindTheScenes": "Az alaprajz a galéria alaprajza alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falakon újrarajzolt téglaminták láthatók, a galériában mért 7,7 cm-es téglasorokhoz méretezve. A festmények és a nyomatok a művész saját reprodukciói, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory növénye a művész saját 3D-modellje; az installáció többi része és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; az egyetlen hang a videók saját hangja, amelyet a Web Audio a képernyőjükről szólaltat meg.",
   "rooms": {
     "r1": {
       "name": "1. terem",
@@ -301,7 +301,7 @@
       ]
     }
   },
-  "source": "A címek, méretek, technikák és évszámok két forrásból származnak: a galériában, a mosdó ajtaja mellett kifüggesztett teremlapról és a galéria alaprajzáról (Alaprajz_ok new.jpg), a művész későbbi javításaival. A termek alaprajza erről az alaprajzról készült, az épület OpenStreetMap-körvonalával összevetve.",
+  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról és a galéria alaprajzáról származnak, a művész javításaival. A termek alaprajza erről az alaprajzról készült, az épület OpenStreetMap-körvonalával összevetve.",
   "tourIntro": "Le a lépcsőn, a MAMŰ pincéjébe: KristofLab Artificial Paradise című kiállítása, 2025. január 10-31.",
   "openingSpeech": {
     "author": "Zemlényi-Kovács Barnabás",

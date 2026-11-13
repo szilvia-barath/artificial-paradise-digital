@@ -174,7 +174,7 @@
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "The floor plan is traced from the gallery's own floor plan (Alaprajz_ok new.jpg) and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls uses redrawn brick patterns, scaled so each course is 7.7 cm as measured in the gallery. The paintings and prints are the artist’s own reproductions, and the screens play the artist's videos with their own sound. The plant of Paradise Factory is the artist's own 3D model; the rest of the installation and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the only sound is the videos' own, played from their screens with Web Audio.",
+  "behindTheScenes": "The floor plan is traced from the gallery's floor plan and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls uses redrawn brick patterns, scaled so each course is 7.7 cm as measured in the gallery. The paintings and prints are the artist’s own reproductions, and the screens play the artist's videos with their own sound. The plant of Paradise Factory is the artist's own 3D model; the rest of the installation and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the only sound is the videos' own, played from their screens with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -303,7 +303,7 @@
       ]
     }
   },
-  "source": "Titles, sizes, media and years come from two sources: the room sheet displayed in the gallery, beside the toilet door, and the gallery's floor plan (Alaprajz_ok new.jpg), with later corrections from the artist. The plan of the rooms is traced from that floor plan and checked against the building's outline on OpenStreetMap.",
+  "source": "Titles, sizes, media and years come from the room sheet displayed in the gallery and the gallery's floor plan, with the artist's corrections. The plan of the rooms is traced from that floor plan and checked against the building's outline on OpenStreetMap.",
   "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025.",
   "openingSpeech": {
     "author": "Barnabás Zemlényi-Kovács",
