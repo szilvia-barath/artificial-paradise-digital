@@ -1,14 +1,24 @@
 # Hungarian wording to confirm
 
-Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 strings, all added in the accessibility pilot. To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. The no-JavaScript notice in `index.html` repeats one of them without the mark ("A kiállítás szöveges változata").
+Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 40 strings on 14 November 2026 (53 at first; 14 were settled by the reconstructor, one was added with the 2.1.4 change). To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. Rule: the Hungarian addresses no one where it can (see `hu-address-forms.md`).
 
 `python3 tests/tools/hu-confirm.py` prints the current list and checks that both language files have the same keys.
 
-## Where a work is (text version)
-
+- `ui.panels.controlsDesk`
+  - HU: Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek. A betűbillentyűk és a nagyítás billentyűi akkor működnek, ha a 3D nézeten van a fókusz: a nézetre kattintva vagy a Tab billentyűvel vihető rá.
+  - EN: Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work while the 3D view has focus: click the view or Tab to it.
+- `ui.textEdition.intro`
+  - HU: Ez az oldal szövegként adja vissza a kiállítást: a négy termet a bejárás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.
+  - EN: This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.
 - `ui.textEdition.positionsNote`
   - HU: Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik.
   - EN: The positions given here follow the 3D reconstruction and its decision log.
+- `ui.textEdition.toWalk`
+  - HU: Tovább a 3D bejáráshoz
+  - EN: Go to the 3D walk
+- `ui.textEdition.openInWalk`
+  - HU: {no}. mű, {title}: megnyitás a 3D bejárásban
+  - EN: Open No. {no}, {title}, in the 3D walk
 - `ui.textEdition.pos.left`
   - HU: Belépéskor a bal oldali falon.
   - EN: On the left wall as you enter.
@@ -18,9 +28,6 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `ui.textEdition.pos.ahead`
   - HU: Belépéskor a szemközti falon.
   - EN: On the wall facing you as you enter.
-- `ui.textEdition.pos.behind`
-  - HU: Belépéskor a hátad mögötti falon.
-  - EN: On the wall behind you as you enter.
 - `ui.textEdition.pos.only`
   - HU: Ezen a falon ez az egyetlen mű.
   - EN: It is the only work on this wall.
@@ -45,12 +52,6 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `ui.textEdition.pos.doorAheadRight`
   - HU: A következő terembe ({room}) vezető átjárótól jobbra van.
   - EN: It hangs to the right of the way through to {room}.
-- `ui.textEdition.pos.doorBehindLeft`
-  - HU: A bejárat mellett van, belépéskor a bal kezed felől.
-  - EN: It hangs beside the doorway you came through, on your left as you walk in.
-- `ui.textEdition.pos.doorBehindRight`
-  - HU: A bejárat mellett van, belépéskor a jobb kezed felől.
-  - EN: It hangs beside the doorway you came through, on your right as you walk in.
 - `ui.textEdition.pos.floorNear`
   - HU: A padlón, a bejárat közelében.
   - EN: On the floor, near the entrance.
@@ -60,57 +61,15 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `ui.textEdition.pos.floorFar`
   - HU: A padlón, a terem túlsó végében.
   - EN: On the floor, at the far end of the room.
-
-## Text version: other lines
-
-- `ui.textEdition.intro`
-  - HU: Ez az oldal szövegként adja vissza a kiállítást: a négy termet a bejárás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.
-  - EN: This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.
-- `ui.textEdition.toWalk`
-  - HU: Tovább a 3D bejáráshoz
-  - EN: Go to the 3D walk
-- `ui.textEdition.enterStairs`
-  - HU: A lépcsőn lefelé érkezel.
-  - EN: You come in down the stairs.
-- `ui.textEdition.enterFrom`
-  - HU: Innen érkezel: {room}.
-  - EN: You come in from {room}.
-- `ui.textEdition.sheet`
-  - HU: A kiállítási szöveg ebben a teremben is ott van a falon. {where}
-  - EN: The exhibition text is on a wall in this room. {where}
-- `ui.textEdition.openInWalk`
-  - HU: {no}. mű, {title}: megnyitás a 3D bejárásban
-  - EN: Open No. {no}, {title}, in the 3D walk
-- `ui.textEdition.textAbove`
-  - HU: A műhöz tartozó szöveg feljebb olvasható, itt: {ref}.
-  - EN: The artist's text that goes with this work is printed above, under {ref}.
-- `ui.textEdition.part`
-  - HU: A műhöz tartozó kis képernyő külön van. {where}
-  - EN: A small screen that belongs to the work hangs apart from it. {where}
 - `ui.textEdition.skip`
   - HU: A kiállítás szöveges változata
   - EN: Text version of the exhibition
-
-## Screen reader announcements
-
 - `ui.announce.work`
   - HU: {no}. mű, {title}. Megnyitás: Enter.
   - EN: No. {no}, {title}. Press Enter to open.
 - `ui.announce.text`
   - HU: Kiállítási szöveg. Elolvasás: Enter.
   - EN: Exhibition text. Press Enter to read.
-- `ui.announce.tourStopped`
-  - HU: A tárlatvezetés leállt.
-  - EN: Tour stopped.
-
-## Name of the 3D view
-
-- `ui.sceneLabel`
-  - HU: A kiállítás 3D nézete: a nyílbillentyűkkel sétálhatsz, az Enter megnyitja az előtted lévő művet. A szöveges változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt.
-  - EN: 3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys.
-
-## Accessibility statement
-
 - `accessibility.sections[0].p[0]`
   - HU: Ez egy pilot: a bejárás első akadálymentesített változata. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még.
   - EN: This is a pilot: the first accessible version of the walk. It does not claim conformance with WCAG. I worked from WCAG 2.2 and the W3C's XR Accessibility User Requirements, and this page says what was tested, what works and what does not work yet.
@@ -132,21 +91,15 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `accessibility.sections[2].p[0]`
   - HU: A szöveges változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.
   - EN: The text version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.
-- `accessibility.sections[2].p[1]`
-  - HU: Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül oda, ahol voltál. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja az előtted lévő művet.
-  - EN: Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. Page Down and Page Up go to the next and the previous work. Enter opens the work in front of you.
 - `accessibility.sections[2].p[2]`
   - HU: Képernyőolvasóknak a bejárás egyszerre egy sort ír egy élő régióba: a termet, ahová belépsz, az előtted lévő művet és a tárlatvezetés minden feliratát. A 3D nézetnek neve van, amely a szöveges változatra mutat.
   - EN: For screen readers the walk writes one line at a time into a live region: the room you enter, the work in front of you, each caption of the tour. The 3D view has a name that points to the text version.
-- `accessibility.sections[2].p[3]`
-  - HU: Ha a rendszeredben be van kapcsolva a csökkentett mozgás, a bejárásban nincs glitch-átmenet, nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép.
-  - EN: With reduced motion switched on in your system, the walk has no glitch transition, no grain, no colour fringes and no pulsing, and the tour jumps from stop to stop. The loading screen is a still image for everyone.
 - `accessibility.sections[3].p[0]`
   - HU: Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a 3D bejárásban.
   - EN: The live announcements were checked as text only. How a screen reader reads them in the 3D walk is not known yet.
 - `accessibility.sections[3].p[1]`
-  - HU: Az egybillentyűs parancsok (T, M, E és W, A, S, D) nem kapcsolhatók ki és nem állíthatók át. Ez nem felel meg a WCAG 2.1.4-nek, ami leginkább a beszédvezérlést használókat érinti.
-  - EN: The single-key shortcuts T, M, E and W, A, S, D cannot be switched off or changed. This fails WCAG 2.1.4, which matters most to people who use speech input.
+  - HU: A T, M, E, W, A, S, D betűbillentyűk és a nagyítás billentyűi csak akkor működnek, ha a 3D nézeten van a fókusz, ahogy a WCAG 2.1.4 kéri; a fókusz a nézetre kattintva vagy a Tab billentyűvel vihető rá. Nem kapcsolhatók ki és nem állíthatók át.
+  - EN: The letter keys T, M, E, W, A, S, D and the zoom keys work only while the 3D view has focus, which is what WCAG 2.1.4 asks; a click on the view or Tab gives it focus. They cannot be switched off or changed.
 - `accessibility.sections[3].p[2]`
   - HU: A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. A szöveges változat minden mű adatait, helyét és a művész szövegét adja meg.
   - EN: The works have no descriptions of what they show, and the videos have no captions, transcripts or audio description. The text version gives each work's data, its place and the artist's text.
@@ -159,9 +112,6 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `accessibility.sections[3].p[5]`
   - HU: A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani.
   - EN: Walking means holding a key down. Page Down and Page Up, the rooms menu and the tour move you without holding anything.
-- `accessibility.sections[3].p[6]`
-  - HU: A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.
-  - EN: The tour's captions change by themselves: after 5 seconds, or 14 at the videos with sound. The tour can be stopped (T or Esc) but not paused or slowed.
 - `accessibility.sections[3].p[7]`
   - HU: A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem.
   - EN: The contrast of the small labels over the 3D view depends on the wall behind them and was not measured.
@@ -171,9 +121,6 @@ Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 53 str
 - `accessibility.sections[4].p[0]`
   - HU: A tér hangos leírása (audionarráció). Egy nézet, amely megmutatja, mi mért és mi becsült a rekonstrukcióban. Teszt az NVDA képernyőolvasóval, Windowson.
   - EN: An audio description of the space. A view that shows what in the reconstruction was measured and what was guessed. A test with the NVDA screen reader on Windows.
-- `accessibility.sections[5].p[0]`
-  - HU: Ha itt valami nem működik nálad, vagy más formában lenne szükséged a kiállításra, írj nekem.
-  - EN: If something here does not work for you, or you need the exhibition in another form, write to me.
 - `accessibility.updated`
   - HU: A nyilatkozat kelte: 2026. november 13.
   - EN: Statement of 13 November 2026

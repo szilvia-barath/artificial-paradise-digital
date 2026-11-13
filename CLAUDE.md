@@ -38,6 +38,7 @@ This repo is `szilvia-barath/artificial-paradise-digital`. The private `artifici
 
 - EN and HU must say the same thing. Any new string goes into both `en.json` and `hu.json`. If you're unsure of the Hungarian, mark it `[HU: confirm]` and tell me. Don't machine-guess legal wording.
 - The `legal` and `privacy` sections are legal text. Change them only when I ask, and keep the update date.
+- Hungarian addresses no one where it can: no te forms, and Ön only where I chose it (the contact line of the accessibility statement).
 - My voice: plain, concrete, first person where it fits. No AI phrasing (delve, crucial, seamless, robust, showcase, "at the intersection of", "not X but Y", em dashes). Use the szilvia-voice skill if it's installed.
 
 ## Design rules
