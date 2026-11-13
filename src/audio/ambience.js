@@ -1,7 +1,9 @@
 // The sound of the walk is the videos' own sound: the videos with a sound track play it
 // from their screen (attachVideos), louder the closer you stand and quieter from the next
-// room. Nothing else is synthesised (the drone, room tone, bar murmur, projector fan and
-// the noise burst between rooms, added on 22 Oct 2026, were invented and are gone).
+// room. Nothing else is synthesised or added (the drone, room tone, bar murmur, projector
+// fan, the noise burst between rooms and the echo on the videos, added on 22 Oct 2026,
+// were invented and are gone). What is left sets only level and place: each video's
+// gain and stereo pan, the master gain and a compressor on the master bus.
 // An AnalyserNode on the master bus exposes bass/mid/high/level; the post chain reads
 // only `glitch` from it.
 
@@ -45,22 +47,6 @@ export class Ambience {
     this.analyser.smoothingTimeConstant = 0.75;
     comp.connect(this.analyser);
     this.freq = new Uint8Array(this.analyser.frequencyBinCount);
-
-    // Reverb-ish space: a short feedback delay network for "basement" tail
-    this.space = ctx.createGain();
-    this.space.gain.value = 0.35;
-    const d1 = ctx.createDelay(1);
-    const d2 = ctx.createDelay(1);
-    d1.delayTime.value = 0.113;
-    d2.delayTime.value = 0.171;
-    const fb = ctx.createGain();
-    fb.gain.value = 0.55;
-    const damp = ctx.createBiquadFilter();
-    damp.type = 'lowpass';
-    damp.frequency.value = 2200;
-    this.space.connect(d1);
-    d1.connect(d2).connect(damp).connect(fb).connect(d1);
-    damp.connect(this.master);
   }
 
   // Routes the in-world videos with a sound track through the mix (once, after start()).
@@ -73,10 +59,7 @@ export class Ambience {
       const gain = ctx.createGain();
       gain.gain.value = 0;
       const pan = ctx.createStereoPanner();
-      const send = ctx.createGain();
-      send.gain.value = 0.25; // a little of the basement's echo
       src.connect(gain).connect(pan).connect(this.master);
-      pan.connect(send).connect(this.space);
       const room = roomAt(v.pos.x, v.pos.z);
       this.videos.push({ v, gain, pan, room: room && room.id });
     }
