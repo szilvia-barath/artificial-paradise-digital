@@ -145,12 +145,12 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.1 Tab back to the 3D view (25 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
-- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
+- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | Room 1. Paintings, Paradise Factory. No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
 
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Room 1. Paintings, Paradise Factory. Tour stopped."
+- What happened: aria-pressed: false; announced: "Tour stopped. | No. 2, Human as Error VI. Press Enter to open."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 
