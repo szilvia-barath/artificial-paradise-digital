@@ -488,11 +488,16 @@ body.touch #crosshair { display: none; }
 }
 #tour-caption.show { opacity: 1; }
 #tour-caption .t { display: block; font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 6px; }
+/* The first-use hint sits below the crosshair and below the prompt that names a work
+   (22 px + its 27 px under the middle), so the two never share a place. */
 #click-to-look {
   position: absolute;
   left: 50%;
-  top: 34%;
+  top: calc(50% + 58px);
   transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  text-align: center;
   font-size: 11px;
   color: var(--fg);
   padding: 8px 14px;
@@ -500,10 +505,18 @@ body.touch #crosshair { display: none; }
   border: 1px solid var(--line);
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, visibility 0s;
 }
 #click-to-look { pointer-events: none; }
-body.looked #click-to-look, body.touch #click-to-look, body.touring #click-to-look { opacity: 0; }
+/* A window under 520 px high (a laptop at 200% zoom): below the crosshair the hint would
+   reach the toolbar, so it sits just above the crosshair instead. */
+@media (max-height: 519px) {
+  #click-to-look { top: auto; bottom: calc(50% + 14px); }
+}
+/* Gone for good after the first look or move, or about 8 seconds (main.js); out of the way
+   while the tour runs or the rooms menu is open. Hidden from screen readers as well. */
+body.looked #click-to-look, body.touch #click-to-look, body.touring #click-to-look,
+#hud:has([data-action="rooms"][aria-expanded="true"]) #click-to-look { opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
 body.dragging, body.dragging canvas { cursor: grabbing !important; }
 
 #joystick {

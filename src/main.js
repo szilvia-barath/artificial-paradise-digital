@@ -180,6 +180,7 @@ tour.onEnd = () => {
 tour.onCaption = (text) => announce(text, 'tour');
 function toggleTour() {
   if (tour.active) { tour.stop(); return; }
+  retireHint();
   viewer.close();
   ui.close();
   document.body.classList.add('touring');
@@ -195,6 +196,7 @@ function toggleSound() {
 
 function teleport(x, z, lookX, lookZ, pitch = 0) {
   if (tour.active) tour.stop();
+  retireHint();
   controls.resetZoom(true);
   controls.setPose(x, z, 0);
   controls.lookAt(lookX, lookZ);
@@ -210,6 +212,7 @@ function gotoWork(w) {
   if (!f) return;
   if (!entered && worldReady) enter();
   if (tour.active) tour.stop();
+  retireHint();
   controls.resetZoom(true);
   poseAtWork(w);
 }
@@ -260,7 +263,7 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
 });
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
-controls.onManualMove = () => tour.stop();
+controls.onManualMove = () => { retireHint(); tour.stop(); };
 const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
 
 // Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.
@@ -305,7 +308,11 @@ let mouseInside = false;
 // view (the one Enter opens) is named on screen and to screen readers.
 let keyNav = false;
 const MOVE_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
-window.addEventListener('keydown', (e) => { if (MOVE_KEYS.has(e.code) && (!LETTER_KEYS.has(e.code) || document.activeElement === canvas)) keyNav = true; });
+window.addEventListener('keydown', (e) => {
+  if (!MOVE_KEYS.has(e.code) || (LETTER_KEYS.has(e.code) && document.activeElement !== canvas)) return;
+  keyNav = true;
+  if (controls.enabled) retireHint();
+});
 for (const type of ['pointerdown', 'wheel']) canvas.addEventListener(type, () => { keyNav = false; }, { passive: true });
 canvas.addEventListener('mousemove', (e) => {
   mouseInside = true;
@@ -424,6 +431,7 @@ function stepWork(d) {
   const base = here >= 0 ? here : visitAt;
   visitAt = base < 0 ? (d > 0 ? 0 : visit.length - 1) : (base + d + visit.length) % visit.length;
   const w = visit[visitAt];
+  retireHint();
   announceRoom(w.room);
   gotoWork(w);
   keyNav = true;
@@ -470,6 +478,7 @@ soundAsk.addEventListener('click', (e) => {
   blockers.panel = false;
   syncEnabled();
   soundDialog.closed();
+  startHintTimer();
   announceArrival();
 });
 soundAsk.addEventListener('keydown', (e) => {
@@ -495,13 +504,23 @@ function enter(ask = true) {
     soundDialog.opened();
   } else {
     focusScene();
+    startHintTimer();
     announceArrival();
   }
   syncEnabled();
 }
 enterBtn.addEventListener('click', () => enter());
-// the "drag to look" hint goes once the visitor has looked around
-controls.onLook = () => document.body.classList.add('looked');
+// The "drag to look" hint goes at the first look or move of any kind: a drag, a walking or
+// turning key, the wheel, an on-screen key, Page Down or Page Up, the tour. Left alone, it
+// goes about 8 seconds after the visitor is in the room (the sound question answered).
+const HINT_SECONDS = 8;
+let hintTimer = 0;
+function retireHint() {
+  clearTimeout(hintTimer);
+  document.body.classList.add('looked');
+}
+const startHintTimer = () => { hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000); };
+controls.onLook = retireHint;
 
 // ---------------------------------------------------------------- resize
 // Field of view before zoom (updateZoom divides it by the magnification).
