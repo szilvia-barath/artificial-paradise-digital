@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interface mockup: digital exhibition</title>
+<!--
+  Mockup for docs/design/ui-ux-proposal.md. Plain HTML and CSS, nothing loaded from
+  outside, no artwork: the "room" is a grey gradient and the works are neutral panels.
+  Open it in a browser. It shows the proposed HUD on a desktop window and on a phone, the
+  first-use card, and a panel. It is a picture of the direction, not working code.
+-->
+<style>
+:root {
+  --paper: #fbfbf9; --blue: #072fcc; --ink: #0b0c0e; --panel: #111216;
+  --text: #f2f1ed; --muted: #c4c3be; --muted-panel: #b8b7b2; --link: #a9c1ff; --accent: #9dff6a;
+  --glass: rgba(11, 12, 14, 0.9); --edge: rgba(255, 255, 255, 0.45);
+  --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px 16px 64px; background: #2b2d31; color: var(--text); font: 16px/1.5 var(--sans); }
+h1 { font-weight: 300; font-size: 28px; margin: 0 0 4px; }
+.lead { color: #d6d5d0; max-width: 70ch; margin: 0 0 24px; }
+.cap { font: 13px/1.4 var(--mono); color: #d6d5d0; margin: 8px 0 32px; max-width: 80ch; }
+.scroll { overflow-x: auto; max-width: 100%; }
+.frames { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+
+/* a room without artworks: a light wall over a darker floor */
+.room { position: relative; overflow: hidden; background: linear-gradient(#e6e3db 0 62%, #8d877d 62% 100%); border: 1px solid #555; }
+.desk { width: 1024px; height: 576px; }
+.phone { width: 343px; height: 667px; border-radius: 18px; }
+.work { position: absolute; background: #9b9a95; color: #2b2b2b; display: grid; place-items: center; font: 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+
+/* the HUD */
+.glass { background: var(--glass); border: 1px solid var(--edge); border-radius: 8px; }
+.nav { position: absolute; inset: 0 0 auto; height: 44px; display: flex; align-items: center; gap: var(--s2); padding: 0 var(--s3); background: linear-gradient(rgba(11,12,14,.85), rgba(11,12,14,.55)); font: 13px var(--mono); letter-spacing: .06em; }
+.nav b { font-weight: 600; margin-right: auto; }
+.nav span { padding: 10px 8px; }
+.room-chip { position: absolute; left: var(--s3); top: 56px; padding: var(--s2) 12px; }
+.room-chip strong { display: block; font: 600 15px var(--sans); letter-spacing: .02em; }
+.room-chip small { display: block; font: 13px var(--sans); color: var(--muted); }
+.map { position: absolute; right: var(--s3); top: 56px; width: 200px; height: 120px; display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
+.toolbar { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); display: flex; gap: var(--s1); padding: var(--s1); }
+.toolbar button, .keys button, .card button { font: 600 13px var(--sans); color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 6px; min-height: 44px; padding: 0 14px; display: flex; gap: 8px; align-items: center; }
+.toolbar button[aria-pressed="true"] { background: rgba(157,255,106,.16); border-color: var(--accent); }
+.toolbar .focus { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 5px var(--ink); }
+.keys { position: absolute; left: var(--s3); bottom: 52px; display: grid; grid-template-columns: repeat(3, 44px); gap: var(--s1); }
+.keys button { padding: 0; justify-content: center; background: var(--glass); border: 1px solid var(--edge); font: 13px var(--mono); }
+.keys .w { grid-column: 2; grid-row: 1; } .keys .l { grid-column: 1; grid-row: 2; } .keys .s { grid-column: 2; grid-row: 2; } .keys .r { grid-column: 3; grid-row: 2; }
+.foot { position: absolute; inset: auto 0 0; min-height: 36px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; align-items: center; padding: 6px 16px; background: var(--glass); font: 12px var(--sans); color: var(--muted); }
+.foot u { color: var(--text); text-underline-offset: 3px; }
+
+/* first-use card: where the keys are, not over the work; goes after the first move */
+.card { position: absolute; left: 16px; bottom: 156px; width: 290px; padding: 12px 14px; font-size: 14px; }
+.card h2 { font: 600 14px var(--sans); margin: 0 0 6px; }
+.card ul { margin: 0 0 8px; padding-left: 18px; color: var(--muted); }
+.card button { border-color: var(--edge); min-height: 36px; }
+.announce { position: absolute; left: 50%; top: 56px; transform: translateX(-50%); padding: 8px 14px; font-size: 14px; }
+
+/* phone */
+.phone .nav { font-size: 12px; }
+.stick { position: absolute; left: 16px; bottom: 96px; width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--edge); background: rgba(11,12,14,.55); display: grid; place-items: center; font: 12px var(--sans); color: var(--muted); }
+.phone .toolbar { bottom: 16px; }
+.phone .toolbar button { flex-direction: column; gap: 2px; min-width: 64px; min-height: 56px; font-size: 12px; }
+.turn { position: absolute; right: 16px; bottom: 96px; display: flex; gap: 8px; }
+.turn button { width: 56px; height: 56px; border-radius: 50%; background: var(--glass); border: 1px solid var(--edge); color: var(--text); font: 13px var(--sans); }
+
+/* panel */
+.panel { width: 560px; max-width: calc(100vw - 32px); background: var(--paper); color: #16181d; border: 1px solid #c9ccd3; border-radius: 10px; padding: 24px 28px; }
+.panel .eyebrow { font: 13px var(--mono); color: #4a4f5a; letter-spacing: .06em; margin: 0 0 8px; }
+.panel h2 { font: 300 32px/1.15 var(--sans); margin: 0 0 12px; }
+.panel h3 { font: 600 15px var(--sans); color: #16181d; margin: 24px 0 8px; }
+.panel p { color: #16181d; margin: 0 0 12px; }
+.panel a { color: var(--blue); }
+.panel .close { float: right; font: 600 14px var(--sans); color: var(--blue); border: 1px solid var(--blue); border-radius: 6px; background: none; min-height: 44px; padding: 0 14px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
+.swatches span { font: 12px var(--mono); padding: 10px 12px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<h1>Interface mockup</h1>
+<p class="lead">The proposed direction for the digital exhibition's interface, drawn over a neutral room with grey panels in place of the works: paper for words, dark for looking. Labels are larger and in sentence case, the glass is darker so text reads over a white wall, every control on a phone is at least 44 px, and the first-use card sits by the keys instead of over the work.</p>
+
+<div class="frames">
+  <figure style="margin:0;max-width:100%">
+    <div class="scroll"><div class="room desk" role="img" aria-label="Mockup: desktop window, 1024 by 576">
+      <div class="work" style="left:360px;top:120px;width:300px;height:230px">work</div>
+      <div class="nav"><b>|Artificial Paradise|</b><span>About</span><span>Works</span><span>Behind the scenes</span><span>Contact</span><span>EN / HU</span></div>
+      <div class="room-chip glass"><strong>Room 1</strong><small>Paintings, Paradise Factory</small></div>
+      <div class="map glass">map, with room names</div>
+      <div class="announce glass">No. 1, Wrong Data Landscape Dresden · Enter to view</div>
+      <div class="keys"><button class="w">W ↑</button><button class="l">←</button><button class="s">S ↓</button><button class="r">→</button></div>
+      <div class="card glass"><h2>Moving around</h2><ul><li>Arrows or W A S D to walk and turn</li><li>Drag with the mouse to look</li><li>Page Down: next work · Enter: open it</li></ul><button>Got it</button></div>
+      <div class="toolbar glass"><button class="focus" aria-pressed="false">▶ Tour</button><button>⌖ Rooms</button><button>♪ Sound off</button><button>? Help</button></div>
+      <div class="foot"><span>Artworks © Kristóf Szabó / KristofLab</span><u>Contact</u><u>Accessible version (text format)</u><u>Accessibility</u><u>Legal notice</u><u>Privacy</u></div>
+    </div></div>
+    <figcaption class="cap">Desktop. Room name in a glass chip (no text straight on the wall). The work in the middle is named at the top, not under the crosshair. Toolbar buttons keep their words; "Sound off" says the state. The focus ring is white with a dark halo, so it shows on a white wall too. "Help" reopens the first-use card.</figcaption>
+  </figure>
+
+  <figure style="margin:0">
+    <div class="room phone" role="img" aria-label="Mockup: phone, 375 by 667">
+      <div class="work" style="left:110px;top:150px;width:150px;height:120px">work</div>
+      <div class="nav"><b>|AP|</b><span>EN / HU</span><span>☰</span></div>
+      <div class="room-chip glass"><strong>Room 1</strong><small>Paintings, Paradise Factory</small></div>
+      <div class="stick">walk</div>
+      <div class="turn"><button>turn ←</button><button>turn →</button></div>
+      <div class="toolbar glass"><button>▶<span>Tour</span></button><button>⌖<span>Rooms</span></button><button>♪<span>Sound</span></button><button>›<span>Next work</span></button></div>
+    </div>
+    <figcaption class="cap">Phone. Labels under the icons. Two turn buttons and "Next work" give a way to move without dragging (WCAG 2.5.7). Targets 56 px.</figcaption>
+  </figure>
+
+  <figure style="margin:0">
+    <section class="panel" aria-label="Mockup: a panel">
+      <button class="close">Close</button>
+      <p class="eyebrow">Kristóf Szabó / KristofLab · MAMŰ Gallery, Budapest</p>
+      <h2>Artificial Paradise</h2>
+      <p>Text panels in the title card's paper and blue, the same as the accessible version: body text 16 px, ink on paper 17.1:1; secondary text 13 px, 7.9:1; links in the exhibition blue, 8.9:1, underlined. The viewer and the 3D view stay dark, so the works are the brightest thing.</p>
+      <h3>Credits</h3>
+      <p>Section headings in the sans at 15 px, not 11 px green capitals.</p>
+      <div class="swatches">
+        <span style="background:#fbfbf9;color:#072fcc">blue on paper 8.9</span>
+        <span style="background:#fbfbf9;color:#16181d;border:1px solid #c9ccd3">ink on paper 17.1</span>
+        <span style="background:#fbfbf9;color:#4a4f5a;border:1px solid #c9ccd3">muted ink on paper 7.9</span>
+        <span style="background:#212223;color:#c4c3be">muted on glass over white wall 9.0</span>
+        <span style="background:#212223;color:#9dff6a">accent on glass 12.9</span>
+      </div>
+    </section>
+    <figcaption class="cap">A text panel ("paper for words, dark for looking"): solid paper, not a translucent overlay, with a Close button that says "Close". The focus ring on paper is blue.</figcaption>
+  </figure>
+</div>
+</body>
+</html>
