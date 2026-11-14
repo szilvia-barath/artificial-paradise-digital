@@ -37,7 +37,7 @@
     },
     "footer": {
       "rights": "A műalkotások © Szabó Kristóf / KristofLab",
-      "digital": "Digitális kiállítás: Barath Szilvia",
+      "digital": "Digitális kiállítás: Baráth Szilvia",
       "venue": "MAMŰ Galéria, Budapest, 2025"
     },
     "hud": {
@@ -113,7 +113,7 @@
       "contactTitle": "Kapcsolat",
       "contactGallery": "MAMŰ Galéria",
       "contactArtist": "Szabó Kristóf / KristofLab",
-      "contactDigital": "Digitális kiállítás: Barath Szilvia",
+      "contactDigital": "Digitális kiállítás: Baráth Szilvia",
       "contactSoon": "Az elérhetőségek hamarosan itt lesznek.",
       "contactLabel": {
         "address": "Cím",
@@ -225,7 +225,7 @@
     ],
     [
       "Digitális kiállítás",
-      "Barath Szilvia"
+      "Baráth Szilvia"
     ],
     [
       "Fotó",
@@ -386,7 +386,7 @@
       {
         "h": "Üzemeltető",
         "p": [
-          "Barath Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás)."
+          "Baráth Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás)."
         ],
         "links": [
           {
@@ -398,7 +398,7 @@
       {
         "h": "Az oldalról",
         "p": [
-          "Nem kereskedelmi célú digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be bejárható 3D-rekonstrukcióként."
+          "Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be."
         ]
       },
       {
@@ -416,11 +416,19 @@
       {
         "h": "Szerzői jogok",
         "p": [
-          "A műalkotások, reprodukcióik és videóik, valamint a művész szövegei: © Szabó Kristóf / KristofLab. Az installációs fotókat és a dokumentációs videókat is Szabó Kristóf készítette. A MAMŰ logó a MAMŰ Társaság tulajdona. A 3D-rekonstrukció és a weboldal: © Barath Szilvia.",
+          "A műalkotások, reprodukcióik és videóik, valamint a művész szövegei: © Szabó Kristóf / KristofLab. Az installációs fotókat és a dokumentációs videókat is Szabó Kristóf készítette. A MAMŰ logó a MAMŰ Társaság tulajdona. A 3D-rekonstrukció és a weboldal: © Baráth Szilvia.",
+          "A műalkotások, a fotók, a videók és a szövegek szerzői jogi védelem alatt állnak (In Copyright), és nincs rájuk felhasználási engedély.",
           "Bármely részének felhasználásához kérj engedélyt."
+        ],
+        "links": [
+          {
+            "href": "http://rightsstatements.org/vocab/InC/1.0/",
+            "text": "In Copyright (rightsstatements.org)"
+          }
         ]
       }
-    ]
+    ],
+    "updated": "Utolsó frissítés: 2026. november 14."
   },
   "privacy": {
     "title": "Adatkezelési tájékoztató",

@@ -37,7 +37,7 @@
     },
     "footer": {
       "rights": "Artworks © Kristóf Szabó / KristofLab",
-      "digital": "Digital exhibition by Szilvia Barath",
+      "digital": "Digital exhibition by Szilvia Baráth",
       "venue": "MAMŰ Gallery, Budapest, 2025"
     },
     "hud": {
@@ -113,7 +113,7 @@
       "contactTitle": "Contact",
       "contactGallery": "MAMŰ Gallery",
       "contactArtist": "Kristóf Szabó / KristofLab",
-      "contactDigital": "Digital exhibition: Szilvia Barath",
+      "contactDigital": "Digital exhibition: Szilvia Baráth",
       "contactSoon": "Contact details coming soon.",
       "contactLabel": {
         "address": "Address",
@@ -227,7 +227,7 @@
     ],
     [
       "Digital exhibition",
-      "Szilvia Barath"
+      "Szilvia Baráth"
     ],
     [
       "Photography",
@@ -388,7 +388,7 @@
       {
         "h": "Published by",
         "p": [
-          "Szilvia Barath, who made this digital exhibition (3D reconstruction, design and programming)."
+          "Szilvia Baráth, who made this digital exhibition (3D reconstruction, design and programming)."
         ],
         "links": [
           {
@@ -400,7 +400,7 @@
       {
         "h": "About this site",
         "p": [
-          "A non-commercial digital exhibition. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025), as a walkable 3D reconstruction."
+          "A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025)."
         ]
       },
       {
@@ -418,11 +418,19 @@
       {
         "h": "Copyright",
         "p": [
-          "The artworks, their reproductions and videos, and the artist’s texts: © Kristóf Szabó / KristofLab. The installation photographs and the documentation videos were taken by Kristóf Szabó as well. The MAMŰ logo belongs to MAMŰ Society. The 3D reconstruction and the website: © Szilvia Barath.",
+          "The artworks, their reproductions and videos, and the artist’s texts: © Kristóf Szabó / KristofLab. The installation photographs and the documentation videos were taken by Kristóf Szabó as well. The MAMŰ logo belongs to MAMŰ Society. The 3D reconstruction and the website: © Szilvia Baráth.",
+          "The artworks, photographs, videos and texts are In Copyright: they are protected by copyright and are not licensed for reuse.",
           "Please ask before reusing any of it."
+        ],
+        "links": [
+          {
+            "href": "http://rightsstatements.org/vocab/InC/1.0/",
+            "text": "In Copyright (rightsstatements.org)"
+          }
         ]
       }
-    ]
+    ],
+    "updated": "Last updated: 14 November 2026"
   },
   "privacy": {
     "title": "Privacy",

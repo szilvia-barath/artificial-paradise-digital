@@ -2,7 +2,7 @@
   "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
   "meta": {
     "title": "Artificial Paradise",
-    "digitalBy": "Szilvia Barath",
+    "digitalBy": "Szilvia Baráth",
     "links": {
       "exhibition": "https://artkartell.hu/vizit/759-kristoflab-artificial-paradise",
       "gallery": "https://mamu.hu",

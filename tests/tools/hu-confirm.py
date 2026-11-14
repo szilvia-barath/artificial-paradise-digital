@@ -12,6 +12,11 @@ Hungarian string that is new or changed since the last check, with its English b
   python3 tests/tools/hu-confirm.py --checked  a Hungarian reader has checked the list:
                                                take the present strings as checked and
                                                empty the list
+  python3 tests/tools/hu-confirm.py --note KEY "words"
+                                               put a note beside one string in the list
+                                               (kept in tests/tools/hu-notes.json against
+                                               the string's fingerprint, so it goes when
+                                               the string changes again)
 
 tests/tools/hu-checked.txt holds a fingerprint of every string that has been checked (not
 the text). It was first written on 14 November 2026, when the reconstructor had worded or
@@ -53,12 +58,25 @@ try:
 except FileNotFoundError:
     checked = set()
 # a string counts as checked wherever it sits, so moving a paragraph does not list it again
-new = [(k, v) for k, v in strings.items() if fp(v) not in checked]
+# and a string that is the same in both files (an address, a name) is not Hungarian
+new = [(k, v) for k, v in strings.items() if fp(v) not in checked and v != E.get(k)]
+NOTES = 'tests/tools/hu-notes.json'
+try:
+    notes = json.load(open(NOTES, encoding='utf-8'))
+except FileNotFoundError:
+    notes = {}
+if '--note' in sys.argv:
+    key, words = sys.argv[sys.argv.index('--note') + 1:][:2]
+    notes[fp(strings[key])] = words
+live = {fp(v) for _, v in new}
+notes = {f: n for f, n in notes.items() if f in live}
+if '--note' in sys.argv or '--checked' in sys.argv:
+    open(NOTES, 'w', encoding='utf-8').write(json.dumps(notes, indent=2, ensure_ascii=False, sort_keys=True) + '\n')
 for k, v in new:
     print(f'{k}\n  HU: {v}\n  EN: {E.get(k, "")}')
 print(f'{len(new)} Hungarian strings new or changed since the last check; marks: {len(marks)}; keys match: {not diff}')
 
-if '--write' in sys.argv or '--checked' in sys.argv:
+if '--write' in sys.argv or '--checked' in sys.argv or '--note' in sys.argv:
     out = ['# Hungarian strings to check', '',
            f'Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: {len(new)}. '
            'The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. '
@@ -68,12 +86,7 @@ if '--write' in sys.argv or '--checked' in sys.argv:
            '`python3 tests/tools/hu-confirm.py --checked`, which empties this list. '
            '`python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys '
            'and that no string carries a `[HU: confirm]` mark.', '']
-    notes = {}
-    try:
-        notes = json.load(open('tests/tools/hu-notes.json', encoding='utf-8'))
-    except FileNotFoundError:
-        pass
     for k, v in new:
-        out += [f'- `{k}`' + (f' ({notes[k]})' if k in notes else ''), f'  - HU: {v}', f'  - EN: {E.get(k, "")}']
+        out += [f'- `{k}`' + (f' ({notes[fp(v)]})' if fp(v) in notes else ''), f'  - HU: {v}', f'  - EN: {E.get(k, "")}']
     open(DOC, 'w', encoding='utf-8').write('\n'.join(out) + '\n')
 sys.exit(1 if diff or marks else 0)
