@@ -15,6 +15,7 @@
   --ap-blue: #072fcc; /* the exhibition's logotype blue */
   --nav-h: calc(44px + var(--safe-t));
   --foot-h: 30px;
+  --bar-h: 40px; /* the toolbar's real height, kept by main.js, as boot.js keeps --foot-h */
 }
 
 * { box-sizing: border-box; }
@@ -309,6 +310,7 @@ body.entered #site-nav button, body.entered #site-nav .lang-switch button { opac
 body.entered #site-nav .nav-links button:hover, body.entered #site-nav .nav-links button[aria-current="true"] { text-decoration: underline; text-underline-offset: 4px; }
 body.entered.touch #site-foot { display: none; }
 body.touch #toolbar { bottom: calc(16px + var(--safe-b)); }
+body.touch #tour-caption { bottom: calc(16px + var(--safe-b) + var(--bar-h) + 8px); }
 
 @media (max-width: 760px) {
   .nav-links {
@@ -472,10 +474,11 @@ body.touch #crosshair { display: none; }
 /* the room the visitor is in: a green bar and a green name, as on the map */
 #rooms-menu .room-row.here { border-left-color: var(--accent); }
 #rooms-menu button[aria-current] { color: var(--accent); }
+/* The tour caption stands 8 px above the toolbar, wherever the footer's height puts it. */
 #tour-caption {
   position: absolute;
   left: 50%;
-  bottom: calc(84px + var(--safe-b));
+  bottom: calc(var(--foot-h) + 8px + var(--safe-b) + var(--bar-h) + 8px);
   transform: translateX(-50%);
   width: min(640px, calc(100% - 32px));
   text-align: center;
@@ -562,6 +565,9 @@ body.touring #joystick { opacity: 0.25; }
   transition: opacity 0.4s ease;
 }
 body.touch #keypad { display: none; }
+/* The tour walks by itself: the walking keys are put away while it runs, so the caption
+   never covers a key that Tab could reach. The arrow keys, Esc and the Tour button stop it. */
+body.touring #keypad { visibility: hidden; }
 .cap {
   position: relative;
   display: grid;
@@ -638,6 +644,17 @@ body.touch #keypad { display: none; }
   width: 40px;
   pointer-events: auto;
   transition: opacity 0.4s ease;
+}
+/* The zoom keys go on working during the tour. In a window up to 1180 px wide the caption
+   would lie over them, so there they are put away too (+ and − on the keyboard still zoom). */
+@media (max-width: 1180px) {
+  body.touring:not(.touch) #zoompad { visibility: hidden; }
+}
+/* A window under 520 px high (a laptop at 200% zoom): no room for the walking keys, which
+   only repeat the keyboard and the wheel. The zoom keys take their corner. */
+@media (max-height: 519px) {
+  #keypad { display: none; }
+  body:not(.touch) #zoompad { left: 18px; bottom: calc(var(--foot-h) + 8px + var(--safe-b)); }
 }
 body.touch #zoompad { left: auto; right: 14px; bottom: calc(84px + var(--safe-b)); grid-template-rows: 46px 46px; width: 46px; }
 #zoom-level {
@@ -819,7 +836,7 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   #toolbar > button, #toolbar .rooms-wrap > button { padding: 11px 9px; gap: 6px; letter-spacing: 0.08em; white-space: nowrap; }
   #room-label { left: 12px; top: calc(var(--nav-h) + 6px); max-width: calc(100% - 12px - 150px - 10px - 8px); padding: 6px 10px; }
   #room-label .room-name { font-size: 13px; }
-  #tour-caption { font-size: 13px; bottom: calc(76px + var(--safe-b)); }
+  #tour-caption { font-size: 13px; }
   body.touch #tour-caption { bottom: calc(210px + var(--safe-b)); }
   #panel-body .credits { grid-template-columns: 1fr; gap: 2px; }
   #panel-body .credits dd { margin-bottom: 10px; }

@@ -265,6 +265,13 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
 controls.onManualMove = () => { retireHint(); tour.stop(); };
+// The toolbar's height, for what is placed just above it (the tour caption).
+const toolbarEl = document.getElementById('toolbar');
+if ('ResizeObserver' in window) {
+  new ResizeObserver(() => {
+    if (toolbarEl.offsetHeight) document.documentElement.style.setProperty('--bar-h', `${toolbarEl.offsetHeight}px`);
+  }).observe(toolbarEl);
+}
 const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
 
 // Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.
