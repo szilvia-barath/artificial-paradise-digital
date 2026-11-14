@@ -31,7 +31,7 @@
       "enter": "Enter",
       "hint": "Sound: headphones recommended",
       "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
-      "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
+      "howtoTouch": "Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.",
       "failure": "This browser could not start the digital exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.",
       "progress": "Loading the exhibition"
     },
@@ -105,7 +105,7 @@
       "btsTitle": "How it's built",
       "controls": "Controls",
       "controlsDesk": "On a computer, walk forward and back with the up and down arrows or W and S, or with the scroll wheel. The left and right arrows turn, and A and D step sideways. Drag with the mouse to look around. Zoom with + and − or Ctrl and the scroll wheel; 0 resets. Shift makes you run. Open a work by clicking it, or with E or Enter. Page Down and Page Up go to the next and the previous work. T starts the tour, M mutes, Esc closes a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work only while the 3D view is selected: click the view or Tab to it.",
-      "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work.",
+      "controlsTouch": "On a touch screen, walk with the stick on the left: push it forward or back to walk, and sideways to step to the side. Pushed all the way, it runs. Drag a finger across the view to look around. Zoom by pinching with two fingers, or with the + and − buttons. Open a work by tapping it. The buttons at the bottom start the tour, list the rooms and mute the sound.",
       "linkFacebook": "MAMŰ on Facebook",
       "linkMamuInstagram": "MAMŰ on Instagram",
       "speech": "Opening speech",
