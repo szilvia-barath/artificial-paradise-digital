@@ -82,7 +82,7 @@ Three reviewers looked at the change independently; each finding was then checke
 | 7 | The zoom readout used by keyboard hides itself and focus falls to the page | | Fixed in `4c1a2ce`: focus goes to the view |
 | 8 | A click on the map leaves the view without focus (second reviewer) | 1 | Same fix |
 | 9 | Closing the rooms menu by mouse leaves focus on the button (second reviewer) | 2 | Same fix |
-| 10 | A mouse click on a navbar or footer control that opens no dialog leaves the view without focus: EN / HU, and the footer links | 1, in part | EN / HU fixed. The footer links (Instagram, the MAMŰ logo, the accessible version) are not: they leave the page or open a new tab, and on coming back focus is on the link, so one click on the view is needed before the letter keys work. The arrows work meanwhile. Open |
+| 10 | A mouse click on a navbar or footer control that opens no dialog leaves the view without focus: EN / HU, and the footer links | 1, in part | EN / HU fixed. The footer links (Instagram, the MAMŰ logo, the accessible version) fixed on 14 November 2026: a mouse click on one hands focus to the view before the new tab opens or the page is left, so the letter keys work on coming back; by keyboard, focus stays on the link (`focus-mouse.mjs`, steps 14 to 16). Done |
 | 11 | "Walk to this work" on the title screen enters the digital exhibition and then pulls focus out of the sound question | | Fixed in `4c1a2ce`: nothing moves focus or acts under the question |
 | 12 | A dialog closed with the mouse on the title screen sends focus to Enter (second reviewer) | 3 | Same fix |
 

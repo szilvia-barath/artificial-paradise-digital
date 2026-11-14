@@ -224,17 +224,22 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
 for (const bar of ['site-nav', 'site-foot']) {
-  document.getElementById(bar).addEventListener('click', (e) => {
+  const el = document.getElementById(bar);
+  el.addEventListener('click', (e) => {
     const b = e.target.closest('[data-nav]');
     if (!b) {
       // EN / HU opens nothing: a mouse click on it hands focus back to the view (boot.js
       // has already switched the language); a keyboard press leaves focus on the button.
-      if (e.detail > 0 && e.target.closest('[data-lang]')) focusScene();
+      // The same for a link that opens a new tab or leaves the page (Instagram, the MAMŰ
+      // logo, the accessible version): coming back, the letter keys work at once.
+      if (e.detail > 0 && e.target.closest('[data-lang], a[href]')) focusScene();
       return;
     }
     viewer.close();
     ui.show(b.dataset.nav);
   });
+  // a link opened in a new tab with the middle button
+  el.addEventListener('auxclick', (e) => { if (e.target.closest('a[href]')) focusScene(); });
 }
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking()) return;

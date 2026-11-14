@@ -98,6 +98,24 @@ step('12 Zoom readout used by keyboard: zoom reset, focus on the view (not lost 
 await page.keyboard.press('KeyM');
 step('13 After all that, M still works from the view', (await page.getAttribute('[data-action="sound"]', 'aria-pressed')) === 'true', `sound pressed: ${await page.getAttribute('[data-action="sound"]', 'aria-pressed')}`);
 
+// ---------------- footer links: they open a new tab or leave the page
+// Nothing outside is fetched: the new tab's request is refused and the tab closed.
+await ctx.route(/instagram\.com|mamu\.hu/, (r) => r.abort());
+const [popup] = await Promise.all([ctx.waitForEvent('page', { timeout: 30000 }).catch(() => null), page.click('#site-foot a[href*="instagram"]')]);
+if (popup) await popup.close();
+await page.bringToFront();
+step('14 Instagram in the footer clicked with the mouse (opens a new tab): focus is on the view on coming back', !!popup && (await onView()), `new tab opened: ${!!popup}; focus on ${await focusName(page)}`);
+
+// the accessible version opens in the same tab: the click is let through to the page's own
+// handlers, and only the leaving is stopped, so focus can be read
+await page.evaluate(() => document.querySelector('#site-foot a[href*="text/"]').addEventListener('click', (e) => e.preventDefault(), { once: true }));
+await page.click('#site-foot a[href*="text/"]');
+step('15 The accessible version in the footer clicked with the mouse: focus handed to the view before leaving', await onView(), await focusName(page));
+await page.evaluate(() => document.querySelector('#site-foot a[href*="text/"]').addEventListener('click', (e) => e.preventDefault(), { once: true }));
+await page.focus('#site-foot a[href*="text/"]');
+await page.keyboard.press('Enter');
+step('16 The same link by keyboard: focus stays on the link', await isOn('#site-foot a[href*="text/"]'), await focusName(page));
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await ctx.close();
 await browser.close();
