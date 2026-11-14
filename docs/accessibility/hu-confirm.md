@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 10. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 11. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -34,3 +34,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.updated` (the date only)
   - HU: Utolsó frissítés: 2026. november 14.
   - EN: Last updated: 14 November 2026
+- `accessibility.sections[1].p[1]` (only the count of the mouse run and "a lábléc egy hivatkozására" are new)
+  - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra, a lábléc egy hivatkozására vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (16 lépésből 16 sikeres).
+  - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, and the letter keys with and without focus on the 3D view. All 31 steps passed. A second run checked the mouse: after a click on the map, the toolbar, the rooms menu, the language switch, a footer link or a Close button, the letter keys still work (16 of 16 steps).

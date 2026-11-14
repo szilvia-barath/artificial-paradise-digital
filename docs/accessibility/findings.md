@@ -4,11 +4,11 @@ Branch `wip/a11y-pilot`; first written 13 November 2026, brought up to date 14 N
 
 ## Results on 14 November 2026
 
-Rerun on the final code of 14 November 2026, after the changes for WCAG 2.1.4 and 2.3.1 and the fixes from the review.
+Rerun on the final code of 14 November 2026, after the changes for WCAG 2.1.4 and 2.3.1 and the fixes from the review, and again the same day after the corrections of the next round (final wording, the footer-link focus, the tour without its opening line).
 
 - axe-core 4.14 (`tests/a11y/axe.mjs`): 34 states, no violations of any severity. axe could not judge the contrast of text over the 3D view or the title picture.
 - Keyboard only (`tests/a11y/keyboard.mjs`): 31 of 31 steps passed, among them all 17 works by Page Down, and the letter keys with and without focus on the 3D view.
-- Mouse and focus (`tests/a11y/focus-mouse.mjs`, new): 14 of 14 steps passed.
+- Mouse and focus (`tests/a11y/focus-mouse.mjs`): 16 of 16 steps passed (steps 14 to 16, the footer links, added 14 November 2026).
 - Reduced motion (`tests/a11y/reduced-motion.mjs`): 13 of 13 checks passed.
 - Flashing (`tests/a11y/flash.mjs`): no more than 2 flashes a second; see the next section.
 - Also passed: the built site loads all four rooms with no console errors on desktop and phone sizes (`smoke.mjs`); the text edition, 28 of 28 checks (`text-edition.mjs`).

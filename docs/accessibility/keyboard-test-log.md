@@ -55,7 +55,7 @@ Written by `tests/a11y/keyboard.mjs` on 2026-11-14: Chromium (Playwright, headle
 ## PASS: 2. Panel Legal notice (footer): Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Legal notice"; 3 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Legal notice"; 4 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Privacy (footer): Tab to it (1 presses), Enter, Tab round, Esc
 
@@ -144,13 +144,13 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 
 ## PASS: 7.1 Tab back to the 3D view (25 presses); T starts the tour
 
-- Expected: Tour button reads as pressed; the opening caption and the first work's caption are announced
-- What happened: aria-pressed: true; announced: "Artificial Paradise. Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025. | Room 1. Paintings, Paradise Factory. | No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023."
+- Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
+- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
 
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Tour stopped. No. 1, Wrong Data Landscape Dresden. Press Enter to open."
+- What happened: aria-pressed: false; announced: "Room 1. Paintings, Paradise Factory. Tour stopped. | No. 2, Human as Error VI. Press Enter to open."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 

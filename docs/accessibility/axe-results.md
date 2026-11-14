@@ -11,7 +11,7 @@ Written by `tests/a11y/axe.mjs` on 2026-11-14: axe-core 4.14.0, default rule set
 - Walk EN: title screen: 0 violations, 1 items axe could not decide, 40 rules passed
 - Walk EN: panel "about" open (title screen): 0 violations, 2 items axe could not decide, 45 rules passed
 - Walk EN: panel "works" open (title screen): 0 violations, 2 items axe could not decide, 44 rules passed
-- Walk EN: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 41 rules passed
+- Walk EN: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk EN: panel "contact" open (title screen): 0 violations, 2 items axe could not decide, 43 rules passed
 - Walk EN: panel "accessibility" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk EN: panel "legal" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
@@ -26,7 +26,7 @@ Written by `tests/a11y/axe.mjs` on 2026-11-14: axe-core 4.14.0, default rule set
 - Walk HU: title screen: 0 violations, 1 items axe could not decide, 40 rules passed
 - Walk HU: panel "about" open (title screen): 0 violations, 2 items axe could not decide, 45 rules passed
 - Walk HU: panel "works" open (title screen): 0 violations, 2 items axe could not decide, 44 rules passed
-- Walk HU: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 41 rules passed
+- Walk HU: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk HU: panel "contact" open (title screen): 0 violations, 2 items axe could not decide, 43 rules passed
 - Walk HU: panel "accessibility" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk HU: panel "legal" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
@@ -80,7 +80,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk HU: panel "about" open (inside) (53: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
   - Walk HU: rooms menu open (48: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
   - Walk HU: viewer open (painting) (50: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
-  - Walk HU: viewer open (video, with Pause button) (50: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
+  - Walk HU: viewer open (video, with Pause button) (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
   - Walk HU: viewer open (video on a small screen) (49: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico)
 - **serious · label-content-name-mismatch: Elements must have their visible text as part of their accessible name**
   - Walk EN: panel "about" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
@@ -109,7 +109,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk HU: panel "about" open (inside) (7: .k-w, .k-a, .k-s, .k-d)
   - Walk HU: rooms menu open (6: .k-w, .k-a, .k-s, .k-d)
   - Walk HU: viewer open (painting) (7: .k-w, .k-a, .k-s, .k-d)
-  - Walk HU: viewer open (video, with Pause button) (7: .k-w, .k-a, .k-s, .k-d)
+  - Walk HU: viewer open (video, with Pause button) (6: .k-w, .k-a, .k-s, .k-d)
   - Walk HU: viewer open (video on a small screen) (7: .k-w, .k-a, .k-s, .k-d)
 - **critical · video-caption: <video> elements must have captions**
   - Walk EN: viewer open (video, with Pause button) (1: #viewer-video)
