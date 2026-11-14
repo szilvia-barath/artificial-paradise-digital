@@ -399,6 +399,7 @@ function updateRoom() {
     currentRoomId = r.id;
     setText(roomName, `rooms.${r.id}.name`);
     setText(roomSub, `rooms.${r.id}.subtitle`);
+    ui.setRoom(r.id); // the rooms menu marks it (aria-current)
     if (!first && entered) announceRoom();
   }
 }

@@ -171,14 +171,26 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   panel.addEventListener('click', (e) => { if (e.target === panel) close(); });
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
-  // each room with the works in it
+  // Each room with the works in it. The button's name is the room alone; the titles stand
+  // beside it as its description (aria-describedby), and the row as a whole is the button's
+  // target (CSS). The room the visitor is in carries aria-current="location".
+  let hereRoom = null;
+  const markRoom = () => {
+    for (const b of roomsMenu.querySelectorAll('[data-room]')) {
+      const here = b.dataset.room === hereRoom;
+      if (here) b.setAttribute('aria-current', 'location');
+      else b.removeAttribute('aria-current');
+      b.parentElement.classList.toggle('here', here);
+    }
+  };
   const buildRoomsMenu = () => {
     roomsMenu.innerHTML = Object.entries(data.rooms)
       .map(([id, r]) => {
         const titles = data.works.filter((w) => w.room === id && !w.id.endsWith('-screen')).map((w) => w.title);
-        return `<button data-room="${id}">${esc(r.name)}<small>${esc(titles.join(', '))}</small></button>`;
+        return `<div class="room-row"><button data-room="${id}" aria-describedby="rooms-menu-${id}">${esc(r.name)}</button><small id="rooms-menu-${id}">${esc(titles.join(', '))}</small></div>`;
       })
       .join('');
+    markRoom();
   };
   buildRoomsMenu();
   // The rooms menu: the button says whether it is open; Esc or a choice closes it and
@@ -209,6 +221,12 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     works: () => show('works'),
     bts: () => show('bts'),
     toggleRooms: () => setRooms(roomsMenu.hidden),
+    // Called as the visitor walks or jumps: which room the menu marks as the current one.
+    setRoom: (id) => {
+      if (id === hereRoom) return;
+      hereRoom = id;
+      markRoom();
+    },
     // After a language switch: rebuild what is on screen.
     refresh: () => {
       buildRoomsMenu();

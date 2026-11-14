@@ -446,13 +446,26 @@ body.touch #crosshair { display: none; }
   -webkit-backdrop-filter: blur(8px);
   padding: 4px;
 }
+/* A row is the room's button and, under it, the works in the room. The titles are outside
+   the button (they are its description, not its name); the button's ::after covers the
+   whole row, so a click or tap anywhere on the row is a click on the button, and the hover
+   and the focus ring are drawn around the row. */
+#rooms-menu .room-row { position: relative; font-family: var(--mono); font-size: 11px; border-left: 2px solid transparent; }
+#rooms-menu .room-row:hover { background: rgba(255, 255, 255, 0.1); }
 #rooms-menu button {
   width: 100%;
   text-align: left;
   display: block !important;
-  padding: 10px 12px !important;
+  padding: 10px 12px 0 10px !important;
 }
-#rooms-menu small { display: block; color: var(--muted); text-transform: none; letter-spacing: 0.02em; margin-top: 3px; }
+#rooms-menu button:hover { background: transparent; }
+#rooms-menu button::after { content: ""; position: absolute; inset: 0 0 0 -2px; }
+#rooms-menu button:focus-visible { outline: none; }
+#rooms-menu button:focus-visible::after { outline: 2px solid var(--focus); outline-offset: -2px; }
+#rooms-menu small { display: block; padding: 3px 12px 10px 10px; color: var(--muted); letter-spacing: 0.02em; }
+/* the room the visitor is in: a green bar and a green name, as on the map */
+#rooms-menu .room-row.here { border-left-color: var(--accent); }
+#rooms-menu button[aria-current] { color: var(--accent); }
 #tour-caption {
   position: absolute;
   left: 50%;
