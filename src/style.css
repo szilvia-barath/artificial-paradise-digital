@@ -388,7 +388,8 @@ body.touch #crosshair { display: none; }
   background: var(--glass);
   border: 1px solid var(--line);
 }
-#room-label .room-name { font-size: 15px; text-transform: uppercase; letter-spacing: 0.18em; }
+/* the room's name is an h2: it keeps the label's own letters */
+#room-label .room-name { margin: 0; font: inherit; font-size: 15px; text-transform: uppercase; letter-spacing: 0.18em; }
 #room-label .room-sub { font-size: 10px; line-height: 1.5; color: #c9c9c6; text-transform: uppercase; letter-spacing: 0.14em; }
 #minimap {
   position: absolute;
