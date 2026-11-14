@@ -24,6 +24,9 @@
     <link rel="preload" as="image" href="./brand/key-visual.avif" type="image/avif" media="(min-aspect-ratio: 4/5)" />
     <link rel="preload" as="image" href="./brand/logo-blue.webp" />
     <link rel="stylesheet" href="/src/style.css" />
+    <!-- Without JavaScript nothing loads: the card shows the notice in place of the progress
+         line, Enter and the lines about sound and the keys. -->
+    <noscript><style>.loader-card .progress, #progress-label, #enter, #enter-hint, .loader-card .howto, .loader-card .text-link { display: none; }</style></noscript>
     <link rel="alternate" hreflang="en" href="https://artificial-paradise.netlify.app/?lang=en" />
     <link rel="alternate" hreflang="hu" href="https://artificial-paradise.netlify.app/?lang=hu" />
     <link rel="alternate" hreflang="x-default" href="https://artificial-paradise.netlify.app/" />
@@ -124,6 +127,10 @@
         <h1 class="sr-only" id="loader-title">Artificial Paradise · KristofLab · Digital Exhibition</h1>
         <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
         <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10-31.01.2025</span></p>
+        <noscript>
+          <p class="noscript">The digital exhibition needs JavaScript and WebGL. <a href="./text/">Accessible version of the digital exhibition (text format)</a></p>
+          <p class="noscript" lang="hu">A digitális kiállításhoz JavaScript és WebGL szükséges. <a href="./text/hu/">A kiállítás digitális változatának akadálymentes változata (szöveges formátum)</a></p>
+        </noscript>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading the exhibition" data-i18n-attr="aria-label:loader.progress"><span id="progress-bar"></span></div>
         <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
         <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
@@ -206,7 +213,6 @@
     <!-- The one live region: rooms, the work in front, tour captions (src/ui/announce.js) -->
     <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
-    <noscript><p class="noscript">The digital exhibition needs JavaScript and WebGL. <a href="./text/">Accessible version of the digital exhibition (text format)</a> · <span lang="hu">A digitális kiállításhoz JavaScript és WebGL szükséges. <a href="./text/hu/">A kiállítás digitális változatának akadálymentes változata (szöveges formátum)</a></span></p></noscript>
     <script type="module" src="/src/boot.js"></script>
   </body>
 </html>
