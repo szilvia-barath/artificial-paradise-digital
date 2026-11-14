@@ -3,7 +3,8 @@
   --fg: #f2f1ed;
   --muted: #9a9a98;
   --line: rgba(255, 255, 255, 0.14);
-  --glass: rgba(14, 15, 18, 0.72);
+  --glass: rgba(14, 15, 18, 0.85); /* chips over the 3D view; 0.85 so text on them reads over a white wall */
+  --hud-muted: #c4c3be; /* secondary text on glass: keycap letters, the muted icon, the wheel hint */
   --accent: #9dff6a; /* synthetic leaf green */
   --accent-2: #ff4fa3; /* tower-block magenta */
   --cyan: #5fe7ff;
@@ -428,7 +429,7 @@ body.touch #crosshair { display: none; }
 #toolbar button:hover, #toolbar button.on { background: rgba(255, 255, 255, 0.1); }
 #toolbar button .ico { white-space: nowrap; }
 #toolbar button.on .ico { color: var(--accent); }
-#toolbar button.muted .ico { color: var(--muted); text-decoration: line-through; }
+#toolbar button.muted .ico { color: var(--hud-muted); text-decoration: line-through; }
 .rooms-wrap { position: relative; }
 #rooms-menu {
   position: absolute;
@@ -549,12 +550,14 @@ body.touch #keypad { display: none; }
   top: 4px;
   font-style: normal;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.04em;
-  color: var(--muted);
+  color: var(--hud-muted);
 }
 /* the arrow on a keycap is drawn here, so the key's letter is its only text */
 .cap .glyph::before { content: attr(data-glyph); }
+/* the drawing sits 5 px below the middle, clear of the 11 px letter above it */
+.cap .glyph, .cap svg { position: relative; top: 5px; }
 .cap:hover { border-color: rgba(255, 255, 255, 0.35); }
 .cap.pressed {
   background: rgba(157, 255, 106, 0.2);
@@ -584,7 +587,7 @@ body.touch #keypad { display: none; }
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.06em;
-  color: #c9c9c6;
+  color: var(--hud-muted);
 }
 .wheel b { color: var(--fg); }
 /* Zoom keys: beside the keypad on desktop, on the right above the toolbar on touch */
