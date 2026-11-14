@@ -6,7 +6,7 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 
 - NVDA (current version), speech on, Speech viewer open (NVDA menu → Tools → Speech viewer) so you can copy what was said.
 - Run the whole script twice: once in Firefox, once in Chrome. Note the browser at the top of your copy.
-- Address: the preview of the `wip/a11y-pilot` branch, with `?lang=en` at the end. Run steps 1 to 9 again with `?lang=hu` if there is time; the Hungarian strings marked `[HU: confirm]` will be read out with the mark.
+- Address: the preview of the `wip/a11y-pilot` branch, with `?lang=en` at the end. Run steps 1 to 9 again with `?lang=hu` if there is time; the nine Hungarian proposals still marked `[HU: confirm]` will be read out with the mark.
 - Keys in this script: **NVDA** is Insert (or Caps Lock). Browse mode and focus mode: NVDA plays a sound when it switches. Inside the 3D view NVDA should switch to focus mode by itself, because the view has the role "application".
 - Exact wording varies a little between NVDA versions and between Firefox and Chrome ("clickable", "button" before or after the name). Only note differences that change the meaning, drop something, or say something twice.
 
@@ -15,7 +15,7 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 | # | Do | You should hear | Heard |
 |---|---|---|---|
 | 1.1 | Load the page. Wait for the loading line to finish. | The page title "Artificial Paradise: Digital Exhibition". When loading ends: "Ready", then "Enter, button" (focus moves to it). | |
-| 1.2 | Press Ctrl+Home, then Tab once. | "Text version navigation landmark, Text version of the exhibition, link". The link shows at the top left. | |
+| 1.2 | Press Ctrl+Home, then Tab once. | "Accessible version navigation landmark, Accessible version of the digital exhibition (text format), link". The link shows at the top left. | |
 | 1.3 | Press NVDA+F7, choose Headings. | One heading at level 1: "Artificial Paradise · KristofLab · Digital Exhibition". | |
 | 1.4 | In the same list choose Landmarks. | Accessible version (navigation), main, banner, Main (navigation, inside the banner), the title region "Artificial Paradise · KristofLab · Digital Exhibition", content info. | |
 | 1.5 | Close the list. Press B a few times (next button). | About, Works, Behind the scenes, Contact, EN (pressed), HU (not pressed), Menu only on a narrow window, Enter, then in the footer Contact, Accessibility, Legal notice, Privacy. No button for the 3D view yet. | |
@@ -25,7 +25,7 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 
 | # | Do | You should hear | Heard |
 |---|---|---|---|
-| 2.1 | Press Enter on "Text version of the exhibition". | New page: "Artificial Paradise: accessible version (text format)". | |
+| 2.1 | Press Enter on "Accessible version of the digital exhibition (text format)". | New page: "Artificial Paradise: accessible version (text format)". | |
 | 2.2 | Press H repeatedly. | Level 1 "Artificial Paradise: accessible version (text format)"; level 2 "Room 1"; level 3 "No. 1: Wrong Data Landscape Dresden", and so on. 1 heading at level 1, 10 at level 2 (4 rooms, then Exhibition text, Opening speech, Controls, Credits, Accessibility, Rights), 17 at level 3. | |
 | 2.3 | Press 2 to reach "Room 2", then the down arrow. | "Video · bar". "You come in from Room 1. 2 works in this room. The exhibition text is on a wall in this room. On the left wall as you enter. It hangs about halfway along the wall." | |
 | 2.4 | Press 3 for the next work heading, then read down. | "No. 6: Artificial Paradise – Singapore". A list of terms: Medium "Video, Full HD", Year "2025", Where "On the wall behind you as you enter. It is the only work on this wall. It hangs beside the doorway you came through, on your left as you walk in." Then "About the videos" at level 4 and the artist's text. Then the link "Open No. 6, Artificial Paradise – Singapore, in the digital exhibition". | |
@@ -92,7 +92,7 @@ You are standing in front of No. 6, where the link from the accessible version p
 | # | Do | You should hear | Heard |
 |---|---|---|---|
 | 8.1 | Tab to "HU", press Enter. | "HU, toggle button, pressed" (NVDA may say "Magyar" from the title). The page title becomes "Artificial Paradise digitális kiállítás". | |
-| 8.2 | Press Page Down. | A Hungarian announcement with the English title in it, for example "1. terem. Festmények, Paradise Factory. 1. mű, Wrong Data Landscape Dresden. Megnyitás: Enter. [HU: confirm]". Note whether NVDA changes voice for Hungarian. | |
+| 8.2 | Press Page Down. | A Hungarian announcement with the English title in it, for example "1. terem. Festmények, Paradise Factory. 1. mű, Wrong Data Landscape Dresden. Megnyitás: Enter.". Note whether NVDA changes voice for Hungarian. | |
 | 8.3 | Switch back to EN. | "EN, toggle button, pressed". | |
 
 ## 9. Reduced motion (no screen reader needed)

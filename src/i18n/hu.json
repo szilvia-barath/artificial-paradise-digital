@@ -104,7 +104,7 @@
       "btsEyebrow": "A kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek. A betűbillentyűk és a nagyítás billentyűi akkor működnek, ha a 3D nézeten van a fókusz: a nézetre kattintva vagy a Tab billentyűvel vihető rá. [HU: confirm]",
+      "controlsDesk": "Asztali gépen a fel és le nyíllal vagy a W és S gombbal lehet előre és hátra sétálni, a görgővel is. A bal és jobb nyíl fordít, az A és D gombbal oldalra lehet lépni. Körülnézni az egér húzásával lehet. Nagyítani a + és − gombbal vagy Ctrl+görgővel lehet, a 0 visszaállítja. A Shift gombbal futni lehet. Egy művet rákattintással, vagy az E, illetve az Enter gombbal lehet megnyitni. A Page Down és a Page Up a következő és az előző műhöz visz. A T elindítja a tárlatvezetést, az M némít, az Esc bezárja a paneleket. A képernyőn látható gombok egérrel lenyomva ugyanígy működnek. A betűs gombok és a nagyítás csak akkor működnek, ha a 3D nézet van kiválasztva: ehhez a nézetre kell kattintani, vagy a Tab gombbal rálépni.",
       "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás.",
       "linkFacebook": "A MAMŰ a Facebookon",
       "linkMamuInstagram": "A MAMŰ az Instagramon",
@@ -132,9 +132,9 @@
       "name": "Akadálymentes változat",
       "docTitle": "Artificial Paradise: akadálymentes változat (szöveges formátum)",
       "docDescription": "Szabó Kristóf / KristofLab: Artificial Paradise (MAMŰ Galéria, Budapest, 2025. január 10–31.) szövegként: a négy terem a látogatás sorrendjében, a 17 mű és az, hogy melyik hol volt. 3D grafika nélkül is olvasható.",
-      "intro": "Ez az oldal szövegként adja vissza a kiállítást: a négy termet a látogatás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik. [HU: confirm]",
-      "positionsNote": "Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik. [HU: confirm]",
-      "toWalk": "Tovább a 3D bejáráshoz [HU: confirm]",
+      "intro": "Ez az oldal szövegként adja vissza a kiállítást: a négy termet a látogatás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.",
+      "positionsNote": "Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik.",
+      "toWalk": "Tovább a digitális kiállításhoz",
       "onThisPage": "Ezen az oldalon",
       "facts": {
         "artist": "Művész",
@@ -152,37 +152,37 @@
         "year": "Év",
         "where": "Hol"
       },
-      "openInWalk": "{no}. mű, {title}: megnyitás a digitális kiállításban [HU: confirm]",
+      "openInWalk": "{no}. mű, {title}: megnyitás a digitális kiállításban",
       "textAbove": "A művész ehhez a műhöz írt szövege feljebb olvasható, itt: {ref}.",
       "part": "A műhöz tartozó kis képernyő külön helyen van. {where}",
       "rights": "Jogok",
       "pos": {
-        "left": "Belépéskor a bal oldali falon. [HU: confirm]",
-        "right": "Belépéskor a jobb oldali falon. [HU: confirm]",
-        "ahead": "Belépéskor a szemközti falon. [HU: confirm]",
+        "left": "Belépéskor a bal oldali falon.",
+        "right": "Belépéskor a jobb oldali falon.",
+        "ahead": "Belépéskor a szemközti falon.",
         "behind": "A bejárat felőli falon.",
-        "only": "Ezen a falon ez az egyetlen mű. [HU: confirm]",
-        "orderSide": "Ezen a falon {n} mű van. Sorszáma a bejárat felőli végtől számolva: {i}. [HU: confirm]",
-        "orderFacing": "Ezen a falon {n} mű van. Sorszáma balról számolva, a fallal szemben állva: {i}. [HU: confirm]",
-        "alongNear": "A fal bejárat felőli végénél van. [HU: confirm]",
-        "alongMid": "Nagyjából a fal közepén van. [HU: confirm]",
-        "alongFar": "A fal túlsó vége felé van. [HU: confirm]",
-        "doorAheadLeft": "A következő terembe ({room}) vezető átjárótól balra van. [HU: confirm]",
-        "doorAheadRight": "A következő terembe ({room}) vezető átjárótól jobbra van. [HU: confirm]",
+        "only": "Ezen a falon ez az egyetlen mű.",
+        "orderSide": "Ezen a falon {n} mű van. Sorszáma a bejárat felőli végtől számolva: {i}.",
+        "orderFacing": "Ezen a falon {n} mű van. Sorszáma balról számolva, a fallal szemben állva: {i}.",
+        "alongNear": "A fal bejárat felőli végénél van.",
+        "alongMid": "Nagyjából a fal közepén van.",
+        "alongFar": "A fal túlsó vége felé van.",
+        "doorAheadLeft": "A következő terembe ({room}) vezető átjárótól balra van.",
+        "doorAheadRight": "A következő terembe ({room}) vezető átjárótól jobbra van.",
         "doorBehindLeft": "A bejárat mellett van, belépve bal kéz felől.",
         "doorBehindRight": "A bejárat mellett van, belépve jobb kéz felől.",
-        "floorNear": "A padlón, a bejárat közelében. [HU: confirm]",
-        "floorMid": "A padlón, a terem közepén. [HU: confirm]",
-        "floorFar": "A padlón, a terem túlsó végében. [HU: confirm]"
+        "floorNear": "A padlón, a bejárat közelében.",
+        "floorMid": "A padlón, a terem közepén.",
+        "floorFar": "A padlón, a terem túlsó végében."
       },
-      "skip": "A kiállítás szöveges változata [HU: confirm]",
+      "skip": "A kiállítás digitális változatának akadálymentes változata (szöveges formátum)",
       "href": "./text/hu/?lang=hu",
       "nameFull": "Akadálymentes változat (szöveges formátum)"
     },
     "announce": {
       "room": "{name}. {subtitle}.",
-      "work": "{no}. mű, {title}. Megnyitás: Enter. [HU: confirm]",
-      "text": "Kiállítási szöveg. Elolvasás: Enter. [HU: confirm]",
+      "work": "{no}. mű, {title}. Megnyitás: Enter.",
+      "text": "Kiállítási szöveg. Megnyitás: Enter.",
       "tourWork": "{no}. mű, {title}. {meta}.",
       "tourStopped": "A tárlatvezetés leállt."
     }
@@ -492,47 +492,47 @@
       {
         "h": "Állapot",
         "p": [
-          "Ez egy pilot: a digitális kiállítás első változata, amely az akadálymentességet szem előtt tartva készült. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még. [HU: confirm]"
+          "Ez egy pilot: a digitális kiállítás első változata, amely az akadálymentességet szem előtt tartva készült. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még."
         ]
       },
       {
         "h": "Mit teszteltem, és hogyan",
         "p": [
-          "Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját. [HU: confirm]",
-          "Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (14 lépésből 14 sikeres). [HU: confirm]",
-          "Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva. [HU: confirm]",
-          "Telefonszélesség: az akadálymentes változat 375 képpont szélesen, JavaScripttel és anélkül. [HU: confirm]",
-          "Villogás: a képkockák rögzített, másodpercenként 60-as ütemben kirajzolva és cellánként összevetve. A teremváltást jelző glitch-effekt gyorsan egymást követő ugrásoknál másodpercenként akár 10-szer is villoghatott, ezért mindenkinél megszűnt. Nélküle a legtöbb mért érték 2 villanás volt egy másodperc alatt, másodpercenként hatszor lenyomott Page Down mellett. [HU: confirm]",
-          "Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal. [HU: confirm]"
+          "Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját.",
+          "Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (14 lépésből 14 sikeres).",
+          "Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva.",
+          "Telefonszélesség: az akadálymentes változat 375 képpont szélesen, JavaScripttel és anélkül.",
+          "Villogás: a képkockák rögzített, másodpercenként 60-as ütemben kirajzolva és cellánként összevetve. A teremváltást jelző glitch-effekt gyorsan egymást követő ugrásoknál másodpercenként akár 10-szer is villoghatott, ezért mindenkinél megszűnt. Nélküle a legtöbb mért érték 2 villanás volt egy másodperc alatt, másodpercenként hatszor lenyomott Page Down mellett.",
+          "Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal."
         ]
       },
       {
         "h": "Mi működik",
         "p": [
-          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása. [HU: confirm]",
+          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.",
           "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja a nézet közepén lévő művet.",
-          "Képernyőolvasóknak a bejárás egyszerre egy sort ír egy élő régióba: a termet, ahová belépsz, az előtted lévő művet és a tárlatvezetés minden feliratát. A 3D nézetnek neve van, amely a szöveges változatra mutat. [HU: confirm]",
+          "A 3D nézetre lépve a képernyőolvasó felolvassa, hogy ez a digitális kiállítás nézete, és jelzi, hol érhető el az akadálymentes változat. Séta közben bemondja, melyik teremben van a látogató, és melyik kiállított mű van épp fókuszban.",
           "Ha a rendszerben be van kapcsolva a csökkentett mozgás, a digitális kiállításban nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép."
         ]
       },
       {
         "h": "Ismert hiányosságok",
         "p": [
-          "Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a digitális kiállításban. [HU: confirm]",
-          "A T, M, E, W, A, S, D betűbillentyűk és a nagyítás billentyűi csak akkor működnek, ha a 3D nézeten van a fókusz, ahogy a WCAG 2.1.4 kéri; a fókusz a nézetre kattintva vagy a Tab billentyűvel vihető rá. Nem kapcsolhatók ki és nem állíthatók át. [HU: confirm]",
-          "A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. Az akadálymentes változat minden mű adatait, helyét és a művész szövegét adja meg. [HU: confirm]",
-          "Érintőképernyős telefonon a digitális kiállítás 3D nézete képernyőolvasóval nem használható. Az akadálymentes változat igen. [HU: confirm]",
-          "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja. [HU: confirm]",
-          "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani. [HU: confirm]",
+          "Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a digitális kiállításban.",
+          "A T, M, E, W, A, S, D betűbillentyűk és a nagyítás billentyűi csak akkor működnek, ha a 3D nézeten van a fókusz, ahogy a WCAG 2.1.4 kéri; a fókusz a nézetre kattintva vagy a Tab billentyűvel vihető rá. Nem kapcsolhatók ki és nem állíthatók át.",
+          "A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. Az akadálymentes változat minden mű adatait, helyét és a művész szövegét adja meg.",
+          "Érintőképernyős telefonon a digitális kiállítás 3D nézete képernyőolvasóval nem használható. Az akadálymentes változat igen.",
+          "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja.",
+          "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani.",
           "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 másodperc után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.",
-          "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem. [HU: confirm]",
-          "Az új részek magyar szövege még megerősítésre vár. [HU: confirm]"
+          "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem.",
+          "Az új részek magyar szövege még megerősítésre vár."
         ]
       },
       {
         "h": "Tervezett",
         "p": [
-          "A tér hangos leírása (audionarráció). Egy nézet, amely megmutatja, mi mért és mi becsült a rekonstrukcióban. Teszt az NVDA képernyőolvasóval, Windowson. [HU: confirm]"
+          "A tér hangos leírása (audionarráció). Egy nézet, amely megmutatja, mi mért és mi becsült a rekonstrukcióban. Teszt az NVDA képernyőolvasóval, Windowson."
         ]
       },
       {
@@ -546,6 +546,6 @@
         }
       }
     ],
-    "updated": "A nyilatkozat kelte: 2026. november 14. [HU: confirm]"
+    "updated": "A nyilatkozat kelte: 2026. november 14."
   }
 }

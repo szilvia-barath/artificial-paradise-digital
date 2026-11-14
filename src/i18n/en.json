@@ -104,7 +104,7 @@
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
-      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work while the 3D view has focus: click the view or Tab to it.",
+      "controlsDesk": "On a computer, walk forward and back with the up and down arrows or W and S, or with the scroll wheel. The left and right arrows turn, and A and D step sideways. Drag with the mouse to look around. Zoom with + and − or Ctrl and the scroll wheel; 0 resets. Shift makes you run. Open a work by clicking it, or with E or Enter. Page Down and Page Up go to the next and the previous work. T starts the tour, M mutes, Esc closes a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work only while the 3D view is selected: click the view or Tab to it.",
       "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work.",
       "linkFacebook": "MAMŰ on Facebook",
       "linkMamuInstagram": "MAMŰ on Instagram",
@@ -134,7 +134,7 @@
       "docDescription": "Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.",
       "intro": "This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.",
       "positionsNote": "The positions given here follow the 3D reconstruction and its decision log.",
-      "toWalk": "Go to the 3D walk",
+      "toWalk": "Go to the digital exhibition",
       "onThisPage": "On this page",
       "facts": {
         "artist": "Artist",
@@ -175,7 +175,7 @@
         "floorMid": "On the floor, in the middle of the room.",
         "floorFar": "On the floor, at the far end of the room."
       },
-      "skip": "Text version of the exhibition",
+      "skip": "Accessible version of the digital exhibition (text format)",
       "href": "./text/?lang=en",
       "nameFull": "Accessible version (text format)"
     },
@@ -513,7 +513,7 @@
         "p": [
           "The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.",
           "Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. Page Down and Page Up go to the next and the previous work. Enter opens the work in front of you.",
-          "For screen readers the walk writes one line at a time into a live region: the room you enter, the work in front of you, each caption of the tour. The 3D view has a name that points to the text version.",
+          "When a screen reader reaches the 3D view, it says that this is the view of the digital exhibition, and where the accessible version is. While walking, it announces the room and the exhibited work currently in focus.",
           "With reduced motion switched on in your system, the digital exhibition has no grain, no colour fringes and no pulsing, and the tour jumps from stop to stop. The loading screen is a still image for everyone."
         ]
       },
