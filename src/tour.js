@@ -64,14 +64,14 @@ export class Tour {
   _text(s) {
     const w = s.work ? this.byId[s.work] : null;
     if (w) return `<span class="t">${esc(w.no)} · ${esc(w.title)} · ${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption || '')}`;
-    return s.intro ? `<span class="t">Artificial Paradise</span>${esc(this.data.tourIntro)}` : '';
+    return '';
   }
 
   // The caption as one plain sentence, for the screen reader.
   _plain(s) {
     const w = s.work ? this.byId[s.work] : null;
     if (w) return [t('announce.tourWork', { no: w.no, title: w.title, meta: [w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', ') }), w.caption || ''].join(' ');
-    return s.intro ? `Artificial Paradise. ${this.data.tourIntro}` : '';
+    return '';
   }
 
   // After a language switch: re-render the caption on screen.

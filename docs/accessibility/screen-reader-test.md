@@ -73,8 +73,8 @@ You are standing in front of No. 6, where the link from the accessible version p
 
 | # | Do | You should hear | Heard |
 |---|---|---|---|
-| 6.1 | Shift+Tab back to the 3D view. Press T. | After a few seconds: "Artificial Paradise. Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025." | |
-| 6.2 | Wait. | At each stop one caption: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023." Then No. 2, and so on, with "Room 2. Video, bar." when the tour changes room. | |
+| 6.1 | Shift+Tab back to the 3D view. Press T. | After a few seconds, at the first work: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023." No line before it: the tour has no opening sentence. | |
+| 6.2 | Wait. | At each stop one caption: No. 2, and so on, with "Room 2. Video, bar." when the tour changes room. | |
 | 6.3 | Press Esc. | "Tour stopped." | |
 
 ## 7. Panels

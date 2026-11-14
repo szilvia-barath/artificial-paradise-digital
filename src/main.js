@@ -145,10 +145,10 @@ const viewer = setupViewer(data, {
   isMuted: () => audio.muted,
 });
 
-// Guided tour: the works in catalogue order, routed through the doorways.
+// Guided tour: the works in catalogue order, routed through the doorways. It starts at the
+// first work; there is no opening stop with a line of its own.
 function buildTourStops() {
-  const r1 = roomById('r1');
-  const stops = [{ x: r1.spawn.x, z: r1.spawn.z, look: [r1.spawn.look.x, 1.5, r1.spawn.look.z], intro: true, dwell: 4 }];
+  const stops = [];
   let room = 'r1';
   for (const w of data.works) {
     if (!w._focus) continue;

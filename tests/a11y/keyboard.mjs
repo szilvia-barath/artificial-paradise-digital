@@ -227,7 +227,8 @@ await said();
 await page.keyboard.press('KeyT');
 const pressed = await page.getAttribute('[data-action="tour"]', 'aria-pressed');
 // Software rendering draws about two frames a second here, so the test moves the tour's
-// own clock on (0.1 s a step) until the first two captions have come up.
+// own clock on (0.1 s a step) until the first two captions have come up (the tour starts
+// at the first work; it has no opening line).
 const toCaption = (stop) => page.evaluate((n) => {
   const { tour } = window.__ap;
   for (let i = 0; i < 600 && tour.active && !(tour.i === n && tour.shown); i++) tour.update(0.1);
@@ -237,7 +238,7 @@ await wait(1300);
 await toCaption(1);
 await wait(1300);
 heard = (await said()).join(' | ');
-step(`7.1 Tab back to the 3D view (${tabs} presses); T starts the tour`, 'Tour button reads as pressed; the opening caption and the first work\'s caption are announced', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && heard.includes('Artificial Paradise.') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.'));
+step(`7.1 Tab back to the 3D view (${tabs} presses); T starts the tour`, 'Tour button reads as pressed; the first and the second work\'s captions are announced, with no opening line before them', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && !heard.includes('Down the stairs') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.') && heard.includes('No. 2,'));
 await page.keyboard.press('Escape');
 await wait(1500);
 heard = (await said()).join(' | ');
