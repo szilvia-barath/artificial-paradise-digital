@@ -28,6 +28,19 @@ nav.addEventListener('click', (e) => {
 document.addEventListener('pointerdown', (e) => {
   if (!nav.contains(e.target)) closeMenu();
 });
+// Esc closes the open menu and puts focus back on its button; nothing else hears that Esc.
+nav.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || !nav.classList.contains('open')) return;
+  e.stopPropagation();
+  closeMenu();
+  toggle.focus();
+});
+// The menu closes when focus leaves the navbar for another control (Tab past the last
+// language button, Shift+Tab before the menu button). A press that moves focus nowhere is
+// left to the pointerdown above.
+nav.addEventListener('focusout', (e) => {
+  if (e.relatedTarget && !nav.contains(e.relatedTarget)) closeMenu();
+});
 
 // The footer wraps onto more lines in a narrow window. Everything placed above it (the
 // toolbar, the on-screen keys, the focus frame) reads its real height from --foot-h, so
