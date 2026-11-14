@@ -159,12 +159,19 @@ ${inRoom.map(workHTML).join('\n')}
   ];
   // The accessibility statement, the same text as the walk's panel.
   const statement = t('accessibility');
+  const mailOf = (l) => data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
   const inline = (l) => {
-    const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
+    const mail = mailOf(l);
     return mail ? `<a href="${esc(mail.href)}">${esc(l.text)}</a>` : esc(l.text);
   };
+  // On this page only, the address is also written out as a plain line under the
+  // paragraph with the link, so it can be read, copied or printed (same contacts entry).
+  const addressLine = (l) => {
+    const mail = l && mailOf(l);
+    return mail ? `<p>${esc(mail.text)}</p>` : '';
+  };
   const statementHTML = statement.sections.map((sec) => `<dt>${esc(sec.h)}</dt>
-<dd>${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : '')}</p>`).join('')}</dd>`).join('\n');
+<dd>${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : '')}</p>`).join('')}${addressLine(sec.link)}</dd>`).join('\n');
   const other = lang === 'en'
     ? '<a href="hu/?lang=hu" lang="hu" hreflang="hu">Magyar</a>'
     : '<a href="../?lang=en" lang="en" hreflang="en">English</a>';
