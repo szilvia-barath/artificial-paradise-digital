@@ -781,8 +781,8 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   .viewer-info { border-left: 0; border-top: 1px solid var(--line); padding: 18px 16px calc(18px + var(--safe-b)); }
   .viewer-info h2 { font-size: 24px; }
   #minimap { width: 150px; height: 102px; right: 10px; top: calc(var(--nav-h) + 6px); }
-  #toolbar button .lbl { display: none; }
-  #toolbar button { padding: 10px 11px; font-size: 14px; }
+  /* the words stay beside the glyphs at every width (the Hungarian row fits a 375 px phone) */
+  #toolbar button { padding: 11px 9px; gap: 6px; letter-spacing: 0.08em; white-space: nowrap; }
   #room-label { left: 12px; top: calc(var(--nav-h) + 6px); max-width: calc(100% - 12px - 150px - 10px - 8px); padding: 6px 10px; }
   #room-label .room-name { font-size: 13px; }
   #tour-caption { font-size: 13px; bottom: calc(76px + var(--safe-b)); }
