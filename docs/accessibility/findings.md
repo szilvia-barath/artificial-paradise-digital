@@ -65,7 +65,26 @@ A mouse press on the view lets the browser give it focus itself, so the white ke
 
 Checked by the keyboard run (`keyboard-test-log.md`, steps 7.0a and 7.0b): with focus on a button, T, M, E, W and + do nothing; after pressing the mouse on the view, M, + and W work. Checked by `tests/a11y/focus-mouse.mjs` (14 steps): every mouse path above, the title screen, the sound question and the zoom readout by keyboard.
 
-A code review of this change (three reviewers, each finding checked by a fourth) found that the map, EN / HU, closing the rooms menu by mouse and the zoom readout left the letter keys dead; that a dialog closed by mouse on the title screen sent focus to Enter; that the keyboard frame stayed on the view after a mouse press; and that "Walk to this work" on the title screen could take focus out of the sound question. All are fixed as described above.
+A code review of this change (three reviewers, each finding checked by a fourth) found that the map, EN / HU, closing the rooms menu by mouse and the zoom readout left the letter keys dead; that a dialog closed by mouse on the title screen sent focus to Enter; that the keyboard frame stayed on the view after a mouse press; and that "Walk to this work" on the title screen could take focus out of the sound question. All are fixed as described above, except the footer links (see the table below).
+
+### All twelve findings of that review, and what was done
+
+Three reviewers looked at the change independently; each finding was then checked by another agent. Twelve findings were confirmed. Several reviewers found the same fault, so they come to nine distinct faults.
+
+| # | Finding | Same fault as | What was done |
+|---|---|---|---|
+| 1 | A click on the map, or on EN / HU, leaves the 3D view without focus, so the letter keys go dead | | Fixed in `4c1a2ce`: both hand focus back to the view |
+| 2 | Opening and closing the rooms menu by mouse leaves focus on the Rooms button | | Fixed in `4c1a2ce` |
+| 3 | On the title screen a dialog closed with the mouse sends focus to Enter, not to the control that opened it; screen-reader taps on a phone counted as mouse | | Fixed in `4c1a2ce`: back to the opener on the title screen; only a real mouse counts |
+| 4 | The accessible version's contact line shows the link words, so the address itself can no longer be read there | | Asked; now done (`bbb4ec9`): the address is a plain line under the link on `text/` |
+| 5 | The colour fringes still swelled with a "glitch" band from the sound, a leftover of the removed pulse, which twitched them now and then without Web Audio | | Fixed in `eb2f607`, with the glitch removal |
+| 6 | A mouse press on the view after a keyboard focus keeps the keyboard frame | | Fixed in `4c1a2ce`: the browser gives the view its focus itself |
+| 7 | The zoom readout used by keyboard hides itself and focus falls to the page | | Fixed in `4c1a2ce`: focus goes to the view |
+| 8 | A click on the map leaves the view without focus (second reviewer) | 1 | Same fix |
+| 9 | Closing the rooms menu by mouse leaves focus on the button (second reviewer) | 2 | Same fix |
+| 10 | A mouse click on a navbar or footer control that opens no dialog leaves the view without focus: EN / HU, and the footer links | 1, in part | EN / HU fixed. The footer links (Instagram, the MAMŰ logo, the accessible version) are not: they leave the page or open a new tab, and on coming back focus is on the link, so one click on the view is needed before the letter keys work. The arrows work meanwhile. Open |
+| 11 | "Walk to this work" on the title screen enters the digital exhibition and then pulls focus out of the sound question | | Fixed in `4c1a2ce`: nothing moves focus or acts under the question |
+| 12 | A dialog closed with the mouse on the title screen sends focus to Enter (second reviewer) | 3 | Same fix |
 
 Still true: the keys are read by position (`event.code`), so on a French AZERTY keyboard "W" is the key labelled Z. They cannot be switched off or remapped; the criterion does not ask for that once they are focus-scoped.
 
