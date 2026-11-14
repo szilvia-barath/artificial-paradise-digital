@@ -379,10 +379,14 @@ body.touch #crosshair { display: none; }
   display: flex;
   flex-direction: column;
   gap: 2px;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  /* on the same glass chip as the toolbar, never straight on the wall; it wraps beside the map */
+  max-width: calc(100% - 18px - 220px - 14px - 8px);
+  padding: 8px 12px;
+  background: var(--glass);
+  border: 1px solid var(--line);
 }
 #room-label .room-name { font-size: 15px; text-transform: uppercase; letter-spacing: 0.18em; }
-#room-label .room-sub { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; }
+#room-label .room-sub { font-size: 10px; line-height: 1.5; color: #c9c9c6; text-transform: uppercase; letter-spacing: 0.14em; }
 #minimap {
   position: absolute;
   right: 14px;
@@ -772,7 +776,7 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   #minimap { width: 150px; height: 102px; right: 10px; top: calc(var(--nav-h) + 6px); }
   #toolbar button .lbl { display: none; }
   #toolbar button { padding: 10px 11px; font-size: 14px; }
-  #room-label { left: 12px; top: calc(var(--nav-h) + 8px); }
+  #room-label { left: 12px; top: calc(var(--nav-h) + 6px); max-width: calc(100% - 12px - 150px - 10px - 8px); padding: 6px 10px; }
   #room-label .room-name { font-size: 13px; }
   #tour-caption { font-size: 13px; bottom: calc(76px + var(--safe-b)); }
   body.touch #tour-caption { bottom: calc(210px + var(--safe-b)); }
