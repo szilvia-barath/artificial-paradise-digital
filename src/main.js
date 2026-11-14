@@ -610,7 +610,21 @@ function markReady() {
   enterBtn.disabled = false;
   // Enter gets focus when loading is done, unless the visitor has already tabbed
   // somewhere (to the skip link, the navbar, a panel): then focus stays where it is.
-  if (document.activeElement === document.body || !document.activeElement) enterBtn.focus({ preventScroll: true });
+  if (document.activeElement === document.body || !document.activeElement) {
+    enterBtn.focus({ preventScroll: true });
+    showEnter();
+  }
+}
+// In a short window (200% zoom) Enter can be below the fold when it takes focus. The title
+// card's own scroller (#loader, never the page) is then set, in one step and with no
+// animation, so that Enter stands 12 px above the footer, or 12 px under the navbar if the
+// window is too short for that.
+function showEnter() {
+  const loader = document.getElementById('loader');
+  const top = document.getElementById('site-nav').offsetHeight + 12;
+  const bottom = window.innerHeight - document.getElementById('site-foot').offsetHeight - 12;
+  const r = enterBtn.getBoundingClientRect();
+  if (r.bottom > bottom) loader.scrollTop += Math.min(r.bottom - bottom, r.top - top);
 }
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.

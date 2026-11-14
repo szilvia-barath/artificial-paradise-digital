@@ -101,6 +101,8 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
   overflow-y: auto;
   overflow-x: hidden;
   touch-action: auto;
+  /* what Tab scrolls to stays clear of the navbar and the footer, which lie over the card */
+  scroll-padding: calc(var(--nav-h) + 12px) 0 calc(var(--foot-h) + 12px + var(--safe-b));
 }
 #loader.gone { opacity: 0; visibility: hidden; pointer-events: none; }
 /* The loading screen is a still image: nothing on it moves, for anyone (design rule in
@@ -139,11 +141,15 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
   background: #fbfbf9;
   text-align: center;
 }
+/* The logo is capped by the window's height as well as by the card's width: a third of a
+   short window (a laptop at 200% zoom, a phone on its side), so Enter is not pushed far
+   below the fold. From 762 px of height up it is the full 470 px wide, as before. */
 .loader-logo {
   display: block;
-  width: 100%;
-  max-width: 470px;
+  width: auto;
+  max-width: min(470px, 100%);
   height: auto;
+  max-height: max(96px, 34vh);
   margin: 0 auto;
 }
 .loader-meta {
