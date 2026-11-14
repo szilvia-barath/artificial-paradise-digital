@@ -2,7 +2,7 @@
   "_readme": "Hungarian texts, same shape as en.json (anything missing falls back to English). The exhibition text is the official one by Cserhalmi Luca; the opening speech is Zemlényi-Kovács Barnabás's. Work captions are still descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
-    "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállításának digitális változata, fotókból rekonstruálva: a termek a böngészőben végigjárhatók. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető. [HU: confirm]",
+    "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10–31. között volt megtekinthető.",
     "sceneLabel": "A digitális kiállítás 3D nézete: a nyílbillentyűkkel lehet sétálni, az Enter megnyitja a nézet közepén lévő művet. Az akadálymentes változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt.",
     "nav": {
       "main": "Fő menü",
@@ -17,8 +17,8 @@
       "accessibility": "Akadálymentesség"
     },
     "soundAsk": {
-      "question": "Hanggal vagy hang nélkül? [HU: confirm]",
-      "hint": "Fejhallgatóval izgalmasabb · a hang az M billentyűvel bármikor be- és kikapcsolható [HU: confirm]",
+      "question": "Hanggal induljon a kiállítás?",
+      "hint": "Fejhallgatóval izgalmasabb · a hang az M billentyűvel bármikor be- és kikapcsolható",
       "off": "Hang nélkül",
       "on": "Hanggal"
     },
@@ -32,7 +32,7 @@
       "hint": "Hanggal: fejhallgatóval izgalmasabb",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
-      "failure": "Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Egy friss Chrome, Firefox vagy Safari böngészővel érdemes újra megpróbálni. [HU: confirm]",
+      "failure": "Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Friss verziójú Chrome, Firefox vagy Safari böngészővel érdemes megpróbálni.",
       "progress": "A kiállítás betöltése"
     },
     "footer": {
@@ -49,10 +49,10 @@
       "sound": "Hang",
       "soundTitle": "Hang be/ki (M)",
       "toolbar": "Kiállítás vezérlői",
-      "clickToLook": "Egérhúzás: körülnézés [HU: confirm]",
-      "promptText": "Kattintás: a kiállítási szöveg elolvasása [HU: confirm]",
-      "promptWork": "Kattintás: megtekintés · {no} {title} [HU: confirm]",
-      "minimap": "Térkép: egy teremre kattintva oda lehet ugrani [HU: confirm]",
+      "clickToLook": "Az egeret húzva körbe lehet nézni a teremben.",
+      "promptText": "Kattintás a bal egérgombbal: a kiállítási szöveg elolvasásához",
+      "promptWork": "Kattintás a megtekintéshez · {no} {title}",
+      "minimap": "Alaprajz: egy teremre kattintva automatikusan oda lehet jutni",
       "north": "É",
       "keys": {
         "group": "Mozgásbillentyűk",
@@ -61,7 +61,7 @@
         "left": "Fordulás balra (←)",
         "right": "Fordulás jobbra (→)",
         "run": "Shift: futás, kattintásra be/ki",
-        "wheel": "görgetés: séta [HU: confirm]",
+        "wheel": "Sétáláshoz az egér görgője is használható",
         "zoom": "Nagyítás",
         "zoomIn": "Nagyítás (+)",
         "zoomOut": "Kicsinyítés (−)",
@@ -525,8 +525,7 @@
           "Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja.",
           "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani.",
           "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 másodperc után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.",
-          "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem.",
-          "Az új részek magyar szövege még megerősítésre vár."
+          "A 3D nézet fölötti apró feliratok kontrasztja a mögöttük lévő faltól függ; ezt nem mértem."
         ]
       },
       {
@@ -538,7 +537,7 @@
       {
         "h": "Kapcsolat",
         "p": [
-          "Ha valami nem működik, kérem, jelezze {link}."
+          "Ha valami nem működik, kérem, jelezze e-mailben {link}."
         ],
         "link": {
           "contact": "Digital",

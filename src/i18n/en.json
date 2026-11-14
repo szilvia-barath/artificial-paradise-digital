@@ -2,7 +2,7 @@
   "_readme": "English texts. 'ui' holds the interface strings; everything else is exhibition content copied onto src/data/exhibition.json at runtime (works are matched by id). The opening speech is translated from the Hungarian original. Work captions are descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise: Digital Exhibition",
-    "docDescription": "The digital version of Kristóf Szabó - KristofLab's exhibition Artificial Paradise, reconstructed from photographs: its rooms can be walked through in the browser. The exhibition was on view at MAMŰ Gallery, Budapest, 10-31 January 2025.",
+    "docDescription": "The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10–31 January 2025.",
     "sceneLabel": "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys.",
     "nav": {
       "main": "Main",
@@ -17,8 +17,8 @@
       "accessibility": "Accessibility"
     },
     "soundAsk": {
-      "question": "Visit with sound?",
-      "hint": "Headphones recommended · M switches it on or off any time",
+      "question": "Start with sound?",
+      "hint": "Better with headphones · M switches the sound on or off any time",
       "off": "Without sound",
       "on": "With sound"
     },
@@ -49,10 +49,10 @@
       "sound": "Sound",
       "soundTitle": "Sound on/off (M)",
       "toolbar": "Exhibition controls",
-      "clickToLook": "Drag to look around",
-      "promptText": "Click to read the exhibition text",
+      "clickToLook": "Drag the mouse to look around the room.",
+      "promptText": "Left-click to read the exhibition text",
       "promptWork": "Click to view · {no} {title}",
-      "minimap": "Map: click a room to jump there",
+      "minimap": "Floor plan: click a room to go there",
       "north": "N",
       "keys": {
         "group": "Movement keys",
@@ -61,7 +61,7 @@
         "left": "Turn left (←)",
         "right": "Turn right (→)",
         "run": "Shift: run, click to switch on or off",
-        "wheel": "scroll to walk",
+        "wheel": "The mouse wheel also walks",
         "zoom": "Zoom",
         "zoomIn": "Zoom in (+)",
         "zoomOut": "Zoom out (−)",
@@ -527,8 +527,7 @@
           "By keyboard you can walk and turn left and right, but not look up or down. The map can only be clicked; the rooms menu does the same by keyboard.",
           "Walking means holding a key down. Page Down and Page Up, the rooms menu and the tour move you without holding anything.",
           "The tour's captions change by themselves: after 5 seconds, or 14 at the videos with sound. The tour can be stopped (T or Esc) but not paused or slowed.",
-          "The contrast of the small labels over the 3D view depends on the wall behind them and was not measured.",
-          "The Hungarian wording of the new parts is still to be confirmed."
+          "The contrast of the small labels over the 3D view depends on the wall behind them and was not measured."
         ]
       },
       {
@@ -540,7 +539,7 @@
       {
         "h": "Contact",
         "p": [
-          "If something does not work, please tell {link}."
+          "If something does not work, please tell {link} by e-mail."
         ],
         "link": {
           "contact": "Digital",

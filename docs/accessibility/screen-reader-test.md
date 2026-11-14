@@ -6,7 +6,7 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 
 - NVDA (current version), speech on, Speech viewer open (NVDA menu → Tools → Speech viewer) so you can copy what was said.
 - Run the whole script twice: once in Firefox, once in Chrome. Note the browser at the top of your copy.
-- Address: the preview of the `wip/a11y-pilot` branch, with `?lang=en` at the end. Run steps 1 to 9 again with `?lang=hu` if there is time; the nine Hungarian proposals still marked `[HU: confirm]` will be read out with the mark.
+- Address: the preview of the `wip/a11y-pilot` branch, with `?lang=en` at the end. Run steps 1 to 9 again with `?lang=hu` if there is time.
 - Keys in this script: **NVDA** is Insert (or Caps Lock). Browse mode and focus mode: NVDA plays a sound when it switches. Inside the 3D view NVDA should switch to focus mode by itself, because the view has the role "application".
 - Exact wording varies a little between NVDA versions and between Firefox and Chrome ("clickable", "button" before or after the name). Only note differences that change the meaning, drop something, or say something twice.
 
@@ -35,7 +35,7 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 
 | # | Do | You should hear | Heard |
 |---|---|---|---|
-| 3.1 | Press Enter on the Enter button. | "Visit with sound? dialog", then "Without sound, button". | |
+| 3.1 | Press Enter on the Enter button. | "Start with sound? dialog", then "Without sound, button". | |
 | 3.2 | Press Tab twice. | "With sound, button", then "Without sound, button" again. Focus does not leave the question. | |
 | 3.3 | Press Enter on "Without sound". | Focus mode sound. "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys. application". Then "Room 2. Video, bar. No. 6, Artificial Paradise – Singapore. Press Enter to open." | |
 

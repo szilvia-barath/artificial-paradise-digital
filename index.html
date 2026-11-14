@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Artificial Paradise: Digital Exhibition</title>
-    <meta name="description" content="The digital version of Kristóf Szabó - KristofLab's exhibition Artificial Paradise, reconstructed from photographs: its rooms can be walked through in the browser. The exhibition was on view at MAMŰ Gallery, Budapest, 10-31 January 2025." />
+    <meta name="description" content="The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10–31 January 2025." />
     <meta name="theme-color" content="#0b0c0e" />
     <meta name="color-scheme" content="light dark" />
     <!-- Styles load from the head (render-blocking) so the title screen never flashes
@@ -33,7 +33,7 @@
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed from photographs as a digital exhibition you can walk through: the four rooms, the paintings, videos and installations where they hung." />
+    <meta property="og:description" content="The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10–31 January 2025." />
     <meta property="og:image" content="https://artificial-paradise.netlify.app/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -42,7 +42,7 @@
     <meta property="og:url" content="https://artificial-paradise.netlify.app/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed as a digital exhibition you can walk through." />
+    <meta name="twitter:description" content="The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10–31 January 2025." />
     <meta name="twitter:image" content="https://artificial-paradise.netlify.app/og.jpg" />
   </head>
   <body>
@@ -62,7 +62,7 @@
         <div id="crosshair"></div>
         <div id="prompt" class="mono"></div>
         <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
-        <canvas id="minimap" width="220" height="150" role="img" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
+        <canvas id="minimap" width="220" height="150" role="img" aria-label="Floor plan" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
         <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
           <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
           <div class="rooms-wrap">
@@ -80,14 +80,14 @@
           <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
           <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i><span class="glyph" data-glyph="↓" aria-hidden="true"></span></button>
           <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
-          <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">scroll to walk</span></span>
+          <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">The mouse wheel also walks</span></span>
         </div>
         <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
           <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn;aria-label:hud.keys.zoomIn"><i>+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
           <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
         </div>
         <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
-        <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag to look around</div>
+        <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag the mouse to look around the room.</div>
       </div>
     </main>
 
@@ -159,8 +159,8 @@
 
     <div id="sound-ask" class="sound-ask" role="dialog" aria-modal="true" aria-labelledby="sound-ask-q" hidden>
       <div class="sound-ask-card">
-        <p id="sound-ask-q" data-i18n="soundAsk.question">Visit with sound?</p>
-        <p class="hint" data-i18n="soundAsk.hint">Headphones recommended · M switches it on or off any time</p>
+        <p id="sound-ask-q" data-i18n="soundAsk.question">Start with sound?</p>
+        <p class="hint" data-i18n="soundAsk.hint">Better with headphones · M switches the sound on or off any time</p>
         <div class="sound-ask-btns">
           <button class="btn-enter" data-sound="off" data-i18n="soundAsk.off">Without sound</button>
           <button class="btn-enter btn-enter-alt" data-sound="on" data-i18n="soundAsk.on">With sound</button>
