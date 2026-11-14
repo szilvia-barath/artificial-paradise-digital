@@ -50,9 +50,6 @@ export function setupMinimap(canvas, segments, works, onJump) {
     for (const r of ROOMS) {
       ctx.fillStyle = r.id === roomId ? 'rgba(157,255,106,0.12)' : 'rgba(255,255,255,0.04)';
       ctx.fillRect(X(r.x0), Y(r.z0), (r.x1 - r.x0) * s, (r.z1 - r.z0) * s);
-      ctx.fillStyle = r.id === roomId ? 'rgba(157,255,106,0.9)' : 'rgba(255,255,255,0.4)';
-      ctx.font = '9px ui-monospace, Menlo, monospace';
-      ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 10);
     }
     ctx.strokeStyle = 'rgba(255,255,255,0.75)';
     ctx.lineWidth = 1;
@@ -62,12 +59,29 @@ export function setupMinimap(canvas, segments, works, onJump) {
       ctx.lineTo(X(bx), Y(bz));
     }
     ctx.stroke();
-    // works
+    // works: 5 px marks with a 1 px dark edge, told apart by shape as well as colour:
+    // paintings and prints round, videos square
     for (const w of works) {
       const f = w._pin;
       if (!f) continue;
-      ctx.fillStyle = w.type === 'video' || w.type === 'projection' ? '#5fe7ff' : '#ff4fa3';
-      ctx.fillRect(X(f.x) - 1.5, Y(f.z) - 1.5, 3, 3);
+      const video = w.type === 'video' || w.type === 'projection';
+      const cx = Math.round(X(f.x));
+      const cy = Math.round(Y(f.z));
+      for (const [half, colour] of [[3.5, 'rgba(11,12,14,0.9)'], [2.5, video ? '#5fe7ff' : '#ff4fa3']]) {
+        ctx.fillStyle = colour;
+        if (video) ctx.fillRect(cx - half, cy - half, half * 2, half * 2);
+        else {
+          ctx.beginPath();
+          ctx.arc(cx, cy, half, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+    // room numbers, over the marks so a work hung in a corner never covers one
+    ctx.font = '11px ui-monospace, Menlo, monospace';
+    for (const r of ROOMS) {
+      ctx.fillStyle = r.id === roomId ? 'rgba(157,255,106,0.9)' : 'rgba(255,255,255,0.85)';
+      ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 12);
     }
     // compass: true north in plan coordinates (the rooms run from the Damjanich utca
     // front towards bearing 146°, measured on the OpenStreetMap outline of no. 39)
