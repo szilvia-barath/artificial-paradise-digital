@@ -12,6 +12,9 @@ const browser = await launch();
 const results = [];
 
 async function scan(page, state) {
+  // let fades finish first: on a slow machine a panel can still be fading in after 450 ms,
+  // and axe would measure its text at part opacity
+  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getComputedTiming().iterations === Infinity), null, { timeout: 15000 }).catch(() => {});
   await page.addScriptTag({ path: axePath });
   const r = await page.evaluate(async () => {
     const out = await window.axe.run(document, { resultTypes: ['violations', 'incomplete'] });

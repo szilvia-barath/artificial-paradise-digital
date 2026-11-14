@@ -242,7 +242,9 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
 .nav-links { display: flex; }
 .lang-switch { display: flex; align-items: center; margin-left: 6px; }
 .lang-switch span { opacity: 0.4; }
-#site-nav .lang-switch button { padding: 8px 6px; opacity: 0.5; }
+/* the language not chosen: 0.75 like the other navbar buttons (5.1:1 on the title screen;
+   0.5 gave 2.8:1, below WCAG 1.4.3); the chosen one is full strength and underlined */
+#site-nav .lang-switch button { padding: 8px 6px; opacity: 0.75; }
 #site-nav .lang-switch button[aria-pressed="true"] { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
 .nav-toggle { display: none; }
 .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {

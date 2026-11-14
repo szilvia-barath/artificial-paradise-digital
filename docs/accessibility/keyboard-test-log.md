@@ -1,21 +1,21 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-13: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-14: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
-- Expected: focus on a.skip-link "Text version of the exhibition", visible on screen, first focusable element
-- What happened: skip-link "Text version of the exhibition", on screen: true, first focusable: true
+- Expected: focus on a.skip-link "Accessible version of the digital exhibition (text format)", visible on screen, first focusable element
+- What happened: skip-link "Accessible version of the digital exhibition (text format)", on screen: true, first focusable: true
 
-## PASS: 1.2 Enter follows it to the text edition
+## PASS: 1.2 Enter follows it to the accessible version
 
-- Expected: address ends in /text/?lang=en, one h1
-- What happened: /text/?lang=en · h1 "Artificial Paradise: text version"
+- Expected: address ends in /text/?lang=en, one h1 naming it in full ("Accessible version (text format)")
+- What happened: /text/?lang=en · h1 "Artificial Paradise: accessible version (text format)"
 
-## PASS: 1.3 Tab, Enter on its first link comes back to the walk
+## PASS: 1.3 Tab, Enter on its first link comes back to the digital exhibition
 
-- Expected: first link "Go to the 3D walk"; back on the walk's address
-- What happened: a "Go to the 3D walk" → /?lang=en
+- Expected: first link "Go to the digital exhibition"; back on the digital exhibition's address
+- What happened: a "Go to the digital exhibition" → /?lang=en
 
 ## PASS: 1.4 When loading is done, focus is on Enter
 
@@ -70,12 +70,12 @@ Written by `tests/a11y/keyboard.mjs` on 2026-11-13: Chromium (Playwright, headle
 ## PASS: 3.2 Esc answers "without sound" and closes it
 
 - Expected: question closed; focus on the 3D view; the room is announced
-- What happened: closed: true; focus on canvas#scene "3D view of the exhibition:…; announced: ["Room 1. Paintings, Paradise Factory."]
+- What happened: closed: true; focus on canvas#scene "3D view of the digital exh…; announced: ["Room 1. Paintings, Paradise Factory."]
 
 ## PASS: 3.3 The 3D view has a name
 
-- Expected: says what it is, names the text version and the keys
-- What happened: role application: "3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys."
+- Expected: says what it is, names the accessible version and the keys
+- What happened: role application: "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys."
 
 ## PASS: 4.1 Page Down through all 17 works; at each, Enter opens it and Esc closes it
 
@@ -150,7 +150,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Tour stopped."
+- What happened: aria-pressed: false; announced: "Tour stopped. No. 1, Wrong Data Landscape Dresden. Press Enter to open."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 
