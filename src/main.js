@@ -129,7 +129,8 @@ const soundAsking = () => !document.getElementById('sound-ask').hidden;
 
 const ui = setupPanels(data, {
   onOpenWork: (w) => { ui.close(); viewer.open(w); },
-  onOpenPanel: () => { blockers.panel = true; syncEnabled(); },
+  // a panel stops the tour, as the viewer does: its captions are not read over the panel
+  onOpenPanel: () => { blockers.panel = true; if (tour.active) tour.stop(); syncEnabled(); },
   onClosePanel: () => { blockers.panel = false; syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
   focusFallback,
