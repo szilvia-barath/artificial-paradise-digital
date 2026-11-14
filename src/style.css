@@ -202,8 +202,8 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
 }
 
 /* ---------------- Navbar & footer ----------------
-   Thin and quiet: blue on a pale band over the title screen, light text on a soft
-   gradient over the exhibition. */
+   Thin and quiet: blue on a pale band over the title screen, light text on a dark
+   band over the exhibition. */
 #site-nav, #site-foot {
   position: fixed;
   left: 0;
@@ -289,13 +289,18 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
 .foot-logo { display: inline-flex; margin: -2px 6px -2px 0; }
 .foot-logo img { display: block; width: auto; height: 22px; }
 
-/* In the exhibition, or over a dark panel */
-body.entered #site-nav, body.overlay #site-nav,
-body.entered #site-foot {
+/* Over a dark panel opened from the title screen: light text on a soft gradient */
+body.overlay #site-nav {
   color: var(--fg);
   background: linear-gradient(to bottom, rgba(5, 5, 6, 0.6), rgba(5, 5, 6, 0));
 }
-body.entered #site-foot { background: linear-gradient(to top, rgba(5, 5, 6, 0.6), rgba(5, 5, 6, 0)); color: var(--muted); }
+/* In the exhibition: a steady dark band under the text, so it reads over a white wall as
+   well as a dark room (over pure white: navbar 9.7:1, footer 6.6:1). The navbar buttons
+   are full strength here; the open panel's button is underlined, like the chosen language. */
+body.entered #site-nav, body.entered #site-foot { color: var(--fg); background: rgba(11, 12, 14, 0.8); }
+body.entered #site-foot { color: #c9c9c6; }
+body.entered #site-nav button, body.entered #site-nav .lang-switch button { opacity: 1; }
+body.entered #site-nav .nav-links button:hover, body.entered #site-nav .nav-links button[aria-current="true"] { text-decoration: underline; text-underline-offset: 4px; }
 body.entered.touch #site-foot { display: none; }
 body.touch #toolbar { bottom: calc(16px + var(--safe-b)); }
 
