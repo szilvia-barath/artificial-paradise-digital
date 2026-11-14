@@ -621,7 +621,7 @@ body.touch #zoompad { left: auto; right: 14px; bottom: calc(84px + var(--safe-b)
   color: var(--fg);
   pointer-events: auto;
 }
-#zoom-level span { color: var(--accent); }
+#zoom-level .val { color: var(--accent); }
 body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bottom: calc(84px + 108px + var(--safe-b)); }
 
 /* a small mouse with its wheel rolling */

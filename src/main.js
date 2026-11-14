@@ -281,7 +281,7 @@ function updateZoom() {
   if (z !== shownZoom) {
     shownZoom = z;
     zoomLevel.hidden = z <= 1;
-    zoomLevel.firstElementChild.textContent = `${z.toFixed(1)}×`;
+    zoomLevel.querySelector('.val').textContent = `${z.toFixed(1)}×`;
   }
 }
 

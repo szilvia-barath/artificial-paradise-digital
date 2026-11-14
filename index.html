@@ -94,7 +94,9 @@
           <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn"><i aria-hidden="true">+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
           <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut"><i aria-hidden="true">−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
         </div>
-        <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
+        <!-- Named "Reset zoom (0) 2.0×": the words are for screen readers, the ✕ is hidden from
+             them, and the tooltip sits on the visible part so it is not read as a description. -->
+        <button id="zoom-level" class="mono" hidden><span class="sr-only" data-i18n="hud.keys.zoomReset">Reset zoom (0)</span> <span class="see" title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span class="val"></span> <span aria-hidden="true">✕</span></span></button>
         <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag the mouse to look around the room.</div>
       </div>
     </main>
