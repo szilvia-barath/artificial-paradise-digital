@@ -277,6 +277,9 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
 }
 #site-foot a { color: inherit; text-underline-offset: 3px; }
 #site-foot .sep { opacity: 0.5; }
+/* The Instagram link says what it opens. On a phone, where the footer wraps, only the word
+   "Instagram" is shown; the full words stay as the link's name for screen readers. */
+#site-foot a .short { display: none; }
 .notice-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .notice-links .link { margin-top: 0; }
 #site-foot button {
@@ -325,6 +328,8 @@ body.touch #toolbar { bottom: calc(16px + var(--safe-b)); }
   #site-nav .nav-links button { text-align: left; padding: 12px; }
   .nav-toggle { display: grid; place-items: center; width: 36px; height: 36px; padding: 0 !important; opacity: 1 !important; }
   #site-foot .wide { display: none; }
+  #site-foot a .short { display: inline; }
+  #site-foot a .long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   /* the footer wraps on phones: spacing instead of dots, so no "·" is left hanging at
      the end of a line */
   #site-foot .sep { display: none; }
