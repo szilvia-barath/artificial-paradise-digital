@@ -76,7 +76,7 @@ Three reviewers looked at the change independently; each finding was then checke
 | 1 | A click on the map, or on EN / HU, leaves the 3D view without focus, so the letter keys go dead | | Fixed in `4c1a2ce`: both hand focus back to the view |
 | 2 | Opening and closing the rooms menu by mouse leaves focus on the Rooms button | | Fixed in `4c1a2ce` |
 | 3 | On the title screen a dialog closed with the mouse sends focus to Enter, not to the control that opened it; screen-reader taps on a phone counted as mouse | | Fixed in `4c1a2ce`: back to the opener on the title screen; only a real mouse counts |
-| 4 | The accessible version's contact line shows the link words, so the address itself can no longer be read there | | Asked; now done (`bbb4ec9`): the address is a plain line under the link on `text/` |
+| 4 | The accessible version's contact line shows the link words, so the address itself can no longer be read there | | Asked; now done (`bbb4ec9`): the address is a plain line under the link on `text/`, and from 14 November 2026 in the statement panel of the digital exhibition as well |
 | 5 | The colour fringes still swelled with a "glitch" band from the sound, a leftover of the removed pulse, which twitched them now and then without Web Audio | | Fixed in `eb2f607`, with the glitch removal |
 | 6 | A mouse press on the view after a keyboard focus keeps the keyboard frame | | Fixed in `4c1a2ce`: the browser gives the view its focus itself |
 | 7 | The zoom readout used by keyboard hides itself and focus falls to the page | | Fixed in `4c1a2ce`: focus goes to the view |

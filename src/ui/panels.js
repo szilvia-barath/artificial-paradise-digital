@@ -104,9 +104,16 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     const n = t(key);
     // A section's `link` is put where its paragraph says {link}: words that open an e-mail
     // to the address of a group in exhibition.json's contacts (no address is written here).
+    const mailOf = (l) => data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
     const inline = (l) => {
-      const mail = data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
+      const mail = mailOf(l);
       return mail ? `<a href="${esc(mail.href)}">${esc(l.text)}</a>` : esc(l.text);
+    };
+    // The address is also written out as a plain line under the paragraph with the link, so
+    // it can be read and copied without an e-mail program (the same contacts entry).
+    const addressLine = (l) => {
+      const mail = l && mailOf(l);
+      return mail ? `<p>${esc(mail.text)}</p>` : '';
     };
     const link = (l) => {
       return l.nav
@@ -118,7 +125,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <h2 id="panel-title">${esc(n.title)}</h2>
     ${n.sections.map((s) => `
       <h3>${esc(s.h)}</h3>
-      ${s.p.map((p) => `<p>${esc(p).replace('{link}', s.link ? inline(s.link) : '')}</p>`).join('')}
+      ${s.p.map((p) => `<p>${esc(p).replace('{link}', s.link ? inline(s.link) : '')}</p>`).join('')}${addressLine(s.link)}
       ${s.links ? `<p class="notice-links">${s.links.map(link).join(' · ')}</p>` : ''}`).join('')}
     ${n.updated ? `<p class="note">${esc(n.updated)}</p>` : ''}
   `;

@@ -157,7 +157,7 @@ ${inRoom.map(workHTML).join('\n')}
     const mail = mailOf(l);
     return mail ? `<a href="${esc(mail.href)}">${esc(l.text)}</a>` : esc(l.text);
   };
-  // On this page only, the address is also written out as a plain line under the
+  // As in the statement panel, the address is also written out as a plain line under the
   // paragraph with the link, so it can be read, copied or printed (same contacts entry).
   const addressLine = (l) => {
     const mail = l && mailOf(l);
