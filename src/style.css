@@ -420,6 +420,7 @@ body.touch #crosshair { display: none; }
   pointer-events: auto;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  z-index: 2; /* the toolbar and its rooms menu stand above the tour caption */
 }
 #toolbar button {
   background: transparent;
