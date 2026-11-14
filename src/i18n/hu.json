@@ -509,7 +509,7 @@
       {
         "h": "Mi működik",
         "p": [
-          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.",
+          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a látogatás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.",
           "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. A Page Down és a Page Up a következő és az előző műhöz visz. Az Enter megnyitja a nézet közepén lévő művet.",
           "A 3D nézetre lépve a képernyőolvasó felolvassa, hogy ez a digitális kiállítás nézete, és jelzi, hol érhető el az akadálymentes változat. Séta közben bemondja, melyik teremben van a látogató, és melyik kiállított mű van épp fókuszban.",
           "Ha a rendszerben be van kapcsolva a csökkentett mozgás, a digitális kiállításban nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés pedig megállóról megállóra ugrik. A betöltőképernyő mindenkinek állókép."
