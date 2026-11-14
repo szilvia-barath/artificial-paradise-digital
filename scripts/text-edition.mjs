@@ -19,14 +19,6 @@ const readJSON = (file) => JSON.parse(readFileSync(file, 'utf8'));
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-// Hungarian wording still to be confirmed carries " [HU: confirm]" in hu.json. A line put
-// together from several such strings shows the mark once, at its end.
-const MARK = ' [HU: confirm]';
-const joinMarked = (parts) => {
-  const marked = parts.some((p) => p.includes(MARK));
-  return parts.map((p) => p.replaceAll(MARK, '')).join(' ') + (marked ? MARK : '');
-};
-
 const CSS = `
 :root{color-scheme:light dark;--bg:#fbfbf9;--fg:#16181d;--muted:#4a4f5a;--link:#072fcc;--line:#c9ccd3}
 @media (prefers-color-scheme:dark){:root{--bg:#0b0c0e;--fg:#f2f1ed;--muted:#b9b9b5;--link:#a9c1ff;--line:#3a3d44}}
@@ -87,7 +79,7 @@ function page(lang, raw) {
     }
     if (side && (!order || p.count === 1)) parts.push(t(`textEdition.pos.along${cap(p.along)}`));
     if (p.door) parts.push(t(`textEdition.pos.door${cap(p.wall)}${cap(p.door)}`, { room: roomName(p.doorRoom) }));
-    return joinMarked(parts);
+    return parts.join(' ');
   };
 
   // The artist's texts belong to a series: printed in full under the first work of the
@@ -113,7 +105,7 @@ ${d.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${d.note ? `\n<p class="note"
       ['year', esc(w.year)],
     ];
     const parts = data.works.filter((o) => isPart(o) && o.room === w.room && o.no === w.no);
-    const place = joinMarked([where(w), ...parts.map((o) => t('textEdition.part', { where: where(o, { order: false }) }))]);
+    const place = [where(w), ...parts.map((o) => t('textEdition.part', { where: where(o, { order: false }) }))].join(' ');
     rows.push(['where', esc(place)]);
     return `<article id="${esc(w.id)}">
 <h3>${heading(w)}</h3>
@@ -138,7 +130,7 @@ ${artistText(w)}
     return `<section id="room-${r.id}" aria-labelledby="room-${r.id}-h">
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
 <p class="sub">${esc(data.rooms[r.id].subtitle)}</p>
-<p>${esc(joinMarked(lead))}</p>
+<p>${esc(lead.join(' '))}</p>
 ${inRoom.map(workHTML).join('\n')}
 </section>`;
   };
@@ -148,7 +140,7 @@ ${inRoom.map(workHTML).join('\n')}
   const curator = data.credits[1];
   const speech = data.openingSpeech;
   // the page's name: in full where it is first named (the h1), short elsewhere
-  const nameFull = t('textEdition.nameFull').replace(MARK, '');
+  const nameFull = t('textEdition.nameFull');
   const sections = [
     ...ROOMS.map((r) => [`room-${r.id}`, data.rooms[r.id].name]),
     ['exhibition-text', t('viewer.exhibitionText')],
@@ -182,8 +174,8 @@ ${inRoom.map(workHTML).join('\n')}
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(t('textEdition.docTitle').replace(MARK, ''))}</title>
-<meta name="description" content="${esc(t('textEdition.docDescription').replace(MARK, ''))}">
+<title>${esc(t('textEdition.docTitle'))}</title>
+<meta name="description" content="${esc(t('textEdition.docDescription'))}">
 <meta name="color-scheme" content="light dark">
 <script>${langScript(lang)}</script>
 <link rel="canonical" href="${SITE}text/${lang === 'hu' ? 'hu/' : ''}">

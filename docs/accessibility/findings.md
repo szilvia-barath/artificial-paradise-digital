@@ -1,6 +1,6 @@
 # Accessibility pilot: findings
 
-Branch `wip/a11y-pilot`; first written 13 November 2026, brought up to date 14 November 2026. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings waiting for confirmation are in `hu-confirm.md`, those that still address the reader in `hu-address-forms.md`.
+Branch `wip/a11y-pilot`; first written 13 November 2026, brought up to date 14 November 2026. A pilot, with no claim of WCAG conformance. The test output is beside this file: `axe-results.md`, `keyboard-test-log.md`; the script for the NVDA test is `screen-reader-test.md`; the Hungarian strings written since the last check by a Hungarian reader are in `hu-confirm.md`, the history of the forms of address in `hu-address-forms.md`.
 
 ## Results on 14 November 2026
 

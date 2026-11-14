@@ -36,7 +36,7 @@ This repo is `szilvia-barath/artificial-paradise-digital`. The private `artifici
 
 ## Text and languages
 
-- EN and HU must say the same thing. Any new string goes into both `en.json` and `hu.json`. If you're unsure of the Hungarian, mark it `[HU: confirm]` and tell me. Don't machine-guess legal wording.
+- EN and HU must say the same thing. Any new string goes into both `en.json` and `hu.json`. Write the Hungarian yourself: impersonal (no te, no Ön), with the names below. Don't show `[HU: confirm]` in the interface and don't wait for me. List every new or changed Hungarian string in `docs/accessibility/hu-confirm.md` (`python3 tests/tools/hu-confirm.py --write`) for a later check by a Hungarian reader. Don't machine-guess legal wording.
 - The `legal` and `privacy` sections are legal text. Change them only when I ask, and keep the update date.
 - Naming, in every text a visitor reads (both languages, and the page at `text/`):
   - The reconstruction is "digital exhibition" / "digitális kiállítás" ("a kiállítás digitális változata" where the grammar needs it). Not "3D walk", "the walk", "bejárás", "3D bejárás" or "3D kiállítás". "Kiállítás" on its own means the 2025 exhibition at MAMŰ; where a sentence could be read either way, write "digitális kiállítás".
