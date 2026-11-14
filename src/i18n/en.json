@@ -59,7 +59,7 @@
         "back": "Back (↓ / S)",
         "left": "Turn left (←)",
         "right": "Turn right (→)",
-        "run": "Shift: run, click to switch on or off",
+        "run": "Run (Shift)",
         "wheel": "The mouse wheel also walks",
         "zoom": "Zoom",
         "zoomIn": "Zoom in (+)",

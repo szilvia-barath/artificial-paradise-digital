@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 11. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 12. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -10,6 +10,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.footer.digital` (only the accent in the name changed, asked by the reconstructor)
   - HU: Digitális kiállítás: Baráth Szilvia
   - EN: Digital exhibition by Szilvia Baráth
+- `ui.hud.keys.run`
+  - HU: Futás (Shift)
+  - EN: Run (Shift)
 - `ui.panels.controlsTouch`
   - HU: Érintőképernyőn a bal oldali karral lehet sétálni: előre vagy hátra tolva előre és hátra, oldalra tolva oldalra lehet lépni. A kart a széléig tolva futni lehet. Körülnézni az ujjat a nézeten húzva lehet. Nagyítani két ujjal csippentve, vagy a + és − gombbal lehet. Egy művet koppintással lehet megnyitni. Az alsó gombok elindítják a tárlatvezetést, felsorolják a termeket és némítják a hangot.
   - EN: On a touch screen, walk with the stick on the left: push it forward or back to walk, and sideways to step to the side. Pushed all the way, it runs. Drag a finger across the view to look around. Zoom by pinching with two fingers, or with the + and − buttons. Open a work by tapping it. The buttons at the bottom start the tour, list the rooms and mute the sound.

@@ -80,17 +80,19 @@
         <div id="tour-caption"></div>
         <div id="joystick"><div id="joystick-knob"></div></div>
         <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
+        <!-- Each keycap is named by its title alone; the letter and the drawing are hidden from
+             assistive technology, so nothing is read twice. Shift is a toggle (aria-pressed). -->
         <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
-          <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (↑ / W)" data-i18n-attr="title:hud.keys.forward;aria-label:hud.keys.forward"><i>W</i><span class="glyph" data-glyph="↑" aria-hidden="true"></span></button>
-          <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Shift: run, click to switch on or off" aria-pressed="false" data-i18n-attr="title:hud.keys.run;aria-label:hud.keys.run"><i>Shift</i><span class="glyph" data-glyph="⇧" aria-hidden="true"></span></button>
-          <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
-          <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i><span class="glyph" data-glyph="↓" aria-hidden="true"></span></button>
-          <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
+          <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (↑ / W)" data-i18n-attr="title:hud.keys.forward"><i aria-hidden="true">W</i><span class="glyph" data-glyph="↑" aria-hidden="true"></span></button>
+          <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Run (Shift)" aria-pressed="false" data-i18n-attr="title:hud.keys.run"><i aria-hidden="true">Shift</i><span class="glyph" data-glyph="⇧" aria-hidden="true"></span></button>
+          <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left"><i aria-hidden="true">←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
+          <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back"><i aria-hidden="true">S</i><span class="glyph" data-glyph="↓" aria-hidden="true"></span></button>
+          <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right"><i aria-hidden="true">→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
           <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">The mouse wheel also walks</span></span>
         </div>
         <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
-          <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn;aria-label:hud.keys.zoomIn"><i>+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
-          <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
+          <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn"><i aria-hidden="true">+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
+          <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut"><i aria-hidden="true">−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
         </div>
         <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
         <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag the mouse to look around the room.</div>
