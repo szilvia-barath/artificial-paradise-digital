@@ -1,9 +1,36 @@
 # Hungarian wording to confirm
 
-Every string in `src/i18n/hu.json` that carries the mark `[HU: confirm]`: 41 strings on 14 November 2026 (53 at first; 14 were settled by the reconstructor; two came with the changes of 14 November: the sentence on the letter keys in the controls text and the paragraph on flashing in the statement). To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. Rule: the Hungarian addresses no one where it can (see `hu-address-forms.md`).
+Every string in `src/i18n/hu.json` that still carries the mark `[HU: confirm]`: 50. To confirm one, correct it if needed and delete the mark. The mark shows in the interface on purpose, so nothing unconfirmed can go live unnoticed. Rule: the Hungarian addresses no one where it can (see `hu-address-forms.md`).
 
-`python3 tests/tools/hu-confirm.py` prints the current list and checks that both language files have the same keys.
+Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that both language files have the same keys.
 
+- `ui.docDescription`
+  - HU: Szabó Kristóf - KristofLab Artificial Paradise című kiállításának digitális változata, fotókból rekonstruálva: a termek a böngészőben végigjárhatók. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.
+  - EN: Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser.
+- `ui.soundAsk.question`
+  - HU: Hanggal vagy hang nélkül?
+  - EN: Visit with sound?
+- `ui.soundAsk.hint`
+  - HU: Fejhallgatóval izgalmasabb · a hang az M billentyűvel bármikor be- és kikapcsolható
+  - EN: Headphones recommended · M switches it on or off any time
+- `ui.loader.failure`
+  - HU: Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Egy friss Chrome, Firefox vagy Safari böngészővel érdemes újra megpróbálni.
+  - EN: This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.
+- `ui.hud.clickToLook`
+  - HU: Egérhúzás: körülnézés
+  - EN: Drag to look around
+- `ui.hud.promptText`
+  - HU: Kattintás: a kiállítási szöveg elolvasása
+  - EN: Click to read the exhibition text
+- `ui.hud.promptWork`
+  - HU: Kattintás: megtekintés · {no} {title}
+  - EN: Click to view · {no} {title}
+- `ui.hud.minimap`
+  - HU: Térkép: egy teremre kattintva oda lehet ugrani
+  - EN: Map: click a room to jump there
+- `ui.hud.keys.wheel`
+  - HU: görgetés: séta
+  - EN: scroll to walk
 - `ui.panels.controlsDesk`
   - HU: Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek. A betűbillentyűk és a nagyítás billentyűi akkor működnek, ha a 3D nézeten van a fókusz: a nézetre kattintva vagy a Tab billentyűvel vihető rá.
   - EN: Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work while the 3D view has focus: click the view or Tab to it.

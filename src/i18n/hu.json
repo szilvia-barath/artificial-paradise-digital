@@ -2,7 +2,7 @@
   "_readme": "Hungarian texts, same shape as en.json (anything missing falls back to English). The exhibition text is the official one by Cserhalmi Luca; the opening speech is Zemlényi-Kovács Barnabás's. Work captions are still descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
-    "docDescription": "Nézd meg Szabó Kristóf - KristofLab Artificial Paradise című kiállítását fotókból rekonstruálva, bejárható 3D kiállításként a böngészőben. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.",
+    "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállításának digitális változata, fotókból rekonstruálva: a termek a böngészőben végigjárhatók. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető. [HU: confirm]",
     "sceneLabel": "A kiállítás 3D nézete: a nyílbillentyűkkel lehet sétálni, az Enter megnyitja a nézet közepén lévő művet. A szöveges változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt.",
     "nav": {
       "main": "Fő menü",
@@ -17,8 +17,8 @@
       "accessibility": "Akadálymentesség"
     },
     "soundAsk": {
-      "question": "Hanggal nézed a kiállítást?",
-      "hint": "Fejhallgatóval izgalmasabb · az M billentyűvel bármikor be- és kikapcsolhatod",
+      "question": "Hanggal vagy hang nélkül? [HU: confirm]",
+      "hint": "Fejhallgatóval izgalmasabb · a hang az M billentyűvel bármikor be- és kikapcsolható [HU: confirm]",
       "off": "Hang nélkül",
       "on": "Hanggal"
     },
@@ -32,7 +32,7 @@
       "hint": "Hanggal: fejhallgatóval izgalmasabb",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
-      "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel.",
+      "failure": "Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Egy friss Chrome, Firefox vagy Safari böngészővel érdemes újra megpróbálni. [HU: confirm]",
       "progress": "A kiállítás betöltése"
     },
     "footer": {
@@ -49,10 +49,10 @@
       "sound": "Hang",
       "soundTitle": "Hang be/ki (M)",
       "toolbar": "Kiállítás vezérlői",
-      "clickToLook": "Húzd az egeret a körülnézéshez",
-      "promptText": "Kattints a kiállítási szöveg elolvasásához",
-      "promptWork": "Kattints a megtekintéshez · {no} {title}",
-      "minimap": "Térkép: kattints egy teremre az odaugráshoz",
+      "clickToLook": "Egérhúzás: körülnézés [HU: confirm]",
+      "promptText": "Kattintás: a kiállítási szöveg elolvasása [HU: confirm]",
+      "promptWork": "Kattintás: megtekintés · {no} {title} [HU: confirm]",
+      "minimap": "Térkép: egy teremre kattintva oda lehet ugrani [HU: confirm]",
       "north": "É",
       "keys": {
         "group": "Mozgásbillentyűk",
@@ -61,7 +61,7 @@
         "left": "Fordulás balra (←)",
         "right": "Fordulás jobbra (→)",
         "run": "Shift: futás, kattintásra be/ki",
-        "wheel": "görgess a sétához",
+        "wheel": "görgetés: séta [HU: confirm]",
         "zoom": "Nagyítás",
         "zoomIn": "Nagyítás (+)",
         "zoomOut": "Kicsinyítés (−)",
