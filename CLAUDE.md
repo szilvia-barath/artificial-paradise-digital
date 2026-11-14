@@ -38,6 +38,10 @@ This repo is `szilvia-barath/artificial-paradise-digital`. The private `artifici
 
 - EN and HU must say the same thing. Any new string goes into both `en.json` and `hu.json`. If you're unsure of the Hungarian, mark it `[HU: confirm]` and tell me. Don't machine-guess legal wording.
 - The `legal` and `privacy` sections are legal text. Change them only when I ask, and keep the update date.
+- Naming, in every text a visitor reads (both languages, and the page at `text/`):
+  - The reconstruction is "digital exhibition" / "digitális kiállítás" ("a kiállítás digitális változata" where the grammar needs it). Not "3D walk", "the walk", "bejárás", "3D bejárás" or "3D kiállítás". "Kiállítás" on its own means the 2025 exhibition at MAMŰ; where a sentence could be read either way, write "digitális kiállítás".
+  - The page at `text/` is "Accessible version (text format)" / "akadálymentes változat (szöveges formátum)" where it is first named or linked: its h1, the skip link, the footer and loading-screen links, the first mention in the accessibility statement. Elsewhere, including the 3D view's accessible name, it is "accessible version" / "akadálymentes változat". Never "text version" / "szöveges változat". The address `text/` stays.
+  - The canvas is "3D view" / "3D nézet". The site's title "Artificial Paradise: Digital Exhibition" stays. Code names, file names and `PROGRESS.md` keep their words.
 - Hungarian addresses no one where it can: no te forms, and Ön only where I chose it (the contact line of the accessibility statement).
 - My voice: plain, concrete, first person where it fits. No AI phrasing (delve, crucial, seamless, robust, showcase, "at the intersection of", "not X but Y", em dashes). Use the szilvia-voice skill if it's installed.
 

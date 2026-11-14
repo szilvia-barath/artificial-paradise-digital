@@ -4,6 +4,10 @@
 // Usage: npm run build && npm run preview &   then   node tests/a11y/keyboard.mjs
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { launch, BASE, focusName } from './lib.mjs';
+import { readFileSync } from 'node:fs';
+
+// the visible names come from the language file, so a change of wording does not break the run
+const EN = JSON.parse(readFileSync('src/i18n/en.json', 'utf8')).ui;
 
 const browser = await launch();
 const ctx = await browser.newContext({ viewport: { width: 1366, height: 768 }, locale: 'en-GB' });
@@ -65,13 +69,13 @@ const skip = await page.evaluate(() => {
   const r = a.getBoundingClientRect();
   return { cls: a.className, text: a.textContent.trim(), href: a.getAttribute('href'), onScreen: r.top >= 0 && r.left >= 0 && r.width > 0, firstFocusable: a === document.querySelector('a[href], button, [tabindex]') };
 });
-step('1.1 From page load, the first Tab reaches the skip link', 'focus on a.skip-link "Text version of the exhibition", visible on screen, first focusable element', `${skip.cls} "${skip.text}", on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.onScreen && skip.firstFocusable);
+step('1.1 From page load, the first Tab reaches the skip link', `focus on a.skip-link "${EN.textEdition.skip}", visible on screen, first focusable element`, `${skip.cls} "${skip.text}", on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.text === EN.textEdition.skip && skip.onScreen && skip.firstFocusable);
 await Promise.all([page.waitForURL(/\/text\//), page.keyboard.press('Enter')]);
-step('1.2 Enter follows it to the text edition', 'address ends in /text/?lang=en, one h1', `${page.url().replace(BASE, '/')} · h1 "${await page.textContent('h1')}"`, /\/text\/\?lang=en$/.test(page.url()) && (await page.locator('h1').count()) === 1);
+step('1.2 Enter follows it to the accessible version', `address ends in /text/?lang=en, one h1 naming it in full ("${EN.textEdition.nameFull}")`, `${page.url().replace(BASE, '/')} · h1 "${await page.textContent('h1')}"`, /\/text\/\?lang=en$/.test(page.url()) && (await page.locator('h1').count()) === 1 && (await page.textContent('h1')).toLowerCase().includes(EN.textEdition.nameFull.toLowerCase()));
 await page.keyboard.press('Tab');
 const back = await focusName(page);
 await Promise.all([page.waitForURL((u) => !u.pathname.includes('/text/')), page.keyboard.press('Enter')]);
-step('1.3 Tab, Enter on its first link comes back to the walk', 'first link "Go to the 3D walk"; back on the walk\'s address', `${back} → ${page.url().replace(BASE, '/')}`, back.includes('Go to the 3D walk') && !page.url().includes('/text/'));
+step('1.3 Tab, Enter on its first link comes back to the digital exhibition', `first link "${EN.textEdition.toWalk}"; back on the digital exhibition's address`, `${back} → ${page.url().replace(BASE, '/')}`, back.includes(EN.textEdition.toWalk) && !page.url().includes('/text/'));
 await ready();
 await said();
 step('1.4 When loading is done, focus is on Enter', 'button#enter', await focusName(page), await isOn('#enter'));
@@ -114,7 +118,7 @@ await wait(1500);
 let heard = await said();
 step('3.2 Esc answers "without sound" and closes it', 'question closed; focus on the 3D view; the room is announced', `closed: ${!(await open('#sound-ask'))}; focus on ${(await focusName(page)).slice(0, 40)}…; announced: ${JSON.stringify(heard)}`, !(await open('#sound-ask')) && (await isOn('#scene')) && heard.some((s) => s.startsWith('Room 1.')));
 const sceneName = await page.getAttribute('#scene', 'aria-label');
-step('3.3 The 3D view has a name', 'says what it is, names the text version and the keys', `role ${await page.getAttribute('#scene', 'role')}: "${sceneName}"`, /3D view/.test(sceneName) && /text version/i.test(sceneName) && /keys/.test(sceneName));
+step('3.3 The 3D view has a name', 'says what it is, names the accessible version and the keys', `role ${await page.getAttribute('#scene', 'role')}: "${sceneName}"`, /3D view/.test(sceneName) && /accessible version/i.test(sceneName) && /keys/.test(sceneName));
 
 // ---------------------------------------------------------------- 4. all works, Page Down / Page Up
 const works = await page.evaluate(() => window.__ap.visit.map((w) => ({ no: w.no, title: w.title, room: w.room })));

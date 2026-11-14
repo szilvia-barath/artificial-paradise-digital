@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Artificial Paradise: Digital Exhibition</title>
-    <meta name="description" content="Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
+    <meta name="description" content="The digital version of Kristóf Szabó - KristofLab's exhibition Artificial Paradise, reconstructed from photographs: its rooms can be walked through in the browser. The exhibition was on view at MAMŰ Gallery, Budapest, 10-31 January 2025." />
     <meta name="theme-color" content="#0b0c0e" />
     <meta name="color-scheme" content="light dark" />
     <!-- Styles load from the head (render-blocking) so the title screen never flashes
@@ -33,7 +33,7 @@
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed from photographs as a walkable 3D exhibition: the four rooms, the paintings, videos and installations where they hung." />
+    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed from photographs as a digital exhibition you can walk through: the four rooms, the paintings, videos and installations where they hung." />
     <meta property="og:image" content="https://artificial-paradise.netlify.app/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -42,12 +42,12 @@
     <meta property="og:url" content="https://artificial-paradise.netlify.app/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed as a walkable 3D exhibition." />
+    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed as a digital exhibition you can walk through." />
     <meta name="twitter:image" content="https://artificial-paradise.netlify.app/og.jpg" />
   </head>
   <body>
     <!-- First thing Tab reaches: the exhibition as text (text/, built from the same data) -->
-    <nav class="skip-nav" aria-label="Text version" data-i18n-attr="aria-label:textEdition.name">
+    <nav class="skip-nav" aria-label="Accessible version" data-i18n-attr="aria-label:textEdition.name">
       <a class="skip-link" href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Text version of the exhibition</a>
     </nav>
     <!-- The exhibition itself: the 3D view and, once inside, its controls. They come first
@@ -55,7 +55,7 @@
     <main id="stage">
       <!-- The 3D view. role="application": it is driven by keys, so a screen reader passes them
            through. Hidden from assistive technology until the visitor has entered (main.js). -->
-      <canvas id="scene" role="application" aria-hidden="true" aria-label="3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys." data-i18n-attr="aria-label:sceneLabel"></canvas>
+      <canvas id="scene" role="application" aria-hidden="true" aria-label="3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys." data-i18n-attr="aria-label:sceneLabel"></canvas>
 
       <!-- In-world HUD -->
       <div id="hud" hidden>
@@ -148,7 +148,7 @@
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="contact" data-i18n="nav.contact">Contact</button>
       <span class="sep" aria-hidden="true">·</span>
-      <a href="./text/" data-i18n="textEdition.name" data-i18n-attr="href:textEdition.href">Text version</a>
+      <a href="./text/" data-i18n="textEdition.nameFull" data-i18n-attr="href:textEdition.href">Accessible version (text format)</a>
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="accessibility" data-i18n="nav.accessibility">Accessibility</button>
       <span class="sep" aria-hidden="true">·</span>

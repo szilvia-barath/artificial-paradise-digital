@@ -6,7 +6,7 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
 
 - `ui.docDescription`
   - HU: Szabó Kristóf - KristofLab Artificial Paradise című kiállításának digitális változata, fotókból rekonstruálva: a termek a böngészőben végigjárhatók. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.
-  - EN: Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser.
+  - EN: The digital version of Kristóf Szabó - KristofLab's exhibition Artificial Paradise, reconstructed from photographs: its rooms can be walked through in the browser. The exhibition was on view at MAMŰ Gallery, Budapest, 10-31 January 2025.
 - `ui.soundAsk.question`
   - HU: Hanggal vagy hang nélkül?
   - EN: Visit with sound?
@@ -15,7 +15,7 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - EN: Headphones recommended · M switches it on or off any time
 - `ui.loader.failure`
   - HU: Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Egy friss Chrome, Firefox vagy Safari böngészővel érdemes újra megpróbálni.
-  - EN: This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.
+  - EN: This browser could not start the digital exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.
 - `ui.hud.clickToLook`
   - HU: Egérhúzás: körülnézés
   - EN: Drag to look around
@@ -35,7 +35,7 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - HU: Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre, E vagy Enter: megnyitás, Page Down / Page Up: következő / előző mű, T: tárlatvezetés, M: némítás, Esc: panel bezárása. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek. A betűbillentyűk és a nagyítás billentyűi akkor működnek, ha a 3D nézeten van a fókusz: a nézetre kattintva vagy a Tab billentyűvel vihető rá.
   - EN: Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E or Enter to open it, Page Down / Page Up to go to the next / previous work, T for the tour, M to mute, Esc to close a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work while the 3D view has focus: click the view or Tab to it.
 - `ui.textEdition.intro`
-  - HU: Ez az oldal szövegként adja vissza a kiállítást: a négy termet a bejárás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.
+  - HU: Ez az oldal szövegként adja vissza a kiállítást: a négy termet a látogatás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.
   - EN: This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.
 - `ui.textEdition.positionsNote`
   - HU: Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik.
@@ -44,8 +44,8 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - HU: Tovább a 3D bejáráshoz
   - EN: Go to the 3D walk
 - `ui.textEdition.openInWalk`
-  - HU: {no}. mű, {title}: megnyitás a 3D bejárásban
-  - EN: Open No. {no}, {title}, in the 3D walk
+  - HU: {no}. mű, {title}: megnyitás a digitális kiállításban
+  - EN: Open No. {no}, {title}, in the digital exhibition
 - `ui.textEdition.pos.left`
   - HU: Belépéskor a bal oldali falon.
   - EN: On the left wall as you enter.
@@ -98,11 +98,11 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - HU: Kiállítási szöveg. Elolvasás: Enter.
   - EN: Exhibition text. Press Enter to read.
 - `accessibility.sections[0].p[0]`
-  - HU: Ez egy pilot: a bejárás első akadálymentesített változata. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még.
-  - EN: This is a pilot: the first accessible version of the walk. It does not claim conformance with WCAG. I worked from WCAG 2.2 and the W3C's XR Accessibility User Requirements, and this page says what was tested, what works and what does not work yet.
+  - HU: Ez egy pilot: a digitális kiállítás első változata, amely az akadálymentességet szem előtt tartva készült. Nem állítja, hogy megfelel a WCAG-nak. A WCAG 2.2 és a W3C XR-akadálymentességi felhasználói követelményei (XAUR) alapján dolgoztam; ez az oldal azt írja le, mit teszteltem, mi működik, és mi nem működik még.
+  - EN: This is a pilot: the first version of the digital exhibition made with accessibility in mind. It does not claim conformance with WCAG. I worked from WCAG 2.2 and the W3C's XR Accessibility User Requirements, and this page says what was tested, what works and what does not work yet.
 - `accessibility.sections[1].p[0]`
-  - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, a szöveges változaton mindkét nyelven (világos és sötét módban), valamint a bejárás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját.
-  - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the text version in both languages (light and dark) and on the walk in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 14 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.
+  - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 14-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját.
+  - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the accessible version (text format) in both languages (light and dark) and on the digital exhibition in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 14 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture.
 - `accessibility.sections[1].p[1]`
   - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 31 lépés sikeres volt. Egy második futás az egeret ellenőrizte: a térképre, az eszköztárra, a teremmenüre, a nyelvváltóra vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk (14 lépésből 14 sikeres).
   - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, and the letter keys with and without focus on the 3D view. All 31 steps passed. A second run checked the mouse: after a click on the map, the toolbar, the rooms menu, the language switch or a Close button, the letter keys still work (14 of 14 steps).
@@ -110,8 +110,8 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - HU: Csökkentett mozgás: a rendszerbeállítást Chromiumban emulálva.
   - EN: Reduced motion: with the system setting emulated in Chromium.
 - `accessibility.sections[1].p[3]`
-  - HU: Telefonszélesség: a szöveges változat 375 képpont szélesen, JavaScripttel és anélkül.
-  - EN: Phone width: the text version at 375 pixels, with and without JavaScript.
+  - HU: Telefonszélesség: az akadálymentes változat 375 képpont szélesen, JavaScripttel és anélkül.
+  - EN: Phone width: the accessible version at 375 pixels, with and without JavaScript.
 - `accessibility.sections[1].p[4]`
   - HU: Villogás: a képkockák rögzített, másodpercenként 60-as ütemben kirajzolva és cellánként összevetve. A teremváltást jelző glitch-effekt gyorsan egymást követő ugrásoknál másodpercenként akár 10-szer is villoghatott, ezért mindenkinél megszűnt. Nélküle a legtöbb mért érték 2 villanás volt egy másodperc alatt, másodpercenként hatszor lenyomott Page Down mellett.
   - EN: Flashing: frames drawn at a fixed 60 a second and compared cell by cell. The glitch effect that marked a room change could flash up to 10 times a second when jumps followed each other quickly, so it is removed for everyone. Without it, the most measured was 2 flashes in a second, with Page Down pressed six times a second.
@@ -119,23 +119,23 @@ Written by `python3 tests/tools/hu-confirm.py --write`, which also checks that b
   - HU: Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, 200%-os vagy nagyobb böngészőnagyítással, a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal.
   - EN: Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, browser zoom at 200% or more, the Google Drive video player, and visits by people with disabilities.
 - `accessibility.sections[2].p[0]`
-  - HU: A szöveges változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.
-  - EN: The text version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.
+  - HU: Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a bejárás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.
+  - EN: The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.
 - `accessibility.sections[2].p[2]`
   - HU: Képernyőolvasóknak a bejárás egyszerre egy sort ír egy élő régióba: a termet, ahová belépsz, az előtted lévő művet és a tárlatvezetés minden feliratát. A 3D nézetnek neve van, amely a szöveges változatra mutat.
   - EN: For screen readers the walk writes one line at a time into a live region: the room you enter, the work in front of you, each caption of the tour. The 3D view has a name that points to the text version.
 - `accessibility.sections[3].p[0]`
-  - HU: Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a 3D bejárásban.
-  - EN: The live announcements were checked as text only. How a screen reader reads them in the 3D walk is not known yet.
+  - HU: Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a digitális kiállításban.
+  - EN: The live announcements were checked as text only. How a screen reader reads them in the digital exhibition is not known yet.
 - `accessibility.sections[3].p[1]`
   - HU: A T, M, E, W, A, S, D betűbillentyűk és a nagyítás billentyűi csak akkor működnek, ha a 3D nézeten van a fókusz, ahogy a WCAG 2.1.4 kéri; a fókusz a nézetre kattintva vagy a Tab billentyűvel vihető rá. Nem kapcsolhatók ki és nem állíthatók át.
   - EN: The letter keys T, M, E, W, A, S, D and the zoom keys work only while the 3D view has focus, which is what WCAG 2.1.4 asks; a click on the view or Tab gives it focus. They cannot be switched off or changed.
 - `accessibility.sections[3].p[2]`
-  - HU: A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. A szöveges változat minden mű adatait, helyét és a művész szövegét adja meg.
-  - EN: The works have no descriptions of what they show, and the videos have no captions, transcripts or audio description. The text version gives each work's data, its place and the artist's text.
+  - HU: A művekhez nincs leírás arról, mit ábrázolnak, a videókhoz pedig nincs felirat, átirat vagy audionarráció. Az akadálymentes változat minden mű adatait, helyét és a művész szövegét adja meg.
+  - EN: The works have no descriptions of what they show, and the videos have no captions, transcripts or audio description. The accessible version gives each work's data, its place and the artist's text.
 - `accessibility.sections[3].p[3]`
-  - HU: Érintőképernyős telefonon a 3D bejárás képernyőolvasóval nem használható. A szöveges változat igen.
-  - EN: On a touch phone the 3D walk cannot be used with a screen reader. The text version can.
+  - HU: Érintőképernyős telefonon a digitális kiállítás 3D nézete képernyőolvasóval nem használható. Az akadálymentes változat igen.
+  - EN: On a touch phone the 3D view of the digital exhibition cannot be used with a screen reader. The accessible version can.
 - `accessibility.sections[3].p[4]`
   - HU: Billentyűzettel sétálni és jobbra-balra fordulni lehet, felfelé vagy lefelé nézni nem. A térképre csak kattintani lehet; ugyanezt billentyűzettel a teremmenü adja.
   - EN: By keyboard you can walk and turn left and right, but not look up or down. The map can only be clicked; the rooms menu does the same by keyboard.

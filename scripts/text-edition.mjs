@@ -147,7 +147,8 @@ ${inRoom.map(workHTML).join('\n')}
   // The curator is the second line of the credits in both languages.
   const curator = data.credits[1];
   const speech = data.openingSpeech;
-  const name = t('textEdition.name');
+  // the page's name: in full where it is first named (the h1), short elsewhere
+  const nameFull = t('textEdition.nameFull').replace(MARK, '');
   const sections = [
     ...ROOMS.map((r) => [`room-${r.id}`, data.rooms[r.id].name]),
     ['exhibition-text', t('viewer.exhibitionText')],
@@ -195,7 +196,7 @@ ${inRoom.map(workHTML).join('\n')}
 <div class="page">
 <header>
 <p class="top"><a href="${toWalk}?lang=${lang}">${esc(t('textEdition.toWalk'))}</a> ${other}</p>
-<h1>${title(m.title)}: ${esc(name.charAt(0).toLowerCase() + name.slice(1))}</h1>
+<h1>${title(m.title)}: ${esc(nameFull.charAt(0).toLowerCase() + nameFull.slice(1))}</h1>
 <p>${esc(t('textEdition.intro', { count: works.length }))}</p>
 <dl>
 <dt>${esc(t('textEdition.facts.artist'))}</dt><dd>${esc(m.artist)}</dd>

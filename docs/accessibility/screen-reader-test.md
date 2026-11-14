@@ -17,19 +17,19 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 | 1.1 | Load the page. Wait for the loading line to finish. | The page title "Artificial Paradise: Digital Exhibition". When loading ends: "Ready", then "Enter, button" (focus moves to it). | |
 | 1.2 | Press Ctrl+Home, then Tab once. | "Text version navigation landmark, Text version of the exhibition, link". The link shows at the top left. | |
 | 1.3 | Press NVDA+F7, choose Headings. | One heading at level 1: "Artificial Paradise · KristofLab · Digital Exhibition". | |
-| 1.4 | In the same list choose Landmarks. | Text version (navigation), main, banner, Main (navigation, inside the banner), the title region "Artificial Paradise · KristofLab · Digital Exhibition", content info. | |
+| 1.4 | In the same list choose Landmarks. | Accessible version (navigation), main, banner, Main (navigation, inside the banner), the title region "Artificial Paradise · KristofLab · Digital Exhibition", content info. | |
 | 1.5 | Close the list. Press B a few times (next button). | About, Works, Behind the scenes, Contact, EN (pressed), HU (not pressed), Menu only on a narrow window, Enter, then in the footer Contact, Accessibility, Legal notice, Privacy. No button for the 3D view yet. | |
 | 1.6 | Find the progress line with the arrow keys. | "Loading the exhibition, progress bar, 100". | |
 
-## 2. Text version
+## 2. Accessible version
 
 | # | Do | You should hear | Heard |
 |---|---|---|---|
-| 2.1 | Press Enter on "Text version of the exhibition". | New page: "Artificial Paradise: text version". | |
-| 2.2 | Press H repeatedly. | Level 1 "Artificial Paradise: text version"; level 2 "Room 1"; level 3 "No. 1: Wrong Data Landscape Dresden", and so on. 1 heading at level 1, 10 at level 2 (4 rooms, then Exhibition text, Opening speech, Controls, Credits, Accessibility, Rights), 17 at level 3. | |
+| 2.1 | Press Enter on "Text version of the exhibition". | New page: "Artificial Paradise: accessible version (text format)". | |
+| 2.2 | Press H repeatedly. | Level 1 "Artificial Paradise: accessible version (text format)"; level 2 "Room 1"; level 3 "No. 1: Wrong Data Landscape Dresden", and so on. 1 heading at level 1, 10 at level 2 (4 rooms, then Exhibition text, Opening speech, Controls, Credits, Accessibility, Rights), 17 at level 3. | |
 | 2.3 | Press 2 to reach "Room 2", then the down arrow. | "Video · bar". "You come in from Room 1. 2 works in this room. The exhibition text is on a wall in this room. On the left wall as you enter. It hangs about halfway along the wall." | |
-| 2.4 | Press 3 for the next work heading, then read down. | "No. 6: Artificial Paradise – Singapore". A list of terms: Medium "Video, Full HD", Year "2025", Where "On the wall behind you as you enter. It is the only work on this wall. It hangs beside the doorway you came through, on your left as you walk in." Then "About the videos" at level 4 and the artist's text. Then the link "Open No. 6, Artificial Paradise – Singapore, in the 3D walk". | |
-| 2.5 | Press Enter on that link. | The walk's title screen loads again. When ready: "Ready", "Enter, button". | |
+| 2.4 | Press 3 for the next work heading, then read down. | "No. 6: Artificial Paradise – Singapore". A list of terms: Medium "Video, Full HD", Year "2025", Where "On the wall behind you as you enter. It is the only work on this wall. It hangs beside the doorway you came through, on your left as you walk in." Then "About the videos" at level 4 and the artist's text. Then the link "Open No. 6, Artificial Paradise – Singapore, in the digital exhibition". | |
+| 2.5 | Press Enter on that link. | The digital exhibition's title screen loads again. When ready: "Ready", "Enter, button". | |
 
 ## 3. Entering, the sound question
 
@@ -37,13 +37,13 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 |---|---|---|---|
 | 3.1 | Press Enter on the Enter button. | "Visit with sound? dialog", then "Without sound, button". | |
 | 3.2 | Press Tab twice. | "With sound, button", then "Without sound, button" again. Focus does not leave the question. | |
-| 3.3 | Press Enter on "Without sound". | Focus mode sound. "3D view of the exhibition: walk with the arrow keys, press Enter to open the work in front of you. The text version, the first link on the page, lists every work and all the keys. application". Then "Room 2. Video, bar. No. 6, Artificial Paradise – Singapore. Press Enter to open." | |
+| 3.3 | Press Enter on "Without sound". | Focus mode sound. "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys. application". Then "Room 2. Video, bar. No. 6, Artificial Paradise – Singapore. Press Enter to open." | |
 
 Note if the long name of the 3D view is read before the room and the work, after them, or cuts them off.
 
 ## 4. Walking by keyboard
 
-You are standing in front of No. 6, where the link from the text version put you.
+You are standing in front of No. 6, where the link from the accessible version put you.
 
 | # | Do | You should hear | Heard |
 |---|---|---|---|
