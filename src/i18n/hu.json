@@ -42,7 +42,6 @@
     },
     "hud": {
       "tour": "Tárlatvezetés",
-      "stop": "Leállítás",
       "tourTitle": "Tárlatvezetés (T)",
       "rooms": "Termek",
       "roomsTitle": "Ugrás egy terembe",

@@ -167,7 +167,7 @@ const tourBtn = document.querySelector('[data-action="tour"]');
 const syncTourBtn = () => {
   tourBtn.classList.toggle('on', tour.active);
   tourBtn.setAttribute('aria-pressed', String(tour.active));
-  setText(tourBtn.querySelector('.lbl'), tour.active ? 'hud.stop' : 'hud.tour');
+  // the name stays "Tour" and aria-pressed carries the state; only the hidden glyph changes
   tourBtn.querySelector('.ico').textContent = tour.active ? '■' : '▶';
 };
 syncTourBtn();

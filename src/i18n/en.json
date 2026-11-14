@@ -42,7 +42,6 @@
     },
     "hud": {
       "tour": "Tour",
-      "stop": "Stop",
       "tourTitle": "Guided tour (T)",
       "rooms": "Rooms",
       "roomsTitle": "Jump to room",
