@@ -530,6 +530,9 @@ body.touch #rooms-menu { max-height: calc(100vh - var(--nav-h) - 8px - 10px - va
 @media (max-height: 519px) and (pointer: coarse) {
   #rooms-menu button { min-height: 44px; }
 }
+/* On a touch screen the open menu lies over the stick (English) or the zoom keys
+   (Hungarian, where the toolbar is wider): both are put away while it is open, as in the tour. */
+body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility: hidden; }
 /* the room the visitor is in: a green bar and a green name, as on the map */
 #rooms-menu .room-row.here { border-left-color: var(--accent); }
 #rooms-menu button[aria-current] { color: var(--accent); }
