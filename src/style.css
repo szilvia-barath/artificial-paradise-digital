@@ -867,6 +867,25 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   #panel-body .credits dd { margin-bottom: 10px; }
 }
 
+/* ---------------- Touch targets ----------------
+   On a touch screen (pointer: coarse) every control is at least 44 × 44 px, the size
+   advised for a thumb (WCAG 2.5.5). Desktop sizes stay as they are. */
+@media (pointer: coarse) {
+  #toolbar > button, #toolbar .rooms-wrap > button { min-height: 44px; min-width: 44px; }
+  .nav-toggle { width: 44px !important; height: 44px !important; }
+  #site-nav .lang-switch button { min-width: 44px; min-height: 44px; }
+  #site-nav .nav-links button, #site-nav .nav-more a { min-height: 44px; }
+  #site-nav .nav-more a { display: flex; align-items: center; }
+  .close { min-width: 44px; min-height: 44px; }
+  .viewer-nav button, .link, .sound-ask .btn-enter, #zoom-level { min-height: 44px; }
+  .viewer-info summary { padding: 15px 0; }
+  .text-link a { display: inline-block; padding: 8px 0; }
+  /* the link to the artist's page keeps its thin underline; its target reaches above and
+     below it */
+  .artist-link { position: relative; }
+  .artist-link::after { content: ""; position: absolute; left: 0; right: 0; top: -15px; bottom: -15px; }
+}
+
 /* ---------------- Reduced motion ----------------
    With prefers-reduced-motion nothing in the interface fades, slides or pulses: panels,
    captions and the title screen appear and go at once. (The 3D effects are switched off
