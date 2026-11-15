@@ -98,6 +98,44 @@ function room3NorthWall() {
   out.push(g(11.65, 13.45, 0, 2.9, z1, { nx: 'greyBrickReveal', px: 'greyBrickReveal' }), g(15.05, 15.6, 0, 2.9, z1, { nx: 'greyBrickReveal' }));
   return out;
 }
+// Room 4's north wall, the one on the left as you walk in. Two old openings, bricked up
+// 0.12 m back (the depth is inferred), run up to where the vault springs, hidden behind the
+// big pipe. A (x 21.86-22.78) has a flat sill at 0.95 m with toothed brick fill on its west
+// part; B (x 24.10 to the end wall) has a bottom that steps down towards the end wall, as
+// Room 3's openings do. Positions from the end-wall corner by cross-ratio (A west arris,
+// A east arris, B west arris, corner) on DSC_0112, the 04-03 photograph and the video.
+const R4_RECESSES = {
+  back: 1.61, // z of the bricked-up backs (wall face 1.73)
+  A: { x0: 21.86, x1: 22.78, sill: 0.95 },
+  B: { x0: 24.1, x1: 25.4 },
+  top: 2.75, // the vault springing
+};
+function room4NorthWall() {
+  const z0 = 1.33;
+  const z1 = 1.73;
+  const { back, A, B, top } = R4_RECESSES;
+  const r = (x0, x1, y0, y1, zA = z0, zB = z1) => ({ x0, x1, z0: zA, z1: zB, y0, y1, mat: 'rawBrick' });
+  const out = [
+    r(15.6, A.x0, 0, 2.9), // the wall west of A
+    r(A.x1, B.x0, 0, 2.9), // the pier between A and B
+  ];
+  for (const R of [A, B]) {
+    out.push(r(R.x0, R.x1, 0, 2.9, z0, back)); // the bricked-up back
+    out.push(r(R.x0, R.x1, top, 2.9, back, z1)); // the wall above, where the vault springs
+  }
+  // A: wall face up to the sill, then the toothed fill standing 5 cm proud of the back
+  // (the 5 cm is invented); [x0, x1, top of the step]
+  out.push(r(A.x0, A.x1, 0, A.sill, back, z1));
+  for (const [x0, x1, y1] of [[21.86, 21.97, 1.49], [21.97, 22.07, 1.43], [22.07, 22.17, 1.38], [22.17, 22.32, 1.32], [22.32, 22.41, 1.25], [22.41, 22.46, 1.15]]) {
+    out.push(r(x0, x1, A.sill, y1, back, back + 0.05));
+  }
+  // B: the bottom steps down eastwards, filled out to the wall face; the last step is
+  // hidden by the low pipes (inferred)
+  for (const [x0, x1, y1] of [[24.1, 24.4, 1.38], [24.4, 24.61, 1.15], [24.61, 24.83, 1.02], [24.83, 25.07, 0.88], [25.07, 25.18, 0.71], [25.18, 25.4, 0.51]]) {
+    out.push(r(x0, x1, 0, y1, back, z1));
+  }
+  return out;
+}
 function streetWall(z0, z1) {
   const out = [];
   let z = z0;
@@ -157,7 +195,10 @@ export const BLOCKS = [
   // either side of the pier that carries #8; they run up to the ceiling and their sills
   // drop in toothed steps towards the east
   ...room3NorthWall(),
-  { x0: 15.6, x1: 25.4 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'rawBrick' },
+  // Room 4's north wall (DSC_0112, the 04-03 photograph, w16-documentation.mp4 00:00-00:02,
+  // MAMŰ's photograph of 2013): bare brick with two old openings bricked up at the back,
+  // A west of the pier, B running to the end wall (see room4NorthWall)
+  ...room4NorthWall(),
   // the low concrete ledge along its western half, the radiator on it
   { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },
   // south wall: white brick
