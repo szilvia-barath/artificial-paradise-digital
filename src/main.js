@@ -631,16 +631,21 @@ function markReady() {
     showEnter();
   }
 }
-// In a short window (200% zoom) Enter can be below the fold when it takes focus. The title
-// card's own scroller (#loader, never the page) is then set, in one step and with no
-// animation, so that Enter stands 12 px above the footer, or 12 px under the navbar if the
-// window is too short for that.
+// In a short window (200% zoom) Enter, or the lines under it, can be below the fold or
+// under the footer when Enter takes focus. The title card's own scroller (#loader, never
+// the page) is then set, in one step and with no animation, so that the card's last line
+// (the link to the accessible version) stands 12 px above the footer. Where the window is
+// too short for that, the scroll stops where Enter would leave the navbar's edge (12 px
+// under it), so Enter itself always stays in view.
 function showEnter() {
   const loader = document.getElementById('loader');
   const top = document.getElementById('site-nav').offsetHeight + 12;
   const bottom = window.innerHeight - document.getElementById('site-foot').offsetHeight - 12;
+  const shown = [...document.querySelectorAll('.loader-card > *')].filter((el) => el.getClientRects().length);
+  const last = shown[shown.length - 1] || enterBtn;
   const r = enterBtn.getBoundingClientRect();
-  if (r.bottom > bottom) loader.scrollTop += Math.min(r.bottom - bottom, r.top - top);
+  const lastBottom = Math.max(r.bottom, last.getBoundingClientRect().bottom);
+  if (lastBottom > bottom) loader.scrollTop += Math.max(0, Math.min(lastBottom - bottom, r.top - top));
 }
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.
