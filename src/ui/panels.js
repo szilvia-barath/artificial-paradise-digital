@@ -19,7 +19,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   const aboutHTML = () => {
     const m = data.meta;
     return `
-    <p class="eyebrow">${esc(m.artist)} · ${esc(m.venue)} · ${esc(m.dates)}</p>
+    <p class="eyebrow">${esc(m.artist)} · ${esc(m.venue)} · <span class="date">${esc(m.dates)}</span></p>
     <h2 id="panel-title">${esc(m.title)}</h2>
     ${data.text.map((p) => `<p>${esc(p)}</p>`).join('')}
     <p class="note">${esc(data.textCredit)}</p>

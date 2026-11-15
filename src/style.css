@@ -169,7 +169,7 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
 }
 /* The dates never break inside ("10–" / "31"). In a narrow window they take a line of
    their own and the dot before them is put away, so no line ends in "·". */
-.loader-meta .date { white-space: nowrap; }
+.loader-meta .date, .eyebrow .date { white-space: nowrap; }
 @media (max-width: 480px) {
   .loader-meta .sep { display: none; }
   .loader-meta .date { display: block; }
