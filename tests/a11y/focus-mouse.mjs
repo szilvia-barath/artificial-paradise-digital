@@ -59,6 +59,7 @@ step('3d A panel closed while the question is open: walking stays locked, the qu
 await page.click('[data-sound="off"]');
 await page.waitForTimeout(800);
 step('4 Sound question answered with the mouse: focus on the 3D view', await onView(), await focusName(page));
+step('4a "Without sound" clicked with the mouse: no keyboard frame on the view', (await onView()) && !(await ringOnView()), `focus on view ${await onView()}, frame ${await ringOnView()}`);
 
 // ---------------- inside
 // a keyboard focus on the view, then a mouse press on it: no keyboard frame
@@ -180,7 +181,35 @@ await page.focus('#site-foot a[href*="text/"]');
 await page.keyboard.press('Enter');
 step('16 The same link by keyboard: focus stays on the link', await isOn('#site-foot a[href*="text/"]'), await focusName(page));
 
-step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
+// the walk above is done: close it, so the fresh pages below load at full speed
 await ctx.close();
+
+// ---------------- the sound question answered each other way, each on a fresh page
+// "Without sound" has focus when the question opens; by mouse no frame follows focus to the
+// view, by keyboard the frame shows there, as after any keyboard move.
+async function answer(enterBy, choice, by) {
+  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+  const p = w.page;
+  if (enterBy === 'key') { await p.focus('#enter'); await p.keyboard.press('Enter'); } else await p.click('#enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  if (by === 'mouse') await p.click(`[data-sound="${choice}"]`);
+  else {
+    if (choice === 'on') await p.keyboard.press('Tab');
+    await p.keyboard.press(choice === 'on' ? 'Space' : 'Enter');
+  }
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden && document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
+  const got = await p.evaluate(() => ({ view: document.activeElement === document.getElementById('scene'), frame: document.getElementById('scene').matches(':focus-visible'), sound: document.querySelector('[data-action="sound"]').getAttribute('aria-pressed') }));
+  errors.push(...w.errors);
+  await w.ctx.close();
+  return got;
+}
+let r = await answer('mouse', 'on', 'mouse');
+step('17 "With sound" clicked with the mouse: sound on, focus on the view, no keyboard frame', r.view && !r.frame && r.sound === 'true', JSON.stringify(r));
+r = await answer('key', 'off', 'key');
+step('18 Enter on "Without sound" (the question opened by keyboard): focus on the view with the keyboard frame', r.view && r.frame && r.sound === 'false', JSON.stringify(r));
+r = await answer('mouse', 'on', 'key');
+step('19 Tab to "With sound" and Space (the question opened with the mouse): sound on, focus on the view with the keyboard frame', r.view && r.frame && r.sound === 'true', JSON.stringify(r));
+
+step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

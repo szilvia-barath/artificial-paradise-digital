@@ -514,6 +514,14 @@ soundAsk.addEventListener('click', (e) => {
 soundAsk.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') soundAsk.click();
 });
+// "Without sound" has focus from the opening, given by the page, so the browser shows the
+// keyboard frame (:focus-visible) on it, and carries the frame on to the 3D view when the
+// click hands focus there. A mouse press on the button that has focus lets go of it first,
+// as controls.js does, so the press focuses it again as a mouse focus and no frame follows.
+soundAsk.addEventListener('mousedown', (e) => {
+  const b = e.target.closest('[data-sound]');
+  if (b && e.button === 0 && document.activeElement === b) b.blur();
+});
 function enter(ask = true) {
   entered = true;
   setSound(false);
