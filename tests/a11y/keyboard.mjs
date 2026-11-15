@@ -243,10 +243,10 @@ const toCaption = (stop) => page.evaluate((n) => {
   for (let i = 0; i < 600 && tour.active && !(tour.i === n && tour.shown); i++) tour.update(0.1);
 }, stop);
 await toCaption(0);
-await wait(1300);
+// the live region's timer can fire seconds late here: wait (up to 30 s) for each caption
+await until(() => window.__said.join(' | ').includes('No. 1, '));
 await toCaption(1);
-await wait(1300);
-heard = (await said()).join(' | ');
+heard = await hear(['No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.', 'No. 2,']);
 step(`7.1 Tab back to the 3D view (${tabs} presses); T starts the tour`, 'Tour button reads as pressed; the first and the second work\'s captions are announced, with no opening line before them', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && !heard.includes('Down the stairs') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.') && heard.includes('No. 2,'));
 await page.keyboard.press('Escape');
 await until(() => document.querySelector('[data-action="tour"]').getAttribute('aria-pressed') === 'false');
