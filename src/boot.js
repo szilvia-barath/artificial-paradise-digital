@@ -75,16 +75,20 @@ if ('ResizeObserver' in window) {
   for (const el of foot.children) ro.observe(el);
 }
 
-// If the scene can't start (no WebGL, very old browser), say so on the title screen
-// instead of leaving it on "Preparing the basement…" for ever.
-function showFailure() {
+// If the scene can't start, say so on the title screen instead of leaving it on
+// "Preparing the basement…" for ever. Only a real start-up failure counts: main.js could
+// not be loaded, or it stopped while it ran (no WebGL: three.js throws when it cannot
+// create the context). A later error, a texture that fails on a slow phone say, is not
+// one: the loading goes on and ends in "Ready". After a failure the state is "failed",
+// and markReady() in main.js then announces nothing.
+function showFailure(err) {
   if (document.body.dataset.state === 'ready') return;
+  document.body.dataset.state = 'failed';
   const label = document.getElementById('progress-label');
   setText(label, 'loader.failure');
   label.classList.add('error');
   announce(t('loader.failure'), 'loader');
+  console.error(err);
 }
-window.addEventListener('error', showFailure);
-window.addEventListener('unhandledrejection', showFailure);
 
 import('./main.js').catch(showFailure);

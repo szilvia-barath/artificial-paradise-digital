@@ -607,7 +607,8 @@ function frame() {
 renderer.compile(scene, camera);
 renderer.setAnimationLoop(frame);
 function markReady() {
-  if (worldReady) return;
+  // after a start-up failure (boot.js) the title screen keeps saying so: no "Ready"
+  if (worldReady || document.body.dataset.state === 'failed') return;
   worldReady = true;
   document.body.dataset.state = 'ready';
   progressLabel.classList.remove('error');
