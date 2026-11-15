@@ -58,6 +58,23 @@ function page(lang, raw) {
   // Titles are the official English ones; on the Hungarian page they are marked as English
   // so a screen reader pronounces them as such.
   const title = (s) => (lang === 'en' ? esc(s) : `<span lang="en">${esc(s)}</span>`);
+  // A string with a {title} slot, the title put in through title().
+  const withTitle = (key, vars, s) => t(key, { ...vars, title: '{title}' }).split('{title}').map(esc).join(title(s));
+  // A text that names works by their titles (a room's subtitle): each title goes through
+  // title() as well, the longest first, so "Artificial Paradise II" is not cut short.
+  const titles = [...new Set(data.works.map((w) => w.title))].sort((a, b) => b.length - a.length);
+  const titled = (s) => {
+    const found = titles.filter((n) => s.includes(n));
+    if (!found.length) return esc(s);
+    const re = new RegExp(found.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+    let out = '';
+    let at = 0;
+    for (const m of s.matchAll(re)) {
+      out += esc(s.slice(at, m.index)) + title(m[0]);
+      at = m.index + m[0].length;
+    }
+    return out + esc(s.slice(at));
+  };
   const no = (w) => t('viewer.no', { no: w.no });
   const heading = (w) => `${esc(no(w))}: ${title(w.title)}`;
   const plainHeading = (w) => `${no(w)}: ${w.title}`;
@@ -110,7 +127,7 @@ ${d.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${d.note ? `\n<p class="note"
 ${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${esc(t(`textEdition.label.${k}`))}</dt><dd>${v}</dd>`).join('\n')}
 </dl>${w.caption ? `\n<p>${esc(w.caption)}</p>` : ''}
 ${artistText(w)}
-<p><a href="${toWalk}?lang=${lang}&amp;work=${encodeURIComponent(w.id)}">${esc(t('textEdition.openInWalk', { no: w.no, title: w.title }))}</a></p>
+<p><a href="${toWalk}?lang=${lang}&amp;work=${encodeURIComponent(w.id)}">${withTitle('textEdition.openInWalk', { no: w.no }, w.title)}</a></p>
 </article>`;
   };
 
@@ -126,7 +143,7 @@ ${artistText(w)}
     }
     return `<section id="room-${r.id}" aria-labelledby="room-${r.id}-h">
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
-<p class="sub">${esc(data.rooms[r.id].subtitle)}</p>
+<p class="sub">${titled(data.rooms[r.id].subtitle)}</p>
 <p>${esc(lead.join(' '))}</p>
 ${inRoom.map(workHTML).join('\n')}
 </section>`;
