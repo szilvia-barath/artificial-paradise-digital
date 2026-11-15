@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'photo' names the installation photograph that shows the work in place (the photographer's file name; the photographs are not in this repository); for a work without a 'situ' list, its in-situ view (the image's '-situ' file) was cut from it. Where the images a work shows were cut from other photographs, 'imageSources' names the file each image comes from, as in scripts/crops.json (\"repro\"); there 'photo' is a reference only and no image on the site is cut from it. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Baráth",
@@ -89,6 +89,11 @@
         "img/w03-paradise-factory-b",
         "img/w03-paradise-factory-c"
       ],
+      "imageSources": {
+        "img/w03-paradise-factory": "1 terem/_artificial paradise 01 - 02.jpg",
+        "img/w03-paradise-factory-b": "1 terem/_artificial paradise 01 - 01.jpg",
+        "img/w03-paradise-factory-c": "1 terem/_artificial paradise 01 - 06.jpg"
+      },
       "video": {
         "viewer": "video/w03-documentation.mp4"
       },
@@ -463,6 +468,10 @@
         "img/w16-let-it-flow-a",
         "img/w16-let-it-flow-b"
       ],
+      "imageSources": {
+        "img/w16-let-it-flow-a": "4 terem/_artificial paradise 04 - 01.jpg",
+        "img/w16-let-it-flow-b": "4 terem/_artificial paradise 04 - 03.jpg"
+      },
       "size": "400 × 700 cm",
       "link": {
         "en": "https://kristoflab.com/en/let-it-flow-2024/",
