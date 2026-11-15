@@ -708,9 +708,11 @@ export function buildProps(materials) {
     g.add(place(box(0.11, 0.24, 0.1, materials.black), 21.8, 2.28, 1.79));
     g.add(place(box(0.04, 0.03, 0.04, materials.led), 21.82, 2.42, 1.8));
     g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), materials.black), 21.66, 2.15, 1.77));
-    // a round pipe standing on recess A's sill against its east jamb, up to the big pipe
-    // (DSC_0112, 04-03, w16-documentation.mp4 00:00); how far it stands from the back is invented
-    g.add(place(cyl(0.04, 0.04, 2.46 - 0.95, pipeMat, 10), 22.72, (2.46 + 0.95) / 2, 1.67));
+    // a round pipe standing on recess A's sill against its east jamb, rising behind the big
+    // pipe (DSC_0112, 04-03, w16-documentation.mp4 00:00); how far it stands from the back is
+    // invented. Its top is hidden in every photograph: it runs on up into the wall over the
+    // recess (from 2.75 m), so no open end shows (inferred)
+    g.add(place(cyl(0.04, 0.04, 2.78 - 0.95, pipeMat, 10), 22.72, (2.78 + 0.95) / 2, 1.67));
     // the pale pipe with collars above the projection, and the dark one along the top of the
     // north wall (DSC_0113; height and thickness from the 4 m wall's scale)
     const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
