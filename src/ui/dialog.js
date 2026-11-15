@@ -25,6 +25,8 @@ export function focusDialog(el, { initial, fallback } = {}) {
   const first = () => (initial && initial()) || items()[0];
 
   // On the document, so Tab also comes back in if a mouse click put focus elsewhere.
+  // Focus on the dialog itself (the sound question takes it from a mouse press on its
+  // backdrop or text) counts as outside its controls: Tab goes to the first, Shift+Tab to the last.
   document.addEventListener('keydown', (e) => {
     if (!open || e.key !== 'Tab') return;
     const list = items();
@@ -32,7 +34,7 @@ export function focusDialog(el, { initial, fallback } = {}) {
     const a = document.activeElement;
     const head = list[0];
     const tail = list[list.length - 1];
-    if (!el.contains(a)) {
+    if (a === el || !el.contains(a)) {
       e.preventDefault();
       (e.shiftKey ? tail : head).focus();
     } else if (e.shiftKey && a === head) {

@@ -518,6 +518,8 @@ soundAsk.addEventListener('keydown', (e) => {
 // keyboard frame (:focus-visible) on it, and carries the frame on to the 3D view when the
 // click hands focus there. A mouse press on the button that has focus lets go of it first,
 // as controls.js does, so the press focuses it again as a mouse focus and no frame follows.
+// A press anywhere else on the question (the backdrop, which answers "without sound", or the
+// card's text) focuses the question itself, which has tabindex -1 for that, as a mouse focus.
 soundAsk.addEventListener('mousedown', (e) => {
   const b = e.target.closest('[data-sound]');
   if (b && e.button === 0 && document.activeElement === b) b.blur();

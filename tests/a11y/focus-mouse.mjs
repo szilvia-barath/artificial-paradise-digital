@@ -204,18 +204,22 @@ await ctx.close();
 // ---------------- the sound question answered each other way, each on a fresh page
 // "Without sound" has focus when the question opens; by mouse no frame follows focus to the
 // view, by keyboard the frame shows there, as after any keyboard move.
-async function answer(enterBy, choice, by) {
-  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+// by: 'mouse' or 'key' on the choice's button, or a function that answers some other way.
+const PHONE = { viewport: { width: 375, height: 667 }, hasTouch: true, isMobile: true };
+const centreOf = (p, sel) => p.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; }, sel);
+async function answer(enterBy, choice, by, context = { viewport: { width: 1280, height: 800 } }) {
+  const w = await openWalk(browser, context);
   const p = w.page;
-  if (enterBy === 'key') { await p.focus('#enter'); await p.keyboard.press('Enter'); } else await p.click('#enter');
+  if (enterBy === 'key') { await p.focus('#enter'); await p.keyboard.press('Enter'); } else if (enterBy === 'tap') await p.tap('#enter'); else await p.click('#enter');
   await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
-  if (by === 'mouse') await p.click(`[data-sound="${choice}"]`);
+  if (typeof by === 'function') await by(p);
+  else if (by === 'mouse') await p.click(`[data-sound="${choice}"]`);
   else {
     if (choice === 'on') await p.keyboard.press('Tab');
     await p.keyboard.press(choice === 'on' ? 'Space' : 'Enter');
   }
   await p.waitForFunction(() => document.getElementById('sound-ask').hidden && document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
-  const got = await p.evaluate(() => ({ view: document.activeElement === document.getElementById('scene'), frame: document.getElementById('scene').matches(':focus-visible'), sound: document.querySelector('[data-action="sound"]').getAttribute('aria-pressed') }));
+  const got = await p.evaluate(() => ({ view: document.activeElement === document.getElementById('scene'), frame: document.getElementById('scene').matches(':focus-visible'), sound: document.querySelector('[data-action="sound"]').getAttribute('aria-pressed'), panel: !document.getElementById('panel').hidden, menu: document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded'), lang: document.documentElement.lang }));
   errors.push(...w.errors);
   await w.ctx.close();
   return got;
@@ -229,6 +233,43 @@ step('19 Tab to "With sound" and Space (the question opened with the mouse): sou
 // the case C8 is about, on its own page (step 4a reaches it only after the walk's earlier steps)
 r = await answer('mouse', 'off', 'mouse');
 step('20 Enter and then "Without sound" clicked with the mouse: sound off, focus on the view, no keyboard frame', r.view && !r.frame && r.sound === 'false', JSON.stringify(r));
+
+// A click or tap anywhere outside the card answers "without sound" too. The question itself
+// takes focus from the press, as a mouse focus, so no frame follows to the view. Since C3 the
+// navbar strip is part of that: a press there lands on the question, and opens nothing.
+const quiet = (x) => x.view && !x.frame && x.sound === 'false' && !x.panel && x.menu === 'false' && x.lang === 'en';
+r = await answer('mouse', 'off', (p) => p.mouse.click(10, 300));
+step('21 The dimmed backdrop clicked with the mouse: sound off, focus on the view, no keyboard frame', quiet(r), JSON.stringify(r));
+r = await answer('mouse', 'off', async (p) => { const [x, y] = await centreOf(p, '#site-nav [data-nav="about"]'); await p.mouse.click(x, y); });
+step('22 Clicked with the mouse where About lies under the question: no panel, sound off, focus on the view, no keyboard frame', quiet(r), JSON.stringify(r));
+r = await answer('mouse', 'off', async (p) => { const [x, y] = await centreOf(p, '#site-nav [data-lang="hu"]'); await p.mouse.click(x, y); });
+step('23 Clicked with the mouse where HU lies under the question: language unchanged, sound off, focus on the view, no keyboard frame', quiet(r), JSON.stringify(r));
+r = await answer('tap', 'off', (p) => p.touchscreen.tap(10, 300), PHONE);
+step('24 Phone (375 x 667, touch): the backdrop tapped: sound off, focus on the view, no keyboard frame', quiet(r), JSON.stringify(r));
+r = await answer('tap', 'off', async (p) => { const [x, y] = await centreOf(p, '#site-nav .nav-toggle'); await p.touchscreen.tap(x, y); }, PHONE);
+step('25 Phone: tapped where Menu lies under the question: menu not opened, sound off, focus on the view, no keyboard frame', quiet(r), JSON.stringify(r));
+
+// a press on the card's own text: the question keeps focus (on itself), Tab and Shift+Tab
+// go on to its buttons and do not leave it
+{
+  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+  const p = w.page;
+  await p.click('#enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  const where = () => p.evaluate(() => { const d = document.getElementById('sound-ask'); const a = document.activeElement; return d.hidden ? 'closed' : a === d ? 'question' : a.dataset.sound ? `button ${a.dataset.sound}` : d.contains(a) ? 'in' : 'OUT'; });
+  const seen = [];
+  await p.click('#sound-ask-q');
+  seen.push(await where());
+  await p.keyboard.press('Shift+Tab');
+  seen.push(await where());
+  await p.click('#sound-ask-q');
+  seen.push(await where());
+  await p.keyboard.press('Tab');
+  seen.push(await where());
+  step('26 The question\'s text clicked with the mouse: focus on the question; Shift+Tab goes to "With sound"; clicked again, Tab goes to "Without sound"', seen.join(',') === 'question,button on,question,button off', seen.join(' '));
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
