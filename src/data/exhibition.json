@@ -263,6 +263,8 @@
       },
       "video": {
         "loop": "video/w08-wiena-wrong-landscape-i.mp4",
+        "mediaAspect": 1.3333,
+        "cropTop": 0.085,
         "full": [
           {
             "drive": "1iwGauzuP_sOdcIbcs9J8F7Aa-qffDfqW",
@@ -427,6 +429,8 @@
       },
       "video": {
         "loop": "video/w15-wiena-wrong-landscape-ii.mp4",
+        "mediaAspect": 1.3333,
+        "cropTop": 0.148,
         "full": [
           {
             "drive": "1RCL-S3kwpjcpTsVgCWZxLheWWjFYPBOt",

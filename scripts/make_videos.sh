@@ -74,7 +74,9 @@ enc_loop() { # file, output name, start s, duration s, filter, fps, crf, sound g
 enc "artifical paradise_singapore.mp4" w06-artificial-paradise-singapore 30 40 "scale=960:540" 30 30 -2
 enc "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-eden-project 0 58 "scale=960:540" 30 30 0
 # silent: the Wiena files have no sound track, Paradise Factory and Let it flow a silent one
-# the cyan Wiena hangs in Room 3 (#8), the red one in Room 4 (#15); the TVs stretched 4:3 to 16:9
+# the cyan Wiena hangs in Room 3 (#8), the red one in Room 4 (#15); the files stay 4:3. The
+# gallery's 16:9 TVs cropped the picture, they did not stretch it (the artist, 13 November
+# 2026; DSC_0089, DSC_0120): the walk crops it too (video.mediaAspect and cropTop in exhibition.json)
 # the cyan Wiena barely moves (only the grass in the lower half sways): at the usual settings
 # the encoder drops that motion and the screen looks frozen, so no skipped blocks and a lower crf
 enc_subtle "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-i 0 37.6 "scale=960:720:flags=lanczos" 25 26

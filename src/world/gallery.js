@@ -61,10 +61,14 @@ const screenFrag = /* glsl */ `
   uniform sampler2D mapB;
   uniform float mixB;
   uniform float brightness;
+  uniform vec4 uvRect;
   varying vec2 vUv;
   void main() {
+    // The part of the texture on the screen: all of it, or the band of a loop of another
+    // shape (uvRect: scale xy, offset zw).
+    vec2 uv = vUv * uvRect.xy + uvRect.zw;
     // The frames are shown as photographed; only a slow crossfade between them.
-    vec3 col = mix(texture2D(map, vUv).rgb, texture2D(mapB, vUv).rgb, mixB);
+    vec3 col = mix(texture2D(map, uv).rgb, texture2D(mapB, uv).rgb, mixB);
     // faint LCD falloff at the panel edges
     vec2 d = abs(vUv - 0.5) * 2.0;
     col *= 1.0 - 0.1 * pow(max(d.x, d.y), 8.0);
@@ -219,6 +223,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
             mapB: { value: null },
             mixB: { value: 0 },
             brightness: { value: 1.1 },
+            uvRect: { value: new THREE.Vector4(1, 1, 0, 0) },
           },
           vertexShader: screenVert,
           fragmentShader: screenFrag,
@@ -242,6 +247,23 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
         pool.material.opacity = work.room === 'r4' ? 0.035 : 0.08;
         const frames = work.frames && work.frames.length ? work.frames : [work.image];
         const entry = { work, mat, frames, textures: [], idx: 0, t: Math.random() * 6 };
+        // A loop of another shape than the screen (video.mediaAspect) is cropped to it, in the
+        // shader and for the loop only: the photographed stills shown until it plays already
+        // have the screen's shape. Footage taller than the screen keeps its full width and the
+        // band from video.cropTop down (a fraction of the frame's height from the top; centred
+        // if not given); wider footage keeps its full height, centred.
+        const vm = work.video && work.video.mediaAspect;
+        if (vm) {
+          const s = w / h / vm;
+          if (s >= 1) {
+            const band = 1 / s;
+            const top = work.video.cropTop ?? (1 - band) / 2;
+            // the video texture keeps flipY, so v = 1 is the frame's top row
+            entry.uvRect = new THREE.Vector4(1, band, 0, 1 - top - band);
+          } else {
+            entry.uvRect = new THREE.Vector4(s, 1, (1 - s) / 2, 0);
+          }
+        }
         screens.push(entry);
         frames.forEach((fr, i) => {
           loader.load(url(`${fr}-thumb.webp`), (t) => {
@@ -397,6 +419,8 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     }
     for (const s of screens) {
       const u = s.mat.uniforms;
+      if (s.video && s.video.ready && s.uvRect) u.uvRect.value.copy(s.uvRect);
+      else u.uvRect.value.set(1, 1, 0, 0);
       if (s.video && s.video.ready) {
         u.map.value = s.video.tex;
         u.mapB.value = s.video.tex;
