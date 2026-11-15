@@ -263,7 +263,9 @@ export function buildProps(materials) {
       const zBack = backIn - 0.125;
       const base = (s) => new THREE.Vector2(foot, tread(0) + 0.06).addScaledVector(d, s);
       const mortarMat = new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 });
-      for (const zc of [zOpen, backIn - 0.1175]) {
+      // on the wall side the mortar's inner face stands 3 mm back from the parapet's face and
+      // the bricks' ends, so it shares no plane with them
+      for (const zc of [zOpen, backIn - 0.1175 - 0.003]) {
         const mortar = box(len, 0.1, 0.235, mortarMat);
         const mc = base(len / 2).addScaledVector(nrm, 0.045);
         mortar.position.set(mc.x, mc.y, zc);
