@@ -1,6 +1,6 @@
 # Screen reader test: NVDA on Windows
 
-A script for me (Szilvia) to run by hand. It has not been run yet: the "you should hear" lines are what the markup should produce, worked out from the code, not heard. They were worked out again on 15 November 2026, after the changes of group a of the UI/UX proposal. Where NVDA says something else, write it in the "Heard" column and send the table back.
+A script for me (Szilvia) to run by hand. It has not been run yet: the "you should hear" lines are what the markup should produce, worked out from the code, not heard. They were worked out again on 15 November 2026, after the changes of group a of the UI/UX proposal, and again the same day after group b (C3, C5, C8): steps 3.4 to 3.7 and 8.4 to 8.6 are new. Where NVDA says something else, write it in the "Heard" column and send the table back.
 
 ## Before you start
 
@@ -43,6 +43,10 @@ A script for me (Szilvia) to run by hand. It has not been run yet: the "you shou
 | 3.1 | Press Enter on the Enter button. | "Start with sound? dialog", then its description "Better with headphones · M switches the sound on or off any time" (NVDA may skip the dot or say it), then "Without sound, button". | |
 | 3.2 | Press Tab twice. | "With sound, button", then "Without sound, button" again. Focus does not leave the question. | |
 | 3.3 | Press Enter on "Without sound". | Focus mode sound. "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys. application". Then "Room 2. Video, bar. No. 6, Artificial Paradise – Singapore. Press Enter to open." | |
+| 3.4 | Press F5 to reload. When "Enter, button" is read, press Enter: the question opens as in 3.1. Press NVDA+Space (browse mode), Ctrl+Home, then B a few times. | Only "Without sound, button" and "With sound, button": the browser may hide the rest of the page behind the question. If NVDA does reach a button of the bar at the top, press Enter on About or on Works: nothing opens and no dialog is read. (EN and HU still switch the language there, and the question changes language with the page; if you try it, switch back to EN.) Then press NVDA+Space (focus mode) and Tab: "Without sound, button" or "With sound, button". Focus is in the question again. | |
+| 3.5 | With the question still open, click with the mouse on the bar at the top, where About is. It is dimmed under the question. | Focus mode sound, the 3D view's name, then the room and the work, as in 3.3. About does not open: a click anywhere outside the card answers "Without sound". On screen there is no white frame round the 3D view. | |
+| 3.6 | Reload, press Enter, and click "With sound" with the mouse. Then press NVDA+Tab (it says where focus is), then M. | The 3D view's name, the room and the work, and the sound starts. No white frame round the view. NVDA+Tab: the 3D view's name again, "application". M switches the sound off, because focus is on the view. | |
+| 3.7 | Reload, press Enter, and click "Without sound" with the mouse. Then press NVDA+Tab. | As in 3.3: focus mode sound, the 3D view's name, then "Room 2. Video, bar. No. 6, Artificial Paradise – Singapore. Press Enter to open." No white frame round the view; after Enter in 3.3 there was one, which is right for the keyboard. NVDA+Tab: the 3D view's name. You are where 3.3 left you. | |
 
 Note if the long name of the 3D view is read before the room and the work, after them, or cuts them off.
 
@@ -106,6 +110,9 @@ You are standing in front of No. 6, where the link from the accessible version p
 | 8.1 | Tab to "HU", press Enter. | "HU, toggle button, pressed" (NVDA may say "Magyar" from the title). The page title becomes "Artificial Paradise digitális kiállítás", and so does the heading at level 1 (NVDA+F7 in browse mode). | |
 | 8.2 | Press Page Down. | A Hungarian announcement with the English title in it, for example "1. terem. Festmények, Paradise Factory. 1. mű, Wrong Data Landscape Dresden. Megnyitás: Enter.". Note whether NVDA changes voice for Hungarian. | |
 | 8.3 | Switch back to EN. | "EN, toggle button, pressed". | |
+| 8.4 | Tab to "About" in the navbar, press Enter. Then click "HU" with the mouse, and press NVDA+Tab. Press Tab a few times, click "EN" with the mouse, then press Esc. | "Artificial Paradise, dialog", "Close, button". After the click NVDA may read the new name at once; there is no focus mode sound and the 3D view's name is not read. NVDA+Tab: "Bezárás, button": focus is still on Close, now in Hungarian, and the panel's text is Hungarian. Tab stays inside the panel. After Esc: "About, button". | |
+| 8.5 | Tab to "Works", press Enter, Tab to No. 6 and press Enter. Tab to "Next work". Click "HU" with the mouse, press NVDA+Tab, click "EN", press NVDA+Tab. | "Artificial Paradise – Singapore, dialog", "Close, button". NVDA+Tab after HU: "Következő mű, button"; after EN: "Next work, button". Focus stays on that button, and the viewer stays open. | |
+| 8.6 | Shift+Tab to "Full video with sound". Do not press it: Enter would load the Google Drive player. Click "HU" with the mouse, press NVDA+Tab, then Tab. Click "EN" with the mouse and press Esc. | NVDA+Tab: "Bezárás, button". The full-video buttons are built again in Hungarian, so focus goes to the viewer's Close button. Tab: "Helyszíni fotó (installációs kép), button", still in the viewer. After Esc: "Works, button". | |
 
 ## 9. Reduced motion (no screen reader needed)
 
