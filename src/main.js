@@ -60,8 +60,9 @@ const enterBtn = document.getElementById('enter');
 let worldReady = false;
 manager.onProgress = (_url, loaded, total) => {
   const p = total ? loaded / total : 1;
-  // Late files after the 12 s safety net must not overwrite "Ready".
-  if (worldReady) return;
+  // Late files after the 12 s safety net must not overwrite "Ready", and after a
+  // start-up failure (boot.js) they must not overwrite the failure line.
+  if (worldReady || document.body.dataset.state === 'failed') return;
   progressBar.style.width = `${Math.round(p * 100)}%`;
   progressBar.parentElement.setAttribute('aria-valuenow', String(Math.round(p * 100)));
   setText(progressLabel, 'loader.loading', { loaded, total });
