@@ -522,7 +522,14 @@ soundAsk.addEventListener('keydown', (e) => {
 // card's text) focuses the question itself, which has tabindex -1 for that, as a mouse focus.
 soundAsk.addEventListener('mousedown', (e) => {
   const b = e.target.closest('[data-sound]');
-  if (b && e.button === 0 && document.activeElement === b) b.blur();
+  if (!b || e.button !== 0 || document.activeElement !== b) return;
+  b.blur();
+  // Safari, and Firefox on macOS, do not focus a button on a press. If no click follows
+  // (the press dragged off the button) and focus is outside the question that is still
+  // open, it goes back to the button. After a click the question is closed by then.
+  window.addEventListener('mouseup', () => setTimeout(() => {
+    if (soundAsking() && !soundAsk.contains(document.activeElement)) b.focus({ preventScroll: true });
+  }), { once: true, capture: true });
 });
 function enter(ask = true) {
   entered = true;

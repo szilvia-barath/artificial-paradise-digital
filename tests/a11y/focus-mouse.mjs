@@ -271,6 +271,28 @@ step('25 Phone: tapped where Menu lies under the question: menu not opened, soun
   await w.ctx.close();
 }
 
+// A browser that moves no focus on a mouse press (Safari, Firefox on macOS, for buttons), and
+// a press on "Without sound" dragged off it, so no click comes: focus is not left outside
+// the question. Chromium focuses the button on a press, so the page stops that here.
+{
+  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+  const p = w.page;
+  await p.click('#enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  await p.evaluate(() => window.addEventListener('mousedown', (e) => e.preventDefault(), true));
+  const [bx, by] = await centreOf(p, '[data-sound="off"]');
+  const [tx, ty] = await centreOf(p, '#sound-ask-q');
+  await p.mouse.move(bx, by);
+  await p.mouse.down();
+  await p.mouse.move(tx, ty, { steps: 4 });
+  await p.mouse.up();
+  const back = await p.waitForFunction(() => document.activeElement === document.querySelector('[data-sound="off"]'), null, { timeout: 30000 }).then(() => true, () => false);
+  const open27 = await p.evaluate(() => !document.getElementById('sound-ask').hidden);
+  step('27 A press on "Without sound" dragged off it, in a browser that moves no focus on a press: the question stays open, focus back on "Without sound"', back && open27, `question open: ${open27}; focus on ${await focusName(p)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);
