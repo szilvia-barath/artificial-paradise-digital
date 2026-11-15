@@ -21,8 +21,9 @@ for (const [path, lang] of [['text/', 'en'], ['text/hu/', 'hu']]) {
     const tag = `${lang}${js ? '' : ', JavaScript off'}`;
     // locator-based reads work with JavaScript off too
     const count = (sel) => page.locator(sel).count();
-    const h = { h1: await count('h1'), h2rooms: await count('section[id^="room-"] > h2'), h3: await count('h3'), img: await count('img, picture, svg, video, canvas') };
-    check(`[${tag}] headings: one h1, an h2 per room, an h3 per work; no images`, h.h1 === 1 && h.h2rooms === 4 && h.h3 === works.length && h.img === 0, JSON.stringify(h));
+    // the works are articles with an h3 each; the accessibility statement's parts are h3s too
+    const h = { h1: await count('h1'), h1InMain: await count('main h1'), h2rooms: await count('section[id^="room-"] > h2'), h3works: await count('article > h3'), img: await count('img, picture, svg, video, canvas') };
+    check(`[${tag}] headings: one h1, in main; an h2 per room, an h3 per work; no images`, h.h1 === 1 && h.h1InMain === 1 && h.h2rooms === 4 && h.h3works === works.length && h.img === 0, JSON.stringify(h));
     check(`[${tag}] page language`, (await page.getAttribute('html', 'lang')) === lang);
     const body = await page.locator('body').innerText();
     const missing = works.filter((w) => !(body.includes(w.title) && body.includes(w.year) && (!w.size || body.includes(w.size)))).map((w) => w.id);

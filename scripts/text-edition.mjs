@@ -36,9 +36,6 @@ a:focus-visible{outline:3px solid var(--link);outline-offset:3px;border-radius:2
 dl{display:grid;grid-template-columns:minmax(5.5rem,max-content) 1fr;gap:.25rem 1rem;margin:.6rem 0}
 dt{font-weight:600}
 dd{margin:0}
-dl.stacked{grid-template-columns:1fr;gap:0}
-dl.stacked dt{margin-top:1rem}
-dd p:first-child{margin-top:.2rem}
 .top{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;margin:0}
 .sub,.note{color:var(--muted)}
 .note{font-size:.95rem}
@@ -150,7 +147,8 @@ ${inRoom.map(workHTML).join('\n')}
     ['accessibility', t('nav.accessibility')],
     ['rights', t('textEdition.rights')],
   ];
-  // The accessibility statement, the same text as the walk's panel.
+  // The accessibility statement, the same text as the walk's panel, with the same
+  // structure: a heading (h3 here, under the section's h2) and paragraphs for each part.
   const statement = t('accessibility');
   const mailOf = (l) => data.contacts.find((g) => g.id === l.contact)?.items.find((c) => c.type === 'email' && c.href);
   const inline = (l) => {
@@ -163,8 +161,8 @@ ${inRoom.map(workHTML).join('\n')}
     const mail = l && mailOf(l);
     return mail ? `<p>${esc(mail.text)}</p>` : '';
   };
-  const statementHTML = statement.sections.map((sec) => `<dt>${esc(sec.h)}</dt>
-<dd>${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : '')}</p>`).join('')}${addressLine(sec.link)}</dd>`).join('\n');
+  const statementHTML = statement.sections.map((sec) => `<h3>${esc(sec.h)}</h3>
+${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : '')}</p>`).join('\n')}${addressLine(sec.link)}`).join('\n');
   const other = lang === 'en'
     ? '<a href="hu/?lang=hu" lang="hu" hreflang="hu">Magyar</a>'
     : '<a href="../?lang=en" lang="en" hreflang="en">English</a>';
@@ -188,6 +186,8 @@ ${inRoom.map(workHTML).join('\n')}
 <div class="page">
 <header>
 <p class="top"><a href="${toWalk}?lang=${lang}">${esc(t('textEdition.toWalk'))}</a> ${other}</p>
+</header>
+<main>
 <h1>${title(m.title)}: ${esc(nameFull.charAt(0).toLowerCase() + nameFull.slice(1))}</h1>
 <p>${esc(t('textEdition.intro', { count: works.length }))}</p>
 <dl>
@@ -197,13 +197,11 @@ ${inRoom.map(workHTML).join('\n')}
 <dt>${esc(t('textEdition.facts.curator'))}</dt><dd>${esc(curator[1])}</dd>
 </dl>
 <p class="note">${esc(t('textEdition.positionsNote'))} ${esc(data.source || '')}</p>
-</header>
 <nav aria-label="${esc(t('textEdition.onThisPage'))}">
 <ul>
 ${sections.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('\n')}
 </ul>
 </nav>
-<main>
 ${ROOMS.map(roomHTML).join('\n')}
 <section id="exhibition-text" aria-labelledby="exhibition-text-h">
 <h2 id="exhibition-text-h">${esc(t('viewer.exhibitionText'))}</h2>
@@ -229,9 +227,7 @@ ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('\n'
 </section>
 <section id="accessibility" aria-labelledby="accessibility-h">
 <h2 id="accessibility-h">${esc(statement.title)}</h2>
-<dl class="stacked">
 ${statementHTML}
-</dl>
 <p class="note">${esc(statement.updated)}</p>
 </section>
 <section id="rights" aria-labelledby="rights-h">
