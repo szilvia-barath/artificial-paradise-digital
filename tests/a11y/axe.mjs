@@ -1,9 +1,13 @@
 // axe-core on the text edition (both languages, light and dark) and on the walk in each of
 // its states: title screen, every panel, the sound question, the HUD, the rooms menu, the
 // artwork viewer. Fails on any serious or critical violation; lists every other one.
-// Writes docs/accessibility/axe-results.md.
-// Usage: npm run build && npm run preview &   then   node tests/a11y/axe.mjs
+// Writes its results to the system's temporary folder. With --write it writes them to
+// docs/accessibility/axe-results.md instead, the log the statement quotes: the counts of
+// "incomplete" items vary a little from run to run, so a plain run leaves the tracked log alone.
+// Usage: npm run build && npm run preview &   then   node tests/a11y/axe.mjs [--write]
 import { writeFileSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { createRequire } from 'node:module';
 import { launch, openWalk, BASE } from './lib.mjs';
 
@@ -91,8 +95,9 @@ const byRule = (list) => {
   return [...m].map(([k, states]) => `- **${k}**\n${states.map((s) => `  - ${s}`).join('\n')}`).join('\n') || '- none';
 };
 const incomplete = byRule(results.flatMap((r) => r.incomplete.map((v) => ({ state: r.state, ...v }))));
-mkdirSync('docs/accessibility', { recursive: true });
-writeFileSync('docs/accessibility/axe-results.md', `# axe-core results
+const out = process.argv.includes('--write') ? 'docs/accessibility/axe-results.md' : join(tmpdir(), 'ap-axe-results.md');
+if (out.startsWith('docs/')) mkdirSync('docs/accessibility', { recursive: true });
+writeFileSync(out, `# axe-core results
 
 Written by \`tests/a11y/axe.mjs\` on ${new Date().toISOString().slice(0, 10)}: axe-core ${results[0].version}, default rule set, Chromium (Playwright, headless), ${results.length} states scanned.
 
@@ -114,5 +119,5 @@ These are not failures. axe reports them when it cannot measure something, mostl
 
 ${incomplete}
 `);
-console.log(`\n${results.length} states; ${bad.length} serious or critical; ${other.length} other; results in docs/accessibility/axe-results.md`);
+console.log(`\n${results.length} states; ${bad.length} serious or critical; ${other.length} other; results in ${out}`);
 process.exit(bad.length ? 1 : 0);
