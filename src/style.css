@@ -167,6 +167,13 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
   margin: clamp(18px, 3vw, 26px) 0 clamp(20px, 3vw, 28px);
   line-height: 1.7;
 }
+/* The dates never break inside ("10–" / "31"). In a narrow window they take a line of
+   their own and the dot before them is put away, so no line ends in "·". */
+.loader-meta .date { white-space: nowrap; }
+@media (max-width: 480px) {
+  .loader-meta .sep { display: none; }
+  .loader-meta .date { display: block; }
+}
 .progress {
   width: 100%;
   height: 2px;
@@ -292,6 +299,8 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
 }
 #site-foot a { color: inherit; text-underline-offset: 3px; }
 #site-foot .sep { opacity: 0.5; }
+/* a dot where the footer wraps, at the end or the start of a line, is hidden (boot.js) */
+#site-foot .sep.at-wrap { visibility: hidden; }
 /* The Instagram link says what it opens. On a phone, where the footer wraps, only the word
    "Instagram" is shown; the full words stay as the link's name for screen readers. */
 #site-foot a .short { display: none; }
@@ -469,7 +478,11 @@ body.touch #crosshair { display: none; }
 #toolbar button:hover, #toolbar button.on { background: rgba(255, 255, 255, 0.1); }
 #toolbar button .ico { white-space: nowrap; }
 #toolbar button.on .ico { color: var(--accent); }
-#toolbar button.muted .ico { color: var(--hud-muted); text-decoration: line-through; }
+#toolbar button.muted .ico { color: var(--hud-muted); }
+/* Sound: a loudspeaker with waves when on, with a cross when off (inline SVG, currentColor) */
+#toolbar .ico svg { display: block; width: 14px; height: 14px; }
+#toolbar [data-action="sound"] .snd-on, #toolbar [data-action="sound"][aria-pressed="true"] .snd-off { display: none; }
+#toolbar [data-action="sound"][aria-pressed="true"] .snd-on { display: block; }
 .rooms-wrap { position: relative; }
 #rooms-menu {
   position: absolute;

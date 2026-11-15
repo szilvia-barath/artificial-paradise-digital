@@ -47,7 +47,33 @@ nav.addEventListener('focusout', (e) => {
 // the footer never covers a control or its focus ring.
 const foot = document.getElementById('site-foot');
 const syncFoot = () => document.documentElement.style.setProperty('--foot-h', `${foot.offsetHeight}px`);
-if ('ResizeObserver' in window) new ResizeObserver(syncFoot).observe(foot);
+// Where the footer wraps, the dot between the last item of one line and the first of the
+// next is hidden, so no line ends or starts with a lone "·". Hiding keeps its place
+// (visibility), so it never changes where the footer wraps. In a narrow window CSS puts
+// all the dots away.
+const seps = [...foot.querySelectorAll('.sep')];
+const shown = (el) => el.getClientRects().length > 0;
+const middle = (el) => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; };
+const neighbour = (el, dir) => {
+  let n = el[dir];
+  while (n && (!shown(n) || n.classList.contains('sep'))) n = n[dir];
+  return n;
+};
+function markWraps() {
+  for (const s of seps) {
+    if (!shown(s)) continue;
+    const y = middle(s);
+    const a = neighbour(s, 'previousElementSibling');
+    const b = neighbour(s, 'nextElementSibling');
+    s.classList.toggle('at-wrap', !a || !b || Math.abs(middle(a) - y) > 3 || Math.abs(middle(b) - y) > 3);
+  }
+}
+if ('ResizeObserver' in window) {
+  const ro = new ResizeObserver(() => { syncFoot(); markWraps(); });
+  ro.observe(foot);
+  // a language switch changes the items' widths, and with them where the footer wraps
+  for (const el of foot.children) ro.observe(el);
+}
 
 // If the scene can't start (no WebGL, very old browser), say so on the title screen
 // instead of leaving it on "Preparing the basement…" for ever.

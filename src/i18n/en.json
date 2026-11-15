@@ -24,7 +24,7 @@
     },
     "loader": {
       "meta1": "Digital exhibition",
-      "meta2": "MAMŰ Gallery, Budapest · 10-31.01.2025",
+      "meta2": "MAMŰ Gallery, Budapest",
       "preparing": "Preparing the basement…",
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
@@ -124,7 +124,7 @@
       }
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31.01.2025"
+      "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025"
     },
     "textEdition": {
       "name": "Accessible version",

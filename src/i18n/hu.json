@@ -24,7 +24,7 @@
     },
     "loader": {
       "meta1": "Digitális kiállítás",
-      "meta2": "MAMŰ Galéria, Budapest · 2025. 01. 10-31.",
+      "meta2": "MAMŰ Galéria, Budapest",
       "preparing": "Lemegyünk a pincébe...",
       "loading": "A művek felkerülnek a falra… {loaded}/{total}",
       "ready": "Kész",
@@ -124,7 +124,7 @@
       }
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10-31."
+      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31."
     },
     "textEdition": {
       "name": "Akadálymentes változat",
