@@ -272,6 +272,14 @@ if ('ResizeObserver' in window) {
     if (toolbarEl.offsetHeight) document.documentElement.style.setProperty('--bar-h', `${toolbarEl.offsetHeight}px`);
   }).observe(toolbarEl);
 }
+// Pinch-zoom of the page (a panel or the viewer enlarged with two fingers): while the page
+// is zoomed in, the 3D view lets touches through to the browser, so the visitor can pan and
+// zoom back out; at scale 1 the view takes its gestures back (style.css, controls.js).
+if (window.visualViewport) {
+  const syncPageZoom = () => document.body.classList.toggle('page-zoomed', window.visualViewport.scale > 1.01);
+  window.visualViewport.addEventListener('resize', syncPageZoom);
+  syncPageZoom();
+}
 const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
 
 // Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.

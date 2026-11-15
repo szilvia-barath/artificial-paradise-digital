@@ -224,18 +224,21 @@ export class FirstPersonControls {
       return Math.hypot(a.x - b.x, a.y - b.y);
     };
     window.addEventListener('touchmove', (e) => {
+      // While the page itself is pinch-zoomed the browser pans and zooms it; the view waits.
+      const pageZoomed = document.body.classList.contains('page-zoomed');
       for (const t of e.changedTouches) {
         if (t.identifier === joyId) { moveJoy(t); continue; }
         const l = looks.get(t.identifier);
         if (!l) continue;
-        if (this.enabled && looks.size === 1) {
+        if (pageZoomed) l.pinched = true; // a pan of the zoomed page is not a tap either
+        if (this.enabled && looks.size === 1 && !pageZoomed) {
           this.yaw -= ((t.clientX - l.x) * 0.0055) / this.zoom;
           this.pitch = Math.max(-1.2, Math.min(1.2, this.pitch - ((t.clientY - l.y) * 0.0045) / this.zoom));
         }
         l.x = t.clientX;
         l.y = t.clientY;
       }
-      if (looks.size === 2 && this.zoomEnabled) {
+      if (looks.size === 2 && this.zoomEnabled && !pageZoomed) {
         if (!pinch) pinch = { d0: spread(), z0: this.zoomTarget };
         else {
           this.zoomTarget = Math.max(1, Math.min(MAX_ZOOM, (pinch.z0 * spread()) / Math.max(1, pinch.d0)));

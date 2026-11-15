@@ -206,9 +206,11 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     if (e.key === 'ArrowRight') step(1);
     if (e.key === 'ArrowLeft') step(-1);
   });
-  // Swipe on touch
+  // Swipe on touch: one finger, and only while the page is not pinch-zoomed (then a drag
+  // moves round the enlarged page, and two fingers zoom it; neither changes the work).
   let sx = null;
-  img.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  const pageZoomed = () => (window.visualViewport ? window.visualViewport.scale > 1.01 : false);
+  img.addEventListener('touchstart', (e) => { sx = e.touches.length === 1 && !pageZoomed() ? e.touches[0].clientX : null; }, { passive: true });
   img.addEventListener('touchend', (e) => {
     if (sx === null) return;
     const dx = e.changedTouches[0].clientX - sx;

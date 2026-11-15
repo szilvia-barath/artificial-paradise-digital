@@ -28,7 +28,6 @@ html, body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
-  touch-action: none;
 }
 button { font: inherit; color: inherit; cursor: pointer; }
 .mono { font-family: var(--mono); letter-spacing: 0.02em; }
@@ -52,6 +51,12 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
   display: block;
   outline: none;
 }
+/* Touch: the page itself can be pinch-zoomed (panels, the viewer, the title screen). Only
+   the 3D view and the controls laid over it keep their gestures to themselves, so a drag
+   looks around and a pinch zooms the camera, never the page. While the page is zoomed in
+   (body.page-zoomed, kept by main.js) they let go, so two fingers can zoom back out. */
+#scene, #hud { touch-action: none; }
+body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
 
 /* The skip link: off screen until Tab reaches it, then at the top left above everything. */
 .skip-link {
@@ -100,7 +105,6 @@ body.entered #site-nav :focus-visible, body.entered #site-foot :focus-visible { 
   padding: calc(var(--nav-h) + 16px) 16px calc(var(--foot-h) + 24px + var(--safe-b));
   overflow-y: auto;
   overflow-x: hidden;
-  touch-action: auto;
   /* what Tab scrolls to stays clear of the navbar and the footer, which lie over the card */
   scroll-padding: calc(var(--nav-h) + 12px) 0 calc(var(--foot-h) + 12px + var(--safe-b));
 }
@@ -715,7 +719,6 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   animation: fade-in 0.35s ease;
-  touch-action: auto;
 }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 #viewer {
