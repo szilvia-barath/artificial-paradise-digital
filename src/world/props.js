@@ -131,78 +131,149 @@ export function buildProps(materials) {
   const SZ = R1.D;
 
   // Stairs along the north wall, rising west through the wall into the stair shaft
-  // (DSC_0013–0016, panorama, close-ups of the flight). Treads are dark, worn concrete; the
-  // open side is a whitewashed brick wall topped by a row of bare bricks set on edge, square
-  // to the slope, with a little brick pier at its foot; a black railing.
+  // (DSC_0013–0016, panorama, close-ups of the flight). Treads are dark, worn concrete. The
+  // flight runs between two whitewashed brick parapets, each topped by a row of bare bricks
+  // set on edge, square to the slope; a black railing on the open (south) side. The foot is
+  // rebuilt from the stair photographs 4.jpg, 5.jpg and 7.jpg (PROGRESS.md, decision log,
+  // 15 November 2026): a little bare brick pier under the open side's last coping brick, and
+  // on the wall side a brick laid flat on a grey rendered base, with open floor between the
+  // wall-side parapet and the north wall.
   {
     const run = 0.26;
     const rise = 0.19;
-    const foot = EX - 2.54; // last step ends ~50 cm before Wrong Data Landscape Dresden
+    const foot = EX - 2.54; // bottom riser; the last step ends ~50 cm before Wrong Data Landscape Dresden
     const steps = 17;
-    const width = 1.95;
+    // the bottom riser measures 0.11-0.12 m: the flight sits 0.07 m lower than rise x steps
+    const sunk = 0.07;
+    const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
+    // across the flight, z from the north wall face (measured at the foot in 4.jpg)
+    const backOut = 0.37; // wall-side parapet, back face (0.13 thick: inferred)
+    const backIn = 0.5; // wall-side parapet, face towards the treads
+    const openIn = 1.69; // open-side parapet, face towards the treads (0.23 thick: inferred)
+    const openOut = 1.92; // open-side parapet, face towards the room
+    const pierX0 = foot + 0.08; // the pier: 0.12 m E-W, 0.21 m N-S
+    const pierX1 = foot + 0.2;
+    const pierZ0 = openOut - 0.21;
+    const pierTop = 0.19;
+    const capTop = pierTop + 0.012;
+    const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
+    const baseTop = 0.25;
     const inRoom = Math.round((foot - WX) / run);
     const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps);
     const m = new THREE.Matrix4();
+    const q0 = new THREE.Quaternion();
+    // the treads run under both parapets; their ends are hidden in the brickwork
+    const tz0 = backIn - 0.02;
+    const tz1 = openIn + 0.02;
     for (let i = 0; i < steps; i++) {
-      const h = rise * (i + 1);
+      const h = tread(i);
       const x1 = foot - run * i;
-      m.compose(new THREE.Vector3(x1 - run / 2, h / 2, width / 2), new THREE.Quaternion(), new THREE.Vector3(run + 0.002, h, width));
+      m.compose(new THREE.Vector3(x1 - run / 2, h / 2, (tz0 + tz1) / 2), q0, new THREE.Vector3(run + 0.002, h, tz1 - tz0));
       inst.setMatrixAt(i, m);
     }
     g.add(inst);
-    // stringer wall: the stair profile extruded 0.15 m on the open (south) side
-    const shape = new THREE.Shape();
-    shape.moveTo(foot, 0);
-    for (let i = 0; i < inRoom; i++) shape.lineTo(foot - run * i, rise * (i + 1) + 0.06);
-    shape.lineTo(WX - 0.02, rise * inRoom + 0.06);
-    shape.lineTo(WX - 0.02, 0);
-    shape.lineTo(foot, 0);
-    const sg = new THREE.ExtrudeGeometry(shape, { depth: 0.15, bevelEnabled: false });
-    const stringer = new THREE.Mesh(sg, materials.whiteBrick);
-    stringer.position.z = width;
-    g.add(stringer);
-    // damp stains on the wall the flight runs along, rising from the treads (close-up):
-    // a strip following the steps, 0.6 m tall, on the face of the north wall
+    // behind the wall-side parapet: open floor at the foot (4.jpg); further up nobody has
+    // seen it (folding chairs stood there, higher up the flight), so it is filled in steps
+    // 0.30 m below the treads (invented)
+    {
+      const first = 2;
+      const fill = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps - first);
+      for (let i = first; i < steps; i++) {
+        const h = tread(i) - 0.3;
+        m.compose(new THREE.Vector3(foot - run * i - run / 2, h / 2, backOut / 2), q0, new THREE.Vector3(run + 0.002, h, backOut));
+        fill.setMatrixAt(i - first, m);
+      }
+      g.add(fill);
+    }
+    // a parapet's side profile: its top runs 0.06 m above the step noses; `east` is where it
+    // meets the floor at the foot, `eastTop` the height of its top there
+    const parapet = (east, eastTop) => {
+      const s = new THREE.Shape();
+      s.moveTo(east, 0);
+      s.lineTo(east, eastTop);
+      for (let i = 0; i < inRoom; i++) s.lineTo(foot - run * i, tread(i) + 0.06);
+      s.lineTo(WX - 0.02, tread(inRoom - 1) + 0.06);
+      s.lineTo(WX - 0.02, 0);
+      s.lineTo(east, 0);
+      return s;
+    };
+    // open side: whitewashed brick down to the pier's west face, under the last coping bricks
+    const openWall = new THREE.Mesh(new THREE.ExtrudeGeometry(parapet(pierX0, tread(0) + 0.06), { depth: openOut - openIn, bevelEnabled: false }), materials.whiteBrick);
+    openWall.position.z = openIn;
+    g.add(openWall);
+    // wall side: whitewashed brick from the bottom riser up, its east end on the grey base
+    const backWall = new THREE.Mesh(new THREE.ExtrudeGeometry(parapet(foot, tread(0) + 0.06), { depth: backIn - backOut, bevelEnabled: false }), materials.whiteBrick);
+    backWall.position.z = backOut;
+    g.add(backWall);
+    // the grey rendered base at the wall-side end (render over brick, whitewashed in patches)
+    const base = new THREE.Mesh(uvMetres(new THREE.BoxGeometry(baseX1 - foot, baseTop, backIn - backOut), baseX1 - foot, baseTop), materials.stair);
+    base.position.set((foot + baseX1) / 2, baseTop / 2, (backOut + backIn) / 2);
+    g.add(base);
+    // the pier: one bare brick per course, laid flat, the lowest course partly under the
+    // tiles (joints at 0.045 and 0.12 m), with a thin grey cement cap
+    {
+      const geo = uvMetres(new THREE.BoxGeometry(pierX1 - pierX0, pierTop, openOut - pierZ0), pierX1 - pierX0, pierTop);
+      const uv = geo.attributes.uv;
+      for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) + 0.032);
+      const pier = new THREE.Mesh(geo, materials.stairBrick);
+      pier.position.set((pierX0 + pierX1) / 2, pierTop / 2, (pierZ0 + openOut) / 2);
+      g.add(pier);
+      const cap = box(pierX1 - pierX0 + 0.006, capTop - pierTop, openOut - pierZ0 + 0.006, materials.stair);
+      cap.position.set((pierX0 + pierX1) / 2, (pierTop + capTop) / 2, (pierZ0 + openOut) / 2);
+      g.add(cap);
+    }
+    // damp stains, flaked render and dirt on the wall-side parapet's face, between the treads
+    // and the coping (4.jpg, 5.jpg)
     {
       const sh = new THREE.Shape();
-      sh.moveTo(foot, 0);
+      sh.moveTo(foot, tread(0));
       for (let i = 0; i < inRoom; i++) {
-        sh.lineTo(foot - run * i, rise * (i + 1));
-        sh.lineTo(foot - run * (i + 1), rise * (i + 1));
+        sh.lineTo(foot - run * (i + 1), tread(i));
+        if (i < inRoom - 1) sh.lineTo(foot - run * (i + 1), tread(i + 1));
       }
-      sh.lineTo(WX, rise * inRoom + 0.6);
-      sh.lineTo(foot, rise + 0.6);
-      sh.lineTo(foot, 0);
+      sh.lineTo(foot - run * inRoom, tread(inRoom - 1) + 0.06);
+      for (let i = inRoom - 1; i >= 0; i--) sh.lineTo(foot - run * i, tread(i) + 0.06);
       const geo = new THREE.ShapeGeometry(sh);
-      // UVs: along the wall in metres, upwards measured from the tread line
+      // UVs: along the wall in metres, upwards measured from the line of the step noses
       const pos = geo.attributes.position;
       const uv = geo.attributes.uv;
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i);
-        const base = ((foot - x) / run) * rise;
+        const base = ((foot - x) / run) * rise - sunk;
         uv.setXY(i, x, pos.getY(i) - base);
       }
       const stain = new THREE.Mesh(geo, materials.stairStain);
-      stain.position.z = 0.003;
+      stain.position.z = backIn + 0.003;
       stain.renderOrder = 1;
       g.add(stain);
     }
-    // the brick-on-edge coping: one brick every 7.7 cm along the slope, each showing its
+    // the brick-on-edge copings: one brick every 7.7 cm along the slope, each showing its
     // 6.5 x 12 cm end on the side, in its own red-brown, set a little irregularly in pale
-    // mortar, overhanging the whitewashed wall on both sides
+    // mortar. On the open side the outer face is flush with the wall; at the foot the last
+    // two bricks stand level, one over the end of the wall and one on the pier's cap. On the
+    // wall side the inner face is flush with the parapet and the lowest brick meets the
+    // brick on the base.
     {
       const len = Math.hypot(run * inRoom, rise * inRoom);
       const L = Math.hypot(run, rise);
       const d = new THREE.Vector2(-run / L, rise / L); // up the slope
       const nrm = new THREE.Vector2(rise / L, run / L); // square to it, upwards
       const angle = -Math.atan2(rise, run);
-      const zc = width + 0.075;
-      const base = (s) => new THREE.Vector2(foot, rise + 0.06).addScaledVector(d, s);
-      const mortar = box(len, 0.1, 0.235, new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 }));
-      const mc = base(len / 2).addScaledVector(nrm, 0.045);
-      mortar.position.set(mc.x, mc.y, zc);
-      mortar.rotation.z = angle;
-      g.add(mortar);
+      const zOpen = (openIn + openOut) / 2;
+      const zBack = backIn - 0.125;
+      const base = (s) => new THREE.Vector2(foot, tread(0) + 0.06).addScaledVector(d, s);
+      const mortarMat = new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 });
+      for (const zc of [zOpen, backIn - 0.1175]) {
+        const mortar = box(len, 0.1, 0.235, mortarMat);
+        const mc = base(len / 2).addScaledVector(nrm, 0.045);
+        mortar.position.set(mc.x, mc.y, zc);
+        mortar.rotation.z = angle;
+        g.add(mortar);
+      }
+      // the level bed at the foot of the open side, over the wall's end and the pier
+      const bed = box(pierX1 - foot, 0.02, 0.235, mortarMat);
+      bed.position.set((foot + pierX1) / 2, tread(0) + 0.06 + 0.01, zOpen);
+      g.add(bed);
       const n = Math.floor(len / 0.077);
       // old, soft, sand-faced brick: a pitted, dusty face with chips and mortar left on it
       // (one small texture on every face, tinted per brick), and worn, uneven edges
@@ -260,39 +331,64 @@ export function buildProps(materials) {
         }
         brickGeo.computeVertexNormals();
       }
-      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, n);
+      const extra = [
+        // [x, bed y, z, tilt]: the two level bricks at the foot of the open side
+        [foot + 0.04, tread(0) + 0.06 + 0.02, zOpen, 0.0],
+        [(pierX0 + pierX1) / 2 + 0.01, capTop, zOpen, -0.06],
+      ];
+      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, 2 * n + extra.length + 1);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
       const c = new THREE.Color();
+      const one = new THREE.Vector3(1, 1, 1);
       const r = (k) => (Math.sin(k * 12.9898) * 43758.5453) % 1; // fixed jitter per brick
-      for (let i = 0; i < n; i++) {
-        const p = base((i + 0.5) * 0.077).addScaledVector(nrm, 0.055 + Math.abs(r(i + 1)) * 0.008);
-        e2.set(r(i + 7) * 0.03, r(i + 3) * 0.02, angle + r(i + 5) * 0.05);
-        q2.setFromEuler(e2);
-        m.compose(new THREE.Vector3(p.x, p.y, zc + r(i + 9) * 0.012), q2, new THREE.Vector3(1, 1, 1));
-        bricks.setMatrixAt(i, m);
-        const t = Math.abs(r(i + 11));
-        // faded, dusty orange-pink, a few scorched a shade deeper
-        c.setHSL(0.04 + t * 0.03, 0.22 + Math.abs(r(i + 13)) * 0.12, 0.6 + Math.abs(r(i + 17)) * 0.1 - (t > 0.9 ? 0.07 : 0), THREE.SRGBColorSpace);
-        // old whitewash left on some of them
-        if (Math.abs(r(i + 19)) > 0.84) c.lerp(new THREE.Color(0xd9d3c8), 0.45 + Math.abs(r(i + 23)) * 0.3);
-        bricks.setColorAt(i, c);
+      // faded, dusty orange-pink, a few scorched a shade deeper, old whitewash on some
+      const tint = (k) => {
+        const t = Math.abs(r(k + 11));
+        c.setHSL(0.04 + t * 0.03, 0.22 + Math.abs(r(k + 13)) * 0.12, 0.6 + Math.abs(r(k + 17)) * 0.1 - (t > 0.9 ? 0.07 : 0), THREE.SRGBColorSpace);
+        if (Math.abs(r(k + 19)) > 0.84) c.lerp(new THREE.Color(0xd9d3c8), 0.45 + Math.abs(r(k + 23)) * 0.3);
+        return c;
+      };
+      let k = 0;
+      for (const [zc, seed] of [[zOpen, 0], [zBack, 101]]) {
+        for (let i = 0; i < n; i++) {
+          const j = i + seed;
+          const p = base((i + 0.5) * 0.077).addScaledVector(nrm, 0.055 + Math.abs(r(j + 1)) * 0.008);
+          e2.set(r(j + 7) * 0.03, r(j + 3) * 0.02, angle + r(j + 5) * 0.05);
+          q2.setFromEuler(e2);
+          m.compose(new THREE.Vector3(p.x, p.y, zc + r(j + 9) * 0.012), q2, one);
+          bricks.setMatrixAt(k, m);
+          bricks.setColorAt(k++, tint(j));
+        }
       }
+      for (const [x, y, zc, tilt] of extra) {
+        e2.set(0, 0, tilt);
+        q2.setFromEuler(e2);
+        m.compose(new THREE.Vector3(x, y + 0.06, zc), q2, one);
+        bricks.setMatrixAt(k, m);
+        bricks.setColorAt(k++, tint(k + 300));
+      }
+      // the brick laid flat on the wall-side base (about 14 x 12 x 7 cm), east face flush
+      // with the base: the same brick, scaled
+      m.compose(new THREE.Vector3(baseX1 - 0.07, baseTop + 0.035, backIn - 0.06), q0, new THREE.Vector3(0.14 / 0.065, 0.07 / 0.12, 0.12 / 0.25));
+      bricks.setMatrixAt(k, m);
+      bricks.setColorAt(k++, tint(207));
       g.add(bricks);
-      // the little brick pier the coping starts from, at the foot of the flight
-      const pier = new THREE.Mesh(uvMetres(new THREE.BoxGeometry(0.26, 0.36, 0.27), 0.26, 0.36), materials.stairBrick);
-      pier.position.set(foot + 0.09, 0.18, zc);
-      g.add(pier);
-      obstacle(foot - 0.04, foot + 0.22, width - 0.06, width + 0.21);
+      obstacle(pierX0 - 0.02, pierX1 + 0.02, pierZ0 - 0.02, openOut + 0.02);
+      // the wall-side end and the narrow strip of floor behind it
+      obstacle(foot - 0.02, baseX1 + 0.02, 0, backIn + 0.02);
     }
-    // railing posts + handrail
+    // railing posts + handrail, on the open side's coping; the first post 0.36 m up from the
+    // bottom riser (4.jpg: 0.33 to 0.38 m)
     const railH = 0.9;
-    const top = (x) => ((foot - x) / run) * rise + rise + 0.06;
-    for (let x = foot - 0.15; x > WX; x -= 0.75) {
-      g.add(rod(materials.black, new THREE.Vector3(x, top(x), width + 0.075), new THREE.Vector3(x, top(x) + railH, width + 0.075), 0.014));
+    const zRail = (openIn + openOut) / 2;
+    const top = (x) => ((foot - x) / run) * rise + tread(0) + 0.06;
+    const firstPost = foot - 0.36;
+    for (let x = firstPost; x > WX; x -= 0.75) {
+      g.add(rod(materials.black, new THREE.Vector3(x, top(x), zRail), new THREE.Vector3(x, top(x) + railH, zRail), 0.014));
     }
-    g.add(rod(materials.black, new THREE.Vector3(foot - 0.15, top(foot - 0.15) + railH, width + 0.075), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, width + 0.075), 0.02));
-    obstacle(WX - 0.4, foot + 0.02, 0, width + 0.16);
+    g.add(rod(materials.black, new THREE.Vector3(firstPost, top(firstPost) + railH, zRail), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, zRail), 0.02));
+    obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
   }
 
   // Grey bench along the south wall, turning up the west wall (the L on the plan): a dark
