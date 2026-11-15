@@ -1,6 +1,6 @@
 # axe-core results
 
-Written by `tests/a11y/axe.mjs` on 2026-11-14: axe-core 4.14.0, default rule set, Chromium (Playwright, headless), 34 states scanned.
+Written by `tests/a11y/axe.mjs` on 2026-11-15: axe-core 4.14.0, default rule set, Chromium (Playwright, headless), 34 states scanned.
 
 ## States scanned
 
@@ -33,7 +33,7 @@ Written by `tests/a11y/axe.mjs` on 2026-11-14: axe-core 4.14.0, default rule set
 - Walk HU: panel "privacy" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk HU: sound question: 0 violations, 1 items axe could not decide, 41 rules passed
 - Walk HU: inside, HUD: 0 violations, 1 items axe could not decide, 39 rules passed
-- Walk HU: panel "about" open (inside): 0 violations, 1 items axe could not decide, 44 rules passed
+- Walk HU: panel "about" open (inside): 0 violations, 2 items axe could not decide, 44 rules passed
 - Walk HU: rooms menu open: 0 violations, 1 items axe could not decide, 39 rules passed
 - Walk HU: viewer open (painting): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk HU: viewer open (video, with Pause button): 0 violations, 3 items axe could not decide, 42 rules passed
@@ -62,7 +62,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk EN: panel "privacy" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: sound question (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: inside, HUD (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk EN: panel "about" open (inside) (55: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk EN: panel "about" open (inside) (54: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: rooms menu open (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: viewer open (painting) (49: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: viewer open (video, with Pause button) (49: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
@@ -77,7 +77,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk HU: panel "privacy" open (title screen) (16: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: sound question (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: inside, HUD (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk HU: panel "about" open (inside) (40: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk HU: panel "about" open (inside) (52: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: rooms menu open (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: viewer open (painting) (49: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: viewer open (video, with Pause button) (49: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
@@ -101,6 +101,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk HU: panel "accessibility" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "legal" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "privacy" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
+  - Walk HU: panel "about" open (inside) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (painting) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (video, with Pause button) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (video on a small screen) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])

@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-14: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-15: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
