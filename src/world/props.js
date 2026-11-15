@@ -714,9 +714,10 @@ export function buildProps(materials) {
       return place(m, x, y, z);
     };
     // Measured on DSC_0113 (4 m wall, 652 px/m), DSC_0116 (brick courses) and mamu.jpg (2013),
-    // see the decision log, 15 November 2026: Ø 0.16 m, axis 2.58 m (0.89 of the wall's
-    // height), 2 cm off the wall (invented); it comes out from behind the dark pipe's end and
-    // stops 5 cm short of the south wall in a domed cap, tip at z 5.68
+    // see the decision log, 15 November 2026: Ø 0.16 m, axis 2.58 m (0.88 to 0.90 of the end
+    // wall's height in the photographs; the model's end wall shows 2.75 m), 2 cm off the wall
+    // (invented); it comes out from behind the dark pipe's end and stops 5 cm short of the
+    // south wall in a domed cap, tip at z 5.68
     const PX = 25.3;
     const PR = 0.08;
     g.add(along(PR, 3.75, endPipe, PX, 2.58, 3.725));
@@ -727,9 +728,11 @@ export function buildProps(materials) {
     // five sockets, the last one the cap's: 12 cm long, Ø 0.19
     for (const z of [2.0, 2.45, 3.44, 4.45, 5.45]) g.add(along(0.095, 0.12, endPipe, PX, 2.58, z));
     // its branch near the north corner: off the top at z 2.30, rising south at about 47° to a
-    // rounded end at the ceiling line, z 2.47 (DSC_0113)
+    // rounded end just under the ceiling line (DSC_0113). The model's end wall shows only
+    // 2.75 m, where the last vault bay springs, so the end (top 2.75, centre z 2.33) is lower
+    // and nearer the pipe than the photograph's z 2.47 (decision log, fix of 15 November 2026)
     const bA = new THREE.Vector3(PX, 2.58, 2.23);
-    const bB = new THREE.Vector3(PX, 2.84, 2.47);
+    const bB = new THREE.Vector3(PX, 2.685, 2.33);
     g.add(rod(endPipe, bA, bB, 0.062, 12));
     g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.062, 12, 8), endPipe), PX, bB.y, bB.z));
 
