@@ -29,7 +29,6 @@
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
       "enter": "Enter",
-      "hint": "Sound: headphones recommended",
       "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
       "howtoTouch": "Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.",
       "failure": "This browser could not start the digital exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.",
