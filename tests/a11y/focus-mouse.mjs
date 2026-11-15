@@ -209,6 +209,9 @@ r = await answer('key', 'off', 'key');
 step('18 Enter on "Without sound" (the question opened by keyboard): focus on the view with the keyboard frame', r.view && r.frame && r.sound === 'false', JSON.stringify(r));
 r = await answer('mouse', 'on', 'key');
 step('19 Tab to "With sound" and Space (the question opened with the mouse): sound on, focus on the view with the keyboard frame', r.view && r.frame && r.sound === 'true', JSON.stringify(r));
+// the case C8 is about, on its own page (step 4a reaches it only after the walk's earlier steps)
+r = await answer('mouse', 'off', 'mouse');
+step('20 Enter and then "Without sound" clicked with the mouse: sound off, focus on the view, no keyboard frame', r.view && !r.frame && r.sound === 'false', JSON.stringify(r));
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
