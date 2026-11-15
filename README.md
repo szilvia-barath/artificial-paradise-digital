@@ -36,6 +36,8 @@ Netlify builds and publishes the site on every push to `main`, with the settings
 
 Artist: Kristóf Szabó / KristofLab. Curator and text: Luca Cserhalmi. Opening speech: Barnabás Zemlényi-Kovács. Gallery: MAMŰ, Budapest. Supported by the National Cultural Fund of Hungary, the Hungarian Academy of Arts and the Municipality of Budapest District VII. Photography: Kristóf Szabó. Digital exhibition: Szilvia Baráth.
 
+The exhibition on the gallery's site: [MAMŰ: the exhibition page](https://mamusociety.wordpress.com/2025/01/06/5963/).
+
 **The artworks, photographs, videos and texts are © Kristóf Szabó / KristofLab and the respective authors; all rights reserved. The MIT licence covers the source code only.**
 
 See `LICENSE` (MIT, code only) and `NOTICE` (what is not covered: also the sound, the 3D model and the textures). The installation photographs and documentation videos were taken by Kristóf Szabó.

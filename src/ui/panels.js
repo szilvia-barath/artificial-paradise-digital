@@ -33,6 +33,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       ${esc(m.opening)}<br />${esc(m.hours)}</p>
     <p>
       <a href="${esc(m.links.exhibition)}" target="_blank" rel="noopener">${esc(t('panels.linkExhibition'))}</a><br />
+      <a href="${esc(m.links.mamuPage)}" target="_blank" rel="noopener">${esc(t('panels.linkMamuPage'))}</a><br />
       <a href="${esc(m.links.gallery)}" target="_blank" rel="noopener">${esc(t('panels.linkGallery'))}</a><br />
       <a href="${esc(m.links.facebook)}" target="_blank" rel="noopener">${esc(t('panels.linkFacebook'))}</a> ·
       <a href="${esc(m.links.mamuInstagram)}" target="_blank" rel="noopener">${esc(t('panels.linkMamuInstagram'))}</a><br />

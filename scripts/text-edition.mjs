@@ -213,6 +213,7 @@ ${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : 
 <dt>${esc(t('textEdition.facts.dates'))}</dt><dd>${esc(m.dates)}</dd>
 <dt>${esc(t('textEdition.facts.curator'))}</dt><dd>${esc(curator[1])}</dd>
 </dl>
+<p><a href="${esc(m.links.mamuPage)}">${esc(t('panels.linkMamuPage'))}</a></p>
 <p class="note">${esc(t('textEdition.positionsNote'))} ${esc(data.source || '')}</p>
 <nav aria-label="${esc(t('textEdition.onThisPage'))}">
 <ul>
