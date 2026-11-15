@@ -497,6 +497,23 @@ body.touch #crosshair { display: none; }
 #rooms-menu button:focus-visible { outline: none; }
 #rooms-menu button:focus-visible::after { outline: 2px solid var(--focus); outline-offset: -2px; }
 #rooms-menu small { display: block; padding: 3px 12px 10px 10px; color: var(--muted); letter-spacing: 0.02em; }
+/* The menu never reaches above the navbar: it is at most as tall as the room between the
+   navbar and the toolbar (less 8 px), and scrolls inside itself. In a short window (a phone
+   on its side, a laptop at 200%) the titles are left out of view; they are still read as
+   each room's description, and the rows stay tall enough for a finger. */
+#rooms-menu {
+  max-height: calc(100vh - var(--nav-h) - 8px - 10px - var(--bar-h) - var(--foot-h) - 8px - var(--safe-b));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+body.touch #rooms-menu { max-height: calc(100vh - var(--nav-h) - 8px - 10px - var(--bar-h) - 16px - var(--safe-b)); }
+@media (max-height: 519px) {
+  #rooms-menu small { display: none; }
+  #rooms-menu button { padding-bottom: 10px !important; }
+}
+@media (max-height: 519px) and (pointer: coarse) {
+  #rooms-menu button { min-height: 44px; }
+}
 /* the room the visitor is in: a green bar and a green name, as on the map */
 #rooms-menu .room-row.here { border-left-color: var(--accent); }
 #rooms-menu button[aria-current] { color: var(--accent); }
