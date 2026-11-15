@@ -33,6 +33,15 @@ const step = (name, expected, got, pass) => {
 };
 const said = () => page.evaluate(() => window.__said.splice(0));
 const wait = (ms) => page.waitForTimeout(ms);
+// Software rendering runs at about 1 fps, so the live region's timer can fire seconds late.
+// Wait (up to 30 s) until it has said every one of `parts`, then take what it said. If the
+// words never come, the wait just ends and the step's own check fails on what was heard.
+const hear = async (parts, timeout = 30000) => {
+  await page.waitForFunction((p) => { const all = window.__said.join(' | '); return p.every((x) => all.includes(x)); }, parts, { timeout, polling: 100 }).catch(() => {});
+  return (await said()).join(' | ');
+};
+// Wait (up to 30 s) for a state in the page; on time-out the step's check fails as before.
+const until = (fn, arg, timeout = 30000) => page.waitForFunction(fn, arg, { timeout, polling: 100 }).catch(() => {});
 const ready = () => page.waitForFunction(() => document.body.dataset.state === 'ready', null, { timeout: 90000 });
 const isOn = (sel) => page.evaluate((s) => document.activeElement === document.querySelector(s), sel);
 const inside = (sel) => page.evaluate((s) => !!document.querySelector(s)?.contains(document.activeElement), sel);
@@ -240,8 +249,8 @@ await wait(1300);
 heard = (await said()).join(' | ');
 step(`7.1 Tab back to the 3D view (${tabs} presses); T starts the tour`, 'Tour button reads as pressed; the first and the second work\'s captions are announced, with no opening line before them', `aria-pressed: ${pressed}; announced: "${heard}"`, pressed === 'true' && !heard.includes('Down the stairs') && heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.') && heard.includes('No. 2,'));
 await page.keyboard.press('Escape');
-await wait(1500);
-heard = (await said()).join(' | ');
+await until(() => document.querySelector('[data-action="tour"]').getAttribute('aria-pressed') === 'false');
+heard = await hear(['Tour stopped.']);
 step('7.2 Esc stops the tour', 'Tour button not pressed; "Tour stopped." announced', `aria-pressed: ${await page.getAttribute('[data-action="tour"]', 'aria-pressed')}; announced: "${heard}"`, (await page.getAttribute('[data-action="tour"]', 'aria-pressed')) === 'false' && heard.includes('Tour stopped.'));
 await tabTo('[data-action="tour"]');
 at = await focusName(page);
@@ -268,12 +277,12 @@ await page.goto(`${BASE}?lang=en&work=w11-artificial-paradise-i-print`, { waitUn
 await ready();
 await said();
 await page.keyboard.press('Enter');
-await wait(500);
+// the sound question is open and has focus before Enter answers it
+await until(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); });
 await page.keyboard.press('Enter');
-await wait(1800);
-heard = (await said()).join(' | ');
+heard = await hear(['Room 3.', 'No. 11, Artificial Paradise I. Press Enter to open.']);
 await page.keyboard.press('Enter');
-await wait(900);
+await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer-title').textContent.trim() !== '');
 step('9.1 Open the walk from a link to a work (?work=w11-artificial-paradise-i-print)', 'after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11', `announced: "${heard}"; Enter opened: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(nothing)'}"`, heard.includes('Room 3.') && heard.includes('No. 11, Artificial Paradise I. Press Enter to open.') && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')));
 
 step('Console errors during the whole run', 'none', errors.length ? errors.join(' | ') : 'none', errors.length === 0);
