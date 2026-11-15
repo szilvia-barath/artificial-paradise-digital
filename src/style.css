@@ -359,6 +359,9 @@ body.touch #tour-caption { bottom: calc(16px + var(--safe-b) + var(--bar-h) + 8p
      the end of a line */
   #site-foot .sep { display: none; }
   #site-foot { column-gap: 14px; }
+  /* links and buttons at least 24 px tall, so a finger has room (WCAG 2.5.8); the rows of
+     the footer grow with them */
+  #site-foot a, #site-foot button { display: inline-flex; align-items: center; gap: 0.35em; min-height: 24px; }
 }
 @media (max-width: 440px) {
   .brand > span { display: none; } /* KristofLab; the bars inside the name stay */
