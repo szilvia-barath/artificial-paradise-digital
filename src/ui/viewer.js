@@ -151,12 +151,22 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     }
   };
 
+  // The text column scrolls on its own (on a phone it is the lower half of the viewer).
+  const info = el.querySelector('.viewer-info');
+  // Keep a control in view inside the text column, without moving anything else.
+  const keepInView = (n) => {
+    const r = n.getBoundingClientRect();
+    const box = info.getBoundingClientRect();
+    if (r.bottom > box.bottom) info.scrollTop += r.bottom - box.bottom + 8;
+    else if (r.top < box.top) info.scrollTop -= box.top - r.top + 8;
+  };
   const open = (work) => {
     index = works.indexOf(work);
     situ = 0;
     full = -1;
     show();
     el.hidden = false;
+    info.scrollTop = 0; // a work opens at its title, wherever the last one was left
     onOpen();
     dialog.opened();
   };
@@ -192,8 +202,16 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     videoBtns.querySelector(`[data-full="${i}"]`)?.focus({ preventScroll: true });
   });
   closeBtn.addEventListener('click', close);
-  document.getElementById('viewer-prev').addEventListener('click', () => step(-1));
-  document.getElementById('viewer-next').addEventListener('click', () => step(1));
+  // Previous and Next by tap or click: the new work's text starts at its title. By keyboard
+  // the column stays where it is, so the focused button is not scrolled away (only kept in
+  // view if the new text is shorter).
+  for (const [id, d] of [['viewer-prev', -1], ['viewer-next', 1]]) {
+    document.getElementById(id).addEventListener('click', (e) => {
+      step(d);
+      if (e.detail > 0) info.scrollTop = 0;
+      else keepInView(e.currentTarget);
+    });
+  }
   document.getElementById('viewer-goto').addEventListener('click', () => {
     const w = works[index];
     close();
@@ -214,7 +232,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   img.addEventListener('touchend', (e) => {
     if (sx === null) return;
     const dx = e.changedTouches[0].clientX - sx;
-    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 50) {
+      step(dx < 0 ? 1 : -1);
+      info.scrollTop = 0;
+    }
     sx = null;
   });
 
