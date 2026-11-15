@@ -202,6 +202,7 @@ function teleport(x, z, lookX, lookZ, pitch = 0) {
   controls.setPose(x, z, 0);
   controls.lookAt(lookX, lookZ);
   controls.setPose(x, z, controls.yaw, pitch);
+  minimap.pulse(); // the map's dot swells for a moment after a jump
 }
 function jumpToRoom(id) {
   const r = roomById(id);
@@ -216,6 +217,7 @@ function gotoWork(w) {
   retireHint();
   controls.resetZoom(true);
   poseAtWork(w);
+  minimap.pulse();
 }
 
 document.getElementById('toolbar').addEventListener('click', (e) => {
@@ -535,7 +537,11 @@ function retireHint() {
   clearTimeout(hintTimer);
   document.body.classList.add('looked');
 }
-const startHintTimer = () => { hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000); };
+const startHintTimer = () => {
+  hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000);
+  // the visitor is in the room: the little mouse by the keys rolls its wheel three times
+  document.body.classList.add('in-room');
+};
 controls.onLook = retireHint;
 
 // ---------------------------------------------------------------- resize
@@ -595,7 +601,7 @@ function frame() {
   updateFront(dt);
   updateHover();
   if (entered) {
-    minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
+    minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId);
     updateKeypad();
   }
   post.update();
@@ -652,4 +658,4 @@ onLangChange(() => {
 });
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap };

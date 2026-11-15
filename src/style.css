@@ -743,7 +743,8 @@ body.touch #zoompad { left: auto; right: calc(14px + var(--safe-r)); bottom: cal
 #zoom-level .val { color: var(--accent); }
 body.touch #zoom-level { left: auto; right: calc(14px + var(--safe-r)); top: auto; transform: none; bottom: calc(84px + 108px + var(--safe-b)); }
 
-/* a small mouse with its wheel rolling */
+/* a small mouse whose wheel rolls three times once the visitor is in the room (the sound
+   question answered), then stays still (WCAG 2.2.2) */
 .wheel b {
   position: relative;
   display: block;
@@ -763,8 +764,8 @@ body.touch #zoom-level { left: auto; right: calc(14px + var(--safe-r)); top: aut
   margin-left: -1px;
   border-radius: 1px;
   background: currentColor;
-  animation: wheel-roll 1.8s ease-in-out infinite;
 }
+body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
 @keyframes wheel-roll {
   0%, 100% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(5px); opacity: 0.3; }

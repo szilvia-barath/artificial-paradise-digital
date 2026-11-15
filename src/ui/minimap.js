@@ -42,7 +42,18 @@ export function setupMinimap(canvas, segments, works, onJump) {
     if (room) onJump(room.id);
   });
 
-  return (px, pz, yaw, roomId, time) => {
+  // The visitor's dot swells three times, over 3 s, after a jump (a room from the rooms
+  // menu or the map, Page Down, "Walk to this work"), so the eye finds it; otherwise it is
+  // still. With reduced motion it never moves (WCAG 2.2.2).
+  const PULSE_SECONDS = 3;
+  let pulseFrom = -Infinity;
+  const dotRadius = () => {
+    const age = (performance.now() - pulseFrom) / 1000;
+    if (age < 0 || age >= PULSE_SECONDS || reducedMotion()) return 2.6;
+    return 2.6 + 1.2 * Math.sin(Math.PI * age) ** 2;
+  };
+
+  const draw = (px, pz, yaw, roomId) => {
     // The HUD starts hidden, so measure lazily once it is on screen.
     if (W < 10 || canvas.getBoundingClientRect().width !== W) resize();
     if (W < 10 || s <= 0) return;
@@ -118,7 +129,9 @@ export function setupMinimap(canvas, segments, works, onJump) {
     ctx.fill();
     ctx.fillStyle = '#9dff6a';
     ctx.beginPath();
-    ctx.arc(X(px), Y(pz), 2.6 + (reducedMotion() ? 0 : Math.sin(time * 4) * 0.4), 0, Math.PI * 2); // the dot pulses, unless motion is reduced
+    ctx.arc(X(px), Y(pz), dotRadius(), 0, Math.PI * 2);
     ctx.fill();
   };
+  draw.pulse = () => { pulseFrom = performance.now(); };
+  return draw;
 }

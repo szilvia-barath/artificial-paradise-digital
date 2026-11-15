@@ -1,7 +1,9 @@
 // Reduced motion: with prefers-reduced-motion the walk has no grain, no chromatic
 // aberration and no pulses, and the tour jumps from stop to stop. (The glitch transition
 // is gone for everyone.) The same
-// run without the setting shows the effects are otherwise on, so the test can tell.
+// run without the setting shows the effects are otherwise on, so the test can tell. For
+// everyone, the mouse by the keys rolls its wheel three times and then stays still, and the
+// map's dot swells only for 3 s after a jump (WCAG 2.2.2).
 // Usage: npm run build && npm run preview &   then   node tests/a11y/reduced-motion.mjs
 import { launch, openWalk } from './lib.mjs';
 
@@ -14,6 +16,9 @@ for (const mode of ['reduce', 'no-preference']) {
   await page.keyboard.press('Enter'); // the sound question: without sound
   await page.waitForTimeout(2500);
   const r = (report[mode] = {});
+  // the little mouse by the keys: its wheel rolls three times once the visitor is in
+  const wheel = () => page.evaluate(() => document.getAnimations().filter((a) => a.animationName === 'wheel-roll').map((a) => ({ iterations: a.effect.getTiming().iterations, state: a.playState })));
+  r.wheelOnArrival = await wheel();
   r.mediaQuery = await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
   r.effectsAtRest = await page.evaluate(() => window.__ap.post.state());
   // the glitch pulse on a room change was removed for everyone (WCAG 2.3.1)
@@ -58,6 +63,32 @@ for (const mode of ['reduce', 'no-preference']) {
     }
     return { stopsToVisit: stops.length, stopsVisited: visited.size, framesBetweenStops: between, framesTotal: steps, finished: !tour.active };
   });
+  // the map: the visitor's dot swells for 3 s after a jump and is otherwise still; with
+  // reduced motion it never changes size. The test draws the map itself, over and over,
+  // for 3.2 s after a jump (this machine renders the 3D view at about one frame a second,
+  // too few to sample the swell), and records the radius of the visitor's dot, the one
+  // arc drawn in full green.
+  r.mapDot = await page.evaluate(() => {
+    const { minimap, controls, jumpToRoom } = window.__ap;
+    const c = document.getElementById('minimap').getContext('2d');
+    const arc = c.arc;
+    let seen = [];
+    c.arc = function (x, y, rad, ...rest) { if (c.fillStyle === '#9dff6a') seen.push(rad); return arc.call(this, x, y, rad, ...rest); };
+    const drawFor = (ms) => {
+      seen = [];
+      const end = performance.now() + ms;
+      while (performance.now() < end) minimap(controls.pos.x, controls.pos.y, controls.yaw, 'r3');
+      return { draws: seen.length, min: Math.min(...seen), max: Math.max(...seen) };
+    };
+    const before = drawFor(300);
+    jumpToRoom('r3');
+    const during = drawFor(2900);
+    drawFor(200);
+    const after = drawFor(300);
+    c.arc = arc;
+    return { before, during, after };
+  });
+  r.wheelAtEnd = await wheel();
   r.consoleErrors = errors;
   await ctx.close();
 }
@@ -79,6 +110,11 @@ const checks = [
   ['default: chromatic aberration is on', off.effectsAtRest.aberration.some((v) => v > 0)],
   ['default: there is no glitch pulse either (removed for everyone)', off.glitchPulseExists === false],
   ['default: the tour flies between stops', off.tour.framesBetweenStops > 0],
+  ['reduced: the mouse wheel by the keys does not roll', on.wheelOnArrival.length === 0 && on.wheelAtEnd.length === 0],
+  ['reduced: the map dot keeps its size, also after a jump', [on.mapDot.before, on.mapDot.during, on.mapDot.after].every((d) => d.draws > 0 && d.min === 2.6 && d.max === 2.6)],
+  ['default: the mouse wheel rolls three times, then stays still', off.wheelOnArrival.length === 1 && off.wheelOnArrival[0].iterations === 3 && off.wheelAtEnd.length === 0],
+  ['default: the map dot swells after a jump', off.mapDot.during.draws > 0 && off.mapDot.during.max > 3.7],
+  ['default: the map dot is still before a jump and 3 s after it', [off.mapDot.before, off.mapDot.after].every((d) => d.draws > 0 && d.min === 2.6 && d.max === 2.6)],
   ['no console errors', on.consoleErrors.length === 0 && off.consoleErrors.length === 0],
 ];
 let failed = 0;
