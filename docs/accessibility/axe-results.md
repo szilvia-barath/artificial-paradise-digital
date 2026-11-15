@@ -18,7 +18,7 @@ Written by `tests/a11y/axe.mjs` on 2026-11-15: axe-core 4.14.0, default rule set
 - Walk EN: panel "privacy" open (title screen): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk EN: sound question: 0 violations, 1 items axe could not decide, 41 rules passed
 - Walk EN: inside, HUD: 0 violations, 1 items axe could not decide, 39 rules passed
-- Walk EN: panel "about" open (inside): 0 violations, 1 items axe could not decide, 44 rules passed
+- Walk EN: panel "about" open (inside): 0 violations, 2 items axe could not decide, 44 rules passed
 - Walk EN: rooms menu open: 0 violations, 1 items axe could not decide, 39 rules passed
 - Walk EN: viewer open (painting): 0 violations, 2 items axe could not decide, 42 rules passed
 - Walk EN: viewer open (video, with Pause button): 0 violations, 3 items axe could not decide, 42 rules passed
@@ -52,32 +52,32 @@ Written by `tests/a11y/axe.mjs` on 2026-11-15: axe-core 4.14.0, default rule set
 These are not failures. axe reports them when it cannot measure something, mostly the contrast of text that lies over the 3D view or a picture.
 
 - **serious · color-contrast: Elements must meet minimum color contrast ratio thresholds**
-  - Walk EN: title screen (24: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "about" open (title screen) (39: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "works" open (title screen) (54: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "bts" open (title screen) (32: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "contact" open (title screen) (47: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "accessibility" open (title screen) (33: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "legal" open (title screen) (37: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "privacy" open (title screen) (37: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: title screen (7: .sep[aria-hidden="true"]:nth-child(3), .wide.sep[aria-hidden="true"], .sep[aria-hidden="true"]:nth-child(7), .sep[aria-hidden="true"]:nth-child(9))
+  - Walk EN: panel "about" open (title screen) (31: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "works" open (title screen) (45: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "bts" open (title screen) (23: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "contact" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "accessibility" open (title screen) (24: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "legal" open (title screen) (28: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "privacy" open (title screen) (28: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: sound question (38: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: inside, HUD (37: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk EN: panel "about" open (inside) (37: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk EN: panel "about" open (inside) (53: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: rooms menu open (45: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: viewer open (painting) (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: viewer open (video, with Pause button) (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk EN: viewer open (video on a small screen) (46: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk HU: title screen (24: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "about" open (title screen) (37: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "works" open (title screen) (54: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "bts" open (title screen) (32: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "contact" open (title screen) (47: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "accessibility" open (title screen) (32: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "legal" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: panel "privacy" open (title screen) (37: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: title screen (7: .sep[aria-hidden="true"]:nth-child(3), .wide.sep[aria-hidden="true"], .sep[aria-hidden="true"]:nth-child(7), .sep[aria-hidden="true"]:nth-child(9))
+  - Walk HU: panel "about" open (title screen) (29: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "works" open (title screen) (45: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "bts" open (title screen) (23: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "contact" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "accessibility" open (title screen) (23: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "legal" open (title screen) (29: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "privacy" open (title screen) (28: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: sound question (38: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: inside, HUD (38: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk HU: panel "about" open (inside) (50: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk HU: panel "about" open (inside) (51: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: rooms menu open (45: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: viewer open (painting) (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
   - Walk HU: viewer open (video, with Pause button) (47: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
@@ -90,6 +90,7 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk EN: panel "accessibility" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "legal" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "privacy" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
+  - Walk EN: panel "about" open (inside) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: viewer open (painting) (1: #viewer > .close[data-close=""][aria-label="Close"])
   - Walk EN: viewer open (video, with Pause button) (1: #viewer > .close[data-close=""][aria-label="Close"])
   - Walk EN: viewer open (video on a small screen) (1: #viewer > .close[data-close=""][aria-label="Close"])
