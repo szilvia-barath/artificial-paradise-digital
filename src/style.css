@@ -565,7 +565,9 @@ body.dragging, body.dragging canvas { cursor: grabbing !important; }
   display: none;
 }
 body.touch #joystick { display: block; }
-body.touring #joystick { opacity: 0.25; }
+/* The tour walks by itself: on a phone the stick is put away while it runs, and the caption
+   takes the desktop place, just above the toolbar. The Tour button stops the tour. */
+body.touring #joystick { visibility: hidden; }
 #joystick-knob {
   position: absolute;
   left: 50%;
@@ -683,6 +685,15 @@ body.touring #keypad { visibility: hidden; }
   body:not(.touch) #zoompad { left: 18px; bottom: calc(var(--foot-h) + 8px + var(--safe-b)); }
 }
 body.touch #zoompad { left: auto; right: 14px; bottom: calc(84px + var(--safe-b)); grid-template-rows: 46px 46px; width: 46px; }
+/* During the tour on a phone the caption stands just above the toolbar. Upright, it spans
+   the screen and would lie over the zoom keys, so they are put away (two fingers still
+   zoom). On its side the caption is narrower, clear of the zoom keys on the right. */
+@media (orientation: portrait) {
+  body.touch.touring #zoompad { visibility: hidden; }
+}
+@media (orientation: landscape) {
+  body.touch #tour-caption { width: min(640px, calc(100% - 2 * (14px + 46px + 12px))); }
+}
 #zoom-level {
   position: absolute;
   left: 50%;
@@ -862,7 +873,6 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   #room-label { left: 12px; top: calc(var(--nav-h) + 6px); max-width: calc(100% - 12px - 150px - 10px - 8px); padding: 6px 10px; }
   #room-label .room-name { font-size: 13px; }
   #tour-caption { font-size: 13px; }
-  body.touch #tour-caption { bottom: calc(210px + var(--safe-b)); }
   #panel-body .credits { grid-template-columns: 1fr; gap: 2px; }
   #panel-body .credits dd { margin-bottom: 10px; }
 }
