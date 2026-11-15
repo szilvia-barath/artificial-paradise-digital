@@ -254,6 +254,7 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
 .brand { margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .brand b { font-weight: 600; }
 .nav-links { display: flex; }
+.nav-more { display: none; } /* the folded menu only (max-width: 760px) */
 .lang-switch { display: flex; align-items: center; margin-left: 6px; }
 .lang-switch span { opacity: 0.4; }
 /* the language not chosen: 0.75 like the other navbar buttons (5.1:1 on the title screen;
@@ -331,13 +332,25 @@ body.touch #tour-caption { bottom: calc(16px + var(--safe-b) + var(--bar-h) + 8p
     flex-direction: column;
     align-items: stretch;
     min-width: 200px;
+    /* never taller than the window: in a short one (a phone on its side) it scrolls */
+    max-height: calc(100vh - var(--nav-h) - 8px);
+    overflow-y: auto;
     padding: 4px;
     background: rgba(251, 251, 249, 0.97);
     border: 1px solid rgba(7, 47, 204, 0.2);
   }
   body.entered .nav-links, body.overlay .nav-links { background: rgba(14, 15, 18, 0.95); border-color: var(--line); }
   #site-nav.open .nav-links { display: flex; }
+.nav-more { display: none; } /* the folded menu only (max-width: 760px) */
   #site-nav .nav-links button { text-align: left; padding: 12px; }
+  /* Below a line: the accessible version, Accessibility, Legal notice and Privacy, as in the
+     footer (which is put away inside the exhibition on a phone). */
+  #site-nav .nav-more { display: flex; flex-direction: column; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(7, 47, 204, 0.35); }
+  body.entered #site-nav .nav-more, body.overlay #site-nav .nav-more { border-top-color: rgba(255, 255, 255, 0.3); }
+  #site-nav .nav-more a { padding: 12px; color: inherit; text-decoration: none; text-transform: uppercase; opacity: 0.75; }
+  body.entered #site-nav .nav-more a { opacity: 1; }
+  #site-nav .nav-more a:hover, #site-nav .nav-more a:focus-visible { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+  #site-nav .nav-more a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   .nav-toggle { display: grid; place-items: center; width: 36px; height: 36px; padding: 0 !important; opacity: 1 !important; }
   #site-foot .wide { display: none; }
   #site-foot a .short { display: inline; }
