@@ -19,7 +19,7 @@ import { setupPanels } from './ui/panels.js';
 import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
 import { setupKeypad } from './ui/keypad.js';
-import { focusDialog } from './ui/dialog.js';
+import { focusDialog, BEHIND } from './ui/dialog.js';
 import { localize, onLangChange, setText, t } from './i18n.js';
 import { announce, unannounce } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
@@ -493,8 +493,9 @@ function announceArrival() {
 // The walk starts without sound; a pop-up after entering offers to switch it on.
 const soundAsk = document.getElementById('sound-ask');
 // The sound question was opened by the Enter button, which is gone by the time it is
-// answered, so focus goes on to the 3D view.
-const soundDialog = focusDialog(soundAsk, { initial: () => soundAsk.querySelector('[data-sound="off"]'), fallback: () => canvas });
+// answered, so focus goes on to the 3D view. While it is open the navbar is inert as well,
+// unlike behind a panel or the viewer: it lies under the question and does nothing then.
+const soundDialog = focusDialog(soundAsk, { initial: () => soundAsk.querySelector('[data-sound="off"]'), fallback: () => canvas, behind: [...BEHIND, '#site-nav'] });
 function setSound(on) {
   audio.setMuted(!on);
   soundBtn.classList.toggle('muted', !on);

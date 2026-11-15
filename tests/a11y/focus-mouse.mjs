@@ -293,6 +293,140 @@ step('25 Phone: tapped where Menu lies under the question: menu not opened, soun
   await w.ctx.close();
 }
 
+// ---------------- B3: what lies behind an open dialog is inert
+// Behind a panel or the viewer: the skip link, the 3D view and its controls (#stage), the
+// title screen and the footer are out of the accessibility tree and out of reach; the
+// navbar stays usable. Behind the sound question the navbar is inert too. On closing,
+// nothing is left inert but the title screen once inside.
+const BEHIND = ['.skip-nav', '#stage', '#loader', '#site-foot', '#site-nav'];
+const inertOf = (p) => p.evaluate((sels) => Object.fromEntries(sels.map((x) => [x, !!document.querySelector(x).closest('[inert]')])), BEHIND);
+const inertList = (p) => p.evaluate(() => [...document.querySelectorAll('[inert]')].map((n) => (n.id ? `#${n.id}` : `.${n.className}`)).join(' ') || 'none');
+const showInert = (o) => BEHIND.map((x) => `${x} ${o[x] ? 'inert' : 'live'}`).join(', ');
+const behindDialog = (o) => o['.skip-nav'] && o['#stage'] && o['#loader'] && o['#site-foot'] && !o['#site-nav'];
+// what a screen reader can reach: the browser's own accessibility tree (through the DevTools
+// protocol, which leaves out inert content), as "role:name", in lower case
+const viewHas = (p) => p.evaluate(() => document.activeElement === document.getElementById('scene'));
+const tree = async (p) => {
+  const cdp = await p.context().newCDPSession(p);
+  const { nodes } = await cdp.send('Accessibility.getFullAXTree');
+  await cdp.detach();
+  return nodes.filter((n) => !n.ignored).map((n) => `${n.role?.value}:${n.name?.value || ''}`.toLowerCase());
+};
+const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(x.slice(0, -1))));
+{
+  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+  const p = w.page;
+  await p.focus('#site-nav [data-nav="about"]');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden && document.getElementById('panel').contains(document.activeElement), null, { timeout: 30000 });
+  const o = await inertOf(p);
+  const t = await tree(p);
+  const reach = { skip: has(t, 'link:accessible version of the digital exhibition*'), enter: has(t, 'button:enter'), footer: has(t, 'contentinfo:'), works: has(t, 'button:works'), hu: has(t, 'button:hu'), close: has(t, 'button:close') };
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const after = await inertList(p);
+  const back = await p.evaluate(() => document.activeElement === document.querySelector('#site-nav [data-nav="about"]'));
+  step('28 B3 Title screen, About open by keyboard: skip link, title screen, 3D view and footer inert and out of the accessibility tree, the navbar not; Esc: nothing left inert, focus back on About', behindDialog(o) && !reach.skip && !reach.enter && !reach.footer && reach.works && reach.hu && reach.close && after === 'none' && back, `${showInert(o)}; in the tree: ${JSON.stringify(reach)}; inert after Esc: ${after}; focus on ${await focusName(p)}`);
+
+  // a panel opened from the footer: the footer is inert while it is open, and wakes before
+  // focus goes back to its button
+  await p.focus('#site-foot [data-nav="legal"]');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const o2 = await inertOf(p);
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const after2 = await inertList(p);
+  const back2 = await p.evaluate(() => document.activeElement === document.querySelector('#site-foot [data-nav="legal"]'));
+  step('29 B3 Legal notice opened from the footer by keyboard: the footer inert while open; Esc: nothing left inert, focus back on the footer\'s Legal notice', behindDialog(o2) && after2 === 'none' && back2, `${showInert(o2)}; inert after Esc: ${after2}; focus on ${await focusName(p)}`);
+
+  // the sound question: the navbar inert as well; a screen reader cannot reach EN / HU
+  await p.focus('#enter');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  const o3 = await inertOf(p);
+  const t3 = await tree(p);
+  const reach3 = { hu: has(t3, 'button:hu'), about: has(t3, 'button:about'), view: has(t3, 'application:*'), toolbar: has(t3, 'navigation:exhibition controls'), off: has(t3, 'button:without sound'), on: has(t3, 'button:with sound') };
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden && document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
+  const after3 = await inertList(p);
+  step('30 B3 Sound question open: the navbar is inert too, with the rest of the page (EN, HU, About not in the accessibility tree); answered: only the title screen stays inert, focus on the view', BEHIND.every((x) => o3[x]) && !reach3.hu && !reach3.about && !reach3.view && !reach3.toolbar && reach3.off && reach3.on && after3 === '#loader' && (await viewHas(p)), `${showInert(o3)}; in the tree: ${JSON.stringify(reach3)}; inert after: ${after3}; focus on ${await focusName(p)}`);
+
+  // dialogs that follow each other: the panel to the viewer, the viewer to a panel, a panel
+  // to another through a link in it, the language switched; inert all the way, nothing left after
+  const seen = [];
+  const note = async (what) => { const x = await inertOf(p); seen.push(`${what}: ${behindDialog(x) ? 'ok' : showInert(x)}`); return behindDialog(x); };
+  let ok = true;
+  await p.focus('#site-nav [data-nav="works"]');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+  ok = (await note('Works')) && ok;
+  await p.focus('#panel-body [data-work="w02-human-as-error-vi"]');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden && document.getElementById('panel').hidden, null, { timeout: 30000 });
+  ok = (await note('viewer from the list')) && ok;
+  await p.click('#site-nav [data-nav="about"]');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden && document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  ok = (await note('About from the navbar over the viewer')) && ok;
+  await p.click('#site-nav [data-nav="contact"]');
+  await p.click('#panel-body [data-nav="legal"]');
+  await p.waitForFunction(() => document.getElementById('panel-title')?.textContent === 'Legal notice', null, { timeout: 30000 });
+  ok = (await note('Contact, then Legal notice from its text')) && ok;
+  await p.click('[data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  ok = (await note('HU')) && ok;
+  await p.click('[data-lang="en"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const after4 = await inertList(p);
+  step('31 B3 Works, a work from it, About over the viewer, Contact, Legal notice from its text, HU and EN, Esc: inert behind every one, only the title screen inert after', ok && after4 === '#loader', `${seen.join('; ')}; inert after Esc: ${after4}; focus on ${await focusName(p)}`);
+
+  // the tour: a work opened during it stops it; the viewer closed, nothing left inert
+  await p.focus('#scene');
+  await p.keyboard.press('KeyT');
+  const touring = await p.evaluate(() => window.__ap.tour.active);
+  await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[0])); // as a click on a work during the tour
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  const o5 = await inertOf(p);
+  const stopped = await p.evaluate(() => !window.__ap.tour.active);
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  const after5 = await inertList(p);
+  step('32 B3 Tour started, a work opened during it: the tour stops and the page behind the viewer is inert; Esc: only the title screen inert, focus on the view', touring && stopped && behindDialog(o5) && after5 === '#loader' && (await viewHas(p)), `tour started: ${touring}, stopped: ${stopped}; ${showInert(o5)}; inert after Esc: ${after5}; focus on ${await focusName(p)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+// the phone layout: the folded menu still works behind a panel; the joystick and the
+// toolbar (inside #stage) are out of reach
+{
+  const w = await openWalk(browser, PHONE);
+  const p = w.page;
+  await p.tap('#enter');
+  await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.tap('[data-sound="off"]');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.tap('#site-nav .nav-toggle');
+  await p.waitForFunction(() => document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded') === 'true', null, { timeout: 30000 });
+  await p.tap('#site-nav [data-nav="about"]');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const o = await inertOf(p);
+  const hud = await p.evaluate(() => ({ joystick: !!document.getElementById('joystick').closest('[inert]'), toolbar: !!document.getElementById('toolbar').closest('[inert]'), shown: document.getElementById('joystick').getClientRects().length > 0 }));
+  const [jx, jy] = await centreOf(p, '#joystick');
+  const under = await p.evaluate(([x, y]) => { const e = document.elementFromPoint(x, y); return e.closest('#panel') ? 'panel' : e.closest('#joystick') ? 'joystick' : e.tagName.toLowerCase(); }, [jx, jy]);
+  await p.tap('#site-nav .nav-toggle');
+  await p.waitForFunction(() => document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded') === 'true', null, { timeout: 30000 });
+  await p.tap('#site-nav [data-nav="works"]');
+  const switched = await p.waitForFunction(() => !!document.querySelector('#panel-body .works-list'), null, { timeout: 30000 }).then(() => true, () => false);
+  const o2 = await inertOf(p);
+  await p.tap('#panel [data-close]');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const after = await inertList(p);
+  step('33 B3 Phone (375 x 667, touch): About from the folded menu: page behind inert, the joystick and the toolbar too (a tap there lands on the panel); the menu still opens Works over it; closed: only the title screen inert', behindDialog(o) && hud.joystick && hud.toolbar && hud.shown && under === 'panel' && switched && behindDialog(o2) && after === '#loader', `${showInert(o)}; ${JSON.stringify(hud)}; a tap at the joystick lands on: ${under}; Works from the menu: ${switched} (${showInert(o2)}); inert after Close: ${after}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);
