@@ -130,8 +130,11 @@ export function buildProps(materials) {
   const RX = R1.recess;
   const SZ = R1.D;
 
-  // Stairs along the north wall, rising west through the wall into the stair shaft
-  // (DSC_0013–0016, panorama, close-ups of the flight). Treads are dark, worn concrete. The
+  // Stairs along the north wall, rising west through the wall into the stair shaft. This
+  // comment named "DSC_0013–0016, panorama, close-ups of the flight" as the source; by the
+  // reconstructor's account (PROGRESS.md, note of 15 November 2026) the flight was built from
+  // her written descriptions and her close-ups, not measured on the photographs, and only
+  // the foot is measured (below). Treads are dark, worn concrete. The
   // flight runs between two whitewashed brick parapets, each topped by a row of bare bricks
   // set on edge, square to the slope; a black railing on the open (south) side. The foot is
   // rebuilt from the stair photographs 4.jpg, 5.jpg and 7.jpg (PROGRESS.md, decision log,
@@ -714,7 +717,11 @@ export function buildProps(materials) {
     // recess (from 2.75 m), so no open end shows (inferred)
     g.add(place(cyl(0.04, 0.04, 2.78 - 0.95, pipeMat, 10), 22.72, (2.78 + 0.95) / 2, 1.67));
     // the pale pipe with collars above the projection, and the dark one along the top of the
-    // north wall (DSC_0113; height and thickness from the 4 m wall's scale)
+    // north wall. This comment named "DSC_0113; height and thickness from the 4 m wall's
+    // scale" as the source of both. By the reconstructor's account (PROGRESS.md, note of 15
+    // November 2026) the pale pipe was built from her written descriptions; it is now measured
+    // on DSC_0113 (below). How the dark one's height and thickness were found is not
+    // recorded; DSC_0112 gives 2.40 to 2.57 m against its 2.46 to 2.66 here (not changed yet)
     const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
     // the pipe over the projection is white paint; the projector lights it (DSC_0113–0114)
     const endPipe = new THREE.MeshStandardMaterial({ color: 0x8e8a83, roughness: 0.6 });

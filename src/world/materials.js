@@ -337,10 +337,12 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     steel: new THREE.MeshStandardMaterial({ color: 0x9a9ca0, roughness: 0.35, metalness: 0.8 }),
     wood: new THREE.MeshStandardMaterial({ color: 0x6b5442, roughness: 0.8 }),
     door: new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.7 }),
-    // the stairs (panorama): worn grey concrete treads, a band of bare red brick along the
-    // open side. The treads are about 0.44 of the whitewash's brightness in 4.jpg (risers
-    // 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at about 0.45 (15 November 2026).
-    stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // dark, worn
+    // the stairs (first said to be from the panorama; built from the reconstructor's
+    // descriptions, PROGRESS.md note of 15 November 2026): worn grey concrete treads, a band
+    // of bare red brick along the open side. The treads are about 0.44 of the whitewash's
+    // brightness in 4.jpg (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
+    // about 0.45 (15 November 2026).
+    stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // worn; renders at about 0.45 of the whitewash
     stairStain: new THREE.MeshStandardMaterial({ map: stainMap, transparent: true, depthWrite: false, roughness: 1, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }),
     stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
