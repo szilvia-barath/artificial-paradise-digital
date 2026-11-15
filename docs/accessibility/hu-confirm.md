@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 23. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 24. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -37,9 +37,12 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.sections[3].p[1]` (legal notice; a new line the reconstructor asked for)
   - HU: A műalkotások, a fotók, a videók és a szövegek szerzői jogi védelem alatt állnak (In Copyright), és nincs rájuk felhasználási engedély.
   - EN: The artworks, photographs, videos and texts are In Copyright: they are protected by copyright and are not licensed for reuse.
+- `legal.sections[3].p[2]` (legal notice; the reconstructor's own wording, in place of the te form "kérj engedélyt")
+  - HU: Bármely részének felhasználásához engedély szükséges.
+  - EN: Please ask before reusing any of it.
 - `legal.updated` (the date only)
-  - HU: Utolsó frissítés: 2026. november 14.
-  - EN: Last updated: 14 November 2026
+  - HU: Utolsó frissítés: 2026. november 15.
+  - EN: Last updated: 15 November 2026
 - `accessibility.sections[1].p[0]` (statement; new since the last check: the date and the last clause, from "a 3D nézet fölötti kontrasztot")
   - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél és a műnézőben. Eredmény 2026. november 15-én: a 34 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját; a 3D nézet fölötti kontrasztot ezért képernyőképeken mértem meg (lásd: Mi működik).
   - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the accessible version (text format) in both languages (light and dark) and on the digital exhibition in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu and the artwork viewer. Result on 15 November 2026: no violations in any of the 34 states. axe could not judge the contrast of text that lies over the 3D view or a picture; I measured the contrast over the 3D view in screenshots instead (see What works).

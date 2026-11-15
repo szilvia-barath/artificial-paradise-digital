@@ -42,7 +42,7 @@ These were proposals, marked `[HU: confirm]` in `hu.json` until the reconstructo
 
 ## Final wording (14 November 2026)
 
-The reconstructor's own wording, set in both languages. No string in `hu.json` carries a mark now, and outside the legal and privacy sections the contact line is the only one that addresses the reader (Ön, chosen by the reconstructor). The legal notice has one te form left, "kérj engedélyt" in its copyright section; it is legal text, so it changes only when the reconstructor asks.
+The reconstructor's own wording, set in both languages. No string in `hu.json` carries a mark now, and outside the legal and privacy sections the contact line is the only one that addresses the reader (Ön, chosen by the reconstructor). The legal notice had one te form left, "kérj engedélyt" in its copyright section; it is legal text, so it waited for the reconstructor. On 15 November 2026 she reworded it: "Bármely részének felhasználásához engedély szükséges." The legal notice addresses no one now.
 
 | Key | Hungarian | English |
 |---|---|---|
