@@ -617,12 +617,25 @@ export function buildProps(materials) {
       m.rotation.x = Math.PI / 2;
       return place(m, x, y, z);
     };
-    g.add(along(0.085, 3.75, endPipe, 25.295, 2.58, 3.725));
-    dirtAlong(25.295, 2.58, 1.85, 25.295, 2.58, 5.6);
-    for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, endPipe, 25.295, 2.58, z));
-    // its branch near the north corner, slanting up and then straight into the ceiling
-    g.add(rod(endPipe, new THREE.Vector3(25.295, 2.58, 2.62), new THREE.Vector3(25.295, 2.76, 2.42), 0.075, 12));
-    g.add(rod(endPipe, new THREE.Vector3(25.295, 2.74, 2.42), new THREE.Vector3(25.295, 2.92, 2.42), 0.075, 12));
+    // Measured on DSC_0113 (4 m wall, 652 px/m), DSC_0116 (brick courses) and mamu.jpg (2013),
+    // see the decision log, 15 November 2026: Ø 0.16 m, axis 2.58 m (0.89 of the wall's
+    // height), 2 cm off the wall (invented); it comes out from behind the dark pipe's end and
+    // stops 5 cm short of the south wall in a domed cap, tip at z 5.68
+    const PX = 25.3;
+    const PR = 0.08;
+    g.add(along(PR, 3.75, endPipe, PX, 2.58, 3.725));
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(PR, 14, 6, 0, Math.PI * 2, 0, Math.PI / 2), endPipe);
+    cap.rotation.x = Math.PI / 2; // the dome faces south (+z)
+    g.add(place(cap, PX, 2.58, 5.6));
+    dirtAlong(PX, 2.58, 1.85, PX, 2.58, 5.68);
+    // five sockets, the last one the cap's: 12 cm long, Ø 0.19
+    for (const z of [2.0, 2.45, 3.44, 4.45, 5.45]) g.add(along(0.095, 0.12, endPipe, PX, 2.58, z));
+    // its branch near the north corner: off the top at z 2.30, rising south at about 47° to a
+    // rounded end at the ceiling line, z 2.47 (DSC_0113)
+    const bA = new THREE.Vector3(PX, 2.58, 2.23);
+    const bB = new THREE.Vector3(PX, 2.84, 2.47);
+    g.add(rod(endPipe, bA, bB, 0.062, 12));
+    g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.062, 12, 8), endPipe), PX, bB.y, bB.z));
 
     // the dark conduit along the middle of the ceiling with four LED floodlights on it, the
     // projector hanging at its west end (DSC_0111, DSC_0113, DSC_0114)

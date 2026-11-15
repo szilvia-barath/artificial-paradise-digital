@@ -19,7 +19,9 @@ const WALL_X = 25.4;
 const Z0 = 1.73;
 const Z1 = 5.73;
 // Measured on DSC_0113 (the 4 m wall is 259 px/m): the picture stands on the floor, reaches
-// 2.30 m, just under the pipe, and at 16:9 is 4.09 m wide, a little wider than the wall.
+// 2.30 m, about 20 cm under the pipe's underside (2.50 m; checked on DSC_0116 and the
+// documentation video at 00:00.0, where it never touches the pipe), and at 16:9 is 4.09 m
+// wide, a little wider than the wall.
 const TOP = 2.3;
 const VIDEO_ASPECT = 16 / 9;
 const WALL_GAIN = 1.3; // the file's trees are mid grey; a projector in the dark makes them bright
