@@ -242,7 +242,9 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   // After a language switch: re-render the texts without reloading the image.
   const refresh = () => {
     renderText();
-    if (!el.hidden) renderInfo();
+    if (el.hidden) return;
+    renderInfo();
+    dialog.rebuilt(); // if focus was on a rebuilt button (the full videos), it goes to Close
   };
 
   return { open, close, refresh, isOpen: () => !el.hidden };

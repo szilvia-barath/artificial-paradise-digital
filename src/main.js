@@ -122,9 +122,10 @@ const syncEnabled = () => {
 // A dialog closed with the mouse goes to the 3D view only once inside; on the title screen
 // it goes back to its opener like a keyboard close.
 const focusFallback = (why) => (entered ? canvas : why === 'mouse' || enterBtn.disabled ? null : enterBtn);
-// Never while the sound question is open: it is a modal dialog and keeps focus.
+// Never while the sound question, a panel or the viewer is open: they are modal dialogs
+// and keep focus (a mouse click on EN / HU over one leaves focus in it).
 const focusScene = () => {
-  if (entered && document.getElementById('sound-ask').hidden) canvas.focus({ preventScroll: true });
+  if (entered && document.getElementById('sound-ask').hidden && !ui.isOpen() && !viewer.isOpen()) canvas.focus({ preventScroll: true });
 };
 const soundAsking = () => !document.getElementById('sound-ask').hidden;
 
@@ -251,6 +252,12 @@ for (const bar of ['site-nav', 'site-foot']) {
   });
   // a link opened in a new tab with the middle button
   el.addEventListener('auxclick', (e) => { if (e.target.closest('a[href]')) focusScene(); });
+  // A mouse press on EN / HU while a panel or the viewer is open does not take focus out of
+  // the dialog: focus stays on the control in it that had it (the language switch then
+  // rebuilds the dialog's text; if that took the control, focus goes to its Close button).
+  el.addEventListener('mousedown', (e) => {
+    if (e.target.closest('[data-lang]') && (ui.isOpen() || viewer.isOpen())) e.preventDefault();
+  });
 }
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking()) return;

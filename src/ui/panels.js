@@ -231,7 +231,9 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     // After a language switch: rebuild what is on screen.
     refresh: () => {
       buildRoomsMenu();
-      if (current) body.innerHTML = PAGES[current]();
+      if (!current) return;
+      body.innerHTML = PAGES[current]();
+      dialog.rebuilt(); // if focus was on a control in the old text, it goes to Close
     },
     close,
     isOpen: () => !panel.hidden,

@@ -96,6 +96,46 @@ await page.click('[data-lang="en"]');
 await page.waitForTimeout(300);
 step('9 EN / HU clicked with the mouse: language switched, focus back on the view', huOk && (await onView()), `focus on ${await focusName(page)}`);
 
+// EN / HU clicked with the mouse while a dialog is open: focus stays in the dialog
+const langIs = (l) => page.waitForFunction((x) => document.documentElement.lang === x, l, { timeout: 30000 }).then(() => true, () => false);
+await page.click('#site-nav [data-nav="about"]');
+await page.waitForFunction(() => !document.getElementById('panel').hidden && document.getElementById('panel').contains(document.activeElement), null, { timeout: 30000 });
+const before9a = await focusName(page);
+await page.click('[data-lang="hu"]');
+const hu9a = await langIs('hu');
+const close9a = await isOn('#panel [data-close]');
+const at9a = await focusName(page);
+await page.click('[data-lang="en"]');
+const en9a = await langIs('en');
+step('9a About open, HU then EN clicked with the mouse: focus stays on the panel\'s Close button (not the view)', hu9a && en9a && close9a && (await isOn('#panel [data-close]')), `before: ${before9a}; after HU: ${at9a}; after EN: ${await focusName(page)}`);
+
+// focus on a control in the panel's text, which the language switch rebuilds
+const inBody = await page.evaluate(() => { const c = document.querySelector('#panel-body a[href], #panel-body button, #panel-body summary'); c?.focus(); return !!c && document.activeElement === c; });
+const before9b = await focusName(page);
+await page.click('[data-lang="hu"]');
+const hu9b = await langIs('hu');
+const at9b = await focusName(page);
+const close9b = await isOn('#panel [data-close]');
+await page.click('[data-lang="en"]');
+await langIs('en');
+step('9b A control in the panel\'s text has focus, HU clicked with the mouse: the text is rebuilt, focus on the panel\'s Close button', inBody && hu9b && close9b, `before: ${before9b}; after HU: ${at9b}`);
+await page.click('#panel [data-close]');
+await page.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+
+await page.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[0]));
+await page.waitForFunction(() => !document.getElementById('viewer').hidden && document.getElementById('viewer').contains(document.activeElement), null, { timeout: 30000 });
+await page.focus('#viewer-next');
+await page.click('[data-lang="hu"]');
+const hu9c = await langIs('hu');
+const at9c = await focusName(page);
+const next9c = await isOn('#viewer-next');
+await page.click('[data-lang="en"]');
+const en9c = await langIs('en');
+step('9c Viewer open with focus on Next, HU then EN clicked with the mouse: focus stays on Next (not the view)', hu9c && en9c && next9c && (await isOn('#viewer-next')), `after HU: ${at9c}; after EN: ${await focusName(page)}`);
+await page.click('#viewer [data-close]');
+await page.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 });
+step('9d The viewer closed with the mouse afterwards: focus on the view', await onView(), await focusName(page));
+
 await page.click('#site-nav [data-nav="about"]');
 await page.waitForTimeout(300);
 await page.click('#panel [data-close]');
