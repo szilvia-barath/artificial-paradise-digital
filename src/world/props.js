@@ -270,11 +270,17 @@ export function buildProps(materials) {
         mortar.rotation.z = angle;
         g.add(mortar);
       }
-      // the level bed at the foot of the open side, over the wall's end and the pier
-      const bed = box(pierX1 - foot, 0.02, 0.235, mortarMat);
-      bed.position.set((foot + pierX1) / 2, tread(0) + 0.06 + 0.01, zOpen);
+      // the level bed at the foot of the open side, over the wall's end, stopping at the
+      // pier's cap
+      const bedX1 = pierX0 - 0.003;
+      const bed = box(bedX1 - foot, 0.02, 0.235, mortarMat);
+      bed.position.set((foot + bedX1) / 2, tread(0) + 0.06 + 0.01, zOpen);
       g.add(bed);
-      const n = Math.floor(len / 0.077);
+      // where the sloped bricks start, up the slope from the foot: on the open side one pitch
+      // up, so the lowest stands beside the level brick; on the wall side 5 cm up, so it meets
+      // the brick on the base without running into it
+      const sides = [[zOpen, 0, 0.077], [zBack, 101, 0.05]];
+      const count = (s0) => Math.floor((len - s0) / 0.077);
       // old, soft, sand-faced brick: a pitted, dusty face with chips and mortar left on it
       // (one small texture on every face, tinted per brick), and worn, uneven edges
       const face = document.createElement('canvas');
@@ -336,7 +342,7 @@ export function buildProps(materials) {
         [foot + 0.04, tread(0) + 0.06 + 0.02, zOpen, 0.0],
         [(pierX0 + pierX1) / 2 + 0.01, capTop, zOpen, -0.06],
       ];
-      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, 2 * n + extra.length + 1);
+      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
       const c = new THREE.Color();
@@ -350,10 +356,10 @@ export function buildProps(materials) {
         return c;
       };
       let k = 0;
-      for (const [zc, seed] of [[zOpen, 0], [zBack, 101]]) {
-        for (let i = 0; i < n; i++) {
+      for (const [zc, seed, s0] of sides) {
+        for (let i = 0; i < count(s0); i++) {
           const j = i + seed;
-          const p = base((i + 0.5) * 0.077).addScaledVector(nrm, 0.055 + Math.abs(r(j + 1)) * 0.008);
+          const p = base(s0 + (i + 0.5) * 0.077).addScaledVector(nrm, 0.055 + Math.abs(r(j + 1)) * 0.008);
           e2.set(r(j + 7) * 0.03, r(j + 3) * 0.02, angle + r(j + 5) * 0.05);
           q2.setFromEuler(e2);
           m.compose(new THREE.Vector3(p.x, p.y, zc + r(j + 9) * 0.012), q2, one);
