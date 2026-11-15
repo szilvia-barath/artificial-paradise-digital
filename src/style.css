@@ -203,7 +203,9 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
   text-transform: uppercase;
 }
 .btn-enter-alt { border-style: dashed; }
-.sound-ask { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(8, 8, 10, 0.55); --focus: var(--ap-blue); }
+/* The sound question is a modal dialog: it lies over the navbar (70) as well, so nothing
+   behind it can be clicked while it is open. Only the skip link (90) is higher. */
+.sound-ask { position: fixed; inset: 0; z-index: 75; display: grid; place-items: center; background: rgba(8, 8, 10, 0.55); --focus: var(--ap-blue); }
 .sound-ask[hidden] { display: none; }
 .sound-ask-card { background: #fbfbf9; color: var(--ap-blue); padding: 28px 32px; max-width: min(420px, calc(100vw - 32px)); text-align: center; font-family: var(--mono); }
 .sound-ask-card > p:first-child { font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; margin: 0; }

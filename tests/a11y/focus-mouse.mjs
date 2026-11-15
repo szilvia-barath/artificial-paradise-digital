@@ -32,6 +32,30 @@ await page.keyboard.press('PageDown');
 await page.waitForTimeout(400);
 const jumped = await page.evaluate(() => window.__ap.controls.pos.x);
 step('3 Page Down under the sound question does nothing', await page.evaluate(() => document.getElementById('sound-ask').contains(document.activeElement)), `focus on ${await focusName(page)}; x ${jumped.toFixed(2)}`);
+
+// the sound question lies over the navbar: what a mouse would hit at About and HU is the question
+const asking = () => page.evaluate(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); });
+const hit = (sel) => page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); const e = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}`; }, sel);
+const hitAbout = await hit('#site-nav [data-nav="about"]');
+const hitLang = await hit('#site-nav [data-lang="hu"]');
+step('3a The sound question covers the navbar: a mouse at About or HU hits the question', hitAbout === 'div#sound-ask' && hitLang === 'div#sound-ask', `at About: ${hitAbout}; at HU: ${hitLang} (expected: div#sound-ask)`);
+// a click that reaches the navbar anyway, as a screen reader's can
+// (the handler runs during the click, so the panel would be open as soon as it returns)
+await page.evaluate(() => document.querySelector('#site-nav [data-nav="about"]').click());
+step('3b A click on About that reaches the navbar while the question is open opens nothing', (await page.evaluate(() => document.getElementById('panel').hidden)) && (await asking()), `panel open: ${await page.evaluate(() => !document.getElementById('panel').hidden)}; question open with focus: ${await asking()}`);
+const tabbed = [];
+for (const k of ['Tab', 'Tab', 'Tab', 'Shift+Tab', 'Shift+Tab', 'Shift+Tab']) {
+  await page.keyboard.press(k);
+  tabbed.push(await page.evaluate(() => (document.getElementById('sound-ask').contains(document.activeElement) ? 'in' : 'OUT')));
+}
+step('3c Tab and Shift+Tab stay inside the question (the navbar is not reached)', tabbed.every((x) => x === 'in'), `${tabbed.join(' ')}; focus on ${await focusName(page)}`);
+// a panel opened and closed under the question anyway (now only the page's own code can)
+await page.evaluate(() => window.__ap.ui.show('about'));
+await page.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+await page.evaluate(() => window.__ap.ui.close());
+await page.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+const moving = await page.evaluate(() => ({ walk: window.__ap.controls.enabled, zoom: window.__ap.controls.zoomEnabled }));
+step('3d A panel closed while the question is open: walking stays locked, the question stays open with focus', !moving.walk && !moving.zoom && (await asking()), `walking enabled: ${moving.walk}, zoom enabled: ${moving.zoom}; question open with focus: ${await asking()}; focus on ${await focusName(page)}`);
 await page.click('[data-sound="off"]');
 await page.waitForTimeout(800);
 step('4 Sound question answered with the mouse: focus on the 3D view', await onView(), await focusName(page));

@@ -132,7 +132,8 @@ const ui = setupPanels(data, {
   onOpenWork: (w) => { ui.close(); viewer.open(w); },
   // a panel stops the tour, as the viewer does: its captions are not read over the panel
   onOpenPanel: () => { blockers.panel = true; if (tour.active) tour.stop(); syncEnabled(); },
-  onClosePanel: () => { blockers.panel = false; syncEnabled(); },
+  // walking stays locked while the sound question is still open (it holds blockers.panel too)
+  onClosePanel: () => { blockers.panel = soundAsking(); syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
   focusFallback,
 });
@@ -230,9 +231,12 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   else if (a === 'sound') toggleSound();
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
+// Not while the sound question is open: it lies over the navbar and footer, and a click
+// that reaches them anyway (a screen reader's, say) opens nothing.
 for (const bar of ['site-nav', 'site-foot']) {
   const el = document.getElementById(bar);
   el.addEventListener('click', (e) => {
+    if (soundAsking()) return;
     const b = e.target.closest('[data-nav]');
     if (!b) {
       // EN / HU opens nothing: a mouse click on it hands focus back to the view (boot.js
