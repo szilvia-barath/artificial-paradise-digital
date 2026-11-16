@@ -290,7 +290,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 ×
 
 // ---------------- D8: on a short screen on its side the viewer shows the work and its text side
 // by side, so the work is far larger than the 167 × 146 px it had under the old stacked layout
-for (const [name, opts, minW, minH] of [['phone on its side 667 × 375', PHONE_SIDE, 340, 300], ['phone on its side 740 × 360', { ...PHONE, viewport: { width: 740, height: 360 } }, 330, 290], ['phone on its side 844 × 390', { ...PHONE, viewport: { width: 844, height: 390 } }, 360, 320], ['small phone on its side 568 × 320', { ...PHONE, viewport: { width: 568, height: 320 } }, 280, 250], ['phone upright 375 × 667 (stacked, as before)', PHONE, 340, 290]]) {
+for (const [name, opts, minW, minH] of [['phone on its side 667 × 375', PHONE_SIDE, 340, 300], ['phone on its side 740 × 360', { ...PHONE, viewport: { width: 740, height: 360 } }, 330, 290], ['phone on its side 844 × 390', { ...PHONE, viewport: { width: 844, height: 390 } }, 360, 320], ['small phone on its side 568 × 320', { ...PHONE, viewport: { width: 568, height: 320 } }, 280, 250], ['phone upright 375 × 667 (stacked, as before)', PHONE, 340, 290], ['computer window 320 × 256 (1280 × 1024 at 400%), mouse: the work at least as large as stacked before D8 (92 × 81)', { viewport: { width: 320, height: 256 } }, 92, 81], ['computer window 341 × 192 (1366 × 768 at 400%), mouse: at least as large as before D8 (52 × 46)', { viewport: { width: 341, height: 192 } }, 52, 46]]) {
   const w = await openWalk(browser, { lang: 'hu', ...opts });
   const p = w.page;
   await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works.find((k) => k.id === 'w01-dresden')));

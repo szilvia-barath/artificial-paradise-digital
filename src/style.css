@@ -1080,6 +1080,14 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   .viewer-info { border-top: 0; border-left: 1px solid var(--line); padding: calc(var(--nav-h) + 52px) calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) 16px; }
   .viewer-info h2 { font-size: 22px; }
 }
+/* A computer window that small is a page at 400% zoom (320 × 256, or 341 × 192): a 240 px text
+   column would leave the work a strip of 80 px, smaller than stacked. There the text takes
+   45% at most, so the work is larger than it was stacked. */
+@media (orientation: landscape) and (max-height: 519px) and (max-width: 480px) {
+  #viewer { grid-template-columns: minmax(0, 1fr) minmax(140px, 45%); }
+  .viewer-info { padding-left: 12px; padding-right: calc(12px + var(--safe-r)); }
+  .viewer-info h2 { font-size: 18px; }
+}
 
 /* A compact control layer for a very small window on a computer (E2): a page at 400% zoom
    (320 × 256 CSS px, or 341 × 192 on a 1366 × 768 screen) or any window up to 480 px wide and
