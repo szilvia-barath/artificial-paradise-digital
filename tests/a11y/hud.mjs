@@ -431,7 +431,7 @@ await guard(['F1.4', 'F1.5', 'F1.6'], async () => {
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   const back = await on('[data-action="help"]');
   const inertAfter = await p.evaluate(() => document.getElementById('stage').inert);
-  step(`F1.4 Help by keyboard: the guide card gone at the first Tab; Tab from the 3D view reaches the Help button (${tabs} presses); Enter opens the panel "${UI.en.nav.help}" with focus on Close, the page behind inert, the controls for a computer first, then for touch; Tab stays inside; Esc closes it and focus is back on Help`, tabs > 0 && !cardAfterTab && helpName.toLowerCase() === UI.en.hud.help.toLowerCase() && open.title === UI.en.nav.help && open.close && open.inert && open.paras[1] === UI.en.panels.controlsDesk && open.paras[2] === UI.en.panels.controlsTouch && cycle.every(Boolean) && back && !inertAfter, `card after the Tabs: ${cardAfterTab}; ${tabs} Tabs to "${helpName}"; ${JSON.stringify({ ...open, paras: open.paras.map((x) => x.slice(0, 40)) })}; Tab stayed inside: ${cycle.join(',')}; focus back on Help: ${back}; stage inert after: ${inertAfter}`);
+  step(`F1.4 Help by keyboard: the guide card gone at the first Tab; Tab from the 3D view reaches the Help button (${tabs} presses); Enter opens the panel "${UI.en.nav.help}" with focus on Close, the page behind inert, the controls for a computer first, then for touch, both naming the ${UI.en.hud.next} button; Tab stays inside; Esc closes it and focus is back on Help`, tabs > 0 && !cardAfterTab && helpName.toLowerCase() === UI.en.hud.help.toLowerCase() && open.title === UI.en.nav.help && open.close && open.inert && open.paras[1] === UI.en.panels.controlsDesk && open.paras[2] === UI.en.panels.controlsTouch && open.paras.slice(1, 3).every((x) => x.includes(UI.en.hud.next)) && cycle.every(Boolean) && back && !inertAfter, `card after the Tabs: ${cardAfterTab}; ${tabs} Tabs to "${helpName}"; ${JSON.stringify({ ...open, paras: open.paras.map((x) => x.slice(0, 40)) })}; Tab stayed inside: ${cycle.join(',')}; focus back on Help: ${back}; stage inert after: ${inertAfter}`);
   // again, then "Show the short guide again"
   await p.keyboard.press('Enter');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
@@ -449,7 +449,7 @@ await guard(['F1.4', 'F1.5', 'F1.6'], async () => {
   await p.click('[data-action="help"]');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   await switchTo(p, 'hu');
-  const hu = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, guide: document.querySelector('#panel-body [data-guide]')?.textContent, close: document.getElementById('panel').contains(document.activeElement) }));
+  const hu = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, guide: document.querySelector('#panel-body [data-guide]')?.textContent, close: document.getElementById('panel').contains(document.activeElement), paras: [...document.querySelectorAll('#panel-body p')].slice(1, 3).map((x) => x.textContent) }));
   await switchTo(p, 'en');
   await p.click('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
@@ -485,7 +485,7 @@ await guard(['F1.7'], async () => {
   await p.tap('#panel-body [data-guide]');
   const back = await p.waitForFunction(() => document.getElementById('panel').hidden && getComputedStyle(document.getElementById('click-to-look')).visibility === 'visible', null, { timeout: 30000 }).then(() => true, () => false);
   const card = await guideInfo(p);
-  step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch controls first; closed with a tap, focus is on Menu; its button brings the touch hint back (the card is for a computer and does not show)', !onBar && inMenu && first === UI.en.panels.controlsTouch && onMenu && back && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; first paragraph "${(first || '').slice(0, 50)}…"; focus on Menu after Close: ${onMenu}; hint back: ${back}; card: ${card.shown}`);
+  step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch controls first, which name the Next work button; closed with a tap, focus is on Menu; its button brings the touch hint back (the card is for a computer and does not show)', !onBar && inMenu && first === UI.en.panels.controlsTouch && (first || '').includes(UI.en.hud.next) && onMenu && back && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; first paragraph "${(first || '').slice(0, 50)}…"; focus on Menu after Close: ${onMenu}; hint back: ${back}; card: ${card.shown}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
