@@ -94,11 +94,13 @@ const SUPPORTERS_ROW = 4; // the credits line, the same place in en.json and hu.
 const SUPPORTERS_SEP = ' · ';
 // The three footnotes of the original opening speech (source S12): the marker goes after
 // the sentence that ends with these words; the note is the reference's citation, linked to
-// its url_primary.
+// its url_primary. lang: the language the citation is written in (the original speech cites
+// Tyndall in English and the two Hungarian editions of Baudelaire in Hungarian), so a
+// screen reader reads it in that language on either page.
 const FOOTNOTES = [
-  { n: 1, ref: 'R02', after: { en: 'and so warm the atmosphere.', hu: 'és visszasugározzák, ezáltal pedig melegítik a légkört.' } },
-  { n: 2, ref: 'R04', after: { en: 'In other words, only one step separates the artificial paradise from a real hell.', hu: 'Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól.' } },
-  { n: 3, ref: 'R05', after: { en: 'to distil the eternal from the transitory.”', hu: 'az átmenetiből kiszűrje a maradandót”.' } },
+  { n: 1, ref: 'R02', lang: 'en', after: { en: 'and so warm the atmosphere.', hu: 'és visszasugározzák, ezáltal pedig melegítik a légkört.' } },
+  { n: 2, ref: 'R04', lang: 'hu', after: { en: 'In other words, only one step separates the artificial paradise from a real hell.', hu: 'Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól.' } },
+  { n: 3, ref: 'R05', lang: 'hu', after: { en: 'to distil the eternal from the transitory.”', hu: 'az átmenetiből kiszűrje a maradandót”.' } },
 ];
 
 // ---- Works: catalogue ids (ap-w01 … ap-w17) to the site's work ids, by number ----
@@ -236,7 +238,7 @@ for (const lang of ['en', 'hu']) {
 const footnotes = FOOTNOTES.map((f) => {
   const r = byId.get(f.ref);
   if (!r.citation || !r.url.primary) fail(`footnote ${f.n}: ${f.ref} needs a citation and a url_primary`);
-  return { n: f.n, ref: f.ref, after: f.after, citation: r.citation, url: r.url.primary };
+  return { n: f.n, ref: f.ref, after: f.after, citation: r.citation, lang: f.lang, url: r.url.primary };
 });
 
 // ---- The network: nodes, edges and a layout worked out here, not in the browser ----

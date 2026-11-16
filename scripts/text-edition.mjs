@@ -43,6 +43,12 @@ dd{margin:0}
 nav ul{margin:.4rem 0;padding-left:1.2rem}
 a.ref{color:inherit;text-decoration-thickness:1px}
 .lang-mark{display:inline-block;margin-left:.2em;font-size:.7em;letter-spacing:.04em;vertical-align:.4em}
+sup{line-height:0}
+sup a{padding:0 .15em}
+.footnotes{padding-left:1.4rem;font-size:.95rem}
+.footnotes li{margin:.4rem 0}
+.footnotes li:target,.footnotes li:focus{outline:2px solid var(--link);outline-offset:3px}
+.fn-back{text-decoration:none;padding:0 .2em}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:30rem){dl{grid-template-columns:1fr;gap:0}dd{margin-bottom:.5rem}}
 `.trim();
@@ -235,7 +241,8 @@ ${data.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}
 <section id="opening-speech" aria-labelledby="opening-speech-h">
 <h2 id="opening-speech-h">${esc(t('panels.speech'))}</h2>
 <p>${esc(speech.author)}: <em>${esc(speech.title)}</em></p>
-${R.paragraphs('openingSpeech', speech.text).map((p) => `<p>${p}</p>`).join('\n')}${speech.note ? `\n<p class="note">${esc(speech.note)}</p>` : ''}
+${R.paragraphs('openingSpeech', speech.text).map((p) => `<p>${p}</p>`).join('\n')}
+${R.notes('h3')}${speech.note ? `\n<p class="note">${esc(speech.note)}</p>` : ''}
 </section>` : ''}
 <section id="controls" aria-labelledby="controls-h">
 <h2 id="controls-h">${esc(t('panels.controls'))}</h2>

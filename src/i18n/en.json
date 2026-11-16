@@ -221,7 +221,10 @@
       "in": {
         "en": "in English",
         "hu": "in Hungarian"
-      }
+      },
+      "footnote": "Footnote {n}",
+      "notes": "Notes",
+      "backToText": "Back to the text, footnote {n}"
     }
   },
   "meta": {

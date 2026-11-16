@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 69. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 72. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -121,6 +121,15 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.in.hu`
   - HU: magyar nyelven
   - EN: in Hungarian
+- `ui.concept.footnote`
+  - HU: {n}. lábjegyzet
+  - EN: Footnote {n}
+- `ui.concept.notes`
+  - HU: Jegyzetek
+  - EN: Notes
+- `ui.concept.backToText`
+  - HU: Vissza a szöveghez, {n}. lábjegyzet
+  - EN: Back to the text, footnote {n}
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth

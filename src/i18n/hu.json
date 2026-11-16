@@ -221,7 +221,10 @@
       "in": {
         "en": "angol nyelven",
         "hu": "magyar nyelven"
-      }
+      },
+      "footnote": "{n}. lábjegyzet",
+      "notes": "Jegyzetek",
+      "backToText": "Vissza a szöveghez, {n}. lábjegyzet"
     }
   },
   "meta": {

@@ -54,7 +54,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   };
 
   // The opening speech, folded away under its title (it is long). Its words are as in
-  // src/i18n; the links to what it mentions are laid over them here.
+  // src/i18n; the links to what it mentions and the three footnotes of the original speech
+  // (markers in the text, the notes under it) are laid over them here.
   const speechHTML = () => {
     const s = data.openingSpeech;
     if (!s) return '';
@@ -63,6 +64,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <details class="speech">
       <summary>${esc(s.author)}: <em>${esc(s.title)}</em> · ${esc(t('panels.speechRead'))}</summary>
       ${links().paragraphs('openingSpeech', s.text).map((p) => `<p>${p}</p>`).join('')}
+      ${links().notes('h4')}
       ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
     </details>`;
   };
@@ -198,6 +200,16 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     const n = e.target.closest('[data-nav]');
     if (n) {
       show(n.dataset.nav);
+      return;
+    }
+    // A footnote's marker goes to its note, and the note's arrow back to the marker: the
+    // target is scrolled into view and takes focus (the address bar is left alone).
+    const fn = e.target.closest('[data-fn], [data-fnref]');
+    if (fn) {
+      e.preventDefault();
+      const to = body.querySelector(fn.dataset.fn ? `#fn-${fn.dataset.fn}` : `#fnref-${fn.dataset.fnref}`);
+      to?.scrollIntoView({ block: 'center' });
+      to?.focus({ preventScroll: true });
       return;
     }
     // Help's "show the short guide again": the panel closes (focus goes back as on any close)
