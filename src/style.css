@@ -5,6 +5,8 @@
   --line: rgba(255, 255, 255, 0.14);
   --glass: rgba(11, 12, 14, 0.85); /* chips over the 3D view; 0.85 so text on them reads over a white wall */
   --hud-muted: #c4c3be; /* secondary text on glass: keycap letters, the muted icon, the wheel hint */
+  --edge: rgba(255, 255, 255, 0.45); /* the edge of a glass chip, 3:1 or more against its glass over a white wall and over black */
+  --halo: #0b0c0e; /* the dark halo round the white focus ring of a control on glass */
   /* The look (H1): paper and ink for words, glass for what sits over the 3D view. */
   --paper: #fbfbf9; /* title card, panels, accessible version */
   --ink: #16181d; /* text on paper */
@@ -409,7 +411,14 @@ body.touch #tour-caption { bottom: calc(16px + var(--safe-b) + var(--bar-h) + 8p
   outline: 2px solid rgba(0, 0, 0, 0.8);
   pointer-events: none;
 }
-.cap:focus-visible, #zoom-level:focus-visible, #rooms-menu button:focus-visible, #toolbar button:focus-visible, #panel-body .works-list button:focus-visible { outline-offset: -2px; }
+#rooms-menu button:focus-visible, #panel-body .works-list button:focus-visible { outline-offset: -2px; }
+/* On glass the ring is white with a dark halo round it, so it shows where it reaches past the
+   chip onto a white wall (the toolbar's buttons, the keycaps, the zoom readout). A pressed
+   button or keycap keeps its own mark under the halo. */
+#toolbar > button:focus-visible, #toolbar .rooms-wrap > button:focus-visible, #zoom-level:focus-visible { box-shadow: 0 0 0 5px var(--halo); }
+#toolbar > button[aria-pressed="true"]:focus-visible { box-shadow: inset 0 -3px 0 var(--accent), 0 0 0 5px var(--halo); }
+.cap:focus-visible { box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.06), 0 0 0 5px var(--halo); }
+.cap.pressed:focus-visible { box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 0 0 5px var(--halo); }
 #crosshair {
   position: absolute;
   left: 50%;
@@ -430,10 +439,13 @@ body.touch #crosshair { display: none; }
   left: 50%;
   top: calc(50% + 22px);
   transform: translateX(-50%);
-  font-size: 11px;
-  padding: 6px 10px;
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.2s;
@@ -450,11 +462,12 @@ body.touch #crosshair { display: none; }
   max-width: calc(100% - 18px - 220px - 14px - 8px - var(--safe-l) - var(--safe-r));
   padding: 8px 12px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
 }
-/* the room's name is an h2: it keeps the label's own letters */
-#room-label .room-name { margin: 0; font: inherit; font-size: 15px; text-transform: uppercase; letter-spacing: 0.18em; }
-#room-label .room-sub { font-size: 10px; line-height: 1.5; color: #c9c9c6; text-transform: uppercase; letter-spacing: 0.14em; }
+/* the room's name is an h2: semibold, in sentence case; the subtitle under it in the muted colour */
+#room-label .room-name { margin: 0; font: 600 15px/1.3 var(--sans); letter-spacing: 0.02em; }
+#room-label .room-sub { font: 13px/1.4 var(--sans); letter-spacing: 0; color: var(--hud-muted); }
 #minimap {
   position: absolute;
   right: calc(14px + var(--safe-r));
@@ -462,7 +475,8 @@ body.touch #crosshair { display: none; }
   width: 220px;
   height: 150px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   pointer-events: auto;
   cursor: pointer;
 }
@@ -479,12 +493,14 @@ body.touch #crosshair { display: none; }
   gap: 6px;
   padding: 3px 8px;
   white-space: nowrap;
+  font-family: var(--sans);
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.02em;
   color: var(--hud-muted);
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   pointer-events: none;
 }
 #map-key .mk { flex: none; width: 5px; height: 5px; border: 1px solid rgba(11, 12, 14, 0.9); box-sizing: content-box; }
@@ -499,7 +515,8 @@ body.touch #crosshair { display: none; }
   gap: 4px;
   padding: 4px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   pointer-events: auto;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -539,7 +556,8 @@ body.touch #crosshair { display: none; }
   transform: translateX(-50%);
   min-width: 220px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 4px;
@@ -548,7 +566,7 @@ body.touch #crosshair { display: none; }
    the button (they are its description, not its name); the button's ::after covers the
    whole row, so a click or tap anywhere on the row is a click on the button, and the hover
    and the focus ring are drawn around the row. */
-#rooms-menu .room-row { position: relative; font-family: var(--mono); font-size: 11px; border-left: 2px solid transparent; }
+#rooms-menu .room-row { position: relative; font-family: var(--sans); font-size: 13px; border-left: 2px solid transparent; }
 #rooms-menu .room-row:hover { background: rgba(255, 255, 255, 0.1); }
 #rooms-menu button {
   width: 100%;
@@ -560,7 +578,9 @@ body.touch #crosshair { display: none; }
 #rooms-menu button::after { content: ""; position: absolute; inset: 0 0 0 -2px; }
 #rooms-menu button:focus-visible { outline: none; }
 #rooms-menu button:focus-visible::after { outline: 2px solid var(--focus); outline-offset: -2px; }
-#rooms-menu small { display: block; padding: 3px 12px 10px 10px; color: var(--muted); letter-spacing: 0.02em; }
+/* the works in the room: 12 px in the HUD's muted colour, which also reads on a row under
+   the mouse over a white wall (the grey #9a9a98 it had did not) */
+#rooms-menu small { display: block; padding: 3px 12px 10px 10px; font-size: 12px; line-height: 1.4; color: var(--hud-muted); letter-spacing: 0; }
 /* The menu never reaches above the navbar: it is at most as tall as the room between the
    navbar and the toolbar (less 8 px), and scrolls inside itself. In a short window (a phone
    on its side, a laptop at 200%) the titles are left out of view; they are still read as
@@ -598,14 +618,15 @@ body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility:
   line-height: 1.5;
   padding: 14px 18px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   opacity: 0;
   transition: opacity 0.8s ease;
 }
 #tour-caption.show { opacity: 1; }
-#tour-caption .t { display: block; font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 4px; }
+#tour-caption .t { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--accent); margin-bottom: 4px; }
 /* the work's medium, size and year, under the line that says how far along the tour is */
-#tour-caption .m { display: block; font-size: 12px; font-family: var(--mono); color: var(--hud-muted); margin-bottom: 6px; }
+#tour-caption .m { display: block; font-size: 13px; color: var(--hud-muted); margin-bottom: 6px; }
 /* The first-use hint sits below the crosshair and below the prompt that names a work
    (22 px + its 27 px under the middle), so the two never share a place. */
 #click-to-look {
@@ -616,13 +637,15 @@ body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility:
   width: max-content;
   max-width: calc(100% - 32px);
   text-align: center;
-  font-size: 11px;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
   color: var(--fg);
-  padding: 8px 14px;
+  padding: 8px 12px;
   background: var(--glass);
-  border: 1px solid var(--line);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   transition: opacity 0.4s, visibility 0s;
 }
 #click-to-look { pointer-events: none; }
@@ -674,7 +697,8 @@ body.dragging, body.dragging canvas { cursor: grabbing !important; }
   max-width: min(340px, calc(100% - 36px - var(--safe-l) - var(--safe-r)));
   padding: 10px 14px;
   background: var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   font-size: 13px;
   line-height: 1.45;
   color: var(--fg);
@@ -765,8 +789,8 @@ body.touring #keypad { visibility: hidden; }
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 5px;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
   background: var(--glass);
   box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(8px);
@@ -785,15 +809,16 @@ body.touring #keypad { visibility: hidden; }
   top: 4px;
   font-style: normal;
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.02em;
   color: var(--hud-muted);
 }
 /* the arrow on a keycap is drawn here, so the key's letter is its only text */
 .cap .glyph::before { content: attr(data-glyph); }
-/* the drawing sits 5 px below the middle, clear of the 11 px letter above it */
-.cap .glyph, .cap svg { position: relative; top: 5px; }
-.cap:hover { border-color: rgba(255, 255, 255, 0.35); }
+/* the drawing sits 6 px below the middle, clear of the 12 px letter above it */
+.cap .glyph, .cap svg { position: relative; top: 6px; }
+.cap:hover { border-color: rgba(255, 255, 255, 0.8); }
 .cap.pressed {
   /* the tint is laid on the glass, so the letter keeps its contrast over a white wall */
   background: linear-gradient(rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.16)), var(--glass);
@@ -817,12 +842,13 @@ body.touring #keypad { visibility: hidden; }
   margin-top: 2px;
   min-height: 38px; /* two lines in both languages; the zoom keys beside are set against it */
   padding: 5px 9px 5px 7px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
   background: var(--glass);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.02em;
   color: var(--hud-muted);
 }
 .wheel b { color: var(--fg); }
@@ -865,10 +891,11 @@ body.touch #zoompad { left: auto; right: calc(14px + var(--safe-r)); bottom: cal
   top: calc(var(--nav-h) + 12px);
   transform: translateX(-50%);
   padding: 6px 10px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
   background: var(--glass);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--fg);
   pointer-events: auto;
 }
@@ -1079,8 +1106,9 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
      the three buttons only, the rooms menu inside the toolbar keeps its own wrapping lines */
   #toolbar > button, #toolbar .rooms-wrap > button { padding: 11px 9px; gap: 6px; letter-spacing: 0.08em; white-space: nowrap; }
   #room-label { left: calc(12px + var(--safe-l)); top: calc(var(--nav-h) + 6px); max-width: calc(100% - 12px - 150px - 10px - 8px - var(--safe-l) - var(--safe-r)); padding: 6px 10px; }
-  #room-label .room-name { font-size: 13px; }
-  #tour-caption { font-size: 13px; }
+  #room-label .room-name { font-size: 14px; }
+  #room-label .room-sub { font-size: 12px; }
+  #tour-caption { font-size: 14px; }
   #panel-body .credits { grid-template-columns: 1fr; gap: 2px; }
   #panel-body .credits dd { margin-bottom: 10px; }
   .panel-card { padding: 20px 16px; }

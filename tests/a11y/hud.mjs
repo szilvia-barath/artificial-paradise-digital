@@ -849,6 +849,74 @@ await guard(['H1.2'], async () => {
   await t.ctx.close();
 });
 
+// ---------------- H1.3: the glass chips. Every chip over the 3D view (room label, floor plan
+// and its key, toolbar, rooms menu, keycaps, wheel line, zoom readout, the hints, the first-use
+// card, the tour caption) is the glass with a light edge (white at 45%) and rounded corners;
+// the edge reads at 3:1 or more against the glass over a white wall and over black, and the
+// text on the chips at 4.5:1. The focus ring on glass is white, 2 px, at 3:1 or more against
+// the glass; where it reaches past its chip (a toolbar button, a keycap) it has a dark halo
+// round it, so it shows on a white wall; in the rooms menu it stays inside the row.
+await guard(['H1.3'], async () => {
+  const w = await insideByKeys('en'); // by keys, so the focus ring shows when focus is moved
+  const p = w.page;
+  const r = await p.evaluate(() => {
+    const style = (e, ps) => getComputedStyle(e, ps);
+    const chips = ['#room-label', '#minimap', '#map-key', '#toolbar', '#rooms-menu', '#tour-caption', '#click-to-look', '#guide', '#prompt', '#zoom-level', '.cap.k-w', '.cap.k-zin', '#keypad .wheel'].map((sel) => {
+      const e = document.querySelector(sel);
+      const c = style(e);
+      return { sel, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0 };
+    });
+    const texts = ['#room-label .room-name', '#room-label .room-sub', '#map-key', '#keypad .wheel', '.cap.k-w i', '#toolbar [data-action="tour"] .lbl', '#rooms-menu button', '#rooms-menu small', '#click-to-look', '#guide', '#guide .g-note'].map((sel) => {
+      const e = document.querySelector(sel);
+      return { sel, color: style(e).color };
+    });
+    const ring = (e, ps) => { const c = style(e, ps); return { color: c.outlineColor, width: c.outlineWidth, line: c.outlineStyle, offset: c.outlineOffset, shadow: style(e).boxShadow, shown: e.matches(':focus-visible') }; };
+    const tour = document.querySelector('#toolbar [data-action="tour"]');
+    tour.focus();
+    const onTour = ring(tour);
+    tour.setAttribute('aria-pressed', 'true');
+    const onTourPressed = ring(tour);
+    tour.setAttribute('aria-pressed', 'false');
+    const cap = document.querySelector('.cap.k-w');
+    cap.style.transition = 'none';
+    cap.focus();
+    const onCap = ring(cap);
+    cap.style.transition = '';
+    document.querySelector('#toolbar [data-action="rooms"]').click();
+    const row = document.querySelector('#rooms-menu button');
+    row.focus();
+    const onRow = ring(row, '::after');
+    const rowHover = 'rgba(255, 255, 255, 0.1)'; // #rooms-menu .room-row:hover, as in style.css
+    document.querySelector('#toolbar [data-action="rooms"]').click();
+    return { glass: getComputedStyle(document.documentElement).getPropertyValue('--glass').trim(), chips, texts, onTour, onTourPressed, onCap, onRow, rowHover };
+  });
+  const bad = [];
+  let lowEdge = 99; let lowText = 99;
+  for (const c of r.chips) {
+    const e = worst(c.edge, c.bg);
+    lowEdge = Math.min(lowEdge, e);
+    if (rgba(c.bg)[3] < 0.85 || c.edgeW !== '1px' || rgba(c.edge)[3] < 0.45 || e < 3 || c.radius < 6) bad.push(`${c.sel}: glass ${c.bg}, edge ${c.edgeW} ${c.edge} (${e.toFixed(2)}), radius ${c.radius}`);
+  }
+  for (const x of r.texts) { const c = worst(x.color, r.glass); lowText = Math.min(lowText, c); if (c < 4.5) bad.push(`${x.sel}: ${x.color} ${c.toFixed(2)}`); }
+  // the works named in the rooms menu, on a row under the mouse: the row's tint on the glass
+  const hoverLow = Math.min(...[[255, 255, 255], [0, 0, 0]].map((under) => { const bg = over(rgba(r.rowHover), over(rgba(r.glass), under)); return ratio(over(rgba(r.texts.find((x) => x.sel === '#rooms-menu small').color), bg), bg); }));
+  if (hoverLow < 4.5) bad.push(`rooms menu, works on a row under the mouse: ${hoverLow.toFixed(2)}`);
+  const white = (x) => x.shown && x.line === 'solid' && x.width === '2px' && x.color === 'rgb(255, 255, 255)';
+  const halo = (x) => /rgb\(11, 12, 14\) 0px 0px 0px 5px/.test(x.shadow);
+  const ringOnGlass = worst('rgb(255, 255, 255)', r.glass);
+  const haloOnWall = ratio([11, 12, 14], [255, 255, 255]);
+  const ringOnHalo = ratio([255, 255, 255], [11, 12, 14]);
+  if (!white(r.onTour) || !halo(r.onTour)) bad.push(`Tour focused: ${JSON.stringify(r.onTour)}`);
+  if (!white(r.onTourPressed) || !halo(r.onTourPressed) || !/inset/.test(r.onTourPressed.shadow)) bad.push(`Tour pressed and focused: ${JSON.stringify(r.onTourPressed)}`);
+  if (!white(r.onCap) || !halo(r.onCap)) bad.push(`keycap focused: ${JSON.stringify(r.onCap)}`);
+  if (!(r.onRow.line === 'solid' && r.onRow.width === '2px' && r.onRow.color === 'rgb(255, 255, 255)' && parseFloat(r.onRow.offset) < 0)) bad.push(`rooms menu row focused: ${JSON.stringify(r.onRow)}`);
+  step('H1.3 Glass chips: each is the glass (0.85) with a 1 px edge of white at 45% (≥ 3 against the glass over white and black) and rounded corners; text on them ≥ 4.5, also the works on a rooms-menu row under the mouse; the focus ring on a toolbar button (pressed or not) and a keycap is white, 2 px, with a dark halo of 5 px round it; in the rooms menu it is white and inside the row; ring on glass ≥ 3, halo on a white wall ≥ 3',
+    bad.length === 0 && lowEdge >= 3 && lowText >= 4.5 && ringOnGlass >= 3 && haloOnWall >= 3 && ringOnHalo >= 3,
+    `${r.chips.length} chips, lowest edge ${lowEdge.toFixed(2)}; lowest text ${lowText.toFixed(2)}; works on a hovered row ${hoverLow.toFixed(2)}; ring on glass ${ringOnGlass.toFixed(2)}, halo on a white wall ${haloOnWall.toFixed(2)}, ring on its halo ${ringOnHalo.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);
