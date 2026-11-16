@@ -67,7 +67,11 @@
       },
       "promptWorkKey": "Enter to view · {no} {title}",
       "promptTextKey": "Enter to read the exhibition text",
-      "minimapHere": "Floor plan: you are in {room}"
+      "minimapHere": "Floor plan: you are in {room}",
+      "mapKey": {
+        "videos": "Videos",
+        "other": "Other works"
+      }
     },
     "viewer": {
       "artistSite": "On the artist's website",

@@ -67,7 +67,11 @@
       },
       "promptWorkKey": "Enter: megtekintés · {no} {title}",
       "promptTextKey": "Enter: a kiállítási szöveg elolvasása",
-      "minimapHere": "Alaprajz. Jelenlegi hely: {room}"
+      "minimapHere": "Alaprajz. Jelenlegi hely: {room}",
+      "mapKey": {
+        "videos": "Videók",
+        "other": "A többi mű"
+      }
     },
     "viewer": {
       "artistSite": "A művész honlapján",

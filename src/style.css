@@ -450,6 +450,30 @@ body.touch #crosshair { display: none; }
   pointer-events: auto;
   cursor: pointer;
 }
+/* The map's key, one line just under it, right-aligned with it: the two marks drawn as the
+   map draws them (5 px with a 1 px dark edge, round magenta and square cyan), then their words.
+   12 px in the HUD's muted colour on the same glass: 7.1:1 over pure white. */
+#map-key {
+  position: absolute;
+  right: calc(14px + var(--safe-r));
+  top: calc(var(--nav-h) + 8px + 150px + 4px);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--hud-muted);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+#map-key .mk { flex: none; width: 5px; height: 5px; border: 1px solid rgba(11, 12, 14, 0.9); box-sizing: content-box; }
+#map-key .mk-other { background: var(--accent-2); border-radius: 50%; margin-left: 6px; }
+#map-key .mk-video { background: var(--cyan); }
 #toolbar {
   position: absolute;
   left: 50%;
@@ -581,6 +605,12 @@ body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility:
    reach the toolbar, so it sits just above the crosshair instead. */
 @media (max-height: 519px) {
   #click-to-look { top: auto; bottom: calc(50% + 14px); }
+  /* ...and never as wide as the map and its key at the right (nor the same width at the left) */
+  #click-to-look { max-width: calc(100% - 2 * (220px + 14px + 8px + max(var(--safe-l), var(--safe-r)))); }
+}
+@media (max-height: 519px) and (max-width: 820px) {
+  /* the map is 150 px wide here, and its key, about 185 px, reaches a little further left */
+  #click-to-look { max-width: calc(100% - 2 * (190px + 10px + 8px + max(var(--safe-l), var(--safe-r)))); }
 }
 /* Gone for good after the first look or move, or about 8 seconds (main.js); out of the way
    while the tour runs or the rooms menu is open. Hidden from screen readers as well. */
@@ -748,6 +778,10 @@ body.touch #zoompad { left: auto; right: calc(14px + var(--safe-r)); bottom: cal
 }
 #zoom-level .val { color: var(--accent); }
 body.touch #zoom-level { left: auto; right: calc(14px + var(--safe-r)); top: auto; transform: none; bottom: calc(84px + 108px + var(--safe-b)); }
+/* a phone on its side: above the zoom keys it would reach the map's key, so it stands beside them */
+@media (max-height: 519px) {
+  body.touch #zoom-level { right: calc(14px + 46px + 8px + var(--safe-r)); bottom: calc(84px + var(--safe-b)); }
+}
 
 /* a small mouse whose wheel rolls three times once the visitor is in the room (the sound
    question answered), then stays still (WCAG 2.2.2) */
@@ -907,6 +941,7 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   .viewer-info { border-left: 0; border-top: 1px solid var(--line); padding: 18px calc(16px + var(--safe-r)) calc(18px + var(--safe-b)) calc(16px + var(--safe-l)); }
   .viewer-info h2 { font-size: 24px; }
   #minimap { width: 150px; height: 102px; right: calc(10px + var(--safe-r)); top: calc(var(--nav-h) + 6px); }
+  #map-key { right: calc(10px + var(--safe-r)); top: calc(var(--nav-h) + 6px + 102px + 4px); }
   /* the words stay beside the glyphs at every width (the Hungarian row fits a 375 px phone);
      the three buttons only, the rooms menu inside the toolbar keeps its own wrapping lines */
   #toolbar > button, #toolbar .rooms-wrap > button { padding: 11px 9px; gap: 6px; letter-spacing: 0.08em; white-space: nowrap; }

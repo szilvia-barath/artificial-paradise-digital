@@ -71,6 +71,9 @@
         <!-- Its name says which room you are in (main.js keeps it up to date); the jump by a
              click is said in its title only, since a screen reader cannot click a room on it. -->
         <canvas id="minimap" width="220" height="150" role="img" aria-label="Floor plan: you are in Room 1" title="Floor plan: click a room to go there" data-i18n-attr="title:hud.minimap"></canvas>
+        <!-- The map's key: its two marks drawn as on the map (minimap.js). Hidden from screen
+             readers, which get the map as a name only, not its marks. -->
+        <p id="map-key" class="mono" aria-hidden="true"><span class="mk mk-video"></span><span data-i18n="hud.mapKey.videos">Videos</span><span class="mk mk-other"></span><span data-i18n="hud.mapKey.other">Other works</span></p>
         <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
           <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico" aria-hidden="true">▶</span><span class="lbl" data-i18n="hud.tour">Tour</span></button>
           <div class="rooms-wrap">
