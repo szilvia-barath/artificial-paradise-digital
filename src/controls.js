@@ -194,6 +194,8 @@ export class FirstPersonControls {
       const r = joyEl.getBoundingClientRect();
       cx = r.left + r.width / 2;
       cy = r.top + r.height / 2;
+      // pressing and holding walks at once in that direction, without a drag (D2)
+      moveJoy(t);
       e.preventDefault();
     }, { passive: false });
     const moveJoy = (t) => {

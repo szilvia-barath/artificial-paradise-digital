@@ -634,6 +634,10 @@ body.touch #click-to-look { top: auto; bottom: calc(50% + 14px); }
 @media (max-height: 359px) {
   body.touch #click-to-look { max-width: calc(100% - 2 * (162px + max(var(--safe-l), var(--safe-r)))); }
 }
+/* ...and the two turning keys left of the zoom keys (D2): the hint keeps clear of them too */
+@media (max-height: 519px) {
+  body.touch #click-to-look { max-width: calc(100% - 2 * (14px + 46px + 8px + 96px + 10px + max(var(--safe-l), var(--safe-r)))); }
+}
 /* Gone for good after the first look or move, or about 8 seconds (main.js); out of the way
    while the tour runs or the rooms menu is open. Hidden from screen readers as well. */
 body.looked #click-to-look, body.touring #click-to-look,
@@ -726,7 +730,16 @@ body.touring #joystick { visibility: hidden; }
   pointer-events: auto;
   transition: opacity 0.4s ease;
 }
-body.touch #keypad { display: none; }
+/* On a touch screen only the two turning keys show, 44 px each (D2): turning by a tap or a
+   hold, without a drag. Upright they stand just above the stick; on a phone on its side,
+   where the room label leaves no room above the stick, they stand left of the zoom keys. */
+body.touch #keypad { grid-template-columns: 44px 44px; grid-template-rows: 44px; gap: 8px; left: calc(22px + var(--safe-l)); bottom: calc(84px + 116px + 10px + var(--safe-b)); }
+body.touch #keypad :is(.k-w, .k-s, .k-shift, .wheel) { display: none; }
+body.touch #keypad .k-a { grid-column: 1; grid-row: 1; }
+body.touch #keypad .k-d { grid-column: 2; grid-row: 1; }
+@media (max-height: 519px) {
+  body.touch #keypad { display: grid; left: auto; right: calc(14px + 46px + 8px + var(--safe-r)); bottom: calc(84px + var(--safe-b)); }
+}
 /* The tour walks by itself: the walking keys are put away while it runs, so the caption
    never covers a key that Tab could reach. The arrow keys, Esc and the Tour button stop it. */
 body.touring #keypad { visibility: hidden; }
@@ -843,9 +856,10 @@ body.touch #zoompad { left: auto; right: calc(14px + var(--safe-r)); bottom: cal
 }
 #zoom-level .val { color: var(--accent); }
 body.touch #zoom-level { left: auto; right: calc(14px + var(--safe-r)); top: auto; transform: none; bottom: calc(84px + 108px + var(--safe-b)); }
-/* a phone on its side: above the zoom keys it would reach the map's key, so it stands beside them */
+/* a phone on its side: above the zoom keys it would reach the map's key, so it stands beside
+   them, above the two turning keys (D2) */
 @media (max-height: 519px) {
-  body.touch #zoom-level { right: calc(14px + 46px + 8px + var(--safe-r)); bottom: calc(84px + var(--safe-b)); }
+  body.touch #zoom-level { right: calc(14px + 46px + 8px + var(--safe-r)); bottom: calc(84px + 44px + 8px + var(--safe-b)); }
 }
 
 /* a small mouse whose wheel rolls three times once the visitor is in the room (the sound

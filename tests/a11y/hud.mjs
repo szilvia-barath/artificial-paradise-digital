@@ -1,5 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
-// screen, the sound question's hint and the hint inside (D11); the tour caption's first line
+// screen, the sound question's hint and the hint inside (D11), the stick held and the turning
+// keys (D2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
@@ -170,8 +171,8 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   await w.ctx.close();
 }
 {
-  // what the hint says is what works now: a drag looks round; the stick walks when pushed, not
-  // when only pressed and held (D2, not built yet); a tap on a work opens it
+  // what the hint says is what works now: a drag looks round; the stick walks when pushed, and
+  // since D2 also when only pressed and held off its middle; a tap on a work opens it
   const w = await inside('en', PHONE);
   const p = w.page;
   const touch = await finger(p);
@@ -187,8 +188,8 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   const at = () => p.evaluate(() => ({ x: window.__ap.controls.pos.x, z: window.__ap.controls.pos.y }));
   const moved = (from) => p.waitForFunction((f) => Math.hypot(window.__ap.controls.pos.x - f.x, window.__ap.controls.pos.y - f.z) > 0.05, from, { timeout: 4000 }).then(() => true, () => false);
   let from = await at();
-  await touch('touchStart', j.x, j.y);
-  const held = await moved(from); // pressed and held, not pushed: up to 4 s
+  await touch('touchStart', j.x, j.y - 30);
+  const held = await moved(from); // pressed and held above its middle, not pushed: up to 4 s
   from = await at();
   await touch('touchMove', j.x, j.y - 40);
   const pushed = await moved(from);
@@ -202,7 +203,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   // the click, if the browser sends one, comes within a few frames: wait for it, up to 3 s
   const click = await p.waitForFunction(() => window.__clicks > 0, null, { timeout: 3000 }).then(() => true, () => false);
   const opened = await p.evaluate(() => (document.getElementById('viewer').hidden ? '(nothing)' : document.getElementById('viewer-title').textContent));
-  step('D11.3 Phone: the first touch on the 3D view takes the hint away; what it says works now: a drag looks round, the stick walks when pushed, a tap opens the work in the middle and it stays open. Only pressing and holding the stick does not walk (so the hint says "push")', hint0.visibility === 'visible' && gone && looked && !held && pushed && opened === 'Human as Error I', `hint shown first: ${hint0.visibility}; gone at the touch: ${gone}; drag turned the view: ${looked}; stick held still walked: ${held}; stick pushed walked: ${pushed}; tap opened: ${opened} (the browser's click after the tap sent: ${click})`);
+  step('D11.3 Phone: the first touch on the 3D view takes the hint away; what it says works now: a drag looks round, the stick walks when pushed, a tap opens the work in the middle and it stays open. Since D2, pressing and holding the stick above its middle walks too, without a drag (so the hint says "hold")', hint0.visibility === 'visible' && gone && looked && held && pushed && opened === 'Human as Error I', `hint shown first: ${hint0.visibility}; gone at the touch: ${gone}; drag turned the view: ${looked}; stick held still walked: ${held}; stick pushed walked: ${pushed}; tap opened: ${opened} (the browser's click after the tap sent: ${click})`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -240,6 +241,49 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   const w = await inside('en');
   const h = await hintState(w.page);
   step('D11.6 Computer: the hint in the middle is unchanged ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- D2: on a touch screen the stick walks when pressed and held, and two
+// turning keys (44 px) show; nothing else of the keypad
+for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 740 × 360, English', { ...PHONE, viewport: { width: 740, height: 360 } }, 'en'], ['small, on its side 568 × 320, Hungarian', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu']]) {
+  const w = await inside(lang, opts);
+  const p = w.page;
+  await p.evaluate(() => { window.__ap.controls.zoomBy(2); document.body.classList.remove('looked'); });
+  await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
+  const caps = await p.evaluate(() => [...document.querySelectorAll('#keypad .cap')].filter((c) => c.getClientRects().length && getComputedStyle(c).visibility !== 'hidden').map((c) => { const r = c.getBoundingClientRect(); return { title: c.title, w: Math.round(r.width), h: Math.round(r.height), inside: r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight }; }));
+  const others = ['#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label', '#click-to-look'];
+  const b = await boxes(p, ['#keypad .k-a', '#keypad .k-d', ...others]);
+  const clear = ['#keypad .k-a', '#keypad .k-d'].every((k) => others.every((s) => !meets(b[k], b[s])));
+  const want = [UI[lang].hud.keys.left, UI[lang].hud.keys.right];
+  step(`D2.1 Phone ${name}: only the two turning keys show ("${want.join('", "')}"), each at least 44 × 44 px, inside the window, over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key, the room label and the touch hint`, caps.length === 2 && caps.map((c) => c.title).join('|') === want.join('|') && caps.every((c) => c.w >= 44 && c.h >= 44 && c.inside) && clear, `${JSON.stringify(caps)}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // the stick pressed and held off its middle walks that way at once; released, it stops. The
+  // turning keys turn while held, by a finger
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  const touch = await finger(p);
+  const j = await p.evaluate(() => { const r = document.getElementById('joystick').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
+  const at = () => p.evaluate(() => ({ x: window.__ap.controls.pos.x, z: window.__ap.controls.pos.y, yaw: window.__ap.controls.yaw }));
+  const a = await at();
+  await touch('touchStart', j.x, j.y - 35); // forward, no move of the finger after
+  const fwd = await p.waitForFunction((f) => Math.hypot(window.__ap.controls.pos.x - f.x, window.__ap.controls.pos.y - f.z) > 0.3, a, { timeout: 20000 }).then(() => true, () => false);
+  const joy = await p.evaluate(() => ({ x: window.__ap.controls.joy.x, y: window.__ap.controls.joy.y }));
+  await touch('touchEnd');
+  await p.waitForFunction(() => window.__ap.controls.joy.x === 0 && window.__ap.controls.joy.y === 0, null, { timeout: 10000 }).catch(() => {});
+  // it glides to a stop: from one frame to the next it no longer moves (held, it would go on)
+  const stopped = await p.waitForFunction(() => { const c = window.__ap.controls; const l = window.__lastPos; window.__lastPos = { x: c.pos.x, z: c.pos.y }; return !!l && Math.hypot(c.pos.x - l.x, c.pos.y - l.z) < 1e-4; }, null, { timeout: 15000, polling: 'raf' }).then(() => true, () => false);
+  const k = await p.evaluate(() => { const r = document.querySelector('#keypad .k-a').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
+  const y0 = (await at()).yaw;
+  await touch('touchStart', k.x, k.y);
+  const turned = await p.waitForFunction((y) => window.__ap.controls.yaw - y > 0.1, y0, { timeout: 20000 }).then(() => true, () => false);
+  await touch('touchEnd');
+  const released = await p.waitForFunction(() => !window.__ap.controls.isDown('ArrowLeft'), null, { timeout: 10000 }).then(() => true, () => false);
+  step('D2.2 Phone 375 × 667: the stick pressed and held above its middle walks forward at once, without a drag; released, it stops; the turn-left key held by a finger turns left, and lets go when the finger lifts', fwd && joy.y < -0.5 && stopped && turned && released, `walked: ${fwd} (stick at ${joy.x.toFixed(2)}, ${joy.y.toFixed(2)}); stopped after: ${stopped}; turn-left held turned: ${turned}; let go: ${released}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }

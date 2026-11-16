@@ -35,8 +35,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: A többi mű
   - EN: Other works
 - `ui.hud.touchHint`
-  - HU: Húzás: körülnézés · a kar tolása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés
-  - EN: Drag to look around · push the stick to walk · tap a work to open it · Next work: on to the next one
+  - HU: Húzás: körülnézés · a kar nyomva tartása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés
+  - EN: Drag to look around · hold the stick to walk · tap a work to open it · Next work: on to the next one
 - `ui.hud.tourAt`
   - HU: {at} / {total} · {no}. mű · {title}
   - EN: {at} / {total} · No. {no} · {title}
@@ -95,8 +95,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Asztali gépen a fel és le nyíllal vagy a W és S gombbal lehet előre és hátra sétálni, a görgővel is. A bal és jobb nyíl fordít, az A és D gombbal oldalra lehet lépni. Körülnézni az egér húzásával lehet. Nagyítani a + és − gombbal vagy Ctrl+görgővel lehet, a 0 visszaállítja. A Shift gombbal futni lehet. Egy művet rákattintással, vagy az E, illetve az Enter gombbal lehet megnyitni. A Page Down és a Page Up a következő és az előző műhöz visz; az eszköztár Következő mű gombja ugyanazt teszi, mint a Page Down. A T elindítja a tárlatvezetést, az M némít, az Esc bezárja a paneleket. A képernyőn látható gombok egérrel lenyomva ugyanígy működnek. A betűs gombok és a nagyítás csak akkor működnek, ha a 3D nézet van kiválasztva: ehhez a nézetre kell kattintani, vagy a Tab gombbal rálépni.
   - EN: On a computer, walk forward and back with the up and down arrows or W and S, or with the scroll wheel. The left and right arrows turn, and A and D step sideways. Drag with the mouse to look around. Zoom with + and − or Ctrl and the scroll wheel; 0 resets. Shift makes you run. Open a work by clicking it, or with E or Enter. Page Down and Page Up go to the next and the previous work; the Next work button on the toolbar does the same as Page Down. T starts the tour, M mutes, Esc closes a panel. The keys on screen do the same when held with the mouse. The letter keys and the zoom keys work only while the 3D view is selected: click the view or Tab to it.
 - `ui.panels.controlsTouch`
-  - HU: Érintőképernyőn a bal oldali karral lehet sétálni: előre vagy hátra tolva előre és hátra, oldalra tolva oldalra lehet lépni. A kart a széléig tolva futni lehet. Körülnézni az ujjat a nézeten húzva lehet. Nagyítani két ujjal csippentve, vagy a + és − gombbal lehet. Egy művet koppintással lehet megnyitni. Az alsó gombokkal el lehet indítani a tárlatvezetést, meg lehet nyitni a termek listáját, be- és ki lehet kapcsolni a hangot, a Következő mű gombbal pedig tovább lehet lépni a következő műre.
-  - EN: On a touch screen, walk with the stick on the left: push it forward or back to walk, and sideways to step to the side. Pushed all the way, it runs. Drag a finger across the view to look around. Zoom by pinching with two fingers, or with the + and − buttons. Open a work by tapping it. The buttons at the bottom start the tour, list the rooms and switch the sound on or off, and Next work goes on to the next work.
+  - HU: Érintőképernyőn a bal oldali karral lehet sétálni: előre vagy hátra nyomva tartva előre és hátra, oldalra nyomva tartva oldalra lehet lépni, húzni nem kell. A kart a széléig tolva futni lehet. A ← és a → gomb koppintásra vagy nyomva tartva balra, illetve jobbra fordít. Körülnézni az ujjat a nézeten húzva lehet. Nagyítani két ujjal csippentve, vagy a + és − gombbal lehet. Egy művet koppintással lehet megnyitni. Az alsó gombokkal el lehet indítani a tárlatvezetést, meg lehet nyitni a termek listáját, be- és ki lehet kapcsolni a hangot, a Következő mű gombbal pedig tovább lehet lépni a következő műre.
+  - EN: On a touch screen, walk with the stick on the left: press and hold it forward or back to walk, or to one side to step sideways; there is no need to drag. Pushed all the way, it runs. The ← and → buttons turn, with a tap or held down. Drag a finger across the view to look around. Zoom by pinching with two fingers, or with the + and − buttons. Open a work by tapping it. The buttons at the bottom start the tour, list the rooms and switch the sound on or off, and Next work goes on to the next work.
 - `ui.panels.contactDigital` (only the accent in the name changed, asked by the reconstructor)
   - HU: Digitális kiállítás: Baráth Szilvia
   - EN: Digital exhibition: Szilvia Baráth
@@ -129,7 +129,7 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - EN: The artworks, photographs, videos and texts are In Copyright: they are protected by copyright and are not licensed for reuse.
 - `legal.sections[3].p[2]` (legal notice; the reconstructor's own wording, in place of the te form "kérj engedélyt")
   - HU: Bármely részének felhasználásához engedély szükséges.
-  - EN: Please ask before reusing any of it.
+  - EN: Permission is required to reuse any part of it.
 - `legal.updated` (the date only)
   - HU: Utolsó frissítés: 2026. november 15.
   - EN: Last updated: 15 November 2026
