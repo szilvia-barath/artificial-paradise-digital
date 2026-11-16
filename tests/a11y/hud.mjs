@@ -917,6 +917,118 @@ await guard(['H1.3'], async () => {
   await w.ctx.close();
 });
 
+// ---------------- H1.4: the buttons. Toolbar buttons are words in the sans, semibold, in
+// sentence case, with rounded corners; none of their states is told by colour alone: a pressed
+// one has an edge all round and a bar along its foot (none when not pressed), Sound changes
+// its sign, the current room is bold with a bar, a pressed keycap sinks by 1 px and gets an
+// edge, the open panel's button in the navbar and the chosen language are underlined. Close
+// says its word in a panel and in the viewer. Buttons on paper are in the blue #072fcc with a
+// blue edge (≥ 4.5 and ≥ 3 on paper) and turn to paper on blue under the mouse (≥ 4.5);
+// buttons in the dark viewer have the light edge (≥ 3 over white and black).
+await guard(['H1.4'], async () => {
+  const w = await insideByKeys('en');
+  const p = w.page;
+  const bar = await p.evaluate(() => {
+    const style = (e) => getComputedStyle(e);
+    const look = (e) => { const c = style(e); return { family: c.fontFamily.split(',')[0].replace(/"/g, ''), weight: Number(c.fontWeight), size: parseFloat(c.fontSize), upper: c.textTransform, radius: parseFloat(c.borderTopLeftRadius) || 0, edge: c.borderTopColor, edgeW: c.borderTopWidth, shadow: c.boxShadow, bg: c.backgroundColor, color: c.color, h: e.getBoundingClientRect().height }; };
+    const buttons = [...document.querySelectorAll('#toolbar > button, #toolbar .rooms-wrap > button')].map((b) => ({ action: b.dataset.action, ...look(b) }));
+    const tour = document.querySelector('#toolbar [data-action="tour"]');
+    tour.setAttribute('aria-pressed', 'true');
+    const pressed = look(tour);
+    tour.setAttribute('aria-pressed', 'false');
+    const off = look(tour);
+    const sound = document.querySelector('#toolbar [data-action="sound"]');
+    const signs = () => [style(sound.querySelector('.snd-on')).display, style(sound.querySelector('.snd-off')).display].join('/');
+    const was = sound.getAttribute('aria-pressed');
+    sound.setAttribute('aria-pressed', 'true');
+    const signOn = signs();
+    sound.setAttribute('aria-pressed', 'false');
+    const signOff = signs();
+    sound.setAttribute('aria-pressed', was);
+    const rows = [...document.querySelectorAll('#rooms-menu button')].map((b) => ({ here: b.hasAttribute('aria-current'), weight: Number(style(b).fontWeight), bar: style(b.closest('.room-row')).borderLeftColor }));
+    const cap = document.querySelector('.cap.k-w');
+    cap.style.transition = 'none';
+    const capOff = { edge: style(cap).borderTopColor, move: style(cap).transform };
+    cap.classList.add('pressed');
+    const capOn = { edge: style(cap).borderTopColor, move: style(cap).transform };
+    cap.classList.remove('pressed');
+    cap.style.transition = '';
+    const lang = [...document.querySelectorAll('#site-nav [data-lang]')].map((b) => ({ pressed: b.getAttribute('aria-pressed'), line: style(b).textDecorationLine }));
+    return { buttons, pressed, off, signOn, signOff, rows, capOff, capOn, lang, glass: style(document.documentElement).getPropertyValue('--glass').trim() };
+  });
+  // a panel: Close and a button in it, and the navbar's mark for the open panel
+  await p.evaluate(() => window.__ap.ui.show('contact'));
+  await p.waitForTimeout(700);
+  const paperButtons = async () => {
+    const out = [];
+    for (const sel of ['#panel [data-close]', '#panel-body .link']) {
+      const read = () => p.evaluate((x) => { const e = document.querySelector(x); const c = getComputedStyle(e); return { text: e.textContent.trim(), color: c.color, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0, family: c.fontFamily.split(',')[0].replace(/"/g, ''), upper: c.textTransform }; }, sel);
+      const rest = await read();
+      await p.hover(sel);
+      const hover = await read();
+      await p.mouse.move(2, 400);
+      out.push({ sel, rest, hover });
+    }
+    return out;
+  };
+  const onPaper = await paperButtons();
+  const navMark = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
+  await p.evaluate(() => window.__ap.ui.close());
+  // the same mark on the title screen, where the navbar is not on its dark band
+  const t = await openWalk(browser, { lang: 'en' });
+  await t.page.evaluate(() => window.__ap.ui.show('about'));
+  await t.page.waitForTimeout(700);
+  const navTitle = await t.page.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
+  // the viewer
+  await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[0]));
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  await p.waitForTimeout(700);
+  const dark = await p.evaluate(() => ({
+    ground: getComputedStyle(document.getElementById('viewer')).backgroundColor,
+    buttons: ['#viewer [data-close]', '#viewer-prev', '#viewer-next', '#viewer-goto'].map((sel) => { const e = document.querySelector(sel); const c = getComputedStyle(e); return { sel, text: e.textContent.trim(), color: c.color, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0, family: c.fontFamily.split(',')[0].replace(/"/g, ''), upper: c.textTransform }; }),
+  }));
+  const bad = [];
+  const sans = (f) => !/mono|menlo|consolas/i.test(f);
+  for (const b of bar.buttons) if (!sans(b.family) || b.weight < 600 || b.size < 13 || b.upper !== 'none' || b.radius < 6 || b.h < 32 || rgba(b.edge)[3] !== 0) bad.push(`toolbar ${b.action}: ${b.family} ${b.weight} ${b.size}px ${b.upper}, radius ${b.radius}, ${Math.round(b.h)} px high, edge ${b.edge}`);
+  const acc = /143,\s*168,\s*255/;
+  // a pressed toolbar button: the tint on the glass, over a white wall and over black
+  const tintOn = (under) => over(rgba(bar.pressed.bg), over(rgba(bar.glass), under));
+  const pressedText = Math.min(...[[255, 255, 255], [0, 0, 0]].map((u) => ratio(over(rgba(bar.pressed.color), tintOn(u)), tintOn(u))));
+  const pressedEdge = Math.min(...[[255, 255, 255], [0, 0, 0]].map((u) => ratio([143, 168, 255], tintOn(u))));
+  if (!(acc.test(bar.pressed.edge) && rgba(bar.pressed.edge)[3] === 1 && bar.pressed.edgeW === '1px' && /inset/.test(bar.pressed.shadow) && acc.test(bar.pressed.shadow) && acc.test(bar.pressed.bg))) bad.push(`pressed toolbar button: edge ${bar.pressed.edgeW} ${bar.pressed.edge}, shadow ${bar.pressed.shadow}, ground ${bar.pressed.bg}`);
+  if (acc.test(bar.off.edge) || acc.test(bar.off.shadow) || acc.test(bar.off.bg)) bad.push(`toolbar button not pressed: ${JSON.stringify(bar.off)}`);
+  if (pressedText < 4.5 || pressedEdge < 3) bad.push(`pressed toolbar button: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}`);
+  if (bar.signOn === bar.signOff) bad.push(`Sound keeps one sign: ${bar.signOn}`);
+  if (!bar.rows.some((x) => x.here) || !bar.rows.every((x) => (x.here ? x.weight >= 700 && acc.test(x.bar) : x.weight <= 400 && !acc.test(x.bar)))) bad.push(`rooms menu: ${JSON.stringify(bar.rows)}`);
+  if (!(acc.test(bar.capOn.edge) && !acc.test(bar.capOff.edge) && bar.capOn.move !== bar.capOff.move)) bad.push(`keycap: ${JSON.stringify([bar.capOff, bar.capOn])}`);
+  if (!bar.lang.every((x) => (x.pressed === 'true') === /underline/.test(x.line))) bad.push(`languages: ${JSON.stringify(bar.lang)}`);
+  for (const [where, marks, name] of [['inside', navMark, 'contact'], ['title screen', navTitle, 'about']]) if (!marks.length || !marks.every((x) => (x.nav === name) === (x.current === 'true') && (x.current === 'true') === /underline/.test(x.line))) bad.push(`navbar (${where}): ${JSON.stringify(marks)}`);
+  let lowPaper = 99;
+  for (const b of onPaper) {
+    const text = ratio(over(rgba(b.rest.color), PAPER), PAPER);
+    const edge = ratio(over(rgba(b.rest.edge), PAPER), PAPER);
+    const hover = ratio(over(rgba(b.hover.color), over(rgba(b.hover.bg), PAPER)), over(rgba(b.hover.bg), PAPER));
+    lowPaper = Math.min(lowPaper, text, hover);
+    if (b.rest.color !== 'rgb(7, 47, 204)' || b.rest.edge !== 'rgb(7, 47, 204)' || b.rest.edgeW !== '1px' || b.rest.radius < 6 || !sans(b.rest.family) || b.rest.upper !== 'none' || text < 4.5 || edge < 3 || b.hover.bg !== 'rgb(7, 47, 204)' || hover < 4.5) bad.push(`${b.sel}: ${JSON.stringify(b)}`);
+  }
+  if (onPaper[0]?.rest.text !== UI.en.viewer.close) bad.push(`Close in a panel reads "${onPaper[0]?.rest.text}"`);
+  let lowDark = 99;
+  for (const b of dark.buttons) {
+    const ground = rgba(b.bg)[3] > 0 ? b.bg : dark.ground;
+    const edge = worst(b.edge, ground);
+    const text = worst(b.color, ground);
+    lowDark = Math.min(lowDark, edge);
+    if (b.edgeW !== '1px' || edge < 3 || text < 4.5 || b.radius < 6 || !sans(b.family) || b.upper !== 'none') bad.push(`${b.sel}: ${JSON.stringify(b)} edge ${edge.toFixed(2)} text ${text.toFixed(2)}`);
+  }
+  if (dark.buttons[0].text !== UI.en.viewer.close) bad.push(`Close in the viewer reads "${dark.buttons[0].text}"`);
+  step('H1.4 Buttons: the toolbar in the sans, semibold, 13 px or more, sentence case, rounded, 32 px high or more; pressed: an edge all round and a bar along the foot in the accent on its tint (text ≥ 4.5, edge ≥ 3; none of them when not pressed); Sound changes its sign; the current room bold with a bar, the others regular; a pressed keycap gets an edge and sinks; the chosen language and the open panel in the navbar (inside and on the title screen) underlined; Close says "Close" in a panel and in the viewer; on paper Close and a button are blue with a blue edge (≥ 4.5, ≥ 3), paper on blue under the mouse (≥ 4.5); in the viewer the buttons have the light edge (≥ 3 over white and black)',
+    bad.length === 0,
+    `${bar.buttons.length} toolbar buttons (${bar.buttons.map((b) => `${b.action} ${b.size}px/${b.weight}/${Math.round(b.h)}h`).join(', ')}); pressed: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}; Sound signs ${bar.signOn} and ${bar.signOff}; on paper lowest ${lowPaper.toFixed(2)}; viewer edges lowest ${lowDark.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+  errors.push(...w.errors, ...t.errors);
+  await w.ctx.close();
+  await t.ctx.close();
+});
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);
