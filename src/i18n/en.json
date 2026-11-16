@@ -73,7 +73,8 @@
         "videos": "Videos",
         "other": "Other works"
       },
-      "touchHint": "Drag to look around · push the stick to walk · tap a work to open it"
+      "touchHint": "Drag to look around · push the stick to walk · tap a work to open it",
+      "tourAt": "{at} / {total} · No. {no} · {title}"
     },
     "viewer": {
       "artistSite": "On the artist's website",

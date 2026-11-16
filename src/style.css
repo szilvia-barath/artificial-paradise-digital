@@ -580,7 +580,9 @@ body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility:
   transition: opacity 0.8s ease;
 }
 #tour-caption.show { opacity: 1; }
-#tour-caption .t { display: block; font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 6px; }
+#tour-caption .t { display: block; font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 4px; }
+/* the work's medium, size and year, under the line that says how far along the tour is */
+#tour-caption .m { display: block; font-size: 12px; font-family: var(--mono); color: var(--hud-muted); margin-bottom: 6px; }
 /* The first-use hint sits below the crosshair and below the prompt that names a work
    (22 px + its 27 px under the middle), so the two never share a place. */
 #click-to-look {

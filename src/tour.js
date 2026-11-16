@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { EYE } from './world/layout.js';
-import { t } from './i18n.js';
+import { t, titleLang } from './i18n.js';
 import { reducedMotion } from './motion.js';
+import { visitOrder } from './world/route.js';
 
 // Guided tour: flies the camera along the stops in exhibition.json ("tour"), easing
 // between positions and turning to face each work while its caption fades in.
@@ -18,6 +19,9 @@ export class Tour {
     this.onEnd = null;
     this.onCaption = null; // (plain text) => void, as each stop's caption appears
     this.byId = Object.fromEntries(data.works.map((w) => [w.id, w]));
+    // How far along the tour is counts the 17 works; no. 3's small screen, a stop of its
+    // own, counts as no. 3 (as in the viewer).
+    this.seq = visitOrder(data.works);
   }
 
   start() {
@@ -61,10 +65,17 @@ export class Tour {
     this.text = this._text(s);
   }
 
+  // On screen: where the tour is and the work ("3 / 17 · No. 3 · Paradise Factory", the
+  // title marked lang="en" on the Hungarian page), then its medium, size and year, then the
+  // caption.
   _text(s) {
     const w = s.work ? this.byId[s.work] : null;
-    if (w) return `<span class="t">${esc(w.no)} · ${esc(w.title)} · ${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption || '')}`;
-    return '';
+    if (!w) return '';
+    const at = (this.seq.includes(w) ? this.seq.indexOf(w) : this.seq.findIndex((x) => x.no === w.no)) + 1;
+    const lang = titleLang(w);
+    // {title} is left in the string and filled in after escaping, as markup
+    const head = esc(t('hud.tourAt', { at, total: this.seq.length, no: w.no })).replace('{title}', lang ? `<span lang="${lang}">${esc(w.title)}</span>` : esc(w.title));
+    return `<span class="t">${head}</span><span class="m">${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption || '')}`;
   }
 
   // The caption as one plain sentence, for the screen reader.

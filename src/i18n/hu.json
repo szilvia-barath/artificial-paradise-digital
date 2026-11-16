@@ -73,7 +73,8 @@
         "videos": "Videók",
         "other": "A többi mű"
       },
-      "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás"
+      "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás",
+      "tourAt": "{at} / {total} · {no}. mű · {title}"
     },
     "viewer": {
       "artistSite": "A művész honlapján",

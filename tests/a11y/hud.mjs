@@ -1,5 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
-// screen, the sound question's hint and the hint inside (D11). Each step
+// screen, the sound question's hint and the hint inside (D11); the tour caption's first line
+// (F3). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -229,6 +230,58 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   const w = await inside('en');
   const h = await hintState(w.page);
   step('D11.6 Computer: the hint in the middle is unchanged ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- F3: the tour caption's first line says how far along the tour is
+const fill = (str, vars) => String(str ?? '(no such string)').replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+// The tour's own clock is moved on (0.1 s a step) until the caption of that stop is up: the
+// 3D view renders at 1 to 2 frames a second here.
+const toStop = (p, id) => p.evaluate((x) => {
+  const { tour } = window.__ap;
+  for (let i = 0; i < 5000 && tour.active && !(tour.work === x && tour.shown); i++) tour.update(0.1);
+  return tour.work === x && tour.shown;
+}, id);
+const caption = (p) => p.evaluate(() => { const c = document.getElementById('tour-caption'); const t = c.querySelector('.t'); return { first: t?.textContent ?? null, html: t?.innerHTML ?? null, meta: c.querySelector('.m')?.textContent ?? null }; });
+{
+  const w = await inside('en');
+  const p = w.page;
+  await p.evaluate(() => { window.__said = []; const el = document.getElementById('announcer'); new MutationObserver(() => window.__said.push(el.textContent.trim())).observe(el, { childList: true, characterData: true, subtree: true }); });
+  await p.click('[data-action="tour"]');
+  const got = [];
+  for (const [id, at, no, title] of [['w01-dresden', 1, 1, 'Wrong Data Landscape Dresden'], ['w03-paradise-factory', 3, 3, 'Paradise Factory'], ['w03-screen', 3, 3, 'Paradise Factory'], ['w04-human-as-error-iii', 4, 4, 'Human as Error III'], ['w17-natural-life', 17, 17, 'Natural Life']]) {
+    const up = await toStop(p, id);
+    const c = await caption(p);
+    got.push({ id, up, ...c, ok: up && c.first === fill(UI.en.hud.tourAt, { at, total: 17, no, title }) && !c.html.includes('lang=') });
+    // the first caption is let through the live region (it says one message a second at
+    // most, and a newer caption takes the place of one not said yet)
+    if (id === 'w01-dresden') await p.waitForFunction(() => window.__said.join(' | ').includes('No. 1, '), null, { timeout: 30000 }).catch(() => {});
+  }
+  step(`F3.1 The tour caption's first line: "${fill(UI.en.hud.tourAt, { at: 1, total: 17, no: 1, title: 'Wrong Data Landscape Dresden' })}", "3 / 17 · No. 3 · Paradise Factory" (and the same at no. 3's small screen, a stop of its own), "4 / 17 …", "17 / 17 …"; the medium, size and year on their own line under it`, got.every((x) => x.ok) && got[0].meta === 'Acrylic on canvas, 140 × 160 cm, 2023', got.map((x) => `${x.id}: "${x.first}"${x.ok ? '' : ' (wrong)'}`).join('; ') + `; under the first: "${got[0].meta}"`);
+  // what the live region says for a caption: the old short sentence, no "1 / 17"
+  const heard = await p.evaluate(() => window.__said.join(' | '));
+  step('F3.2 The live region says each caption as before, short: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023." and the caption, without the "1 / 17" (the tour goes in catalogue order, so the number already says how far along it is)', heard.includes('No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023.') && !heard.includes(' / 17'), heard.slice(0, 300));
+  // switched to Hungarian while a caption shows: the line follows, the title in lang="en"
+  await p.evaluate(() => window.__ap.tour.stop());
+  await p.click('[data-action="tour"]');
+  await toStop(p, 'w02-human-as-error-vi');
+  await switchTo(p, 'hu');
+  const hu = await caption(p);
+  await switchTo(p, 'en');
+  const en = await caption(p);
+  step(`F3.3 Switched to Hungarian while no. 2's caption shows: "${fill(UI.hu.hud.tourAt, { at: 2, total: 17, no: 2, title: 'Human as Error VI' })}", the title in a <span lang="en">; back in English: no lang mark`, hu.first === fill(UI.hu.hud.tourAt, { at: 2, total: 17, no: 2, title: 'Human as Error VI' }) && hu.html.includes('<span lang="en">Human as Error VI</span>') && en.first === fill(UI.en.hud.tourAt, { at: 2, total: 17, no: 2, title: 'Human as Error VI' }) && !en.html.includes('lang='), `HU "${hu.first}" (${hu.html}); EN "${en.first}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // a tour started on the Hungarian page
+  const w = await inside('hu');
+  const p = w.page;
+  await p.click('[data-action="tour"]');
+  await toStop(p, 'w16-let-it-flow');
+  const c = await caption(p);
+  step(`F3.4 Hungarian page: no. 16's caption reads "${fill(UI.hu.hud.tourAt, { at: 16, total: 17, no: 16, title: 'Let it Flow' })}", the title in a <span lang="en">`, c.first === fill(UI.hu.hud.tourAt, { at: 16, total: 17, no: 16, title: 'Let it Flow' }) && c.html.includes('<span lang="en">Let it Flow</span>'), `"${c.first}" (${c.html})`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
