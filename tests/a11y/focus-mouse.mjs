@@ -412,8 +412,10 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
   const o = await inertOf(p);
   const hud = await p.evaluate(() => ({ joystick: !!document.getElementById('joystick').closest('[inert]'), toolbar: !!document.getElementById('toolbar').closest('[inert]'), shown: document.getElementById('joystick').getClientRects().length > 0 }));
-  const [jx, jy] = await centreOf(p, '#joystick');
-  const under = await p.evaluate(([x, y]) => { const e = document.elementFromPoint(x, y); return e.closest('#panel') ? 'panel' : e.closest('#joystick') ? 'joystick' : e.tagName.toLowerCase(); }, [jx, jy]);
+  // what a screen reader reaches: the toolbar and the zoom buttons are out of the tree (a tap
+  // at the joystick lands on the full-screen panel with or without inert, so it proves nothing)
+  const t33 = await tree(p);
+  const reach = { toolbar: has(t33, 'navigation:exhibition controls'), tour: has(t33, 'button:tour'), rooms: has(t33, 'button:rooms'), sound: has(t33, 'button:sound'), zoom: has(t33, 'button:zoom in*'), close: has(t33, 'button:close') };
   await p.tap('#site-nav .nav-toggle');
   await p.waitForFunction(() => document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded') === 'true', null, { timeout: 30000 });
   await p.tap('#site-nav [data-nav="works"]');
@@ -422,7 +424,7 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   await p.tap('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
   const after = await inertList(p);
-  step('33 B3 Phone (375 x 667, touch): About from the folded menu: page behind inert, the joystick and the toolbar too (a tap there lands on the panel); the menu still opens Works over it; closed: only the title screen inert', behindDialog(o) && hud.joystick && hud.toolbar && hud.shown && under === 'panel' && switched && behindDialog(o2) && after === '#loader', `${showInert(o)}; ${JSON.stringify(hud)}; a tap at the joystick lands on: ${under}; Works from the menu: ${switched} (${showInert(o2)}); inert after Close: ${after}`);
+  step('33 B3 Phone (375 x 667, touch): About from the folded menu: page behind inert, the joystick and the toolbar too, the toolbar and the zoom buttons out of the accessibility tree; the menu still opens Works over it; closed: only the title screen inert', behindDialog(o) && hud.joystick && hud.toolbar && hud.shown && !reach.toolbar && !reach.tour && !reach.rooms && !reach.sound && !reach.zoom && reach.close && switched && behindDialog(o2) && after === '#loader', `${showInert(o)}; ${JSON.stringify(hud)}; in the tree: ${JSON.stringify(reach)}; Works from the menu: ${switched} (${showInert(o2)}); inert after Close: ${after}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
