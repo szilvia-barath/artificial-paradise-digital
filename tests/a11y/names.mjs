@@ -114,6 +114,21 @@ const clickTo = async (p, sel, title) => {
   await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
   const en = await p.textContent('#viewer-count');
   step('B5.6 The language switched while the viewer shows no. 3: the counter reads "3. mű a 17 közül", then "No. 3 of 17" again', hu === fill(UI.hu.viewer.count, { no: 3, total: 17 }) && en === c(3), `HU "${hu}"; EN "${en}"`);
+
+  // → and at once Esc: the work stepped to is not said after the viewer has closed (the
+  // message is dropped from the queue with the viewer). Both keys in one go, so the message
+  // is still waiting when Esc comes.
+  await p.evaluate(() => window.__said.splice(0));
+  const stale = fill(UI.en.announce.viewerWork, { title: 'Human as Error III', no: 4, total: 17 });
+  await p.evaluate(() => {
+    const press = (key) => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+    press('ArrowRight');
+    press('Escape');
+  });
+  const closedNow = await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => true, () => false);
+  // nothing to wait for if it is right: give the live region three of its one-second gaps
+  const staleSaid = await p.waitForFunction((x) => window.__said.join(' | ').includes(x), stale, { timeout: 3000, polling: 100 }).then(() => true, () => false);
+  step(`B5.7 → and at once Esc: the viewer closes and "${stale}" is not said after it`, closedNow && !staleSaid, `closed: ${closedNow}; said: "${await p.evaluate(() => window.__said.join(' | '))}"`);
   errors.push(...w.errors);
   await w.ctx.close();
 }

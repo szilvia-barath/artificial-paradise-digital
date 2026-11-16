@@ -1,6 +1,6 @@
 import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
-import { announce } from './announce.js';
+import { announce, unannounce } from './announce.js';
 import { isPart } from '../world/route.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
@@ -197,6 +197,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   // toList: closed by the visitor (Close, Esc, a click beside the picture).
   const close = (toList = false) => {
     if (el.hidden) return;
+    // a work stepped to just before closing and not yet said is no longer on screen
+    unannounce('viewer');
     const ret = toList ? back : null;
     back = null;
     el.hidden = true;
