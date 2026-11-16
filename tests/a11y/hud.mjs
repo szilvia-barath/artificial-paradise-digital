@@ -397,6 +397,16 @@ for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: 
   errors.push(...w.errors);
   await w.ctx.close();
 }
+{
+  // the English words index.html holds until the language file has loaded are the language
+  // file's own (for the line before entering, F1, as for every other string)
+  const html = readFileSync('index.html', 'utf8');
+  const unesc = (x) => x.replace(/&nbsp;/g, '\u00a0').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+  const get = (k) => k.split('.').reduce((o, x) => (o && typeof o === 'object' ? o[x] : undefined), UI.en);
+  const off = [...html.matchAll(/data-i18n="([^"]+)"[^>]*>([^<]*)</g)].filter(([, k, x]) => typeof get(k) === 'string' && unesc(x).trim() !== get(k).trim()).map(([, k]) => k);
+  const line = html.match(/data-i18n="loader\.howtoDesk">([^<]*)</)?.[1];
+  step(`F1.9 index.html's English stand-in text matches en.json, the line before entering included ("${UI.en.loader.howtoDesk}")`, off.length === 0 && line === UI.en.loader.howtoDesk, off.length ? `differs: ${off.join(', ')}` : `all match; the line: "${line}"`);
+}
 await guard(['F1.3'], async () => {
   // it goes at the first key, and that key works (walking is not blocked); a mouse press; the wheel
   const w = await insideByKeys('en');
