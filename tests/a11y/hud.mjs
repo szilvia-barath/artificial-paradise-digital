@@ -68,7 +68,7 @@ const keyInfo = (p) => p.evaluate(() => {
     hidden: k.getAttribute('aria-hidden'),
     font: parseFloat(cs.fontSize), color: cs.color, glass: cs.backgroundColor,
     lines: Math.round((r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth)) / parseFloat(cs.lineHeight)),
-    under: Math.round(r.top - m.bottom), rightEdge: Math.round(m.right - r.right), inWindow: r.left >= 0 && r.right <= innerWidth,
+    under: Math.round(r.top - m.bottom), leftOf: Math.round(m.left - r.right), topLevel: Math.round(r.top - m.top), rightEdge: Math.round(m.right - r.right), inWindow: r.left >= 0 && r.right <= innerWidth,
     other: mark('.mk-other'), video: mark('.mk-video'),
   };
 });
@@ -92,7 +92,7 @@ const keyInfo = (p) => p.evaluate(() => {
   await w.ctx.close();
 }
 // The map is not hidden on a phone (150 × 102 px), so neither is its key.
-for (const [name, opts, lang] of [['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['laptop at 200% (683 × 384 at 2×), Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu']]) {
+for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['laptop at 200% (683 × 384 at 2×), Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu'], ['small phone on its side 568 × 320, Hungarian (the key at the left of the map, level with its top)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu', true], ['small phone on its side 568 × 320, English (the key at the left of the map)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'en', true]]) {
   const w = await inside(lang, opts);
   const p = w.page;
   await p.waitForFunction(() => document.getElementById('map-key')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});
@@ -103,7 +103,7 @@ for (const [name, opts, lang] of [['phone 375 × 667, English', PHONE, 'en'], ['
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look']);
   const clear = ['#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look'].every((s) => !meets(b['#map-key'], b[s])) && !meets(b['#click-to-look'], b['#minimap']);
-  step(`A4.5 ${name}: the key shows, one line under the map, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.lines === 1 && k.inWindow && k.under >= 0 && k.under <= 8 && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.lines} line, ${k.under} px under the map; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`A4.5 ${name}: the key shows, one line ${beside ? 'at the left of the map, level with its top' : 'under the map'}, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.lines === 1 && k.inWindow && (beside ? k.leftOf >= 0 && k.leftOf <= 8 && Math.abs(k.topLevel) <= 2 : k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.lines} line, ${beside ? `${k.leftOf} px left of the map, top ${k.topLevel} px from its top` : `${k.under} px under the map`}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -149,7 +149,7 @@ async function asked(lang, opts) {
   await d.ctx.close();
   step(`D11.1 Sound question on a phone: "${want.en}" (in Hungarian "${want.hu}", also after a switch while it shows); the Sound button is at the bottom; on a computer the words with M stay`, got.en === want.en && got.hu === want.hu && got.switched === want.hu && got.button.label === UI.en.hud.sound && got.button.bottom && desk === UI.en.soundAsk.hint, `phone EN "${got.en}"; HU "${got.hu}"; switched "${got.switched}"; button ${JSON.stringify(got.button)}; computer "${desk}"`);
 }
-for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 640 × 360, Hungarian', { ...PHONE, viewport: { width: 640, height: 360 } }, 'hu']]) {
+for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 640 × 360, Hungarian', { ...PHONE, viewport: { width: 640, height: 360 } }, 'hu'], ['small, on its side 568 × 320, Hungarian', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu']]) {
   const w = await inside(lang, opts);
   const p = w.page;
   const h = await hintState(p);
