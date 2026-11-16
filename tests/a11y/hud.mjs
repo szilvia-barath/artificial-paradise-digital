@@ -2,7 +2,7 @@
 // screen, the sound question's hint and the hint inside (D11), the stick held and the turning
 // keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
-// (F2). Each step
+// (F2); the look, its accent and states not told by colour alone (H1). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -721,6 +721,53 @@ await guard(['F2.5'], async () => {
   await switchTo(w.page, 'hu');
   const hu = (await guideInfo(w.page)).text;
   step(`F2.5 The first-use card names Page Down and Next work: "${UI.en.hud.guide.next}" / "${UI.hu.hud.guide.next}"`, en.includes(UI.en.hud.guide.next) && UI.en.hud.guide.next.includes('Page Down') && UI.en.hud.guide.next.includes(UI.en.hud.next) && hu.includes(UI.hu.hud.guide.next) && UI.hu.hud.guide.next.includes(UI.hu.hud.next), `EN ${JSON.stringify(en)}; HU ${JSON.stringify(hu)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+
+// ---------------- H1: the look. The accent is the reconstructor's blue #8fa8ff (the green
+// #9dff6a is gone everywhere), it reads on the glass over a white wall and over black, and no
+// state is told by its colour alone: a pressed toolbar button has a bar along its foot, the
+// room the visitor is in is bold in the rooms menu, a pressed keycap keeps a light letter.
+await guard(['H1.1'], async () => {
+  const w = await inside('en');
+  const p = w.page;
+  const r = await p.evaluate(() => {
+    const css = getComputedStyle(document.documentElement);
+    const green = [];
+    for (const e of document.querySelectorAll('*')) {
+      const c = getComputedStyle(e);
+      for (const k of ['color', 'backgroundColor', 'borderTopColor', 'borderLeftColor', 'boxShadow', 'outlineColor']) if (/157,\s*255,\s*106/.test(c[k])) green.push(`${e.id || e.className || e.tagName} ${k}`);
+    }
+    const style = (e) => getComputedStyle(e);
+    const tour = document.querySelector('#toolbar [data-action="tour"]');
+    const was = tour.getAttribute('aria-pressed');
+    tour.setAttribute('aria-pressed', 'true');
+    const pressedShadow = style(tour).boxShadow;
+    tour.setAttribute('aria-pressed', was);
+    const offShadow = style(tour).boxShadow;
+    const here = document.querySelector('#rooms-menu button[aria-current]');
+    const cap = document.querySelector('.cap.k-w');
+    cap.style.transition = 'none'; // the colours it ends on, not a step of the 0.12 s change
+    cap.classList.add('pressed');
+    const capText = style(cap.querySelector('i')).color;
+    const capBg = style(cap).backgroundColor;
+    const capTint = (style(cap).backgroundImage.match(/rgba?\([^)]*\)/) || ['rgba(0, 0, 0, 0)'])[0];
+    cap.classList.remove('pressed');
+    cap.style.transition = '';
+    return {
+      accent: css.getPropertyValue('--accent').trim(), glass: css.getPropertyValue('--glass').trim(), green,
+      pressedShadow, offShadow, hereWeight: here ? Number(style(here).fontWeight) : 0, hereBar: here ? style(here.closest('.room-row')).borderLeftColor : '',
+      capText, capBg, capTint, zoomVal: style(document.querySelector('#zoom-level .val')).color, zoomBg: style(document.getElementById('zoom-level')).backgroundColor,
+    };
+  });
+  const onGlass = worst(r.zoomVal, r.zoomBg);
+  // the pressed keycap, over a white wall and over black: its own background (the glass), the
+  // accent tint on that, then the letter
+  const capWorst = Math.min(...[[255, 255, 255], [0, 0, 0]].map((under) => { const bg = over(rgba(r.capTint), over(rgba(r.capBg), under)); return ratio(over(rgba(r.capText), bg), bg); }));
+  step('H1.1 The accent is #8fa8ff and no green is left; accent text on glass ≥ 4.5 over white and black; a pressed toolbar button has a bar in the accent along its foot (none when not pressed); the current room in the rooms menu is bold with a bar in the accent; a pressed keycap letter ≥ 4.5',
+    r.accent === '#8fa8ff' && r.green.length === 0 && onGlass >= 4.5 && /inset/.test(r.pressedShadow) && /143,\s*168,\s*255/.test(r.pressedShadow) && !/143,\s*168,\s*255/.test(r.offShadow) && r.hereWeight >= 600 && /143,\s*168,\s*255/.test(r.hereBar) && capWorst >= 4.5,
+    `accent ${r.accent}; green on ${r.green.length ? r.green.join(', ') : 'nothing'}; zoom value ${onGlass.toFixed(2)}; pressed "${r.pressedShadow}", not pressed "${r.offShadow}"; current room weight ${r.hereWeight} bar ${r.hereBar}; pressed keycap letter ${capWorst.toFixed(2)} ("${r.capText}" on "${r.capTint}" on "${r.capBg}")`);
   errors.push(...w.errors);
   await w.ctx.close();
 });

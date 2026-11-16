@@ -13,7 +13,7 @@
 <style>
 :root {
   --paper: #fbfbf9; --blue: #072fcc; --ink: #0b0c0e; --panel: #111216;
-  --text: #f2f1ed; --muted: #c4c3be; --muted-panel: #b8b7b2; --link: #a9c1ff; --accent: #9dff6a;
+  --text: #f2f1ed; --muted: #c4c3be; --muted-panel: #b8b7b2; --link: #a9c1ff; --accent: #8fa8ff;
   --glass: rgba(11, 12, 14, 0.9); --edge: rgba(255, 255, 255, 0.45);
   --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -44,7 +44,7 @@ h1 { font-weight: 300; font-size: 28px; margin: 0 0 4px; }
 .map { position: absolute; right: var(--s3); top: 56px; width: 200px; height: 120px; display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
 .toolbar { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); display: flex; gap: var(--s1); padding: var(--s1); }
 .toolbar button, .keys button, .card button { font: 600 13px var(--sans); color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 6px; min-height: 44px; padding: 0 14px; display: flex; gap: 8px; align-items: center; }
-.toolbar button[aria-pressed="true"] { background: rgba(157,255,106,.16); border-color: var(--accent); }
+.toolbar button[aria-pressed="true"] { background: rgba(143,168,255,.16); border-color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
 .toolbar .focus { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 5px var(--ink); }
 .keys { position: absolute; left: var(--s3); bottom: 52px; display: grid; grid-template-columns: repeat(3, 44px); gap: var(--s1); }
 .keys button { padding: 0; justify-content: center; background: var(--glass); border: 1px solid var(--edge); font: 13px var(--mono); }
@@ -124,7 +124,8 @@ h1 { font-weight: 300; font-size: 28px; margin: 0 0 4px; }
         <span style="background:#fbfbf9;color:#16181d;border:1px solid #c9ccd3">ink on paper 17.1</span>
         <span style="background:#fbfbf9;color:#4a4f5a;border:1px solid #c9ccd3">muted ink on paper 7.9</span>
         <span style="background:#212223;color:#c4c3be">muted on glass over white wall 9.0</span>
-        <span style="background:#212223;color:#9dff6a">accent on glass 12.9</span>
+        <span style="background:#232324;color:#8fa8ff">accent on glass over white wall 6.8</span>
+        <span style="background:#fbfbf9;color:#8fa8ff;border:1px solid #c9ccd3">accent on paper 2.2: not used on paper</span>
       </div>
     </section>
     <figcaption class="cap">A text panel ("paper for words, dark for looking"): solid paper, not a translucent overlay, with a Close button that says "Close". The focus ring on paper is blue.</figcaption>

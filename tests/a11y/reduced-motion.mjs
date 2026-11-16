@@ -67,13 +67,13 @@ for (const mode of ['reduce', 'no-preference']) {
   // reduced motion it never changes size. The test draws the map itself, over and over,
   // for 3.2 s after a jump (this machine renders the 3D view at about one frame a second,
   // too few to sample the swell), and records the radius of the visitor's dot, the one
-  // arc drawn in full green.
+  // arc drawn in full accent.
   r.mapDot = await page.evaluate(() => {
     const { minimap, controls, jumpToRoom } = window.__ap;
     const c = document.getElementById('minimap').getContext('2d');
     const arc = c.arc;
     let seen = [];
-    c.arc = function (x, y, rad, ...rest) { if (c.fillStyle === '#9dff6a') seen.push(rad); return arc.call(this, x, y, rad, ...rest); };
+    c.arc = function (x, y, rad, ...rest) { if (c.fillStyle === '#8fa8ff') seen.push(rad); return arc.call(this, x, y, rad, ...rest); };
     const drawFor = (ms) => {
       seen = [];
       const end = performance.now() + ms;

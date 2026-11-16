@@ -3,9 +3,18 @@
   --fg: #f2f1ed;
   --muted: #9a9a98;
   --line: rgba(255, 255, 255, 0.14);
-  --glass: rgba(14, 15, 18, 0.85); /* chips over the 3D view; 0.85 so text on them reads over a white wall */
+  --glass: rgba(11, 12, 14, 0.85); /* chips over the 3D view; 0.85 so text on them reads over a white wall */
   --hud-muted: #c4c3be; /* secondary text on glass: keycap letters, the muted icon, the wheel hint */
-  --accent: #9dff6a; /* synthetic leaf green */
+  /* The look (H1): paper and ink for words, glass for what sits over the 3D view. */
+  --paper: #fbfbf9; /* title card, panels, accessible version */
+  --ink: #16181d; /* text on paper */
+  --ink-muted: #4a4f5a; /* secondary text on paper */
+  --blue: #072fcc; /* links and focus on paper; the same blue as the logotype */
+  --text: #f2f1ed; /* text on glass */
+  /* pressed and on states over the 3D view only, never body text and never on paper
+     (2.20:1 there): 5.76:1 on the glass over a white wall, 8.68:1 over black */
+  --accent: #8fa8ff;
+  --accent-rgb: 143, 168, 255;
   --accent-2: #ff4fa3; /* tower-block magenta */
   --cyan: #5fe7ff;
   --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
@@ -411,7 +420,8 @@ body.touch #tour-caption { bottom: calc(16px + var(--safe-b) + var(--bar-h) + 8p
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s, background 0.2s;
 }
-#crosshair.active { transform: scale(2.4); background: var(--accent); }
+/* aimed at a work: larger, in the accent, with a dark edge so it reads on a white wall too */
+#crosshair.active { transform: scale(2.4); background: var(--accent); box-shadow: 0 0 0 1px #0b0c0e; }
 body.touch #crosshair { display: none; }
 #prompt {
   position: absolute;
@@ -509,6 +519,9 @@ body.touch #crosshair { display: none; }
 #toolbar button:hover, #toolbar button.on { background: rgba(255, 255, 255, 0.1); }
 #toolbar button .ico { white-space: nowrap; }
 #toolbar button.on .ico { color: var(--accent); }
+/* On is never told by colour alone: a pressed button also has a bar in the accent along its foot
+   (aria-pressed gives the state to assistive technology) */
+#toolbar button[aria-pressed="true"] { box-shadow: inset 0 -3px 0 var(--accent); }
 #toolbar button.muted .ico { color: var(--hud-muted); }
 /* Next work: its arrow a little larger than the 11 px letters */
 #toolbar [data-action="next"] .ico { font-size: 15px; line-height: 1; }
@@ -566,9 +579,11 @@ body.touch #rooms-menu { max-height: calc(100vh - var(--nav-h) - 8px - 10px - va
 /* On a touch screen the open menu lies over the stick (English) or the zoom keys
    (Hungarian, where the toolbar is wider): both are put away while it is open, as in the tour. */
 body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility: hidden; }
-/* the room the visitor is in: a green bar and a green name, as on the map */
+/* the room the visitor is in (aria-current): a bar in the accent and the name in bold, as on
+   the map. The name stays light: the accent as text would fall under 4.5:1 on a hovered row
+   over a white wall. */
 #rooms-menu .room-row.here { border-left-color: var(--accent); }
-#rooms-menu button[aria-current] { color: var(--accent); }
+#rooms-menu button[aria-current] { color: var(--fg); font-weight: 700; }
 /* The tour caption stands 8 px above the toolbar, wherever the footer's height puts it. */
 #tour-caption {
   position: absolute;
@@ -778,12 +793,13 @@ body.touring #keypad { visibility: hidden; }
 .cap .glyph, .cap svg { position: relative; top: 5px; }
 .cap:hover { border-color: rgba(255, 255, 255, 0.35); }
 .cap.pressed {
-  background: rgba(157, 255, 106, 0.2);
+  /* the tint is laid on the glass, so the letter keeps its contrast over a white wall */
+  background: linear-gradient(rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.16)), var(--glass);
   border-color: var(--accent);
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06);
   transform: translateY(1px);
 }
-.cap.pressed i { color: var(--accent); }
+.cap.pressed i { color: var(--fg); }
 .cap svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .k-w { grid-column: 3; grid-row: 1; }
 .k-shift { grid-column: 1; grid-row: 2; font-size: 14px; }

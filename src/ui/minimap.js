@@ -59,7 +59,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     if (W < 10 || s <= 0) return;
     ctx.clearRect(0, 0, W, H);
     for (const r of ROOMS) {
-      ctx.fillStyle = r.id === roomId ? 'rgba(157,255,106,0.12)' : 'rgba(255,255,255,0.04)';
+      ctx.fillStyle = r.id === roomId ? 'rgba(143,168,255,0.12)' : 'rgba(255,255,255,0.04)';
       ctx.fillRect(X(r.x0), Y(r.z0), (r.x1 - r.x0) * s, (r.z1 - r.z0) * s);
     }
     ctx.strokeStyle = 'rgba(255,255,255,0.75)';
@@ -89,9 +89,11 @@ export function setupMinimap(canvas, segments, works, onJump) {
       }
     }
     // room numbers, over the marks so a work hung in a corner never covers one
-    ctx.font = '11px ui-monospace, Menlo, monospace';
     for (const r of ROOMS) {
-      ctx.fillStyle = r.id === roomId ? 'rgba(157,255,106,0.9)' : 'rgba(255,255,255,0.85)';
+      // the room the visitor is in: its number bold and fully light on the accent tint, so not
+      // by colour alone (the accent as 11 px text on that tint would be 4.06:1 over a white wall)
+      ctx.font = `${r.id === roomId ? 'bold ' : ''}11px ui-monospace, Menlo, monospace`;
+      ctx.fillStyle = r.id === roomId ? '#f2f1ed' : 'rgba(255,255,255,0.85)';
       ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 12);
     }
     // compass: true north in plan coordinates (the rooms run from the Damjanich utca
@@ -118,8 +120,8 @@ export function setupMinimap(canvas, segments, works, onJump) {
     const rx = fx * Math.cos(-spread) - fz * Math.sin(-spread);
     const rz = fx * Math.sin(-spread) + fz * Math.cos(-spread);
     const g = ctx.createRadialGradient(X(px), Y(pz), 0, X(px), Y(pz), len * s);
-    g.addColorStop(0, 'rgba(157,255,106,0.55)');
-    g.addColorStop(1, 'rgba(157,255,106,0)');
+    g.addColorStop(0, 'rgba(143,168,255,0.55)');
+    g.addColorStop(1, 'rgba(143,168,255,0)');
     ctx.fillStyle = g;
     ctx.beginPath();
     ctx.moveTo(X(px), Y(pz));
@@ -127,7 +129,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     ctx.lineTo(X(px + rx * len), Y(pz + rz * len));
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = '#9dff6a';
+    ctx.fillStyle = '#8fa8ff';
     ctx.beginPath();
     ctx.arc(X(px), Y(pz), dotRadius(), 0, Math.PI * 2);
     ctx.fill();

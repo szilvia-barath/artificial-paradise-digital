@@ -170,7 +170,7 @@ Grouped by what they touch. "When" says whether the change could go in before 20
 | `--glass` | `rgba(11,12,14,.85)` to `.9` | chips over the 3D view: room label, toolbar, keycaps, prompt, caption, map |
 | `--text` | `#f2f1ed` | text on glass |
 | `--hud-muted` | `#c4c3be` | secondary text on glass |
-| `--accent` | `#9dff6a` | pressed and on states only, never body text |
+| `--accent` | `#8fa8ff` | pressed and on states only, never body text, never on paper (the reconstructor's blue, in place of the green `#9dff6a`) |
 
 Magenta and cyan stay on the map only, with shapes and a key (A4).
 
@@ -222,12 +222,29 @@ Ratios for text need 4.5:1 (3:1 for large text); for controls and focus rings (n
 | Text on glass 0.85 over white | 9.63 | 4.5 |
 | Muted `#c4c3be` on glass 0.9 over white | 9.03 | 4.5 |
 | Muted `#c4c3be` on glass 0.9 over a dark room | 11.01 | 4.5 |
-| Accent `#9dff6a` on glass 0.9 over white | 12.86 | 4.5 |
 | Footer `#c9c9c6` on the 0.8 band over white | 6.56 | 4.5 |
 | Focus ring white on glass over white | 15.94 | 3 |
 | Focus halo `#0b0c0e` against a white wall (keeps the ring visible off glass) | 16.11 | 3 |
 | Keycap edge, white at 45%, on glass over white | 4.32 | 3 |
 | Panel border `#8a8f99` on paper (if a visible edge is wanted) | 3.13 | 3 |
+
+**The accent, as built (H1).** The reconstructor chose the blue `#8fa8ff` in place of the green. Worked out with the glass composited over pure white (worst case) and over black:
+
+| Accent `#8fa8ff` and background | Over white | Over black | Needed | Passes |
+|---|---|---|---|---|
+| Text on glass 0.85 (zoom readout, tour caption's first line) | 5.76 | 8.68 | 4.5 | yes |
+| Text on glass 0.9 | 6.79 | 8.65 | 4.5 | yes |
+| Text on the dark panel and viewer, rgba(8, 8, 10, 0.9) | 7.08 | 8.82 | 4.5 | yes |
+| Icon and bar on a pressed toolbar button (white 0.1 on glass) | 4.20 | 6.93 | 3 | yes |
+| Edge of a pressed keycap against its tint | 4.28 | 6.82 | 3 | yes |
+| Light letter `#f2f1ed` on a pressed keycap (tint on glass) | 8.63 | 13.76 | 4.5 | yes |
+| The visitor's dot on the floor plan's glass | 5.76 | 8.68 | 3 | yes |
+| Crosshair dot against its dark edge `#0b0c0e` | 8.58 | 8.58 | 3 | yes |
+| Text on a hovered rooms-menu row, or on the floor plan's current-room tint | 4.20, 4.06 | 6.93, 6.22 | 4.5 | no: those names and numbers stay light and bold instead |
+| On paper `#fbfbf9` | 2.20 | | 4.5 / 3 | no: never used on paper, the blue `#072fcc` is |
+| On the title band `#eceef0` | 1.96 | | 4.5 / 3 | no: not used there |
+
+The lighter `#a9bcff` (1.79 on paper) and the darker `#7f9bff` (2.52 on paper) do not pass on paper either, and `#8fa8ff` passes everywhere it is used, so it stays.
 
 ## Before 20 November, and after 23 November
 
