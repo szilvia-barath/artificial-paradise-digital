@@ -454,7 +454,7 @@ await guard(['F1.4', 'F1.5', 'F1.6'], async () => {
   await p.click('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   const view = await p.evaluate(() => document.activeElement === document.getElementById('scene'));
-  step('F1.6 Help by mouse: switched to Hungarian while open, it reads "Súgó" and its button in Hungarian, focus stays in the panel; Close clicked: focus on the 3D view', hu.title === UI.hu.nav.help && hu.guide === UI.hu.panels.helpGuide && hu.close && view, `${JSON.stringify(hu)}; focus on the view after Close: ${view}`);
+  step('F1.6 Help by mouse: switched to Hungarian while open, it reads "Súgó", its button in Hungarian and both controls texts name "Következő mű", focus stays in the panel; Close clicked: focus on the 3D view', hu.title === UI.hu.nav.help && hu.guide === UI.hu.panels.helpGuide && hu.close && hu.paras.length === 2 && hu.paras.every((x) => x.includes(UI.hu.hud.next)) && view, `${JSON.stringify(hu)}; focus on the view after Close: ${view}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
