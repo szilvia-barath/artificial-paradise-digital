@@ -1,6 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
 // screen, the sound question's hint and the hint inside (D11), the stick held and the turning
-// keys (D2); the viewer side by side on a short screen on its side (D8); the tour caption's first line
+// keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
@@ -387,7 +387,8 @@ const guideInfo = (p) => p.evaluate(() => {
   const shown = !g.hidden && getComputedStyle(g).visibility === 'visible' && g.getClientRects().length > 0;
   const r = g.getBoundingClientRect();
   const under = shown ? document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) : null;
-  const hint = getComputedStyle(document.getElementById('click-to-look')).visibility;
+  // 'none' where the compact control layer of a very small window leaves the hint out (E2)
+  const hint = getComputedStyle(document.getElementById('click-to-look')).display === 'none' ? 'none' : getComputedStyle(document.getElementById('click-to-look')).visibility;
   return { shown, text: g.innerText.trim().split('\n').filter(Boolean), hidden: g.getAttribute('aria-hidden'), focusables: g.querySelectorAll('a, button, input, [tabindex]').length, under: under ? (under.id || under.tagName) : null, focus: document.activeElement?.id || document.activeElement?.tagName, hint };
 });
 // the walk entered by keyboard (Enter, then Esc on the sound question), so no mouse press is sent
@@ -463,8 +464,10 @@ for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: 
   const vw = opts.viewport;
   const inWindow = !!b['#guide'] && b['#guide'].x >= 0 && b['#guide'].y >= 0 && b['#guide'].x + b['#guide'].w <= vw.width && b['#guide'].y + b['#guide'].h <= vw.height;
   const clear = ['#minimap', '#map-key', '#room-label'].every((x) => !meets(b['#guide'], b[x]));
-  const ok = g.shown ? inWindow && clear && g.hidden === 'true' : !mustShow && g.hint === 'visible';
-  step(`F1.8 Computer ${name}: the first-use card shows only inside the window and clear of the map, its key and the room label; else it is not shown and the hint in the middle shows${mustShow ? ' (here it fits and shows)' : ''}`, ok, `card shown: ${g.shown}, hint: ${g.hint}; ${Object.entries(b).map(([x, v]) => `${x} ${show(v)}`).join('; ')}`);
+  // since E2, a window up to 480 × 400 px has the compact control layer: neither the card nor the hint
+  const compact = vw.width <= 480 && vw.height <= 400;
+  const ok = g.shown ? inWindow && clear && g.hidden === 'true' : !mustShow && g.hint === (compact ? 'none' : 'visible');
+  step(`F1.8 Computer ${name}: the first-use card shows only inside the window and clear of the map, its key and the room label; else it is not shown and the hint in the middle shows${mustShow ? ' (here it fits and shows)' : ''}${compact ? ' (here, since E2, the compact control layer leaves out the hint as well)' : ''}`, ok, `card shown: ${g.shown}, hint: ${g.hint}; ${Object.entries(b).map(([x, v]) => `${x} ${show(v)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -586,6 +589,42 @@ await guard(['F1.7'], async () => {
   errors.push(...w.errors);
   await w.ctx.close();
 });
+
+// ---------------- E2: a very small computer window (400% zoom) has a compact control layer
+const E2SIZES = [['320 × 256 (1280 × 1024 at 400%), Hungarian', { viewport: { width: 320, height: 256 } }, 'hu'], ['320 × 192, Hungarian', { viewport: { width: 320, height: 192 } }, 'hu'], ['341 × 192 (1366 × 768 at 400%), English', { viewport: { width: 341, height: 192 } }, 'en']];
+for (const [name, opts, lang] of E2SIZES) {
+  const w = await insideByKeys(lang, opts);
+  const p = w.page;
+  await p.evaluate(() => window.__ap.controls.zoomBy(2));
+  await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
+  const gone = ['#site-foot', '#keypad', '#zoompad', '#minimap', '#map-key', '#click-to-look', '#guide'];
+  const kept = ['#site-nav', '#room-label', '#toolbar', '#zoom-level'];
+  const b = await boxes(p, [...gone, ...kept]);
+  const vw = opts.viewport;
+  const inside = kept.every((s) => b[s] && b[s].x >= 0 && b[s].y >= 0 && b[s].x + b[s].w <= vw.width + 0.5 && b[s].y + b[s].h <= vw.height + 0.5);
+  const pairs = [];
+  for (let i = 0; i < kept.length; i++) for (let j = i + 1; j < kept.length; j++) if (meets(b[kept[i]], b[kept[j]])) pairs.push(`${kept[i]}/${kept[j]}`);
+  step(`E2.1 Computer ${name}, zoomed in: no footer, keys, zoom keys, map, map key, hint or first-use card; the navbar, the room label, the toolbar and the zoom readout inside the window, none over another`, gone.every((s) => !b[s]) && inside && pairs.length === 0, `${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}${pairs.length ? `; over each other: ${pairs.join(', ')}` : ''}`);
+  if (name.startsWith('320 × 256')) {
+    // Tab from the 3D view: every stop shows and lies inside the window; the toolbar comes first
+    const stops = [];
+    for (let i = 0; i < 12; i++) {
+      await p.keyboard.press('Tab');
+      const f = await p.evaluate(() => { const a = document.activeElement; const r = a.getBoundingClientRect(); return { name: a.dataset.action || a.id || a.className || a.tagName, ok: r.width > 0 && r.x >= 0 && r.y >= 0 && r.right <= innerWidth + 0.5 && r.bottom <= innerHeight + 0.5 }; });
+      stops.push(f);
+      if (f.name === 'scene') break;
+    }
+    const order = stops.map((x) => x.name);
+    const bar = ['tour', 'rooms', 'sound', 'next'].map((a) => order.indexOf(a));
+    // the footer's four links, in the folded menu (D3)
+    await p.evaluate(() => document.querySelector('#site-nav .nav-toggle').click());
+    await p.waitForFunction(() => document.querySelector('#site-nav .nav-more')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});
+    const more = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-more a, #site-nav .nav-more button')].filter((x) => x.getClientRects().length).length);
+    step('E2.2 Computer 320 × 256: Tab from the 3D view goes through Tour, Rooms, Sound and Next work first, in that order, and every stop shows inside the window; the folded menu holds the footer\'s four links', bar.every((x, i) => x >= 0 && (i === 0 || x > bar[i - 1])) && bar[0] === 0 && stops.every((x) => x.ok) && more === 4, `${stops.map((x) => `${x.name}${x.ok ? '' : ' (off screen)'}`).join(' → ')}; links in the menu: ${more}`);
+  }
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
 
 // ---------------- F2: Next work on the toolbar, on every device
 const listen = (p) => p.evaluate(() => { window.__said = []; const el = document.getElementById('announcer'); new MutationObserver(() => window.__said.push(el.textContent.trim())).observe(el, { childList: true, characterData: true, subtree: true }); });
