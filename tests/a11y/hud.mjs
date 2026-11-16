@@ -1,6 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
 // screen, the sound question's hint and the hint inside (D11), the stick held and the turning
-// keys (D2); the tour caption's first line
+// keys (D2); the viewer side by side on a short screen on its side (D8); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
@@ -284,6 +284,27 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 ×
   await touch('touchEnd');
   const released = await p.waitForFunction(() => !window.__ap.controls.isDown('ArrowLeft'), null, { timeout: 10000 }).then(() => true, () => false);
   step('D2.2 Phone 375 × 667: the stick pressed and held above its middle walks forward at once, without a drag; released, it stops; the turn-left key held by a finger turns left, and lets go when the finger lifts', fwd && joy.y < -0.5 && stopped && turned && released, `walked: ${fwd} (stick at ${joy.x.toFixed(2)}, ${joy.y.toFixed(2)}); stopped after: ${stopped}; turn-left held turned: ${turned}; let go: ${released}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- D8: on a short screen on its side the viewer shows the work and its text side
+// by side, so the work is far larger than the 167 × 146 px it had under the old stacked layout
+for (const [name, opts, minW, minH] of [['phone on its side 667 × 375', PHONE_SIDE, 340, 300], ['phone on its side 740 × 360', { ...PHONE, viewport: { width: 740, height: 360 } }, 330, 290], ['phone on its side 844 × 390', { ...PHONE, viewport: { width: 844, height: 390 } }, 360, 320], ['small phone on its side 568 × 320', { ...PHONE, viewport: { width: 568, height: 320 } }, 280, 250], ['phone upright 375 × 667 (stacked, as before)', PHONE, 340, 290]]) {
+  const w = await openWalk(browser, { lang: 'hu', ...opts });
+  const p = w.page;
+  await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works.find((k) => k.id === 'w01-dresden')));
+  await p.waitForFunction(() => { const i = document.getElementById('viewer-img'); return i.complete && i.naturalWidth > 0 && i.classList.contains('ready'); }, null, { timeout: 30000 }).catch(() => {});
+  const v = await p.evaluate(() => {
+    const b = (s) => { const r = document.querySelector(s).getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) }; };
+    return { img: b('#viewer-img'), info: b('.viewer-info'), title: b('#viewer-title'), close: b('#viewer .close'), scrollW: document.documentElement.scrollWidth, vw: innerWidth };
+  });
+  const upright = opts.viewport.width < opts.viewport.height;
+  // upright: stacked as before (the work there already reaches 24 px under the top of the text panel)
+  const side = upright ? v.info.y > v.img.y + v.img.h / 2 && v.info.x === 0 : v.info.x >= v.img.x + v.img.w && v.info.y === 0 && v.info.h === opts.viewport.height;
+  // upright the layout is as before, and Close there already reaches 8 px over the top of the work
+  const clear = upright || !meets(v.close, v.img) && !meets(v.close, v.title) && v.title.x >= v.info.x && v.title.x + v.title.w <= v.info.x + v.info.w;
+  step(`D8.1 Viewer, ${name}: the work at least ${minW} × ${minH} px, ${upright ? 'its text under it' : 'its text in a column beside it, the full height'}${upright ? '' : '; Close over neither the work nor the title'}; no sideways scroll`, v.img.w >= minW && v.img.h >= minH && side && clear && v.scrollW <= v.vw, `work ${show(v.img)}; text ${show(v.info)}; title ${show(v.title)}; Close ${show(v.close)}; page ${v.scrollW} px wide in ${v.vw}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }

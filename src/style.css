@@ -1054,6 +1054,17 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   #toolbar [data-action="next"] .lbl { white-space: normal; text-align: center; max-width: 10ch; line-height: 1.15; }
 }
 
+/* A short window on its side (a phone held sideways, under 520 px high): the work and its text
+   side by side (D8), so the work takes the whole height left under the navbar instead of
+   about half of it. The text scrolls in its own column, below the Close button. */
+@media (orientation: landscape) and (max-height: 519px) {
+  #viewer { grid-template-columns: minmax(0, 1fr) minmax(240px, min(40%, 380px)); grid-template-rows: minmax(0, 1fr); }
+  .viewer-media { padding: calc(var(--nav-h) + 8px) 12px calc(8px + var(--safe-b)) calc(12px + var(--safe-l)); }
+  .viewer-media img, .viewer-media video, .viewer-media iframe { max-height: calc(100vh - var(--nav-h) - 16px - var(--safe-b)); }
+  .viewer-info { border-top: 0; border-left: 1px solid var(--line); padding: calc(var(--nav-h) + 52px) calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) 16px; }
+  .viewer-info h2 { font-size: 22px; }
+}
+
 /* ---------------- Touch targets ----------------
    On a touch screen (pointer: coarse) every control is at least 44 × 44 px, the size
    advised for a thumb (WCAG 2.5.5). Desktop sizes stay as they are. */
