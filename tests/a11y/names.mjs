@@ -225,6 +225,36 @@ const clickTo = async (p, sel, title) => {
   await w.ctx.close();
 }
 
+// ---------------- B10: the floor plan's name says where you are; the jump by a click is in its title
+{
+  const w = await inside('en');
+  const p = w.page;
+  const nameIs = (x) => p.waitForFunction((v) => document.getElementById('minimap').getAttribute('aria-label') === v, x, { timeout: 30000 }).catch(() => {});
+  const here = (room, l = 'en') => fill(UI[l].hud.minimapHere, { room });
+  await nameIs(here('Room 1'));
+  const r1 = await axName(p, '#minimap');
+  await p.evaluate(() => window.__ap.jumpToRoom('r2'));
+  await nameIs(here('Room 2'));
+  const r2 = await axName(p, '#minimap');
+  // moved into Room 3 without a jump, as walking does: the frame notices the new room
+  await p.evaluate(() => { const c = window.__ap.controls; c.setPose(12.5, 3.3, c.yaw); });
+  await nameIs(here('Room 3'));
+  const r3 = await axName(p, '#minimap');
+  const title = await p.getAttribute('#minimap', 'title');
+  step('B10.1 The floor plan\'s name says where you are, after the entry, a jump to Room 2 and a move into Room 3; the jump hint is in its title only', r1 === here('Room 1') && r2 === here('Room 2') && r3 === here('Room 3') && title === UI.en.hud.minimap && !r3.includes(UI.en.hud.minimap), `"${r1}" → "${r2}" → "${r3}"; title "${title}"`);
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  await nameIs(here('3. terem', 'hu'));
+  const hu = await axName(p, '#minimap');
+  const huTitle = await p.getAttribute('#minimap', 'title');
+  await p.evaluate(() => window.__ap.jumpToRoom('r4'));
+  await nameIs(here('4. terem', 'hu'));
+  const hu4 = await axName(p, '#minimap');
+  step('B10.2 Switched to Hungarian in Room 3: "Alaprajz. Jelenlegi hely: 3. terem", the title in Hungarian; a jump to Room 4 follows', hu === here('3. terem', 'hu') && huTitle === UI.hu.hud.minimap && hu4 === here('4. terem', 'hu'), `"${hu}"; title "${huTitle}"; then "${hu4}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

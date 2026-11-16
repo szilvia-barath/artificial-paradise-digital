@@ -331,6 +331,8 @@ function updateZoom() {
 
 const minimapEl = document.getElementById('minimap');
 const minimap = setupMinimap(minimapEl, arch.segments, data.works, (id) => jumpToRoom(id));
+// The map's name says where you are, at each change of room and of language.
+const nameMap = () => minimapEl.setAttribute('aria-label', t('hud.minimapHere', { room: data.rooms[currentRoomId].name }));
 // The map can only be clicked and cannot take focus itself: a click on it hands focus back
 // to the view, like the toolbar, so the letter keys go on working.
 minimapEl.addEventListener('click', focusScene);
@@ -447,6 +449,7 @@ function updateRoom() {
     currentRoomId = r.id;
     setText(roomName, `rooms.${r.id}.name`);
     setText(roomSub, `rooms.${r.id}.subtitle`);
+    nameMap();
     ui.setRoom(r.id); // the rooms menu marks it (aria-current)
     if (!first && entered) announceRoom();
   }
@@ -699,6 +702,7 @@ setTimeout(markReady, 12000);
 onLangChange(() => {
   localize(data);
   markTitles();
+  nameMap();
   ui.refresh();
   viewer.refresh();
   tour.refresh();

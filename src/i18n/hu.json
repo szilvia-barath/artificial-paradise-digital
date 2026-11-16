@@ -66,7 +66,8 @@
         "zoomReset": "Nagyítás visszaállítása (0)"
       },
       "promptWorkKey": "Enter: megtekintés · {no} {title}",
-      "promptTextKey": "Enter: a kiállítási szöveg elolvasása"
+      "promptTextKey": "Enter: a kiállítási szöveg elolvasása",
+      "minimapHere": "Alaprajz. Jelenlegi hely: {room}"
     },
     "viewer": {
       "artistSite": "A művész honlapján",

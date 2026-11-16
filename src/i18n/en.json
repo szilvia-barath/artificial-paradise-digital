@@ -66,7 +66,8 @@
         "zoomReset": "Reset zoom (0)"
       },
       "promptWorkKey": "Enter to view · {no} {title}",
-      "promptTextKey": "Enter to read the exhibition text"
+      "promptTextKey": "Enter to read the exhibition text",
+      "minimapHere": "Floor plan: you are in {room}"
     },
     "viewer": {
       "artistSite": "On the artist's website",
