@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { launch, openWalk } from './lib.mjs';
 
 const UI = { en: JSON.parse(readFileSync('src/i18n/en.json', 'utf8')).ui, hu: JSON.parse(readFileSync('src/i18n/hu.json', 'utf8')).ui };
-const fill = (s, vars) => s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+const fill = (s, vars) => String(s ?? '(no such string)').replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
 
 const browser = await launch();
 let failed = 0;
@@ -298,6 +298,93 @@ const clickTo = async (p, sel, title) => {
   await altIs(one);
   const e1 = await axName(p, '#viewer-img');
   step('B16.3 The language switched while the photo shows: "1. installációs fotó a 2 közül: Let it Flow a galériában", then the English again', h1 === huOne && e1 === one, `HU "${h1}"; EN "${e1}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- B17: the video players have names; Esc inside the Google Drive player
+// Nothing from Google loads: every request to it is blocked, and the player's address is
+// answered by a stand-in page of this test (one button), served in its place, so the frame
+// is from another site as the real player is.
+{
+  const w = await inside('en');
+  const p = w.page;
+  const asked = [];
+  p.on('request', (r) => { if (/google/.test(new URL(r.url()).hostname)) asked.push(r.url()); });
+  await w.ctx.route(/^https:\/\/drive\.google\.com\/file\//, (r) => r.fulfill({ contentType: 'text/html', body: '<!doctype html><title>stand-in</title><button>Play</button><script>window.keys = []; addEventListener("keydown", (e) => keys.push(e.key));</script>' }));
+  // The name is read from the accessibility tree; this Chromium cannot play the MP4 files
+  // (no H.264), and once a video has failed it names it "Unable to play media." whatever its
+  // label, so then the label itself is checked and the failure said.
+  const videoName = async () => {
+    const label = await p.getAttribute('#viewer-video', 'aria-label');
+    const ax = await axName(p, '#viewer-video');
+    const failed = await p.evaluate(() => !!document.getElementById('viewer-video').error);
+    return { label, ax, failed, ok: (want) => label === want && (ax === want || failed) };
+  };
+  await openWork(p, 'w06-artificial-paradise-singapore');
+  const loop = await videoName();
+  await openWork(p, 'w03-paradise-factory');
+  const doc = await videoName();
+  const wantLoop = fill(UI.en.viewer.videoLoopName, { title: 'Artificial Paradise – Singapore' });
+  const wantDoc = fill(UI.en.viewer.videoDocName, { title: 'Paradise Factory' });
+  step('B17.1 The video in the viewer has a name: "Video loop: Artificial Paradise – Singapore"; no. 3\'s documentation: "Video documentation: Paradise Factory"', loop.ok(wantLoop) && doc.ok(wantDoc), [loop, doc].map((v) => `label "${v.label}", in the tree "${v.ax}"${v.failed ? ' (the video failed to play here)' : ''}`).join('; '));
+
+  await openWork(p, 'w06-artificial-paradise-singapore');
+  const before = asked.length;
+  await p.click('#viewer-videos [data-full="0"]');
+  await p.waitForFunction(() => !document.getElementById('viewer-frame').hidden, null, { timeout: 30000 });
+  const fr = p.frameLocator('#viewer-frame');
+  await fr.locator('button').waitFor({ timeout: 30000 });
+  const loaded = asked.length;
+  const frameName = await axName(p, '#viewer-frame');
+  const want = fill(UI.en.viewer.frameTitle, { title: 'Artificial Paradise – Singapore' });
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  const frameHu = await p.getAttribute('#viewer-frame', 'title');
+  await p.click('#site-nav [data-lang="en"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
+  step('B17.2 "Full video" pressed: the player\'s frame is named "Full video: Artificial Paradise – Singapore, Google Drive player"; in Hungarian "Teljes videó: …, Google Drive-lejátszó"; it loaded only after the press', frameName === want && frameHu === fill(UI.hu.viewer.frameTitle, { title: 'Artificial Paradise – Singapore' }) && before === 0 && loaded > 0, `"${frameName}"; HU "${frameHu}"; requests to Google before the press: ${before}, after it: ${loaded} (answered by the stand-in)`);
+
+  // Esc with focus inside the player's frame: the page never hears it, so the viewer stays open
+  const inFrame = () => p.evaluate(() => document.activeElement === document.getElementById('viewer-frame'));
+  const viewerOpen = () => p.evaluate(() => !document.getElementById('viewer').hidden);
+  await fr.locator('button').focus();
+  const focusedIn = await inFrame();
+  await p.keyboard.press('Escape');
+  // the frame's own page heard the Esc; the viewer's listener is on the page outside it
+  const player = p.frames().find((f) => f.url().startsWith('https://drive.google.com/'));
+  const heardIn = await player.waitForFunction(() => window.keys.includes('Escape'), null, { timeout: 30000 }).then(() => true, () => false);
+  const stillOpen = await viewerOpen();
+  // Tab leaves the frame into the viewer; then Esc closes it
+  await p.keyboard.press('Tab');
+  const outTab = !(await inFrame()) && (await p.evaluate(() => document.getElementById('viewer').contains(document.activeElement)));
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  const closedTab = !(await viewerOpen());
+  // the same with Shift+Tab
+  await openWork(p, 'w06-artificial-paradise-singapore');
+  await p.click('#viewer-videos [data-full="0"]');
+  await fr.locator('button').waitFor({ timeout: 30000 });
+  await fr.locator('button').focus();
+  await p.keyboard.press('Shift+Tab');
+  const outShift = !(await inFrame()) && (await p.evaluate(() => document.getElementById('viewer').contains(document.activeElement)));
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  const closedShift = !(await viewerOpen());
+  step('B17.3 Focus inside the player\'s frame: Esc goes to the frame and does not close the viewer; Tab or Shift+Tab leaves the frame into the viewer, and Esc then closes it (what the statement says)', focusedIn && heardIn && stillOpen && outTab && closedTab && outShift && closedShift, `focus in the frame: ${focusedIn}; Esc heard in the frame: ${heardIn}; open after Esc: ${stillOpen}; after Tab in the viewer: ${outTab}, Esc closed: ${closedTab}; after Shift+Tab in the viewer: ${outShift}, Esc closed: ${closedShift}`);
+  // the accessibility statement says so, in both languages
+  const says = {};
+  for (const l of ['en', 'hu']) {
+    await p.click(`#site-nav [data-lang="${l}"]`);
+    await p.waitForFunction((x) => document.documentElement.lang === x, l, { timeout: 30000 });
+    await p.evaluate(() => window.__ap.ui.show('accessibility'));
+    await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+    const want = JSON.parse(readFileSync(`src/i18n/${l}.json`, 'utf8')).accessibility.sections.find((x) => x.p.some((t) => t.includes('Google Drive') && t.includes('Shift+Tab')));
+    const text = await p.textContent('#panel-body');
+    says[l] = !!want && want.p.filter((t) => t.includes('Shift+Tab') && t.includes('Google Drive')).every((t) => text.includes(t));
+    await p.evaluate(() => window.__ap.ui.close());
+  }
+  step('B17.4 The accessibility statement says that Esc does not work inside the Google Drive player and how to get out, in English and in Hungarian', says.en && says.hu, JSON.stringify(says));
   errors.push(...w.errors);
   await w.ctx.close();
 }

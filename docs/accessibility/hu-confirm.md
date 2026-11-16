@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 32. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 36. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -28,6 +28,15 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.viewer.situAltOne`
   - HU: Installációs fotó: {title} a galériában
   - EN: Installation photo: {title} in the gallery
+- `ui.viewer.frameTitle`
+  - HU: Teljes videó: {title}, Google Drive-lejátszó
+  - EN: Full video: {title}, Google Drive player
+- `ui.viewer.videoLoopName`
+  - HU: Videóloop: {title}
+  - EN: Video loop: {title}
+- `ui.viewer.videoDocName`
+  - HU: Videódokumentáció: {title}
+  - EN: Video documentation: {title}
 - `ui.panels.linkMamuPage` (a new link; its words came with the request)
   - HU: MAMŰ: a kiállítás oldala
   - EN: MAMŰ: the exhibition page
@@ -100,3 +109,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `accessibility.sections[3].p[8]`
   - HU: Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak.
   - EN: On a touch screen some links are still small. In a window wider than 760 pixels (a tablet, say) the footer's links are 13 pixels tall, and the links in the text of the panels are 17 to 20 pixels tall per line, at any width.
+- `accessibility.sections[3].p[9]`
+  - HU: Amíg a fókusz a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab kivezet a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt.
+  - EN: Esc does not close the viewer while focus is inside the Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab leaves the player, and then Esc works, or the Close button closes the viewer.

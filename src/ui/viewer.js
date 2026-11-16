@@ -112,6 +112,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
       .map((v, i) => `<button class="link mono" data-full="${i}">${esc(t(full === i ? back : `viewer.${v.label}`))}</button>`)
       .join('');
     count.textContent = t('viewer.count', { no: w.no, total: seq.length });
+    // the players' names: the clip that plays here (a loop, or video documentation for nos. 3
+    // and 16), and the Google Drive player, which loads only after "Full video" is pressed
+    video.setAttribute('aria-label', t(w.video?.viewer ? 'viewer.videoDocName' : 'viewer.videoLoopName', { title: w.title }));
+    frame.title = t('viewer.frameTitle', { title: w.title });
     syncPlay();
   };
 

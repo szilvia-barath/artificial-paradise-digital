@@ -91,7 +91,10 @@
       "play": "Videó lejátszása",
       "count": "{no}. mű a {total} közül",
       "situAlt": "{n}. installációs fotó a {total} közül: {title} a galériában",
-      "situAltOne": "Installációs fotó: {title} a galériában"
+      "situAltOne": "Installációs fotó: {title} a galériában",
+      "frameTitle": "Teljes videó: {title}, Google Drive-lejátszó",
+      "videoLoopName": "Videóloop: {title}",
+      "videoDocName": "Videódokumentáció: {title}"
     },
     "panels": {
       "credits": "Közreműködők",
@@ -539,7 +542,8 @@
           "A sétához nyomva kell tartani egy billentyűt. A Page Down és a Page Up, a teremmenü és a tárlatvezetés úgy visz tovább, hogy semmit sem kell nyomva tartani.",
           "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 másodperc után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.",
           "A 3D nézet fölötti kontrasztot Chromiumban készült képernyőképeken mértem, a legvilágosabb fal előtt, nem minden fal előtt. A tárlatvezetés felirata, a nézet közepén lévő művet megnevező sor, a körülnézésről szóló tipp és a nagyítás kijelzője ugyanazon a sötét, áttetsző alapon áll, de ezeket nem mértem. Tiszta fehér fölött a teremmenü szürke címlistája 4,48:1-re esne, épp a WCAG által ekkora szövegre kért 4,5:1 alá. Az 1. és a 2. terem falán lévő kiállítási szövegek lapjait nem mértem.",
-          "Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak."
+          "Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak.",
+          "Amíg a fókusz a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab kivezet a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt."
         ]
       },
       {
