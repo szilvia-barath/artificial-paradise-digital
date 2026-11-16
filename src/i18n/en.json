@@ -20,7 +20,8 @@
       "question": "Start with sound?",
       "hint": "Better with headphones · M switches the sound on or off any time",
       "off": "Without sound",
-      "on": "With sound"
+      "on": "With sound",
+      "hintTouch": "Better with headphones · the Sound button at the bottom switches the sound on or off any time"
     },
     "loader": {
       "meta1": "Digital exhibition",
@@ -71,7 +72,8 @@
       "mapKey": {
         "videos": "Videos",
         "other": "Other works"
-      }
+      },
+      "touchHint": "Drag to look around · push the stick to walk · tap a work to open it"
     },
     "viewer": {
       "artistSite": "On the artist's website",

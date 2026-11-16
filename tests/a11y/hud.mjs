@@ -1,4 +1,5 @@
-// What the controls over the 3D view show and say: the floor plan's key (A4). Each step
+// What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
+// screen, the sound question's hint and the hint inside (D11). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -101,6 +102,133 @@ for (const [name, opts, lang] of [['phone 375 × 667, English', PHONE, 'en'], ['
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look']);
   const clear = ['#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look'].every((s) => !meets(b['#map-key'], b[s])) && !meets(b['#click-to-look'], b['#minimap']);
   step(`A4.5 ${name}: the key shows, one line under the map, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.lines === 1 && k.inWindow && k.under >= 0 && k.under <= 8 && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.lines} line, ${k.under} px under the map; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- D11: the touch words in the sound question, and the touch hint inside
+// Touches are sent through the DevTools protocol, as a finger's would be.
+const finger = async (p) => {
+  const c = await p.context().newCDPSession(p);
+  return (type, x, y) => c.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
+};
+const hintState = (p) => p.evaluate(() => {
+  const h = document.getElementById('click-to-look');
+  const cs = getComputedStyle(h);
+  return { text: h.textContent, hidden: h.getAttribute('aria-hidden'), opacity: cs.opacity, visibility: cs.visibility, focusable: h.tabIndex >= 0 || !!h.querySelector('a, button, [tabindex]') };
+});
+const askHint = (p) => p.evaluate(() => document.getElementById('sound-ask-hint').textContent);
+// the sound question opened (not answered yet), with its hint read
+async function asked(lang, opts) {
+  const w = await openWalk(browser, { lang, ...opts });
+  await w.page.evaluate(() => document.getElementById('enter').click());
+  await w.page.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  return w;
+}
+{
+  const want = { en: UI.en.soundAsk.hintTouch, hu: UI.hu.soundAsk.hintTouch };
+  const got = {};
+  for (const l of ['en', 'hu']) {
+    const w = await asked(l, PHONE);
+    got[l] = await askHint(w.page);
+    if (l === 'en') {
+      // the button the words name: at the bottom, named "Sound"
+      const b = await w.page.evaluate(() => { const s = document.querySelector('[data-action="sound"]'); const r = s.getBoundingClientRect(); return { label: s.querySelector('.lbl').textContent, bottom: r.bottom > innerHeight * 0.8 }; });
+      got.button = b;
+      await switchTo(w.page, 'hu');
+      got.switched = await askHint(w.page);
+    }
+    errors.push(...w.errors);
+    await w.ctx.close();
+  }
+  const d = await asked('en', { viewport: { width: 1366, height: 768 } });
+  const desk = await askHint(d.page);
+  errors.push(...d.errors);
+  await d.ctx.close();
+  step(`D11.1 Sound question on a phone: "${want.en}" (in Hungarian "${want.hu}", also after a switch while it shows); the Sound button is at the bottom; on a computer the words with M stay`, got.en === want.en && got.hu === want.hu && got.switched === want.hu && got.button.label === UI.en.hud.sound && got.button.bottom && desk === UI.en.soundAsk.hint, `phone EN "${got.en}"; HU "${got.hu}"; switched "${got.switched}"; button ${JSON.stringify(got.button)}; computer "${desk}"`);
+}
+for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu']]) {
+  const w = await inside(lang, opts);
+  const p = w.page;
+  const h = await hintState(p);
+  const focus = await p.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
+  const b = await boxes(p, ['#click-to-look', '#joystick', '#toolbar', '#zoompad', '#minimap', '#map-key', '#room-label']);
+  const clear = ['#joystick', '#toolbar', '#zoompad', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#click-to-look'], b[s]));
+  step(`D11.2 Phone ${name}, inside: the touch hint shows ("${UI[lang].hud.touchHint}"), hidden from screen readers, takes no focus (focus stays on the 3D view), over none of the stick, the toolbar, the zoom keys, the map, its key and the room label`, h.text === UI[lang].hud.touchHint && h.hidden === 'true' && h.visibility === 'visible' && !h.focusable && focus === 'scene' && clear && !!b['#click-to-look'], `${JSON.stringify(h)}; focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // what the hint says is what works now: a drag looks round; the stick walks when pushed, not
+  // when only pressed and held (D2, not built yet); a tap on a work opens it
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  const touch = await finger(p);
+  const hint0 = await hintState(p);
+  const yaw0 = await p.evaluate(() => window.__ap.controls.yaw);
+  await touch('touchStart', 190, 420);
+  const gone = await p.waitForFunction(() => getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).then(() => true, () => false);
+  await touch('touchMove', 240, 420);
+  await touch('touchMove', 290, 420);
+  await touch('touchEnd');
+  const looked = await p.waitForFunction((y) => Math.abs(window.__ap.controls.yaw - y) > 0.1, yaw0, { timeout: 30000 }).then(() => true, () => false);
+  const j = await p.evaluate(() => { const r = document.getElementById('joystick').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
+  const at = () => p.evaluate(() => ({ x: window.__ap.controls.pos.x, z: window.__ap.controls.pos.y }));
+  const moved = (from) => p.waitForFunction((f) => Math.hypot(window.__ap.controls.pos.x - f.x, window.__ap.controls.pos.y - f.z) > 0.05, from, { timeout: 4000 }).then(() => true, () => false);
+  let from = await at();
+  await touch('touchStart', j.x, j.y);
+  const held = await moved(from); // pressed and held, not pushed: up to 4 s
+  from = await at();
+  await touch('touchMove', j.x, j.y - 40);
+  const pushed = await moved(from);
+  await touch('touchEnd');
+  // a tap on the work in the middle of the view: the viewer opens and stays open (the
+  // browser's mouse click after the tap must not land on it and close it again; at this
+  // point it lands beside the picture of no. 5)
+  await p.evaluate(() => { window.__clicks = 0; addEventListener('click', () => window.__clicks++, true); window.__ap.gotoWork(window.__ap.data.works.find((k) => k.id === 'w05-human-as-error-i')); });
+  await p.touchscreen.tap(187, 333);
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  // the click, if the browser sends one, comes within a few frames: wait for it, up to 3 s
+  const click = await p.waitForFunction(() => window.__clicks > 0, null, { timeout: 3000 }).then(() => true, () => false);
+  const opened = await p.evaluate(() => (document.getElementById('viewer').hidden ? '(nothing)' : document.getElementById('viewer-title').textContent));
+  step('D11.3 Phone: the first touch on the 3D view takes the hint away; what it says works now: a drag looks round, the stick walks when pushed, a tap opens the work in the middle and it stays open. Only pressing and holding the stick does not walk (so the hint says "push")', hint0.visibility === 'visible' && gone && looked && !held && pushed && opened === 'Human as Error I', `hint shown first: ${hint0.visibility}; gone at the touch: ${gone}; drag turned the view: ${looked}; stick held still walked: ${held}; stick pushed walked: ${pushed}; tap opened: ${opened} (the browser's click after the tap sent: ${click})`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // left alone it goes by itself after about 8 seconds; and the language switched while it shows
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  await p.evaluate(() => { window.__t0 = performance.now(); new MutationObserver(() => { if (document.body.classList.contains('looked') && !window.__t1) window.__t1 = performance.now(); }).observe(document.body, { attributes: true }); });
+  await switchTo(p, 'hu');
+  const hu = await hintState(p);
+  await p.waitForFunction(() => !!window.__t1 && getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).catch(() => {});
+  const secs = await p.evaluate(() => (window.__t1 ? (window.__t1 - window.__t0) / 1000 : null));
+  const after = await hintState(p);
+  step('D11.4 Phone: switched to Hungarian while the hint shows, it says the Hungarian words; untouched, it goes by itself some seconds after the sound question', hu.text === UI.hu.hud.touchHint && hu.visibility === 'visible' && secs !== null && secs > 3 && secs < 15 && after.visibility === 'hidden', `"${hu.text}"; gone after ${secs?.toFixed(1)} s (8 s from the answer); then ${after.visibility}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // reduced motion: it goes at once, with no fade
+  const w = await inside('en', { ...PHONE, reducedMotion: 'reduce' });
+  const p = w.page;
+  const touch = await finger(p);
+  const before = await hintState(p);
+  await touch('touchStart', 190, 420);
+  await p.waitForFunction(() => document.body.classList.contains('looked'), null, { timeout: 30000 }).catch(() => {});
+  const now = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('click-to-look')); return { opacity: cs.opacity, visibility: cs.visibility, transition: cs.transitionDuration }; });
+  await touch('touchMove', 260, 420);
+  await touch('touchEnd');
+  step('D11.5 Phone with reduced motion: the hint goes at once at the first touch, no fade', before.visibility === 'visible' && now.opacity === '0' && now.visibility === 'hidden' && /^0s(, 0s)*$/.test(now.transition), `before: ${before.visibility}; just after the touch: ${JSON.stringify(now)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  // on a computer the hint stays as it was: the mouse words, read by screen readers
+  const w = await inside('en');
+  const h = await hintState(w.page);
+  step('D11.6 Computer: the hint in the middle is unchanged ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
   errors.push(...w.errors);
   await w.ctx.close();
 }

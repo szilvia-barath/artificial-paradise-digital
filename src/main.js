@@ -33,6 +33,15 @@ markTitles();
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
 document.body.classList.toggle('touch', isTouch);
+// On a touch screen the sound question names the Sound button at the bottom, not the M key,
+// and the hint inside says how to move by touch (the desktop words stay as they are).
+// That hint is hidden from screen readers there: with VoiceOver or TalkBack on, a drag moves
+// the screen reader's focus and does not look round, so its gestures are not theirs.
+if (isTouch) {
+  setText(document.getElementById('sound-ask-hint'), 'soundAsk.hintTouch');
+  setText(document.getElementById('click-to-look'), 'hud.touchHint');
+  document.getElementById('click-to-look').setAttribute('aria-hidden', 'true');
+}
 
 // ---------------------------------------------------------------- renderer
 const canvas = document.getElementById('scene');
@@ -288,7 +297,11 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   if (e.detail > 0 && !e.target.closest('[data-action="rooms"][aria-expanded="true"]')) focusScene();
 });
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
-document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
+document.getElementById('joystick').addEventListener('touchstart', () => { tour.stop(); retireHintInRoom(); }, { passive: true });
+// On a touch screen the hint goes at the first touch on the 3D view or the stick, once the
+// visitor is in the room (a touch that answers the sound question does not count).
+const retireHintInRoom = () => { if (document.body.classList.contains('in-room')) retireHint(); };
+canvas.addEventListener('touchstart', retireHintInRoom, { passive: true });
 controls.onManualMove = () => { retireHint(); tour.stop(); };
 // The toolbar's height, for what is placed just above it (the tour caption).
 const toolbarEl = document.getElementById('toolbar');
@@ -576,8 +589,10 @@ function enter(ask = true) {
 }
 enterBtn.addEventListener('click', () => enter());
 // The "drag to look" hint goes at the first look or move of any kind: a drag, a walking or
-// turning key, the wheel, an on-screen key, Page Down or Page Up, the tour. Left alone, it
-// goes about 8 seconds after the visitor is in the room (the sound question answered).
+// turning key, the wheel, an on-screen key, Page Down or Page Up, the tour, and on a touch
+// screen the first touch on the 3D view or the stick. Left alone, it goes about 8 seconds
+// after the visitor is in the room (the sound question answered). Nothing is stored: it
+// shows again on the next visit.
 const HINT_SECONDS = 8;
 let hintTimer = 0;
 function retireHint() {

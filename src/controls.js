@@ -254,8 +254,11 @@ export class FirstPersonControls {
         const l = looks.get(t.identifier);
         if (l) {
           const dist = Math.hypot(t.clientX - l.sx, t.clientY - l.sy);
+          // A tap that opened something (the viewer) keeps the browser from sending its mouse
+          // click after the touch: that click would land on what just opened, and a click
+          // beside the picture closes the viewer again.
           if (!l.pinched && dist < 10 && performance.now() - l.t0 < 350 && this.enabled && this.onTap) {
-            this.onTap(t.clientX, t.clientY, true);
+            if (this.onTap(t.clientX, t.clientY, true) && e.cancelable) e.preventDefault();
           }
           looks.delete(t.identifier);
         }

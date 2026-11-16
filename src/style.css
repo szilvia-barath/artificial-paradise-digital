@@ -612,9 +612,12 @@ body.touch:has(#rooms-menu:not([hidden])) :is(#zoompad, #joystick) { visibility:
   /* the map is 150 px wide here, and its key, about 185 px, reaches a little further left */
   #click-to-look { max-width: calc(100% - 2 * (190px + 10px + 8px + max(var(--safe-l), var(--safe-r)))); }
 }
+/* On a touch screen it says how to move by touch, and sits just above the middle of the
+   view: below it, on a small phone, it would reach the stick. */
+body.touch #click-to-look { top: auto; bottom: calc(50% + 14px); }
 /* Gone for good after the first look or move, or about 8 seconds (main.js); out of the way
    while the tour runs or the rooms menu is open. Hidden from screen readers as well. */
-body.looked #click-to-look, body.touch #click-to-look, body.touring #click-to-look,
+body.looked #click-to-look, body.touring #click-to-look,
 #hud:has([data-action="rooms"][aria-expanded="true"]) #click-to-look { opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
 body.dragging, body.dragging canvas { cursor: grabbing !important; }
 
