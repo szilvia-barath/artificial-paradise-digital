@@ -340,7 +340,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // the stairs (first said to be from the panorama; built from the reconstructor's
     // descriptions, PROGRESS.md note of 15 November 2026): worn grey concrete treads, a band
     // of bare red brick along the open side. The treads are about 0.44 of the whitewash's
-    // brightness in 4.jpg (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
+    // brightness in DSC_0016 (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
     // about 0.45 (15 November 2026).
     stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // worn; renders at about 0.45 of the whitewash
     stairStain: new THREE.MeshStandardMaterial({ map: stainMap, transparent: true, depthWrite: false, roughness: 1, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }),

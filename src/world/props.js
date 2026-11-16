@@ -137,7 +137,7 @@ export function buildProps(materials) {
   // the foot is measured (below). Treads are dark, worn concrete. The
   // flight runs between two whitewashed brick parapets, each topped by a row of bare bricks
   // set on edge, square to the slope; a black railing on the open (south) side. The foot is
-  // rebuilt from the stair photographs 4.jpg, 5.jpg and 7.jpg (PROGRESS.md, decision log,
+  // rebuilt from the stair photographs DSC_0016, DSC_0014 and DSC_0015 (PROGRESS.md, decision log,
   // 15 November 2026): a little bare brick pier under the open side's last coping brick, and
   // on the wall side a brick laid flat on a grey rendered base, with open floor between the
   // wall-side parapet and the north wall.
@@ -149,7 +149,7 @@ export function buildProps(materials) {
     // the bottom riser measures 0.11-0.12 m: the flight sits 0.07 m lower than rise x steps
     const sunk = 0.07;
     const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
-    // across the flight, z from the north wall face (measured at the foot in 4.jpg)
+    // across the flight, z from the north wall face (measured at the foot in DSC_0016)
     const backOut = 0.37; // wall-side parapet, back face (0.13 thick: inferred)
     const backIn = 0.5; // wall-side parapet, face towards the treads
     const openIn = 1.69; // open-side parapet, face towards the treads (0.23 thick: inferred)
@@ -175,7 +175,7 @@ export function buildProps(materials) {
       inst.setMatrixAt(i, m);
     }
     g.add(inst);
-    // behind the wall-side parapet: open floor at the foot (4.jpg); further up nobody has
+    // behind the wall-side parapet: open floor at the foot (DSC_0016); further up nobody has
     // seen it (folding chairs stood there, higher up the flight), so it is filled in steps
     // 0.30 m below the treads (invented)
     {
@@ -226,7 +226,7 @@ export function buildProps(materials) {
       g.add(cap);
     }
     // damp stains, flaked render and dirt on the wall-side parapet's face, between the treads
-    // and the coping (4.jpg, 5.jpg)
+    // and the coping (DSC_0016, DSC_0014)
     {
       const sh = new THREE.Shape();
       sh.moveTo(foot, tread(0));
@@ -390,7 +390,7 @@ export function buildProps(materials) {
       obstacle(foot - 0.02, baseX1 + 0.02, 0, backIn + 0.02);
     }
     // railing posts + handrail, on the open side's coping; the first post 0.36 m up from the
-    // bottom riser (4.jpg: 0.33 to 0.38 m)
+    // bottom riser (DSC_0016: 0.33 to 0.38 m)
     const railH = 0.9;
     const zRail = (openIn + openOut) / 2;
     const top = (x) => ((foot - x) / run) * rise + tread(0) + 0.06;
