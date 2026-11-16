@@ -87,7 +87,8 @@
       "photo": "Back to the photo",
       "situNext": "Next installation photo",
       "pause": "Pause the video",
-      "play": "Play the video"
+      "play": "Play the video",
+      "count": "No. {no} of {total}"
     },
     "panels": {
       "credits": "Credits",
@@ -183,7 +184,8 @@
       "work": "No. {no}, {title}. Press Enter to open.",
       "text": "Exhibition text. Press Enter to read.",
       "tourWork": "No. {no}, {title}. {meta}.",
-      "tourStopped": "Tour stopped."
+      "tourStopped": "Tour stopped.",
+      "viewerWork": "{title}. No. {no} of {total}."
     }
   },
   "meta": {

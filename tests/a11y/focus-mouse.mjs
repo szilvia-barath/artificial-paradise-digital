@@ -473,15 +473,23 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   r = await row();
   step('35 C6 From the reopened list, no. 16 again, Next clicked, then Esc: the list reopens with focus on no. 17, the work last shown, in view', r.list && !r.viewer && r.work === 'w17-natural-life' && r.inView, JSON.stringify(r));
 
-  // no. 3's screen is a work of its own in the viewer, not in the list: its row is no. 3's
+  // Since B5 Next passes no. 3's screen by: from no. 3 it goes to no. 4
   await openFromList('w03-paradise-factory');
   await p.click('#viewer-next');
-  await viewerOn('w03-screen');
+  await viewerOn('w04-human-as-error-iii');
   const media = await p.locator('#viewer .viewer-media').boundingBox();
   await p.mouse.click(media.x + 8, media.y + media.height - 8); // beside the picture
   await listBack();
   r = await row();
-  step('36 C6 No. 3, Next to its screen (not in the list), then a click beside the picture: the list reopens with focus on no. 3', r.list && !r.viewer && r.work === 'w03-paradise-factory' && r.inView, JSON.stringify(r));
+  step('36 C6 No. 3, Next (to no. 4, past its screen since B5), then a click beside the picture: the list reopens with focus on no. 4', r.list && !r.viewer && r.work === 'w04-human-as-error-iii' && r.inView, JSON.stringify(r));
+  // no. 3's screen is an entry of its own in the viewer, not in the list: if it is the work
+  // last shown (only the page's code can now open it with the way back to the list), its row is no. 3's
+  await p.evaluate(() => { const ap = window.__ap; ap.ui.close(); const opener = document.querySelector('#site-nav [data-nav="works"]'); ap.viewer.open(ap.data.works.find((k) => k.id === 'w03-screen'), { opener, back: (last) => ap.ui.works({ opener, work: last }) }); });
+  await viewerOn('w03-screen');
+  await p.click('#viewer [data-close]');
+  await listBack();
+  r = await row();
+  step('36a C6 No. 3\'s screen shown last, Close clicked: the list reopens with focus on no. 3', r.list && !r.viewer && r.work === 'w03-paradise-factory' && r.inView, JSON.stringify(r));
 
   const was37 = await listOpen();
   await p.keyboard.press('Escape');

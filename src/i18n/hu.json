@@ -87,7 +87,8 @@
       "photo": "Vissza a fotóhoz",
       "situNext": "Következő installációs fotó",
       "pause": "Videó szüneteltetése",
-      "play": "Videó lejátszása"
+      "play": "Videó lejátszása",
+      "count": "{no}. mű a {total} közül"
     },
     "panels": {
       "credits": "Közreműködők",
@@ -183,7 +184,8 @@
       "work": "{no}. mű, {title}. Megnyitás: Enter.",
       "text": "Kiállítási szöveg. Megnyitás: Enter.",
       "tourWork": "{no}. mű, {title}. {meta}.",
-      "tourStopped": "A tárlatvezetés leállt."
+      "tourStopped": "A tárlatvezetés leállt.",
+      "viewerWork": "{title}. {no}. mű a {total} közül."
     }
   },
   "meta": {

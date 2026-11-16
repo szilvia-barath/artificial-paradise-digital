@@ -1,5 +1,7 @@
 import { t, lang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
+import { announce } from './announce.js';
+import { isPart } from '../world/route.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
 // request the full video or video documentation from Google Drive), caption, the artist's
@@ -33,6 +35,11 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const count = document.getElementById('viewer-count');
   const base = import.meta.env.BASE_URL;
   const works = data.works;
+  // Previous and Next go through the 17 works. No. 3's small screen is an entry of its own
+  // (a click on it in the 3D view opens it) but not a work: they pass it by, and while it
+  // shows it counts as no. 3.
+  const seq = works.filter((w) => !isPart(w));
+  const seqAt = (w) => (seq.includes(w) ? seq.indexOf(w) : seq.findIndex((x) => x.no === w.no));
   let index = -1;
   let situ = 0; // 0 = the work, n = its nth installation photo
   let full = -1; // index of the full video shown from Drive, -1 = none
@@ -99,6 +106,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     videoBtns.innerHTML = vids
       .map((v, i) => `<button class="link mono" data-full="${i}">${esc(t(full === i ? back : `viewer.${v.label}`))}</button>`)
       .join('');
+    count.textContent = t('viewer.count', { no: w.no, total: seq.length });
     syncPlay();
   };
 
@@ -142,10 +150,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     img.src = src;
     showMedia(w);
     renderInfo();
-    count.textContent = `${index + 1} / ${works.length}`;
     // Preload neighbours
-    for (const k of [index + 1, index - 1]) {
-      const n = works[(k + works.length) % works.length];
+    const at = seqAt(works[index]);
+    for (const k of [at + 1, at - 1]) {
+      const n = seq[(k + seq.length) % seq.length];
       const pre = new Image();
       pre.src = `${base}${n.image}.webp`;
     }
@@ -190,11 +198,15 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     dialog.closed({ refocus: !ret });
     if (ret) ret(works[index]);
   };
+  // The new work is said on its own topic of the live region, so a room or a work in the
+  // 3D view said at the same moment does not take its place.
   const step = (d) => {
-    index = (index + d + works.length) % works.length;
+    index = works.indexOf(seq[(seqAt(works[index]) + d + seq.length) % seq.length]);
     situ = 0;
     full = -1;
     show();
+    const w = works[index];
+    announce(t('announce.viewerWork', { title: w.title, no: w.no, total: seq.length }), 'viewer');
   };
 
   situBtn.addEventListener('click', () => {
