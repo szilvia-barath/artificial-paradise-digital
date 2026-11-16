@@ -330,10 +330,19 @@ const clickTo = async (p, sel, title) => {
   // The name is read from the accessibility tree; this Chromium cannot play the MP4 files
   // (no H.264), and once a video has failed it names it "Unable to play media." whatever its
   // label, so then the label itself is checked and the failure said.
+  // Right after the source changes, the tree can still carry the last clip's "Unable to play
+  // media." while the new clip's error is not set yet: wait (up to 30 s) until the tree gives
+  // the label or the new clip has failed, then decide.
   const videoName = async () => {
     const label = await p.getAttribute('#viewer-video', 'aria-label');
-    const ax = await axName(p, '#viewer-video');
-    const failed = await p.evaluate(() => !!document.getElementById('viewer-video').error);
+    let ax = null;
+    let failed = false;
+    for (const end = Date.now() + 30000; Date.now() < end;) {
+      ax = await axName(p, '#viewer-video');
+      failed = await p.evaluate(() => !!document.getElementById('viewer-video').error);
+      if (ax === label || failed) break;
+      await p.waitForTimeout(250);
+    }
     return { label, ax, failed, ok: (want) => label === want && (ax === want || failed) };
   };
   await openWork(p, 'w06-artificial-paradise-singapore');
