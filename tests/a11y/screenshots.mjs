@@ -10,7 +10,7 @@ mkdirSync(out, { recursive: true });
 const browser = await launch();
 const NEUTRAL = `.loader-bg, .loader-grain { visibility: hidden !important; }
 #viewer-img, #viewer-video, #viewer-frame { visibility: hidden !important; }
-.viewer-media::after { content: "artwork not shown"; display: grid; place-items: center; width: min(70%, 640px); aspect-ratio: 4 / 3; background: #2a2c31; color: #9a9a98; font: 12px ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; position: absolute; }`;
+.viewer-media::after { content: "artwork not shown"; display: grid; place-items: center; width: min(70%, 640px); aspect-ratio: 4 / 3; background: #2a2c31; color: #9a9a98; font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif; position: absolute; }`;
 
 // ---------------- text edition
 for (const [path, lang] of [['text/', 'en'], ['text/hu/', 'hu']]) {
