@@ -170,8 +170,38 @@ at = await focusName(page);
 const vtitle = await page.textContent('#viewer-title');
 c = await cycle('#viewer');
 await page.keyboard.press('Escape');
-await wait(400);
-step(`5.1 Works panel (${tabs} Tabs), Tab to no. 6 (${t2} Tabs), Enter: the viewer opens on a video work`, 'viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video\'s native controls are not in the round); Esc closes; focus back on the Works button', `"${vtitle}", focus on ${at}; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#viewer'))}; focus now on ${await focusName(page)}`, vtitle === 'Artificial Paradise – Singapore' && at.includes('Close') && c.stayed && !(await open('#viewer')) && (await isOn('#site-nav [data-nav="works"]')));
+await until(() => document.getElementById('viewer').hidden && !document.getElementById('panel').hidden);
+// Since C6 Esc on a work opened from the list brings the list back, with focus on that work;
+// a second Esc closes the list and focus goes back to the Works button, as it did before
+// after the first Esc.
+const W6 = '#panel-body [data-work="w06-artificial-paradise-singapore"]';
+const onRow6 = await isOn(W6);
+const list6 = await open('#panel');
+step(`5.1 Works panel (${tabs} Tabs), Tab to no. 6 (${t2} Tabs), Enter: the viewer opens on a video work`, 'viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video\'s native controls are not in the round); Esc closes; the works list is back with focus on no. 6', `"${vtitle}", focus on ${at}; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#viewer'))}; list open: ${list6}; focus now on ${await focusName(page)}`, vtitle === 'Artificial Paradise – Singapore' && at.includes('Close') && c.stayed && !(await open('#viewer')) && list6 && onRow6);
+await page.keyboard.press('Escape');
+await until(() => document.getElementById('panel').hidden);
+step('5.2 Esc on the works list that came back', 'the list closes; focus back on the Works button', `list open before Esc: ${list6}; after: ${await open('#panel')}; focus on ${await focusName(page)}`, list6 && !(await open('#panel')) && (await isOn('#site-nav [data-nav="works"]')));
+// focus on a row, and whether it is in view under the navbar
+const rowAt = () => page.evaluate(() => {
+  const a = document.activeElement;
+  const r = a.getBoundingClientRect();
+  return { work: a.dataset.work || null, inView: r.top >= document.getElementById('site-nav').getBoundingClientRect().bottom && r.bottom <= window.innerHeight };
+});
+await page.keyboard.press('Enter');
+await until(() => !!document.querySelector('#panel:not([hidden]) .works-list'));
+const t3 = await tabTo('#panel-body [data-work="w14-warsaw-g24-ii"]');
+await page.keyboard.press('Enter');
+await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer').contains(document.activeElement));
+await page.keyboard.press('ArrowRight');
+await until(() => document.getElementById('viewer-title').textContent === window.__ap.data.works.find((w) => w.id === 'w15-wiena-wrong-landscape-ii').title);
+const vt = await page.textContent('#viewer-title');
+const onClose = await isOn('#viewer [data-close]');
+await page.keyboard.press('Enter'); // on Close, which has had focus since the viewer opened
+await until(() => document.getElementById('viewer').hidden && !document.getElementById('panel').hidden);
+const r15 = await rowAt();
+step(`5.3 Enter on Works, Tab to no. 14 (${t3} Tabs), Enter, → to the next work, Enter on Close`, 'the viewer moves on to no. 15; Close closes it; the list is back with focus on no. 15, in view', `viewer showed "${vt}", focus on Close: ${onClose}; list open: ${await open('#panel')}; focus on row ${JSON.stringify(r15)}`, onClose && (await open('#panel')) && r15.work === 'w15-wiena-wrong-landscape-ii' && r15.inView);
+await page.keyboard.press('Escape');
+await until(() => document.getElementById('panel').hidden);
 
 // ---------------------------------------------------------------- 6. toolbar: rooms menu, Enter on a button
 tabs = await tabTo('[data-action="rooms"]');

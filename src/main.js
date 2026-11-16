@@ -130,7 +130,14 @@ const focusScene = () => {
 const soundAsking = () => !document.getElementById('sound-ask').hidden;
 
 const ui = setupPanels(data, {
-  onOpenWork: (w) => { ui.close(); viewer.open(w); },
+  // A work opened from the works list: focus goes from the list straight into the viewer,
+  // and closing the viewer reopens the list with focus on the work last shown. The list
+  // keeps the control that first opened it, for Esc there.
+  onOpenWork: (w) => {
+    const opener = ui.opener();
+    ui.close({ refocus: false });
+    viewer.open(w, { opener, back: (last) => ui.works({ opener, work: last }) });
+  },
   // a panel stops the tour, as the viewer does: its captions are not read over the panel
   onOpenPanel: () => { blockers.panel = true; if (tour.active) tour.stop(); syncEnabled(); },
   // walking stays locked while the sound question is still open (it holds blockers.panel too)

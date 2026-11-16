@@ -427,6 +427,103 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   await w.ctx.close();
 }
 
+// ---------------- C6: closing a work opened from the works list reopens the list
+// with focus on the work last shown, scrolled into view; a work opened another way closes as before
+{
+  const w = await openWalk(browser, { viewport: { width: 1280, height: 800 } });
+  const p = w.page;
+  await p.click('#enter');
+  await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.click('[data-sound="off"]');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  // which row has focus, and whether it is in view under the navbar
+  const row = () => p.evaluate(() => {
+    const a = document.activeElement;
+    const r = a.getBoundingClientRect();
+    const top = document.getElementById('site-nav').getBoundingClientRect().bottom;
+    return { list: !document.getElementById('panel').hidden && !!document.querySelector('#panel-body .works-list'), viewer: !document.getElementById('viewer').hidden, work: a.dataset.work || null, inView: r.top >= top && r.bottom <= window.innerHeight };
+  });
+  const viewerOn = (id) => p.waitForFunction((x) => !document.getElementById('viewer').hidden && document.getElementById('viewer-title').textContent === window.__ap.data.works.find((k) => k.id === x).title, id, { timeout: 30000 });
+  const listBack = () => p.waitForFunction(() => !document.getElementById('panel').hidden && document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  const listOpen = () => p.evaluate(() => !!document.querySelector('#panel:not([hidden]) .works-list'));
+  // from the list on screen, or from the navbar's Works if it is not (the steps go on even
+  // where the list failed to come back)
+  const openFromList = async (id) => {
+    if (!(await listOpen())) {
+      await p.click('#site-nav [data-nav="works"]');
+      await p.waitForFunction(() => !!document.querySelector('#panel:not([hidden]) .works-list'), null, { timeout: 30000 });
+    }
+    await p.click(`#panel-body [data-work="${id}"]`);
+    await viewerOn(id);
+  };
+
+  await openFromList('w16-let-it-flow');
+  await p.click('#viewer [data-close]');
+  await listBack();
+  let r = await row();
+  step('34 C6 No. 16 clicked in the works list, the viewer\'s Close clicked with the mouse: the list reopens with focus on no. 16, in view', r.list && !r.viewer && r.work === 'w16-let-it-flow' && r.inView, JSON.stringify(r));
+
+  await openFromList('w16-let-it-flow');
+  await p.click('#viewer-next');
+  await viewerOn('w17-natural-life');
+  await p.keyboard.press('Escape');
+  await listBack();
+  r = await row();
+  step('35 C6 From the reopened list, no. 16 again, Next clicked, then Esc: the list reopens with focus on no. 17, the work last shown, in view', r.list && !r.viewer && r.work === 'w17-natural-life' && r.inView, JSON.stringify(r));
+
+  // no. 3's screen is a work of its own in the viewer, not in the list: its row is no. 3's
+  await openFromList('w03-paradise-factory');
+  await p.click('#viewer-next');
+  await viewerOn('w03-screen');
+  const media = await p.locator('#viewer .viewer-media').boundingBox();
+  await p.mouse.click(media.x + 8, media.y + media.height - 8); // beside the picture
+  await listBack();
+  r = await row();
+  step('36 C6 No. 3, Next to its screen (not in the list), then a click beside the picture: the list reopens with focus on no. 3', r.list && !r.viewer && r.work === 'w03-paradise-factory' && r.inView, JSON.stringify(r));
+
+  const was37 = await listOpen();
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  const onWorks = await p.evaluate(() => document.activeElement === document.querySelector('#site-nav [data-nav="works"]'));
+  step('37 C6 Esc on the reopened list: it closes, focus back on the Works button', was37 && onWorks && (await p.evaluate(() => document.getElementById('panel').hidden)), `list open before Esc: ${was37}; focus on ${await focusName(p)}`);
+
+  await openFromList('w02-human-as-error-vi');
+  await p.click('#viewer [data-close]');
+  await listBack();
+  const was38 = await listOpen();
+  if (was38) await p.click('#panel [data-close]');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 });
+  step('38 C6 The reopened list closed with the mouse: focus on the view, as for any panel', was38 && (await viewHas(p)) && (await p.evaluate(() => document.getElementById('viewer').hidden)), `list reopened: ${was38}; focus on ${await focusName(p)}`);
+
+  // 39 and 40 check what must not change: they pass on the build before C6 as well
+
+  // "Walk to this work" from a work opened from the list goes to the work, not to the list
+  await openFromList('w05-human-as-error-i');
+  await p.click('#viewer-goto');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  const walked = await p.evaluate(() => document.getElementById('panel').hidden);
+  step('39 C6 "Walk to this work" from a work opened from the list: no list, focus on the view', walked && (await viewHas(p)), `list open: ${!walked}; focus on ${await focusName(p)}`);
+
+  // opened another way: Page Down and Enter, then Close with the mouse; a work opened as a
+  // click in the 3D view opens it (no options), then Esc: no list, focus on the view
+  await p.focus('#scene');
+  await p.keyboard.press('PageDown');
+  await p.waitForFunction(() => document.getElementById('prompt').classList.contains('show'), null, { timeout: 30000 }).catch(() => {}); // the work in front is named
+  await p.keyboard.press('Enter');
+  const opened = await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => true, () => false);
+  await p.click('#viewer [data-close]');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  const a1 = { list: await p.evaluate(() => !document.getElementById('panel').hidden), view: await viewHas(p) };
+  await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[7]));
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  const a2 = { list: await p.evaluate(() => !document.getElementById('panel').hidden), view: await viewHas(p) };
+  step('40 C6 A work opened another way (Page Down and Enter, then Close clicked; as a click in the 3D view, then Esc): no list, focus on the view, as before', opened && !a1.list && a1.view && !a2.list && a2.view, `Page Down and Enter opened it: ${opened}; after Close ${JSON.stringify(a1)}; after Esc ${JSON.stringify(a2)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

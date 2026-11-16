@@ -73,23 +73,29 @@ export function focusDialog(el, { initial, fallback, behind: back = BEHIND } = {
   }, true);
 
   return {
-    opened() {
+    // opts.opener: the control focus goes back to on closing, in place of the one that has
+    // focus now (the works list, reopened after the viewer, keeps its first opener).
+    // opts.initial: the element to focus now, in place of initial().
+    opened(opts = {}) {
       if (!open) {
         const a = document.activeElement;
-        opener = a && a !== document.body && !el.contains(a) ? a : null;
+        opener = 'opener' in opts ? opts.opener : a && a !== document.body && !el.contains(a) ? a : null;
       }
       open = true;
       // the opener is taken first: making the page inert takes focus away from it
       behind.set(el, back);
       syncInert();
-      first()?.focus({ preventScroll: true });
+      ((opts.initial && opts.initial()) || first())?.focus({ preventScroll: true });
     },
+    // The control focus would go back to on closing.
+    opener: () => opener,
     // The dialog's content was rebuilt while open: if that took the focused control with
     // it, start again from the top.
     rebuilt() {
       if (open && !el.contains(document.activeElement)) first()?.focus({ preventScroll: true });
     },
-    closed() {
+    // opts.refocus false: focus is left where it is (another dialog takes it next).
+    closed({ refocus = true } = {}) {
       if (!open) return;
       open = false;
       // the page behind wakes first, so the opener can take focus again
@@ -99,7 +105,7 @@ export function focusDialog(el, { initial, fallback, behind: back = BEHIND } = {
       const viaMouse = byPointer && fallback && fallback('mouse');
       const target = viaMouse || (shown(opener) ? opener : fallback && fallback());
       opener = null;
-      target?.focus({ preventScroll: true });
+      if (refocus) target?.focus({ preventScroll: true });
     },
   };
 }

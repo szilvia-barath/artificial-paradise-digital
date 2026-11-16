@@ -137,7 +137,15 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));
   };
-  const show = (name) => {
+  // The works list's button for a work. No. 3's screen is a work of its own in the viewer
+  // (Next and Previous reach it) but not in the list: it falls to the row with its number.
+  const workButton = (w) => {
+    const rows = [...body.querySelectorAll('[data-work]')];
+    return rows.find((b) => b.dataset.work === w.id) || rows.find((b) => data.works.find((x) => x.id === b.dataset.work)?.no === w.no);
+  };
+  // opts.opener: where focus goes back to on closing, if not the control that has focus now.
+  // opts.work: the works list opens with focus on that work's row, scrolled into view.
+  const show = (name, opts = {}) => {
     const wasOpen = !panel.hidden;
     current = name;
     body.innerHTML = PAGES[name]();
@@ -147,18 +155,21 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     panel.scrollTop = 0;
     if (!wasOpen) {
       onOpenPanel();
-      dialog.opened();
+      const row = opts.work && workButton(opts.work);
+      dialog.opened({ ...('opener' in opts ? { opener: opts.opener } : {}), ...(row ? { initial: () => row } : {}) });
+      row?.scrollIntoView({ block: 'nearest' });
     } else dialog.rebuilt(); // moved from one panel to another through a link inside it
   };
-  const close = () => {
+  // refocus false: focus is not handed back (a work opened from the list takes it).
+  const close = ({ refocus = true } = {}) => {
     if (panel.hidden) return;
     panel.hidden = true;
     current = null;
     markNav();
     onClosePanel();
-    dialog.closed();
+    dialog.closed({ refocus });
   };
-  closeBtn.addEventListener('click', close);
+  closeBtn.addEventListener('click', () => close());
   body.addEventListener('click', (e) => {
     const n = e.target.closest('[data-nav]');
     if (n) {
@@ -219,7 +230,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   return {
     show,
     about: () => show('about'),
-    works: () => show('works'),
+    works: (opts) => show('works', opts),
     bts: () => show('bts'),
     toggleRooms: () => setRooms(roomsMenu.hidden),
     // Called as the visitor walks or jumps: which room the menu marks as the current one.
@@ -236,6 +247,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       dialog.rebuilt(); // if focus was on a control in the old text, it goes to Close
     },
     close,
+    // the control focus goes back to when the open panel closes
+    opener: () => dialog.opener(),
     isOpen: () => !panel.hidden,
   };
 }

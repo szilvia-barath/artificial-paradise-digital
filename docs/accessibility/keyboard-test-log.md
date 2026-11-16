@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-15: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 31 of 31 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-16: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 33 of 33 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
@@ -114,8 +114,18 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 
 ## PASS: 5.1 Works panel (12 Tabs), Tab to no. 6 (6 Tabs), Enter: the viewer opens on a video work
 
-- Expected: viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video's native controls are not in the round); Esc closes; focus back on the Works button
-- What happened: "Artificial Paradise – Singapore", focus on button "Close"; 8 controls in the Tab round, stayed inside: true; closed: true; focus now on button[data-nav=works] "Works"
+- Expected: viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video's native controls are not in the round); Esc closes; the works list is back with focus on no. 6
+- What happened: "Artificial Paradise – Singapore", focus on button "Close"; 8 controls in the Tab round, stayed inside: true; closed: true; list open: true; focus now on button "6 Artificial Paradise – SingaporeVideo, Full HD, 2025 · Room"
+
+## PASS: 5.2 Esc on the works list that came back
+
+- Expected: the list closes; focus back on the Works button
+- What happened: list open before Esc: true; after: false; focus on button[data-nav=works] "Works"
+
+## PASS: 5.3 Enter on Works, Tab to no. 14 (14 Tabs), Enter, → to the next work, Enter on Close
+
+- Expected: the viewer moves on to no. 15; Close closes it; the list is back with focus on no. 15, in view
+- What happened: viewer showed "Wiena Wrong Landscape II", focus on Close: true; list open: true; focus on row {"work":"w15-wiena-wrong-landscape-ii","inView":true}
 
 ## PASS: 6.1 Rooms menu: Enter opens it, Tab goes into it, Esc closes it
 
@@ -145,7 +155,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.1 Tab back to the 3D view (25 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
-- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024. Room 1. Paintings, Paradise Factory."
+- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
 
 ## PASS: 7.2 Esc stops the tour
 

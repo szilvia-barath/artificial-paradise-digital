@@ -160,24 +160,35 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     if (r.bottom > box.bottom) info.scrollTop += r.bottom - box.bottom + 8;
     else if (r.top < box.top) info.scrollTop -= box.top - r.top + 8;
   };
-  const open = (work) => {
+  // back(work): set when the work was opened from the works list. Closing the viewer with
+  // its Close button, Esc or a click beside the picture then calls it with the work last
+  // shown (main.js reopens the list there) in place of handing focus back. "Walk to this
+  // work", the navbar or the tour close it as before.
+  let back = null;
+  // opts.opener: where focus goes back to, if not the control that has focus now.
+  const open = (work, opts = {}) => {
     index = works.indexOf(work);
     situ = 0;
     full = -1;
+    back = opts.back || null;
     show();
     el.hidden = false;
     info.scrollTop = 0; // a work opens at its title, wherever the last one was left
     onOpen();
-    dialog.opened();
+    dialog.opened('opener' in opts ? { opener: opts.opener } : {});
   };
-  const close = () => {
+  // toList: closed by the visitor (Close, Esc, a click beside the picture).
+  const close = (toList = false) => {
     if (el.hidden) return;
+    const ret = toList ? back : null;
+    back = null;
     el.hidden = true;
     img.removeAttribute('src');
     full = -1;
     showMedia({});
     onClose();
-    dialog.closed();
+    dialog.closed({ refocus: !ret });
+    if (ret) ret(works[index]);
   };
   const step = (d) => {
     index = (index + d + works.length) % works.length;
@@ -201,7 +212,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     // the buttons were rebuilt: keep focus on the one just pressed
     videoBtns.querySelector(`[data-full="${i}"]`)?.focus({ preventScroll: true });
   });
-  closeBtn.addEventListener('click', close);
+  closeBtn.addEventListener('click', () => close(true));
   // Previous and Next by tap or click: the new work's text starts at its title. By keyboard
   // the column stays where it is, so the focused button is not scrolled away (only kept in
   // view if the new text is shorter).
@@ -217,10 +228,12 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     close();
     onGoto(w);
   });
-  el.querySelector('.viewer-media').addEventListener('click', (e) => { if (e.target === e.currentTarget) close(); });
+  el.querySelector('.viewer-media').addEventListener('click', (e) => { if (e.target === e.currentTarget) close(true); });
+  // (The panels' own Esc listener is added before this one, so the Esc that reopens the
+  // works list here does not also close it.)
   window.addEventListener('keydown', (e) => {
     if (el.hidden) return;
-    if (e.key === 'Escape') close();
+    if (e.key === 'Escape') close(true);
     if (e.key === 'ArrowRight') step(1);
     if (e.key === 'ArrowLeft') step(-1);
   });
@@ -247,5 +260,5 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     dialog.rebuilt(); // if focus was on a rebuilt button (the full videos), it goes to Close
   };
 
-  return { open, close, refresh, isOpen: () => !el.hidden };
+  return { open, close: () => close(), refresh, isOpen: () => !el.hidden };
 }
