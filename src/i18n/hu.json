@@ -3,7 +3,7 @@
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
     "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10–31. között volt megtekinthető.",
-    "sceneLabel": "3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása az akadálymentes változatban van, ez az oldal első hivatkozása.",
+    "sceneLabel": "3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása megtalálható az akadálymentes változatban, ahová az oldal első hivatkozása visz.",
     "nav": {
       "main": "Fő menü",
       "about": "A kiállításról",
@@ -22,7 +22,7 @@
       "hint": "Fejhallgatóval izgalmasabb · a hang az M billentyűvel bármikor be- és kikapcsolható",
       "off": "Hang nélkül",
       "on": "Hanggal",
-      "hintTouch": "Fejhallgatóval izgalmasabb · a hang a lenti Hang gombbal bármikor be- és kikapcsolható"
+      "hintTouch": "Fejhallgatóval izgalmasabb · a hang az alsó Hang gombbal bármikor be- és kikapcsolható"
     },
     "loader": {
       "meta1": "Digitális kiállítás",
@@ -74,7 +74,7 @@
         "videos": "Videók",
         "other": "A többi mű"
       },
-      "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás · Következő mű: továbblépés",
+      "touchHint": "Húzás: körülnézés · a kar tolása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés",
       "tourAt": "{at} / {total} · {no}. mű · {title}",
       "help": "Súgó",
       "helpTitle": "Mozgás és az összes billentyű",
@@ -82,10 +82,10 @@
         "title": "Mozgás a kiállításban",
         "walk": "↑ ↓: séta · ← →: fordulás",
         "look": "Húzás egérrel: körülnézés",
-        "next": "Page Down vagy Következő mű: a következő mű",
+        "next": "Page Down vagy a Következő mű gomb: továbblépés a következő műre",
         "open": "Enter: a nézet közepén lévő mű megnyitása",
         "help": "Súgó: minden billentyű",
-        "close": "Az első billentyűre vagy kattintásra eltűnik"
+        "close": "Az első billentyűleütésre vagy kattintásra eltűnik"
       },
       "next": "Következő mű",
       "nextTitle": "Következő mű (Page Down)"

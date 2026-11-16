@@ -5,13 +5,13 @@ Every string in `src/i18n/hu.json` that is new or changed since the last check b
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
 - `ui.sceneLabel`
-  - HU: 3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása az akadálymentes változatban van, ez az oldal első hivatkozása.
+  - HU: 3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása megtalálható az akadálymentes változatban, ahová az oldal első hivatkozása visz.
   - EN: 3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link.
 - `ui.nav.help`
   - HU: Súgó
   - EN: Help
 - `ui.soundAsk.hintTouch`
-  - HU: Fejhallgatóval izgalmasabb · a hang a lenti Hang gombbal bármikor be- és kikapcsolható
+  - HU: Fejhallgatóval izgalmasabb · a hang az alsó Hang gombbal bármikor be- és kikapcsolható
   - EN: Better with headphones · the Sound button at the bottom switches the sound on or off any time
 - `ui.loader.howtoDesk`
   - HU: ↑↓: séta · ←→: fordulás · Page Down: következő mű · Enter: megnyitás · húzás egérrel: körülnézés
@@ -35,7 +35,7 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: A többi mű
   - EN: Other works
 - `ui.hud.touchHint`
-  - HU: Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás · Következő mű: továbblépés
+  - HU: Húzás: körülnézés · a kar tolása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés
   - EN: Drag to look around · push the stick to walk · tap a work to open it · Next work: on to the next one
 - `ui.hud.tourAt`
   - HU: {at} / {total} · {no}. mű · {title}
@@ -56,7 +56,7 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Húzás egérrel: körülnézés
   - EN: Drag with the mouse: look around
 - `ui.hud.guide.next`
-  - HU: Page Down vagy Következő mű: a következő mű
+  - HU: Page Down vagy a Következő mű gomb: továbblépés a következő műre
   - EN: Page Down or Next work: the next work
 - `ui.hud.guide.open`
   - HU: Enter: a nézet közepén lévő mű megnyitása
@@ -65,7 +65,7 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Súgó: minden billentyű
   - EN: Help: all the keys
 - `ui.hud.guide.close`
-  - HU: Az első billentyűre vagy kattintásra eltűnik
+  - HU: Az első billentyűleütésre vagy kattintásra eltűnik
   - EN: Goes at the first key or click
 - `ui.hud.nextTitle`
   - HU: Következő mű (Page Down)
