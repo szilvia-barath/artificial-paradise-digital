@@ -1,5 +1,5 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
-// screen, the sound question's hint and the hint inside (D11), the stick held and the turning
+// screen, the sound question's hint and the hint inside, and the taps of the tour (D11), the stick held and the turning
 // keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2); the look, its accent and states not told by colour alone (H1). Each step
@@ -366,8 +366,9 @@ const caption = (p) => p.evaluate(() => { const c = document.getElementById('tou
 // ---------------- D11.7: on a phone, the taps of the tour hold
 // During the tour a tap on the view opens the work at that stop. The caption lets a tap
 // through to the view. The browser's mouse click after the tap must not follow: it landed
-// on the viewer that had just opened under the finger, on "Walk to this work", on the
-// artist's link (a new tab), or beside the picture, which closes the viewer again.
+// on the viewer that had just opened under the finger: on "View in situ" (no. 5), on the
+// artist's link, which opens a new tab (no. 16), or beside the picture, which closes the
+// viewer again (no. 1).
 {
   const w = await inside('en', PHONE);
   const p = w.page;
