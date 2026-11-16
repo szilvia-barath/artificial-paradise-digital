@@ -1,6 +1,6 @@
 # axe-core results
 
-Written by `tests/a11y/axe.mjs` on 2026-11-16: axe-core 4.14.0, default rule set, Chromium (Playwright, headless), 34 states scanned.
+Written by `tests/a11y/axe.mjs` on 2026-11-16: axe-core 4.14.0, default rule set, Chromium (Playwright, headless), 38 states scanned.
 
 ## States scanned
 
@@ -11,7 +11,8 @@ Written by `tests/a11y/axe.mjs` on 2026-11-16: axe-core 4.14.0, default rule set
 - Walk EN: title screen: 0 violations, 1 items axe could not decide, 40 rules passed
 - Walk EN: panel "about" open (title screen): 0 violations, 2 items axe could not decide, 36 rules passed
 - Walk EN: panel "works" open (title screen): 0 violations, 2 items axe could not decide, 34 rules passed
-- Walk EN: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
+- Walk EN: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 32 rules passed
+- Walk EN: panel "help" open (title screen): 0 violations, 2 items axe could not decide, 31 rules passed
 - Walk EN: panel "contact" open (title screen): 0 violations, 2 items axe could not decide, 35 rules passed
 - Walk EN: panel "accessibility" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
 - Walk EN: panel "legal" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
@@ -23,21 +24,24 @@ Written by `tests/a11y/axe.mjs` on 2026-11-16: axe-core 4.14.0, default rule set
 - Walk EN: viewer open (painting): 0 violations, 2 items axe could not decide, 36 rules passed
 - Walk EN: viewer open (video, with Pause button): 0 violations, 3 items axe could not decide, 33 rules passed
 - Walk EN: viewer open (video on a small screen): 0 violations, 3 items axe could not decide, 33 rules passed
+- Walk EN: viewer open (full video, the Google Drive player blocked: 1 request stopped): 0 violations, 3 items axe could not decide, 35 rules passed
 - Walk HU: title screen: 0 violations, 1 items axe could not decide, 40 rules passed
 - Walk HU: panel "about" open (title screen): 0 violations, 2 items axe could not decide, 36 rules passed
 - Walk HU: panel "works" open (title screen): 0 violations, 2 items axe could not decide, 34 rules passed
 - Walk HU: panel "bts" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
+- Walk HU: panel "help" open (title screen): 0 violations, 2 items axe could not decide, 31 rules passed
 - Walk HU: panel "contact" open (title screen): 0 violations, 2 items axe could not decide, 35 rules passed
 - Walk HU: panel "accessibility" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
 - Walk HU: panel "legal" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
 - Walk HU: panel "privacy" open (title screen): 0 violations, 2 items axe could not decide, 33 rules passed
 - Walk HU: sound question: 0 violations, 1 items axe could not decide, 26 rules passed
 - Walk HU: inside, HUD: 0 violations, 1 items axe could not decide, 39 rules passed
-- Walk HU: panel "about" open (inside): 0 violations, 2 items axe could not decide, 36 rules passed
+- Walk HU: panel "about" open (inside): 0 violations, 1 items axe could not decide, 36 rules passed
 - Walk HU: rooms menu open: 0 violations, 1 items axe could not decide, 39 rules passed
 - Walk HU: viewer open (painting): 0 violations, 2 items axe could not decide, 36 rules passed
 - Walk HU: viewer open (video, with Pause button): 0 violations, 3 items axe could not decide, 33 rules passed
 - Walk HU: viewer open (video on a small screen): 0 violations, 3 items axe could not decide, 33 rules passed
+- Walk HU: viewer open (full video, the Google Drive player blocked: 1 request stopped): 0 violations, 3 items axe could not decide, 35 rules passed
 
 ## Serious or critical violations
 
@@ -55,35 +59,40 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk EN: title screen (7: .sep[aria-hidden="true"]:nth-child(3), .wide.sep[aria-hidden="true"], .sep[aria-hidden="true"]:nth-child(7), .sep[aria-hidden="true"]:nth-child(9))
   - Walk EN: panel "about" open (title screen) (24: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: panel "works" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: panel "bts" open (title screen) (16: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "bts" open (title screen) (21: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: panel "help" open (title screen) (13: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: panel "contact" open (title screen) (31: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: panel "accessibility" open (title screen) (16: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: panel "legal" open (title screen) (21: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: panel "privacy" open (title screen) (21: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: inside, HUD (37: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk EN: inside, HUD (48: .room-name, .room-sub, span[data-i18n="hud.mapKey.videos"], span[data-i18n="hud.mapKey.other"])
   - Walk EN: panel "about" open (inside) (8: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk EN: rooms menu open (45: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk EN: rooms menu open (65: .room-name, .room-sub, span[data-i18n="hud.mapKey.videos"], span[data-i18n="hud.mapKey.other"])
   - Walk EN: viewer open (painting) (18: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: viewer open (video, with Pause button) (18: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk EN: viewer open (video on a small screen) (17: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk EN: viewer open (full video, the Google Drive player blocked: 1 request stopped) (17: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: title screen (7: .sep[aria-hidden="true"]:nth-child(3), .wide.sep[aria-hidden="true"], .sep[aria-hidden="true"]:nth-child(7), .sep[aria-hidden="true"]:nth-child(9))
   - Walk HU: panel "about" open (title screen) (22: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "works" open (title screen) (38: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "bts" open (title screen) (16: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: panel "help" open (title screen) (13: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "contact" open (title screen) (31: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "accessibility" open (title screen) (16: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "legal" open (title screen) (22: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: panel "privacy" open (title screen) (21: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: inside, HUD (38: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
-  - Walk HU: panel "about" open (inside) (22: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
-  - Walk HU: rooms menu open (45: .room-name, .room-sub, span[data-i18n="hud.tour"], button[data-action="rooms"] > .ico[aria-hidden="true"])
+  - Walk HU: inside, HUD (48: .room-name, .room-sub, span[data-i18n="hud.mapKey.videos"], span[data-i18n="hud.mapKey.other"])
+  - Walk HU: panel "about" open (inside) (8: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: rooms menu open (65: .room-name, .room-sub, span[data-i18n="hud.mapKey.videos"], span[data-i18n="hud.mapKey.other"])
   - Walk HU: viewer open (painting) (18: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: viewer open (video, with Pause button) (18: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
   - Walk HU: viewer open (video on a small screen) (17: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
+  - Walk HU: viewer open (full video, the Google Drive player blocked: 1 request stopped) (17: .brand > b, .brand > span, button[data-nav="about"], button[data-nav="works"])
 - **serious · label-content-name-mismatch: Elements must have their visible text as part of their accessible name**
   - Walk EN: panel "about" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "works" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "bts" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
+  - Walk EN: panel "help" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "contact" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "accessibility" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
   - Walk EN: panel "legal" open (title screen) (1: #panel > .close[data-close=""][aria-label="Close"])
@@ -91,17 +100,19 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk EN: viewer open (painting) (1: #viewer > .close[data-close=""][aria-label="Close"])
   - Walk EN: viewer open (video, with Pause button) (1: #viewer > .close[data-close=""][aria-label="Close"])
   - Walk EN: viewer open (video on a small screen) (1: #viewer > .close[data-close=""][aria-label="Close"])
+  - Walk EN: viewer open (full video, the Google Drive player blocked: 1 request stopped) (1: #viewer > .close[data-close=""][aria-label="Close"])
   - Walk HU: panel "about" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "works" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "bts" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
+  - Walk HU: panel "help" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "contact" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "accessibility" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "legal" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: panel "privacy" open (title screen) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
-  - Walk HU: panel "about" open (inside) (1: #panel > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (painting) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (video, with Pause button) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
   - Walk HU: viewer open (video on a small screen) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
+  - Walk HU: viewer open (full video, the Google Drive player blocked: 1 request stopped) (1: #viewer > .close[data-close=""][aria-label="Bezárás"])
 - **serious · bypass: Page must have means to bypass repeated blocks**
   - Walk EN: sound question (1: html)
   - Walk HU: sound question (1: html)
@@ -110,3 +121,6 @@ These are not failures. axe reports them when it cannot measure something, mostl
   - Walk EN: viewer open (video on a small screen) (1: #viewer-video)
   - Walk HU: viewer open (video, with Pause button) (1: #viewer-video)
   - Walk HU: viewer open (video on a small screen) (1: #viewer-video)
+- **critical · frame-tested: Frames should be tested with axe-core**
+  - Walk EN: viewer open (full video, the Google Drive player blocked: 1 request stopped) (1: #viewer-frame)
+  - Walk HU: viewer open (full video, the Google Drive player blocked: 1 request stopped) (1: #viewer-frame)
