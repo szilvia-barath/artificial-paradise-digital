@@ -668,6 +668,12 @@ body.touch #guide { display: none; }
   #guide { bottom: calc(var(--foot-h) + 8px + var(--safe-b) + 84px + 8px); padding: 6px 12px; }
   #guide .g-title, #guide .g-more, #guide .g-note { display: none; }
 }
+/* A narrow window (under 560 px): the same four lines, so the card stays low, clear of the map
+   and its key; where it still does not fit, main.js does not show it. */
+@media (max-width: 559px) {
+  #guide { padding: 6px 12px; }
+  #guide .g-title, #guide .g-more, #guide .g-note { display: none; }
+}
 
 #joystick {
   position: absolute;
@@ -1002,12 +1008,6 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   #panel-body .credits { grid-template-columns: 1fr; gap: 2px; }
   #panel-body .credits dd { margin-bottom: 10px; }
 }
-/* A computer's window up to 1100 px wide: with Next work and Help the toolbar, kept in the
-   middle, would reach the on-screen keys at the left, so it stands at the right instead. */
-@media (max-width: 1100px) {
-  body:not(.touch) #toolbar { left: auto; right: calc(14px + var(--safe-r)); transform: none; }
-}
-/* A phone: four buttons with words do not fit in one row beside their signs, so the words go
 /* A small phone on its side (under 360 px high, 568 × 320 say): under the map the key would
    lie under the zoom keys and under the touch hint, so it stands at the left of the map, level
    with its top, and the room label stops short of it. */
@@ -1019,6 +1019,12 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   body.touch #map-key { top: calc(var(--nav-h) + 6px); right: calc(10px + 150px + 6px + var(--safe-r)); }
   body.touch #room-label { max-width: calc(100% - 12px - 150px - 10px - 6px - 190px - 8px - var(--safe-l) - var(--safe-r)); }
 }
+/* A computer's window up to 1100 px wide: with Next work and Help the toolbar, kept in the
+   middle, would reach the on-screen keys at the left, so it stands at the right instead. */
+@media (max-width: 1100px) {
+  body:not(.touch) #toolbar { left: auto; right: calc(14px + var(--safe-r)); transform: none; }
+}
+/* A phone: four buttons with words do not fit in one row beside their signs, so the words go
    under the signs (as in the mockup) and "Next work" may take two lines. */
 @media (max-width: 480px) {
   #toolbar > button, #toolbar .rooms-wrap > button { flex-direction: column; justify-content: center; gap: 3px; padding: 6px 7px; letter-spacing: 0.04em; }

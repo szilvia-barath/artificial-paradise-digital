@@ -632,16 +632,30 @@ controls.onLook = retireHint;
 const guide = document.getElementById('guide');
 let guideAt = Infinity;
 function showGuide(again = false) {
-  if (isTouch) {
+  const hintAgain = () => {
     if (!again) return;
     document.body.classList.remove('looked');
     clearTimeout(hintTimer);
     hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000);
-    return;
-  }
+  };
+  if (isTouch) { hintAgain(); return; }
   guide.hidden = false;
+  // In a narrow or short window (a computer's window at phone size, or a laptop at 400%) the
+  // card can lie over the map, its key or the room label, or above the top of the window: then
+  // it is not shown, and the hint in the middle stays as it was (Help brings that back instead).
+  if (!guideFits()) { guide.hidden = true; hintAgain(); return; }
   document.body.classList.add('guiding');
   guideAt = performance.now();
+}
+function guideFits() {
+  const g = guide.getBoundingClientRect();
+  if (g.top < 0 || g.left < 0 || g.right > window.innerWidth || g.bottom > window.innerHeight) return false;
+  return ['minimap', 'map-key', 'room-label'].every((id) => {
+    const e = document.getElementById(id);
+    if (!e || !e.getClientRects().length) return true;
+    const r = e.getBoundingClientRect();
+    return g.bottom <= r.top || r.bottom <= g.top || g.right <= r.left || r.right <= g.left;
+  });
 }
 // Not the event that showed it (Esc answering the sound question shows it on the way).
 function hideGuide(e) {

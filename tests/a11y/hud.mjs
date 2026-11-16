@@ -387,6 +387,22 @@ await guard(['F1.3'], async () => {
   const p = w.page;
   const x0 = await p.evaluate(() => window.__ap.controls.pos.x);
   await p.keyboard.down('ArrowUp');
+// A narrow or short computer window: the card shows only where it fits, inside the window and
+// clear of the map, its key and the room label; where it does not, the hint in the middle shows
+// as it did before the card. 480 × 700 has room for it.
+for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: { width: 320, height: 568 } }, 'en', false], ['320 × 568, Hungarian', { viewport: { width: 320, height: 568 } }, 'hu', false], ['320 × 256 (1280 × 1024 at 400%), Hungarian', { viewport: { width: 320, height: 256 } }, 'hu', false], ['480 × 700, Hungarian', { viewport: { width: 480, height: 700 } }, 'hu', true]]) {
+  const w = await insideByKeys(lang, opts);
+  const p = w.page;
+  const g = await guideInfo(p);
+  const b = await boxes(p, ['#guide', '#minimap', '#map-key', '#room-label']);
+  const vw = opts.viewport;
+  const inWindow = !!b['#guide'] && b['#guide'].x >= 0 && b['#guide'].y >= 0 && b['#guide'].x + b['#guide'].w <= vw.width && b['#guide'].y + b['#guide'].h <= vw.height;
+  const clear = ['#minimap', '#map-key', '#room-label'].every((x) => !meets(b['#guide'], b[x]));
+  const ok = g.shown ? inWindow && clear && g.hidden === 'true' : !mustShow && g.hint === 'visible';
+  step(`F1.8 Computer ${name}: the first-use card shows only inside the window and clear of the map, its key and the room label; else it is not shown and the hint in the middle shows${mustShow ? ' (here it fits and shows)' : ''}`, ok, `card shown: ${g.shown}, hint: ${g.hint}; ${Object.entries(b).map(([x, v]) => `${x} ${show(v)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
   const walked = await p.waitForFunction((x) => Math.abs(window.__ap.controls.pos.x - x) > 0.05, x0, { timeout: 30000 }).then(() => true, () => false);
   await p.keyboard.up('ArrowUp');
   const byKey = await guideInfo(p);
