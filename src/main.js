@@ -556,7 +556,10 @@ function enter(ask = true) {
   if (ask) {
     soundAsk.hidden = false;
     blockers.panel = true;
-    soundDialog.opened();
+    // No opener: whatever has focus when enter() runs (Enter, or after "Walk to this work"
+    // on the title screen the Works button or the Menu button the viewer closed onto) is
+    // not where focus goes once the question is answered. It goes on to the 3D view.
+    soundDialog.opened({ opener: null });
   } else {
     focusScene();
     startHintTimer();

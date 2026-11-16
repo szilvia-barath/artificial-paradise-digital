@@ -585,6 +585,40 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   await w.ctx.close();
 }
 
+// ---------------- "Walk to this work" on the title screen, from a work opened from the works
+// list: once the sound question is answered, focus is on the 3D view, whatever the viewer
+// closed onto (the Menu button on a phone, the Works button in a wide window)
+{
+  const viewAfter = async (context, by, folded) => {
+    const w = await openWalk(browser, context);
+    const p = w.page;
+    const press = async (sel) => { if (by === 'tap') await p.tap(sel); else { await p.focus(sel); await p.keyboard.press('Enter'); } };
+    if (folded) {
+      await press('#site-nav .nav-toggle');
+      await p.waitForFunction(() => document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded') === 'true', null, { timeout: 30000 });
+    }
+    await press('#site-nav [data-nav="works"]');
+    await p.waitForFunction(() => !!document.querySelector('#panel:not([hidden]) .works-list'), null, { timeout: 30000 });
+    await press('#panel-body [data-work="w05-human-as-error-i"]');
+    await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+    await press('#viewer-goto');
+    await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 60000 });
+    await press('[data-sound="off"]');
+    await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+    // focus settles on the view, or stays wherever the question sent it
+    await p.waitForFunction(() => document.activeElement === document.getElementById('scene'), null, { timeout: 10000 }).catch(() => {});
+    const r = { view: await viewHas(p), focus: await focusName(p) };
+    errors.push(...w.errors);
+    await w.ctx.close();
+    return r;
+  };
+  const tap = await viewAfter(PHONE, 'tap', true);
+  const key = await viewAfter(PHONE, 'key', true);
+  step('45 Phone, title screen: Menu, Works, a work, "Walk to this work", the sound question answered (by tap, by keyboard): focus on the 3D view (not the Menu button)', tap.view && key.view, `by tap: ${tap.focus}; by keyboard: ${key.focus}`);
+  const wide = await viewAfter({ viewport: { width: 1280, height: 800 } }, 'key', false);
+  step('46 Wide window, title screen: Works, a work, "Walk to this work", the sound question answered by keyboard: focus on the 3D view (not the Works button)', wide.view, `focus on ${wide.focus}`);
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);
