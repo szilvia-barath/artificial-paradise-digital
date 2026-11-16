@@ -1,4 +1,4 @@
-import { t, lang } from '../i18n.js';
+import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce } from './announce.js';
 import { isPart } from '../world/route.js';
@@ -85,6 +85,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     img.alt = `${w.title}, ${w.medium}`;
     room.textContent = `${data.rooms[w.room].name} · ${t('viewer.no', { no: w.no })}`;
     title.textContent = w.title;
+    if (titleLang(w)) title.lang = titleLang(w);
+    else title.removeAttribute('lang');
     meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
     // the work (or its series) on the artist's own website, in the site's language
     const link = w.link && (w.link[lang()] || w.link.en);

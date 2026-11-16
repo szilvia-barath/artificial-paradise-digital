@@ -1,9 +1,11 @@
-import { t } from '../i18n.js';
+import { t, titleLang } from '../i18n.js';
 import { focusDialog, shown } from './dialog.js';
 
 // About / Works / Behind-the-scenes panels and the "jump to room" menu.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+// A work's title, marked lang="en" on the Hungarian page (titleLang in i18n.js).
+const langAttr = (w) => (titleLang(w) ? ` lang="${titleLang(w)}"` : '');
 
 export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, focusFallback }) {
   const panel = document.getElementById('panel');
@@ -63,7 +65,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <ol class="works-list">
       ${data.works.filter((w) => !w.id.endsWith('-screen')).map((w) => `
         <li><button data-work="${esc(w.id)}"><span class="no">${w.no}</span>
-          <span><em>${esc(w.title)}</em><small>${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))} · ${esc(data.rooms[w.room].name)}</small></span>
+          <span><em${langAttr(w)}>${esc(w.title)}</em><small>${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))} · ${esc(data.rooms[w.room].name)}</small></span>
         </button></li>`).join('')}
     </ol>
     <p class="note">${esc(data.source || '')}</p>
@@ -198,8 +200,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   const buildRoomsMenu = () => {
     roomsMenu.innerHTML = Object.entries(data.rooms)
       .map(([id, r]) => {
-        const titles = data.works.filter((w) => w.room === id && !w.id.endsWith('-screen')).map((w) => w.title);
-        return `<div class="room-row"><button data-room="${id}" aria-describedby="rooms-menu-${id}">${esc(r.name)}</button><small id="rooms-menu-${id}">${esc(titles.join(', '))}</small></div>`;
+        const titles = data.works.filter((w) => w.room === id && !w.id.endsWith('-screen')).map((w) => `<span${langAttr(w)}>${esc(w.title)}</span>`);
+        return `<div class="room-row"><button data-room="${id}" aria-describedby="rooms-menu-${id}">${esc(r.name)}</button><small id="rooms-menu-${id}">${titles.join(', ')}</small></div>`;
       })
       .join('');
     markRoom();

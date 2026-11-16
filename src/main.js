@@ -20,11 +20,15 @@ import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
 import { setupKeypad } from './ui/keypad.js';
 import { focusDialog, BEHIND } from './ui/dialog.js';
-import { localize, onLangChange, setText, t } from './i18n.js';
-import { announce, unannounce } from './ui/announce.js';
+import { localize, onLangChange, setText, t, titleLang } from './i18n.js';
+import { announce, unannounce, setForeign } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
 
 localize(data);
+// The live region marks the English work titles on the Hungarian page, in every message
+// (the work in front, a room's subtitle, the tour, the viewer's Previous and Next).
+const markTitles = () => setForeign(data.works.filter(titleLang).map((w) => ({ text: w.title, lang: titleLang(w) })));
+markTitles();
 
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
@@ -694,6 +698,7 @@ setTimeout(markReady, 12000);
 // Static markup is re-translated by i18n.js; here everything built from the data.
 onLangChange(() => {
   localize(data);
+  markTitles();
   ui.refresh();
   viewer.refresh();
   tour.refresh();

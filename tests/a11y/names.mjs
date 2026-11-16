@@ -109,6 +109,82 @@ const clickTo = async (p, sel, title) => {
   await w.ctx.close();
 }
 
+// ---------------- B6: on the Hungarian page the English work titles carry lang="en"
+// (all 17 titles in exhibition.json are the artist's English ones, and hu.json gives none a
+// Hungarian title, so all are marked; on the English page none is)
+{
+  const w = await inside('hu');
+  const p = w.page;
+  const marks = () => p.evaluate(() => {
+    const viewer = document.getElementById('viewer-title');
+    const list = [...document.querySelectorAll('#panel-body .works-list em')];
+    const menu = [...document.querySelectorAll('#rooms-menu small span')];
+    return {
+      viewer: viewer.getAttribute('lang'),
+      list: `${list.filter((e) => e.lang === 'en').length}/${list.length}`,
+      menu: `${menu.filter((e) => e.lang === 'en').length}/${menu.length}`,
+    };
+  });
+  await openWork(p, 'w08-wiena-wrong-landscape-i');
+  const v = await marks();
+  await p.evaluate(() => window.__ap.viewer.close());
+  await p.evaluate(() => window.__ap.ui.works());
+  await p.waitForFunction(() => !!document.querySelector('#panel:not([hidden]) .works-list'), null, { timeout: 30000 });
+  const l = await marks();
+  step('B6.1 Hungarian page: the viewer\'s title, the 17 titles in the works list and the 17 in the rooms menu carry lang="en"', v.viewer === 'en' && l.list === '17/17' && l.menu === '17/17', `viewer: ${v.viewer}; works list: ${l.list}; rooms menu: ${l.menu}`);
+  // switched to English while the list shows, then the viewer: the marks go
+  await p.click('#site-nav [data-lang="en"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
+  const le = await marks();
+  await p.evaluate(() => window.__ap.ui.close());
+  await openWork(p, 'w08-wiena-wrong-landscape-i');
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  const vh = await marks();
+  await p.click('#site-nav [data-lang="en"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
+  const ve = await marks();
+  step('B6.2 The language switched while they show: in English no title carries lang (works list, rooms menu, viewer); back in Hungarian the viewer\'s title has it again', le.list === '0/17' && le.menu === '0/17' && vh.viewer === 'en' && ve.viewer === null, `English list: ${le.list}, menu: ${le.menu}; viewer in HU: ${vh.viewer}, in EN: ${ve.viewer}`);
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+
+  // the live region: the work in front (Page Down), a room's subtitle, the viewer's Next
+  await p.evaluate(() => window.__ap.viewer.close());
+  await p.waitForFunction(() => document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
+  await p.evaluate(() => { window.__said.splice(0); window.__saidHTML.splice(0); });
+  for (let i = 0; i < 4; i++) await p.keyboard.press('PageDown'); // on to no. 4 in Room 1
+  await hear(p, ['Human as Error III']);
+  await p.evaluate(() => { window.__said.splice(0); window.__saidHTML.splice(0); });
+  await p.keyboard.press('PageDown'); // no. 5, still Room 1
+  let h = await hear(p, ['Human as Error I.']);
+  const html5 = h.html;
+  await p.keyboard.press('PageDown'); // no. 6, Room 2: its subtitle names no title
+  h = await hear(p, ['Artificial Paradise – Singapore']);
+  const workOk = html5.includes('<span lang="en">Human as Error I</span>.') && h.html.includes('<span lang="en">Artificial Paradise – Singapore</span>') && h.html.includes('2. terem');
+  await p.evaluate(() => window.__ap.jumpToRoom('r4')); // Room 4: "Let it Flow · videó"
+  h = await hear(p, ['4. terem']);
+  const roomOk = h.html.includes('<span lang="en">Let it Flow</span>') && !/lang="en">[^<]*terem/.test(h.html);
+  await openWork(p, 'w16-let-it-flow');
+  await p.click('#viewer-next');
+  h = await hear(p, ['Natural Life']);
+  const nextOk = h.html.includes('<span lang="en">Natural Life</span>') && h.html.includes('17. mű a 17 közül') && !/lang="en">[^<]*mű/.test(h.html);
+  step('B6.3 Hungarian page, the live region: the titles in the work in front, in a room\'s subtitle and in the viewer\'s Next are each in a <span lang="en">, the Hungarian words are not', workOk && roomOk && nextOk, `work in front ${workOk}, room ${roomOk}, Next ${nextOk}; last: ${h.html}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+{
+  const w = await inside('en');
+  const p = w.page;
+  await p.evaluate(() => { window.__said.splice(0); window.__saidHTML.splice(0); });
+  await p.keyboard.press('PageDown');
+  const h = await hear(p, ['Wrong Data Landscape Dresden']);
+  await openWork(p, 'w01-dresden');
+  const v = await p.getAttribute('#viewer-title', 'lang');
+  step('B6.4 English page: no lang mark in the live region or on the viewer\'s title', !h.html.includes('lang=') && v === null, `live region: ${h.html}; viewer title lang: ${v}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

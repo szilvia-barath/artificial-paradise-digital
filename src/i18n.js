@@ -20,6 +20,12 @@ export function t(key, vars) {
   return translator(LOCALES[current], en)(key, vars);
 }
 
+// The language of a work's title, where it differs from the page's: the titles are the
+// artist's English ones (exhibition.json), so on the Hungarian page they are marked
+// lang="en", as the accessible version marks them. A title that hu.json gives in Hungarian
+// (works.<id>.title; none does now) is not marked. null on the English page.
+export const titleLang = (w) => (current !== 'en' && !LOCALES[current].works?.[w.id]?.title ? 'en' : null);
+
 // Sets an element's text from a key and remembers it, so a language switch re-renders it.
 export function setText(el, key, vars) {
   el.dataset.i18n = key;
