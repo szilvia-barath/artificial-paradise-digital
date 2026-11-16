@@ -568,7 +568,7 @@
           "The tour's captions change by themselves: after 5 seconds, or 14 at the videos with sound. The tour can be stopped (T or Esc) but not paused or slowed.",
           "The contrast over the 3D view was measured in Chromium screenshots facing the brightest wall, not in front of every wall. The tour caption, the line that names the work in front of you, the drag hint and the zoom readout sit on the same dark glass but were not measured. Over pure white the grey titles in the rooms menu would fall to 4.48:1, just under the 4.5:1 that WCAG asks for text of this size. The exhibition text sheets drawn on the walls of Room 1 and Room 2 were not measured.",
           "On a touch screen some links are still small. In a window wider than 760 pixels (a tablet, say) the footer's links are 13 pixels tall, and the links in the text of the panels are 17 to 20 pixels tall per line, at any width.",
-          "Esc does not close the viewer while focus is inside the Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab leaves the player, and then Esc works, or the Close button closes the viewer."
+          "Esc does not close the viewer while focus is inside the Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab, pressed until focus leaves the player, gets out of it, and then Esc works, or the Close button closes the viewer."
         ]
       },
       {
