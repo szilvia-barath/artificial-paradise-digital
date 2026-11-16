@@ -210,6 +210,7 @@
     "announce": {
       "room": "{name}. {subtitle}.",
       "work": "No. {no}, {title}. Press Enter to open.",
+      "workNext": "No. {no}, {title}.",
       "text": "Exhibition text. Press Enter to read.",
       "tourWork": "No. {no}, {title}. {meta}.",
       "tourStopped": "Tour stopped.",

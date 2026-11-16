@@ -255,8 +255,10 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   else if (a === 'sound') toggleSound();
   else if (a === 'help') ui.show('help');
   // Next work: the same jump as Page Down. Focus stays on the button (a mouse click or a tap
-  // then hands it to the view, below), so pressed again it goes on to the next work.
-  else if (a === 'next') stepWork(1, { focus: false });
+  // then hands it to the view, below), so pressed again it goes on to the next work. Only
+  // after a mouse click does Enter open the work: from the keyboard Enter presses the button
+  // again, and a phone has no Enter key, so there the work is said without "Press Enter".
+  else if (a === 'next') stepWork(1, { focus: false, enter: e.detail > 0 && !isTouch });
 });
 // One jump for each press, as with Page Down: a held Enter repeats, and its repeats would click
 // the button again and cut from view to view that fast (WCAG 2.3.1).
@@ -400,9 +402,9 @@ function pick(x, y) {
 // while walking by keyboard, and announced when it changes.
 let front = null;
 let frontAcc = 0;
-function announceFront(target) {
+function announceFront(target, enter = true) {
   if (target === 'text') announce(t('announce.text'), 'work');
-  else announce(t('announce.work', { no: target.no, title: target.title }), 'work');
+  else announce(t(enter ? 'announce.work' : 'announce.workNext', { no: target.no, title: target.title }), 'work');
 }
 function updateFront(dt) {
   frontAcc += dt;
@@ -495,8 +497,9 @@ function announceRoom(id = currentRoomId) {
 // and sit in the same place on every keyboard layout.
 const visit = visitOrder(data.works);
 let visitAt = -1;
-// focus false: from the toolbar's Next work button, where focus stays.
-function stepWork(d, { focus = true } = {}) {
+// focus false: from the toolbar's Next work button, where focus stays. enter false: Enter
+// would not open the work, so the message leaves out "Press Enter to open".
+function stepWork(d, { focus = true, enter = true } = {}) {
   const here = front && front !== 'text' ? visit.indexOf(front) : -1;
   const base = here >= 0 ? here : visitAt;
   visitAt = base < 0 ? (d > 0 ? 0 : visit.length - 1) : (base + d + visit.length) % visit.length;
@@ -506,7 +509,7 @@ function stepWork(d, { focus = true } = {}) {
   gotoWork(w);
   keyNav = true;
   front = w;
-  announceFront(w);
+  announceFront(w, enter);
   if (focus) focusScene();
 }
 window.addEventListener('keydown', (e) => {

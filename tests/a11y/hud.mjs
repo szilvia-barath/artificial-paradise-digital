@@ -500,6 +500,9 @@ const hear = async (p, parts) => {
 const standingAt = (p) => p.evaluate(() => { const { controls, visit } = window.__ap; const w = visit.find((k) => Math.hypot(k._focus.x - controls.pos.x, k._focus.z - controls.pos.y) < 0.02); return w ? w.no : null; });
 const atWork = (p, no) => p.waitForFunction((n) => { const { controls, visit } = window.__ap; const w = visit[n - 1]; return Math.hypot(w._focus.x - controls.pos.x, w._focus.z - controls.pos.y) < 0.02; }, no, { timeout: 30000 }).then(() => true, () => false);
 const said = (l, no, title) => fill(UI[l].announce.work, { no, title });
+// from the button by keyboard, or tapped: no "Press Enter to open", since Enter there does not open the work
+const saidNext = (l, no, title) => fill(UI[l].announce.workNext, { no, title });
+const enterWords = (l) => UI[l].announce.work.split('. ').pop().replace(/\.$/, ''); // "Press Enter to open", "Megnyitás: Enter"
 for (const [name, opts, lang] of [['1366 × 768, English', {}, 'en'], ['1280 × 800, Hungarian', { viewport: { width: 1280, height: 800 } }, 'hu'], ['900 × 700, Hungarian', { viewport: { width: 900, height: 700 } }, 'hu'], ['800 × 600, Hungarian', { viewport: { width: 800, height: 600 } }, 'hu'], ['683 × 384 at 2×, Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu'], ['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu']]) {
   const w = await insideByKeys(lang, opts);
   const p = w.page;
@@ -545,7 +548,7 @@ await guard(['F2.3'], async () => {
   for (let i = 1; i <= 12; i++) { await p.keyboard.press('Tab'); if (await on()) { tabs = i; break; } }
   await p.keyboard.press('Enter');
   const one = await atWork(p, 1);
-  const h1 = await hear(p, [said('hu', 1, 'Wrong Data Landscape Dresden')]);
+  const h1 = await hear(p, [saidNext('hu', 1, 'Wrong Data Landscape Dresden')]);
   const stays = await on();
   await p.keyboard.press('Enter');
   const two = await atWork(p, 2);
@@ -556,7 +559,7 @@ await guard(['F2.3'], async () => {
   const three = await atWork(p, 3);
   const after = await standingAt(p);
   const viewer = await p.evaluate(() => !document.getElementById('viewer').hidden);
-  step('F2.3 Hungarian page, by keyboard: Tab from the 3D view to Next work, Enter: to no. 1, "1. mű, Wrong Data Landscape Dresden. Megnyitás: Enter." said, focus stays on the button; Enter again: no. 2; Enter held (four repeats): one jump only, to no. 3; nothing opens', tabs > 0 && one && h1.includes(said('hu', 1, 'Wrong Data Landscape Dresden')) && stays && two && three && after === 3 && !viewer, `${tabs} Tabs; no. 1 ${one}, said "${h1}", focus on the button ${stays}; no. 2 ${two}; after the held Enter at no. ${after}; viewer open ${viewer}`);
+  step('F2.3 Hungarian page, by keyboard: Tab from the 3D view to Next work, Enter: to no. 1, "1. mű, Wrong Data Landscape Dresden." said, without "Megnyitás: Enter." (Enter here goes on to the next work), focus stays on the button; Enter again: no. 2; Enter held (four repeats): one jump only, to no. 3; nothing opens', tabs > 0 && one && h1.includes(saidNext('hu', 1, 'Wrong Data Landscape Dresden')) && !h1.includes(enterWords('hu')) && stays && two && three && after === 3 && !viewer, `${tabs} Tabs; no. 1 ${one}, said "${h1}", focus on the button ${stays}; no. 2 ${two}; after the held Enter at no. ${after}; viewer open ${viewer}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
@@ -568,11 +571,11 @@ await guard(['F2.4'], async () => {
   const hint = await p.textContent('#click-to-look');
   await p.tap('[data-action="next"]');
   const one = await atWork(p, 1);
-  const h1 = await hear(p, [said('en', 1, 'Wrong Data Landscape Dresden')]);
+  const h1 = await hear(p, [saidNext('en', 1, 'Wrong Data Landscape Dresden')]);
   await p.tap('[data-action="next"]');
   const two = await atWork(p, 2);
   const viewer = await p.evaluate(() => !document.getElementById('viewer').hidden);
-  step('F2.4 Phone 375 × 667: Next work tapped: to no. 1, said; tapped again: no. 2; nothing opens; the touch hint names Next work', one && h1.includes(said('en', 1, 'Wrong Data Landscape Dresden')) && two && !viewer && hint === UI.en.hud.touchHint && hint.includes(UI.en.hud.next), `no. 1 ${one}, said "${h1}"; no. 2 ${two}; viewer ${viewer}; hint "${hint}"`);
+  step('F2.4 Phone 375 × 667: Next work tapped: to no. 1, said as "No. 1, Wrong Data Landscape Dresden." without "Press Enter to open" (a phone has no Enter key); tapped again: no. 2; nothing opens; the touch hint names Next work', one && h1.includes(saidNext('en', 1, 'Wrong Data Landscape Dresden')) && !h1.includes(enterWords('en')) && two && !viewer && hint === UI.en.hud.touchHint && hint.includes(UI.en.hud.next), `no. 1 ${one}, said "${h1}"; no. 2 ${two}; viewer ${viewer}; hint "${hint}"`);
   errors.push(...w.errors);
   await w.ctx.close();
 });

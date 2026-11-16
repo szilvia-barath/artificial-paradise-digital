@@ -210,6 +210,7 @@
     "announce": {
       "room": "{name}. {subtitle}.",
       "work": "{no}. mű, {title}. Megnyitás: Enter.",
+      "workNext": "{no}. mű, {title}.",
       "text": "Kiállítási szöveg. Megnyitás: Enter.",
       "tourWork": "{no}. mű, {title}. {meta}.",
       "tourStopped": "A tárlatvezetés leállt.",

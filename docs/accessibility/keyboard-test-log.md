@@ -155,12 +155,12 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.1 Tab back to the 3D view (27 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
-- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
+- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. Room 1. Paintings, Paradise Factory. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
 
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Tour stopped. Room 1. Paintings, Paradise Factory. No. 2, Human as Error VI. Press Enter to open."
+- What happened: aria-pressed: false; announced: "Tour stopped."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 
@@ -189,8 +189,8 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 
 ## PASS: 10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)
 
-- Expected: focus on Next work; Enter: "No. 12, Artificial Paradise II. Press Enter to open." said, focus stays on the button; held: one more jump only, "No. 13, Artificial Paradise III. Press Enter to open."
-- What happened: focus on Next work: true; said "No. 12, Artificial Paradise II. Press Enter to open."; focus stays: true; held: "No. 13, Artificial Paradise III. Press Enter to open."; then ""
+- Expected: focus on Next work; Enter: "No. 12, Artificial Paradise II." said, without "Press Enter to open" (Enter here goes on to the next work), focus stays on the button; held: one more jump only, "No. 13, Artificial Paradise III."
+- What happened: focus on Next work: true; said "No. 12, Artificial Paradise II."; focus stays: true; held: "No. 13, Artificial Paradise III."; then ""
 
 ## PASS: Console errors during the whole run
 
