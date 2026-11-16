@@ -256,8 +256,10 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 ×
   const others = ['#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label', '#click-to-look'];
   const b = await boxes(p, ['#keypad .k-a', '#keypad .k-d', ...others]);
   const clear = ['#keypad .k-a', '#keypad .k-d'].every((k) => others.every((s) => !meets(b[k], b[s])));
+  // the zoom readout, moved for the two keys, over none of the map, its key, the room label, the toolbar or the zoom keys
+  const readout = !!b['#zoom-level'] && ['#minimap', '#map-key', '#room-label', '#toolbar', '#zoompad', '#joystick', '#click-to-look'].every((s) => !meets(b['#zoom-level'], b[s]));
   const want = [UI[lang].hud.keys.left, UI[lang].hud.keys.right];
-  step(`D2.1 Phone ${name}: only the two turning keys show ("${want.join('", "')}"), each at least 44 × 44 px, inside the window, over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key, the room label and the touch hint`, caps.length === 2 && caps.map((c) => c.title).join('|') === want.join('|') && caps.every((c) => c.w >= 44 && c.h >= 44 && c.inside) && clear, `${JSON.stringify(caps)}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`D2.1 Phone ${name}: only the two turning keys show ("${want.join('", "')}"), each at least 44 × 44 px, inside the window, over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key, the room label and the touch hint; the zoom readout over none of the map, its key, the room label, the toolbar, the zoom keys, the stick and the hint`, caps.length === 2 && caps.map((c) => c.title).join('|') === want.join('|') && caps.every((c) => c.w >= 44 && c.h >= 44 && c.inside) && clear && readout, `readout clear ${readout}; ${JSON.stringify(caps)}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }

@@ -877,6 +877,11 @@ body.touch #zoom-level { left: auto; right: calc(14px + var(--safe-r)); top: aut
 @media (max-height: 519px) {
   body.touch #zoom-level { right: calc(14px + 46px + 8px + var(--safe-r)); bottom: calc(84px + 44px + 8px + var(--safe-b)); }
 }
+/* a small phone on its side (568 × 320): there it would reach into the map, so it stands at
+   the top in the middle, under the map's key, between the room label and the map */
+@media (max-height: 359px) {
+  body.touch #zoom-level { left: 50%; right: auto; top: calc(var(--nav-h) + 34px); bottom: auto; transform: translateX(-50%); }
+}
 
 /* a small mouse whose wheel rolls three times once the visitor is in the room (the sound
    question answered), then stays still (WCAG 2.2.2) */
