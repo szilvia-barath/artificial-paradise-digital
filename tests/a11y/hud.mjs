@@ -381,12 +381,6 @@ for (const [name, opts, lang] of [['1366 × 768, English', {}, 'en'], ['1280 × 
   errors.push(...w.errors);
   await w.ctx.close();
 }
-await guard(['F1.3'], async () => {
-  // it goes at the first key, and that key works (walking is not blocked); a mouse press; the wheel
-  const w = await insideByKeys('en');
-  const p = w.page;
-  const x0 = await p.evaluate(() => window.__ap.controls.pos.x);
-  await p.keyboard.down('ArrowUp');
 // A narrow or short computer window: the card shows only where it fits, inside the window and
 // clear of the map, its key and the room label; where it does not, the hint in the middle shows
 // as it did before the card. 480 × 700 has room for it.
@@ -403,6 +397,12 @@ for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: 
   errors.push(...w.errors);
   await w.ctx.close();
 }
+await guard(['F1.3'], async () => {
+  // it goes at the first key, and that key works (walking is not blocked); a mouse press; the wheel
+  const w = await insideByKeys('en');
+  const p = w.page;
+  const x0 = await p.evaluate(() => window.__ap.controls.pos.x);
+  await p.keyboard.down('ArrowUp');
   const walked = await p.waitForFunction((x) => Math.abs(window.__ap.controls.pos.x - x) > 0.05, x0, { timeout: 30000 }).then(() => true, () => false);
   await p.keyboard.up('ArrowUp');
   const byKey = await guideInfo(p);
