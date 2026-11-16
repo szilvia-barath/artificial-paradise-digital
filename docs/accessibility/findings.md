@@ -72,6 +72,8 @@ Group e had five items of the UI/UX proposal (D2, D8, E2, D10, A7); three are bu
 | D10 | A laptop whose browser reports touch is treated as a phone. | Open, not built: notes for building it in the "D10 and A7" entry of `PROGRESS.md` (`849e893`). The statement names it as a known gap (`05a9a41`). | |
 | A7 | Most interface type is 9 to 11 px monospace capitals. | Open, tied to steps 2 and 3 of H1. The statement names it as a known gap (`05a9a41`). | |
 
+Note of 16 November 2026: D10, A7, H1 steps 2 to 4 and the tour's possible tap fault (a tap on the tour may close what it opens, as D11 fixed elsewhere) are continued in a separate session, starting from f9f524b. Decided by: reconstructor.
+
 Left open from the review of group e: at 568 × 320 on touch the zoom keys reach about 12 px into the floor plan; in a computer window of 375 × 667 (not touch, not compact) the turning keycaps and the zoom keys lie over the toolbar. H1 steps 2 to 4 are not built: the panels are still dark, the focus ring on glass is still white without a dark halo, and the bracket buttons are unchanged. On the rooms menu's row under the mouse, over pure white, the grey titles work out at 3.4:1; the statement says so. Commit `9ccb08d` (the Let it Flow floor projection) took in a draft of the H1 entry in `PROGRESS.md`; `bb35184` completes it, so the branch head is right.
 
 Limits: Chromium only. Safari and Firefox on a Mac were NOT tested, and neither was Firefox on Windows; nor real phones, a touch-screen laptop, or a real browser zoom (the compact layer was checked in windows of the same size in CSS pixels). Touch in phone emulation only. Nothing heard with a screen reader.
