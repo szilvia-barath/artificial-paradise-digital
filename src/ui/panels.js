@@ -1,5 +1,7 @@
-import { t, titleLang } from '../i18n.js';
+import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog, shown } from './dialog.js';
+import refs from '../data/references.json';
+import { refHTML } from '../refhtml.js';
 
 // About / Works / Behind-the-scenes panels and the "jump to room" menu.
 
@@ -19,9 +21,12 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // Focus goes to the Close button on opening and back to the opener on closing.
   const dialog = focusDialog(panel, { initial: () => closeBtn, fallback: focusFallback });
   let current = null;
+  // The links laid over the texts (references.json), in the page's language.
+  const links = () => refHTML(refs, { t, lang: lang() });
 
   const aboutHTML = () => {
     const m = data.meta;
+    const R = links();
     return `
     <p class="eyebrow">${esc(m.artist)} · ${esc(m.venue)} · <span class="date">${esc(m.dates)}</span></p>
     <h2 id="panel-title">${esc(m.title)}</h2>
@@ -29,7 +34,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="note">${esc(data.textCredit)}</p>
     <h3>${esc(t('panels.credits'))}</h3>
     <dl class="credits">
-      ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
+      ${data.credits.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${R.credit(v, i)}</dd>`).join('')}
     </dl>
     <h3>${esc(t('panels.real'))}</h3>
     <p>${esc(t('panels.address', { venue: m.venue, address: m.address }))} ·
@@ -48,7 +53,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   `;
   };
 
-  // The opening speech, folded away under its title (it is long).
+  // The opening speech, folded away under its title (it is long). Its words are as in
+  // src/i18n; the links to what it mentions are laid over them here.
   const speechHTML = () => {
     const s = data.openingSpeech;
     if (!s) return '';
@@ -56,7 +62,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <h3>${esc(t('panels.speech'))}</h3>
     <details class="speech">
       <summary>${esc(s.author)}: <em>${esc(s.title)}</em> · ${esc(t('panels.speechRead'))}</summary>
-      ${s.text.map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${links().paragraphs('openingSpeech', s.text).map((p) => `<p>${p}</p>`).join('')}
       ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
     </details>`;
   };

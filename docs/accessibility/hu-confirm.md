@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 64. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 69. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -112,6 +112,15 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.announce.viewerWork`
   - HU: {title}. {no}. mű a {total} közül.
   - EN: {title}. No. {no} of {total}.
+- `ui.concept.newTab`
+  - HU: új lapon nyílik meg
+  - EN: opens in a new tab
+- `ui.concept.in.en`
+  - HU: angol nyelven
+  - EN: in English
+- `ui.concept.in.hu`
+  - HU: magyar nyelven
+  - EN: in Hungarian
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
@@ -136,6 +145,12 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.updated` (the date only)
   - HU: Utolsó frissítés: 2026. november 15.
   - EN: Last updated: 15 November 2026
+- `privacy.sections[4].p[1]`
+  - HU: A kiállítás szövegei és a Koncepció oldal a Wikipédiára és más külső oldalakra is mutatnak: a szövegekben említett forrásokra, kiadókra és szervezetekre. Ezek a linkek új lapon nyílnak meg, és mindegyik oldal a saját adatkezelési szabályait alkalmazza.
+  - EN: The exhibition's texts and the Concept page also link to Wikipedia and to other outside sites: the sources, publishers and organisations the texts mention. These links open in a new tab, and each site applies its own privacy policy.
+- `privacy.updated`
+  - HU: Utolsó frissítés: 2026. november 16.
+  - EN: Last updated: 16 November 2026
 - `accessibility.sections[1].p[0]`
   - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél, a Súgóban és a műnézőben, a teljes videó keretével is (a Google lejátszóját letiltva). Eredmény 2026. november 16-án: a 38 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját; a 3D nézet fölötti kontrasztot ezért képernyőképeken mértem meg (lásd: Mi működik).
   - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the accessible version (text format) in both languages (light and dark) and on the digital exhibition in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu, Help and the artwork viewer, also with the frame of the full video (with Google's player blocked). Result on 16 November 2026: no violations in any of the 38 states. axe could not judge the contrast of text that lies over the 3D view or a picture; I measured the contrast over the 3D view in screenshots instead (see What works).

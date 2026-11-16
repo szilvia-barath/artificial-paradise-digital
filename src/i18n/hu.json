@@ -215,6 +215,13 @@
       "tourWork": "{no}. mű, {title}. {meta}.",
       "tourStopped": "A tárlatvezetés leállt.",
       "viewerWork": "{title}. {no}. mű a {total} közül."
+    },
+    "concept": {
+      "newTab": "új lapon nyílik meg",
+      "in": {
+        "en": "angol nyelven",
+        "hu": "magyar nyelven"
+      }
     }
   },
   "meta": {
@@ -501,7 +508,8 @@
       {
         "h": "Más oldalakra mutató linkek",
         "p": [
-          "A művész honlapjára, a MAMŰ-re, az Instagramra, a Facebookra, a LinkedInre és az OpenStreetMapre mutató linkek ezeket az oldalakat nyitják meg, saját adatkezelési szabályaikkal."
+          "A művész honlapjára, a MAMŰ-re, az Instagramra, a Facebookra, a LinkedInre és az OpenStreetMapre mutató linkek ezeket az oldalakat nyitják meg, saját adatkezelési szabályaikkal.",
+          "A kiállítás szövegei és a Koncepció oldal a Wikipédiára és más külső oldalakra is mutatnak: a szövegekben említett forrásokra, kiadókra és szervezetekre. Ezek a linkek új lapon nyílnak meg, és mindegyik oldal a saját adatkezelési szabályait alkalmazza."
         ]
       },
       {
@@ -521,7 +529,7 @@
         ]
       }
     ],
-    "updated": "Utolsó frissítés: 2026. november 9."
+    "updated": "Utolsó frissítés: 2026. november 16."
   },
   "accessibility": {
     "title": "Akadálymentesség",

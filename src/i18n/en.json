@@ -215,6 +215,13 @@
       "tourWork": "No. {no}, {title}. {meta}.",
       "tourStopped": "Tour stopped.",
       "viewerWork": "{title}. No. {no} of {total}."
+    },
+    "concept": {
+      "newTab": "opens in a new tab",
+      "in": {
+        "en": "in English",
+        "hu": "in Hungarian"
+      }
     }
   },
   "meta": {
@@ -503,7 +510,8 @@
       {
         "h": "Links to other sites",
         "p": [
-          "Links to the artist’s website, MAMŰ, Instagram, Facebook, LinkedIn and OpenStreetMap open those sites, under their own privacy policies."
+          "Links to the artist’s website, MAMŰ, Instagram, Facebook, LinkedIn and OpenStreetMap open those sites, under their own privacy policies.",
+          "The exhibition's texts and the Concept page also link to Wikipedia and to other outside sites: the sources, publishers and organisations the texts mention. These links open in a new tab, and each site applies its own privacy policy."
         ]
       },
       {
@@ -523,7 +531,7 @@
         ]
       }
     ],
-    "updated": "Last updated: 9 November 2026"
+    "updated": "Last updated: 16 November 2026"
   },
   "accessibility": {
     "title": "Accessibility",

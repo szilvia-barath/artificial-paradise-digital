@@ -2,6 +2,8 @@ import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
 import { isPart } from '../world/route.js';
+import refs from '../data/references.json';
+import { refHTML } from '../refhtml.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
 // request the full video or video documentation from Google Drive), caption, the artist's
@@ -101,9 +103,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     }
     caption.textContent = w.caption || '';
     caption.hidden = !w.caption;
+    // the artist's text, with the links to what it mentions laid over it (references.json)
     const d = w.desc && data.descriptions[w.desc];
     desc.innerHTML = d
-      ? `<h3>${esc(d.heading)}</h3>${d.text.map((p) => `<p>${esc(p)}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`
+      ? `<h3>${esc(d.heading)}</h3>${refHTML(refs, { t, lang: lang() }).paragraphs(`descriptions.${w.desc}`, d.text).map((p) => `<p>${p}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`
       : '';
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
