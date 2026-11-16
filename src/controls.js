@@ -38,7 +38,8 @@ export class FirstPersonControls {
     this.joy = new THREE.Vector2(0, 0);
     this.bob = 0;
     this.isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
-    this.onTap = null; // (clientX, clientY) => void
+    this.onTap = null; // (clientX, clientY, touch) => true if the tap opened something
+    this.tapOnly = false; // the tour has the controls: nothing moves, but a tap on the view still reaches onTap
     this.onLook = null; // first drag-to-look on desktop (to retire the hint)
     this.onManualMove = null; // wheel / on-screen key used (e.g. to end the tour)
 
@@ -259,7 +260,7 @@ export class FirstPersonControls {
           // A tap that opened something (the viewer) keeps the browser from sending its mouse
           // click after the touch: that click would land on what just opened, and a click
           // beside the picture closes the viewer again.
-          if (!l.pinched && dist < 10 && performance.now() - l.t0 < 350 && this.enabled && this.onTap) {
+          if (!l.pinched && dist < 10 && performance.now() - l.t0 < 350 && (this.enabled || this.tapOnly) && this.onTap) {
             if (this.onTap(t.clientX, t.clientY, true) && e.cancelable) e.preventDefault();
           }
           looks.delete(t.identifier);

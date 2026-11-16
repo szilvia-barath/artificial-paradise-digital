@@ -126,6 +126,7 @@ let entered = false;
 const blockers = { panel: false, viewer: false };
 const syncEnabled = () => {
   controls.enabled = entered && !blockers.panel && !blockers.viewer && !tour.active;
+  controls.tapOnly = tour.active; // a tap during the tour goes through controls.onTap, as outside it
   controls.zoomEnabled = entered && !blockers.panel && !blockers.viewer;
   document.body.classList.toggle('overlay', blockers.panel || blockers.viewer);
 };
@@ -445,7 +446,18 @@ function activate(ud) {
   if (ud.text) { ui.about(); return true; }
   return false;
 }
-controls.onTap = (x, y) => activate(pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1));
+controls.onTap = (x, y) => {
+  const ud = pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+  // During the tour a tap opens the work under the finger, or else the work in view (as the
+  // pointerup below does for the mouse). True tells controls.js to cancel the touchend, so
+  // the browser sends no mouse click after the tap onto the viewer that has just opened.
+  if (tour.active) {
+    const w = (ud || pick(0, 0))?.work;
+    if (w) viewer.open(w);
+    return !!w;
+  }
+  return activate(ud);
+};
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen() || soundAsking()) return;
   // Enter on a focused button or link belongs to that control, not to the work in view.
@@ -455,9 +467,12 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyE' && document.activeElement !== canvas) return; // E is a character key: only in the 3D view
   if ((e.code === 'KeyE' || e.code === 'Enter') && activate(pick(0, 0))) e.preventDefault();
 });
-// During the tour (controls disabled) a click / tap opens the work in view
+// During the tour (controls disabled) a click opens the work in view. A finger's tap goes
+// through controls.onTap above: opened from here, the browser's mouse click after the tap
+// landed on the viewer under the finger (on a button or a link in it, or beside the picture,
+// which closes it again).
 canvas.addEventListener('pointerup', (e) => {
-  if (!tour.active) return;
+  if (!tour.active || e.pointerType === 'touch') return;
   const ud = pick((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1) || pick(0, 0);
   if (ud && ud.work) viewer.open(ud.work);
 });
