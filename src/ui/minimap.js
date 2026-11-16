@@ -92,9 +92,9 @@ export function setupMinimap(canvas, segments, works, onJump) {
     for (const r of ROOMS) {
       // the room the visitor is in: its number bold and fully light on the accent tint, so not
       // by colour alone (the accent as 11 px text on that tint would be 4.06:1 over a white wall)
-      ctx.font = `${r.id === roomId ? 'bold ' : ''}11px ui-monospace, Menlo, monospace`;
+      ctx.font = `${r.id === roomId ? 'bold ' : ''}12px ui-monospace, Menlo, monospace`;
       ctx.fillStyle = r.id === roomId ? '#f2f1ed' : 'rgba(255,255,255,0.85)';
-      ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 12);
+      ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 13);
     }
     // compass: true north in plan coordinates (the rooms run from the Damjanich utca
     // front towards bearing 146°, measured on the OpenStreetMap outline of no. 39)
@@ -107,8 +107,8 @@ export function setupMinimap(canvas, segments, works, onJump) {
       ctx.moveTo(cx - NORTH[0] * 6, cy - NORTH[1] * 6);
       ctx.lineTo(cx + NORTH[0] * 8, cy + NORTH[1] * 8);
       ctx.stroke();
-      ctx.font = '8px ui-monospace, Menlo, monospace';
-      ctx.fillText(t('hud.north'), cx + NORTH[0] * 11 - 3, cy + NORTH[1] * 11 + 3);
+      ctx.font = '12px ui-monospace, Menlo, monospace';
+      ctx.fillText(t('hud.north'), cx + NORTH[0] * 13 - 4, cy + NORTH[1] * 13 + 4);
     }
     // visitor view cone
     const fx = -Math.sin(yaw);

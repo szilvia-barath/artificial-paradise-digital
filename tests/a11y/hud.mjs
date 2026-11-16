@@ -2,7 +2,9 @@
 // screen, the sound question's hint and the hint inside (D11), the stick held and the turning
 // keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
-// (F2); the look, its accent and states not told by colour alone (H1). Each step
+// (F2); the look: its accent and states not told by colour alone (H1.1), the paper panels (H1.2),
+// the glass chips and their focus ring (H1.3), the buttons (H1.4); the size, case and letter
+// spacing of the interface type (A7). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -1027,6 +1029,65 @@ await guard(['H1.4'], async () => {
   errors.push(...w.errors, ...t.errors);
   await w.ctx.close();
   await t.ctx.close();
+});
+
+// ---------------- A7.1: interface type. No text in the interface is under 12 px, in capitals by
+// CSS, or with its letters more than 0.06em apart: the title screen, the sound question, the
+// navbar and footer, every control over the 3D view (also those not on screen at the moment:
+// the hints, the prompt, the tour caption, the zoom readout), the eight panels and the viewer.
+// In English and Hungarian at 1366 × 768, and in English on a phone (375 × 667). What is
+// drawn on the floor plan's canvas cannot be read from the page and is not checked here.
+const typeInfo = (p, root) => p.evaluate((sel) => {
+  const bad = [];
+  let n = 0; let low = 99; let wide = 0;
+  const tag = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}${typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).join('.') : ''}`;
+  const always = ['#prompt', '#tour-caption', '#zoom-level .val', '#viewer-count', '.viewer-loading', '#progress-label', '#room-label .room-name', '#room-label .room-sub'];
+  const scope = document.querySelector(sel);
+  if (!scope) return { n: 0, low: 0, wide: 9, bad: [`${sel} is not there`] };
+  for (const e of scope.querySelectorAll('*')) {
+    if (e.closest('.sr-only, #announcer, script, style, noscript, svg')) continue;
+    const own = [...e.childNodes].some((x) => x.nodeType === 3 && x.textContent.trim());
+    if (!own && !always.some((a) => e.matches(a))) continue;
+    const c = getComputedStyle(e);
+    const size = parseFloat(c.fontSize);
+    const gap = c.letterSpacing === 'normal' ? 0 : parseFloat(c.letterSpacing) / size;
+    n++;
+    low = Math.min(low, size);
+    wide = Math.max(wide, gap);
+    if (size < 12 || gap > 0.0601 || c.textTransform === 'uppercase') bad.push(`${tag(e)} ${size}px ${gap.toFixed(3)}em ${c.textTransform}`);
+  }
+  return { n, low, wide, bad };
+}, root);
+await guard(['A7.1'], async () => {
+  const seen = [];
+  const all = [];
+  for (const [lang, opts, where] of [['en', {}, 'EN 1366 × 768'], ['hu', {}, 'HU 1366 × 768'], ['en', PHONE, 'EN phone']]) {
+    const w = await inside(lang, opts);
+    const p = w.page;
+    // the tour caption's two lines, as tour.js writes them
+    await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = '<span class="t">1 / 17</span><span class="m">x</span>x'; });
+    await p.evaluate(() => document.querySelector('#toolbar [data-action="rooms"]').click());
+    const got = [['page', await typeInfo(p, 'body')]];
+    await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = ''; });
+    for (const name of ['about', 'works', 'bts', 'contact', 'help', 'accessibility', 'legal', 'privacy']) {
+      await p.evaluate((x) => { window.__ap.ui.show(x); for (const d of document.querySelectorAll('#panel details')) d.open = true; }, name);
+      got.push([`panel ${name}`, await typeInfo(p, '#panel')]);
+    }
+    await p.evaluate(() => window.__ap.ui.close());
+    for (const i of [0, 2]) {
+      await p.evaluate((x) => { window.__ap.viewer.open(window.__ap.data.works[x]); for (const d of document.querySelectorAll('#viewer details')) d.open = true; }, i);
+      got.push([`viewer work ${i + 1}`, await typeInfo(p, '#viewer')]);
+    }
+    for (const [what, g] of got) { all.push(g); for (const b of g.bad) seen.push(`${where}, ${what}: ${b}`); }
+    errors.push(...w.errors);
+    await w.ctx.close();
+  }
+  const n = all.reduce((a, g) => a + g.n, 0);
+  const low = Math.min(...all.map((g) => g.low));
+  const wide = Math.max(...all.map((g) => g.wide));
+  step('A7.1 Interface type: no text under 12 px, none in capitals by CSS, no letters more than 0.06em apart, on the title screen, the sound question, the navbar and footer, the controls over the 3D view, the eight panels and the viewer; English and Hungarian at 1366 × 768, English on a phone',
+    seen.length === 0 && n > 300 && low >= 12 && wide <= 0.0601,
+    `${n} texts read; smallest ${low} px; widest letter spacing ${wide.toFixed(3)}em; ${seen.length ? `${seen.length} wrong: ${seen.slice(0, 10).join(' | ')}` : 'nothing wrong'}`);
 });
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
