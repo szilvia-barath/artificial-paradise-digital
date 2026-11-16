@@ -315,6 +315,21 @@ await page.keyboard.press('Enter');
 await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer-title').textContent.trim() !== '');
 step('9.1 Open the walk from a link to a work (?work=w11-artificial-paradise-i-print)', 'after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11', `announced: "${heard}"; Enter opened: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(nothing)'}"`, heard.includes('Room 3.') && heard.includes('No. 11, Artificial Paradise I. Press Enter to open.') && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')));
 
+// ---------------------------------------------------------------- 10. Help
+// Help on the toolbar opens the controls as a panel, through the same dialog path as the
+// others. (The first-use card has gone at the Enter that opened the work in 9.1.)
+await page.keyboard.press('Escape');
+await until(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'));
+tabs = await tabTo('[data-action="help"]');
+await page.keyboard.press('Enter');
+await until(() => !document.getElementById('panel').hidden);
+at = await focusName(page);
+const helpTitle = await page.evaluate(() => document.getElementById(document.getElementById('panel').getAttribute('aria-labelledby'))?.textContent);
+c = await cycle('#panel');
+await page.keyboard.press('Escape');
+await until(() => document.getElementById('panel').hidden);
+step(`10.1 Tab from the 3D view to Help (${tabs} presses), Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('[data-action="help"]')}`, tabs > 0 && at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('[data-action="help"]')));
+
 step('Console errors during the whole run', 'none', errors.length ? errors.join(' | ') : 'none', errors.length === 0);
 await browser.close();
 

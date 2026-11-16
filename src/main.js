@@ -156,6 +156,9 @@ const ui = setupPanels(data, {
   // walking stays locked while the sound question is still open (it holds blockers.panel too)
   onClosePanel: () => { blockers.panel = soundAsking(); syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
+  onGuide: () => showGuide(true),
+  inside: () => entered,
+  isTouch,
   focusFallback,
 });
 
@@ -250,6 +253,7 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   if (a === 'rooms') ui.toggleRooms();
   else if (a === 'tour') toggleTour();
   else if (a === 'sound') toggleSound();
+  else if (a === 'help') ui.show('help');
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
 // Not while the sound question is open: it lies over the navbar and footer, and a click
@@ -537,6 +541,7 @@ soundAsk.addEventListener('click', (e) => {
   syncEnabled();
   soundDialog.closed();
   startHintTimer();
+  showGuide();
   announceArrival();
 });
 soundAsk.addEventListener('keydown', (e) => {
@@ -583,6 +588,7 @@ function enter(ask = true) {
   } else {
     focusScene();
     startHintTimer();
+    showGuide();
     announceArrival();
   }
   syncEnabled();
@@ -605,6 +611,34 @@ const startHintTimer = () => {
   document.body.classList.add('in-room');
 };
 controls.onLook = retireHint;
+
+// The first-use card (a computer): by the keys once the visitor is in the room, gone at the
+// first key, mouse press or turn of the wheel anywhere. Help brings it back (again: true);
+// on a touch screen Help brings the touch hint back instead, which goes as before. It takes
+// the place of the hint in the middle, which says the same, so that one does not show with it
+// and goes with it. Nothing is stored: it shows again on the next visit.
+const guide = document.getElementById('guide');
+let guideAt = Infinity;
+function showGuide(again = false) {
+  if (isTouch) {
+    if (!again) return;
+    document.body.classList.remove('looked');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000);
+    return;
+  }
+  guide.hidden = false;
+  document.body.classList.add('guiding');
+  guideAt = performance.now();
+}
+// Not the event that showed it (Esc answering the sound question shows it on the way).
+function hideGuide(e) {
+  if (guide.hidden || e.timeStamp <= guideAt) return;
+  guide.hidden = true;
+  document.body.classList.remove('guiding');
+  retireHint();
+}
+for (const type of ['keydown', 'pointerdown', 'wheel']) window.addEventListener(type, hideGuide, { capture: true, passive: true });
 
 // ---------------------------------------------------------------- resize
 // Field of view before zoom (updateZoom divides it by the magnification).

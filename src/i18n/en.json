@@ -14,7 +14,8 @@
       "contact": "Contact",
       "legal": "Legal notice",
       "privacy": "Privacy",
-      "accessibility": "Accessibility"
+      "accessibility": "Accessibility",
+      "help": "Help"
     },
     "soundAsk": {
       "question": "Start with sound?",
@@ -30,7 +31,7 @@
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
       "enter": "Enter",
-      "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
+      "howtoDesk": "↑↓ walk · ←→ turn · Page Down: next work · Enter: open · drag to look",
       "howtoTouch": "Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.",
       "failure": "This browser could not start the digital exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.",
       "progress": "Loading the exhibition"
@@ -74,7 +75,18 @@
         "other": "Other works"
       },
       "touchHint": "Drag to look around · push the stick to walk · tap a work to open it",
-      "tourAt": "{at} / {total} · No. {no} · {title}"
+      "tourAt": "{at} / {total} · No. {no} · {title}",
+      "help": "Help",
+      "helpTitle": "How to move, and all the keys",
+      "guide": {
+        "title": "Moving around",
+        "walk": "↑ ↓: walk · ← →: turn",
+        "look": "Drag with the mouse: look around",
+        "next": "Page Down: the next work",
+        "open": "Enter: open the work in front",
+        "help": "Help: all the keys",
+        "close": "Goes at the first key or click"
+      }
     },
     "viewer": {
       "artistSite": "On the artist's website",
@@ -136,7 +148,8 @@
         "instagram": "Instagram",
         "facebook": "Facebook",
         "linkedin": "LinkedIn"
-      }
+      },
+      "helpGuide": "Show the short guide again"
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025"

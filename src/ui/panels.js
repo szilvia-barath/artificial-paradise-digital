@@ -7,7 +7,9 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 // A work's title, marked lang="en" on the Hungarian page (titleLang in i18n.js).
 const langAttr = (w) => (titleLang(w) ? ` lang="${titleLang(w)}"` : '');
 
-export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, focusFallback }) {
+// isTouch: the controls for a touch screen come first in Help. inside(): the visitor is in the
+// exhibition, so Help can bring the first-use card back (onGuide).
+export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, onGuide, inside, isTouch, focusFallback }) {
   const panel = document.getElementById('panel');
   const body = document.getElementById('panel-body');
   const roomsMenu = document.getElementById('rooms-menu');
@@ -83,6 +85,20 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="note">${esc(t('panels.controlsDesk'))}<br />${esc(t('panels.controlsTouch'))}</p>
   `;
 
+  // Help: the controls (the same text as under "Behind the scenes", which keeps it), the
+  // ones for this device first, and inside the exhibition a button that shows the first-use
+  // card again.
+  const helpHTML = () => {
+    const both = [t('panels.controlsDesk'), t('panels.controlsTouch')];
+    if (isTouch) both.reverse();
+    return `
+    <p class="eyebrow">${esc(data.meta.title)}</p>
+    <h2 id="panel-title">${esc(t('nav.help'))}</h2>
+    ${both.map((p) => `<p>${esc(p)}</p>`).join('')}
+    ${inside && inside() ? `<p><button class="link mono" data-guide>${esc(t('panels.helpGuide'))}</button></p>` : ''}
+  `;
+  };
+
   // Contact details from exhibition.json; an entry stays hidden until it has an href, and a
   // group with none left says they are on the way.
   const contactHTML = () => `
@@ -134,7 +150,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   `;
   };
 
-  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy'), accessibility: noticeHTML('accessibility') };
+  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, help: helpHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy'), accessibility: noticeHTML('accessibility') };
 
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));
@@ -176,6 +192,13 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     const n = e.target.closest('[data-nav]');
     if (n) {
       show(n.dataset.nav);
+      return;
+    }
+    // Help's "show the short guide again": the panel closes (focus goes back as on any close)
+    // and the first-use card shows
+    if (e.target.closest('[data-guide]')) {
+      close();
+      onGuide?.();
       return;
     }
     const b = e.target.closest('[data-work]');

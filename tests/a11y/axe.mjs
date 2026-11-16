@@ -1,5 +1,5 @@
 // axe-core on the text edition (both languages, light and dark) and on the walk in each of
-// its states: title screen, every panel, the sound question, the HUD, the rooms menu, the
+// its states: title screen, every panel, the sound question, the HUD (with the first-use card), the rooms menu, the
 // artwork viewer, and the viewer with the full video's frame (Google Drive blocked, so
 // nothing from Google loads). Fails on any serious or critical violation; lists every other one.
 // Writes its results to the system's temporary folder. With --write it writes them to
@@ -44,7 +44,7 @@ for (const [path, name] of [['text/', 'Text edition, English'], ['text/hu/', 'Te
 }
 
 // ---------------- the walk
-const PANELS = ['about', 'works', 'bts', 'contact', 'accessibility', 'legal', 'privacy'];
+const PANELS = ['about', 'works', 'bts', 'help', 'contact', 'accessibility', 'legal', 'privacy'];
 for (const lang of ['en', 'hu']) {
   const { page, ctx, errors } = await openWalk(browser, { lang });
   // Nothing from Google loads in this run: the full-video state below opens the Google Drive

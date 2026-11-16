@@ -14,7 +14,8 @@
       "contact": "Kapcsolat",
       "legal": "Impresszum",
       "privacy": "Adatkezelés",
-      "accessibility": "Akadálymentesség"
+      "accessibility": "Akadálymentesség",
+      "help": "Súgó"
     },
     "soundAsk": {
       "question": "Hanggal induljon a kiállítás?",
@@ -30,7 +31,7 @@
       "loading": "A művek felkerülnek a falra… {loaded}/{total}",
       "ready": "Kész",
       "enter": "Belépés",
-      "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
+      "howtoDesk": "↑↓: séta · ←→: fordulás · Page Down: következő mű · Enter: megnyitás · húzás egérrel: körülnézés",
       "howtoTouch": "A bal oldali karral lehet sétálni, húzással körülnézni, csippentéssel nagyítani, egy műre koppintva pedig megnyitni azt.",
       "failure": "Ez a böngésző nem tudta elindítani a digitális kiállítást (WebGL szükséges). Friss verziójú Chrome, Firefox vagy Safari böngészővel érdemes megpróbálni.",
       "progress": "A kiállítás betöltése"
@@ -74,7 +75,18 @@
         "other": "A többi mű"
       },
       "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás",
-      "tourAt": "{at} / {total} · {no}. mű · {title}"
+      "tourAt": "{at} / {total} · {no}. mű · {title}",
+      "help": "Súgó",
+      "helpTitle": "Mozgás és az összes billentyű",
+      "guide": {
+        "title": "Mozgás a kiállításban",
+        "walk": "↑ ↓: séta · ← →: fordulás",
+        "look": "Húzás egérrel: körülnézés",
+        "next": "Page Down: a következő mű",
+        "open": "Enter: a nézet közepén lévő mű megnyitása",
+        "help": "Súgó: minden billentyű",
+        "close": "Az első billentyűre vagy kattintásra eltűnik"
+      }
     },
     "viewer": {
       "artistSite": "A művész honlapján",
@@ -136,7 +148,8 @@
         "instagram": "Instagram",
         "facebook": "Facebook",
         "linkedin": "LinkedIn"
-      }
+      },
+      "helpGuide": "A rövid útmutató újbóli megjelenítése"
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31."

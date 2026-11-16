@@ -1,6 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
 // screen, the sound question's hint and the hint inside (D11); the tour caption's first line
-// (F3). Each step
+// (F3); the line before entering, the first-use card and Help (F1). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -285,6 +285,206 @@ const caption = (p) => p.evaluate(() => { const c = document.getElementById('tou
   errors.push(...w.errors);
   await w.ctx.close();
 }
+
+// ---------------- F1: the line before entering, the first-use card, Help
+const axName = async (p, sel) => {
+  const cdp = await p.context().newCDPSession(p);
+  const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
+  const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel });
+  const { nodes } = await cdp.send('Accessibility.getPartialAXTree', { nodeId, fetchRelatives: false });
+  await cdp.detach();
+  return nodes[0]?.name?.value ?? null;
+};
+const axTree = async (p) => {
+  const cdp = await p.context().newCDPSession(p);
+  const { nodes } = await cdp.send('Accessibility.getFullAXTree');
+  await cdp.detach();
+  return nodes.filter((n) => !n.ignored).map((n) => `${n.role?.value}:${n.name?.value ?? ''}`);
+};
+// A block of steps that stops with an error (a control it needs is not there) fails its steps
+// and the run goes on.
+const guard = async (names, fn) => {
+  try { await fn(); } catch (e) { for (const n of names) step(`${n} (stopped)`, false, String(e).split('\n')[0]); }
+};
+const guideInfo = (p) => p.evaluate(() => {
+  const g = document.getElementById('guide');
+  if (!g) return { shown: false, text: [], missing: true };
+  const shown = !g.hidden && getComputedStyle(g).visibility === 'visible' && g.getClientRects().length > 0;
+  const r = g.getBoundingClientRect();
+  const under = shown ? document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) : null;
+  const hint = getComputedStyle(document.getElementById('click-to-look')).visibility;
+  return { shown, text: g.innerText.trim().split('\n').filter(Boolean), hidden: g.getAttribute('aria-hidden'), focusables: g.querySelectorAll('a, button, input, [tabindex]').length, under: under ? (under.id || under.tagName) : null, focus: document.activeElement?.id || document.activeElement?.tagName, hint };
+});
+// the walk entered by keyboard (Enter, then Esc on the sound question), so no mouse press is sent
+async function insideByKeys(lang, opts = {}) {
+  const w = await openWalk(browser, { lang, viewport: { width: 1366, height: 768 }, ...opts });
+  const p = w.page;
+  await p.focus('#enter');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  w.during = await guideInfo(p);
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  return w;
+}
+{
+  // the line on the title screen, and what it says is so
+  const w = await openWalk(browser, { lang: 'en', viewport: { width: 1366, height: 768 } });
+  const p = w.page;
+  const line = await p.textContent('.howto .desk');
+  await switchTo(p, 'hu');
+  const lineHu = await p.textContent('.howto .desk');
+  await switchTo(p, 'en');
+  await p.focus('#enter');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.activeElement === document.getElementById('scene'), null, { timeout: 30000 });
+  const pose = () => p.evaluate(() => ({ x: window.__ap.controls.pos.x, z: window.__ap.controls.pos.y, yaw: window.__ap.controls.yaw }));
+  const changed = (from, what) => p.waitForFunction(([f, k]) => { const c = window.__ap.controls; return k === 'yaw' ? Math.abs(c.yaw - f.yaw) > 0.05 : Math.hypot(c.pos.x - f.x, c.pos.y - f.z) > 0.05; }, [from, what], { timeout: 30000 }).then(() => true, () => false);
+  const hold = async (key, what) => { const f = await pose(); await p.keyboard.down(key); const ok = await changed(f, what); await p.keyboard.up(key); return ok; };
+  // Page Down first: from where you come in it goes to no. 1 (later it counts from the work in front)
+  await p.keyboard.press('PageDown');
+  const front = await p.waitForFunction(() => document.getElementById('prompt').textContent.includes('Wrong Data Landscape Dresden'), null, { timeout: 30000 }).then(() => true, () => false);
+  await p.keyboard.press('Enter');
+  const opened = await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => p.textContent('#viewer-title'), () => '(nothing)');
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
+  const up = await hold('ArrowUp', 'pos');
+  const down = await hold('ArrowDown', 'pos');
+  const left = await hold('ArrowLeft', 'yaw');
+  const right = await hold('ArrowRight', 'yaw');
+  const f = await pose();
+  await p.mouse.move(683, 300);
+  await p.mouse.down();
+  await p.mouse.move(760, 300, { steps: 4 });
+  await p.mouse.up();
+  const dragged = await changed(f, 'yaw');
+  step(`F1.1 Title screen on a computer: "${UI.en.loader.howtoDesk}" (HU "${UI.hu.loader.howtoDesk}"), naming ↑↓, ←→, Page Down, Enter and the drag, Page Down before the drag; and each key it names does that: ↑ ↓ walk, ← → turn, Page Down goes to no. 1, Enter opens it, a drag looks round`, line === UI.en.loader.howtoDesk && lineHu === UI.hu.loader.howtoDesk && ['↑↓', '←→', 'Page Down', 'Enter', 'drag'].every((x) => line.includes(x)) && line.indexOf('Page Down') < line.indexOf('drag') && up && down && left && right && front && opened === 'Wrong Data Landscape Dresden' && dragged, `"${line}" / "${lineHu}"; ↑ ${up}, ↓ ${down}, ← ${left}, → ${right}, Page Down named no. 1 ${front}, Enter opened "${opened}", drag ${dragged}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+for (const [name, opts, lang] of [['1366 × 768, English', {}, 'en'], ['1280 × 800, Hungarian', { viewport: { width: 1280, height: 800 } }, 'hu'], ['800 × 600, Hungarian', { viewport: { width: 800, height: 600 } }, 'hu'], ['683 × 384 at 2× (200%), Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu']]) {
+  const w = await insideByKeys(lang, opts);
+  const p = w.page;
+  const g = await guideInfo(p);
+  const tree = await axTree(p);
+  const inTree = tree.some((n) => n.includes(UI[lang].hud.guide?.open ?? '(no such string)'));
+  const b = await boxes(p, ['#guide', '#keypad', '#zoompad', '#toolbar', '#room-label', '#minimap', '#map-key']);
+  const clear = ['#keypad', '#zoompad', '#toolbar', '#room-label', '#minimap', '#map-key'].every((s) => !meets(b['#guide'], b[s]));
+  const want = lang === 'en' ? [UI.en.hud.guide?.title, UI.en.hud.guide?.walk] : [UI.hu.hud.guide?.walk];
+  step(`F1.2 Computer ${name}: not shown while the sound question is open; after Esc answered it, the first-use card shows by the keys, over none of the keys, the zoom keys, the toolbar, the room label, the map and its key; hidden from screen readers, nothing in it takes focus or a click (a click there reaches the 3D view), focus on the 3D view; the hint in the middle does not show with it`, !w.during.shown && g.shown && want.every((x) => g.text.includes(x)) && g.hidden === 'true' && !inTree && g.focusables === 0 && g.under === 'scene' && g.focus === 'scene' && g.hint === 'hidden' && clear, `during the question: ${w.during.shown}; ${JSON.stringify(g)}; read from the tree: ${inTree}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+await guard(['F1.3'], async () => {
+  // it goes at the first key, and that key works (walking is not blocked); a mouse press; the wheel
+  const w = await insideByKeys('en');
+  const p = w.page;
+  const x0 = await p.evaluate(() => window.__ap.controls.pos.x);
+  await p.keyboard.down('ArrowUp');
+  const walked = await p.waitForFunction((x) => Math.abs(window.__ap.controls.pos.x - x) > 0.05, x0, { timeout: 30000 }).then(() => true, () => false);
+  await p.keyboard.up('ArrowUp');
+  const byKey = await guideInfo(p);
+  await w.ctx.close();
+  const m = await insideByKeys('en');
+  await m.page.mouse.click(683, 250);
+  const byClick = await guideInfo(m.page);
+  await m.ctx.close();
+  const r = await insideByKeys('en');
+  await r.page.mouse.move(683, 300);
+  await r.page.mouse.wheel(0, -100);
+  const byWheel = await guideInfo(r.page);
+  // a new visit (the page loaded again): it shows again; nothing is stored but the language
+  await r.page.reload();
+  await r.page.waitForFunction(() => document.body.dataset.state === 'ready', null, { timeout: 90000 });
+  await r.page.focus('#enter');
+  await r.page.keyboard.press('Enter');
+  await r.page.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await r.page.keyboard.press('Escape');
+  await r.page.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  const again = await guideInfo(r.page);
+  const stored = await r.page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage).length, cookies: document.cookie }));
+  step('F1.3 The card goes at the first key (↑, and walking starts at once), at a mouse press on the view, at a turn of the wheel; loaded again, it shows again; nothing stored but the language', walked && !byKey.shown && !byClick.shown && !byWheel.shown && again.shown && stored.local.every((k) => k === 'ap-lang') && !stored.session && !stored.cookies, `↑: walked ${walked}, card ${byKey.shown}; click: ${byClick.shown}; wheel: ${byWheel.shown}; after a reload: ${again.shown}; storage ${JSON.stringify(stored)}`);
+  errors.push(...w.errors, ...m.errors, ...r.errors);
+  await r.ctx.close();
+});
+await guard(['F1.4', 'F1.5', 'F1.6'], async () => {
+  // Help by keyboard, through the dialog path; it brings the card back
+  const w = await insideByKeys('en');
+  const p = w.page;
+  const on = (sel) => p.evaluate((x) => document.activeElement === document.querySelector(x), sel);
+  let tabs = 0;
+  for (let i = 1; i <= 12; i++) { await p.keyboard.press('Tab'); if (await on('[data-action="help"]')) { tabs = i; break; } }
+  const helpName = await axName(p, '[data-action="help"]'); // as the browser gives it: in capitals, as shown
+  const cardAfterTab = (await guideInfo(p)).shown;
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const open = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, close: document.activeElement === document.querySelector('#panel [data-close]'), inert: document.getElementById('stage').inert, paras: [...document.querySelectorAll('#panel-body p')].map((x) => x.textContent) }));
+  const cycle = [];
+  for (let i = 0; i < 4; i++) { await p.keyboard.press('Tab'); cycle.push(await p.evaluate(() => document.getElementById('panel').contains(document.activeElement))); }
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const back = await on('[data-action="help"]');
+  const inertAfter = await p.evaluate(() => document.getElementById('stage').inert);
+  step(`F1.4 Help by keyboard: the guide card gone at the first Tab; Tab from the 3D view reaches the Help button (${tabs} presses); Enter opens the panel "${UI.en.nav.help}" with focus on Close, the page behind inert, the controls for a computer first, then for touch; Tab stays inside; Esc closes it and focus is back on Help`, tabs > 0 && !cardAfterTab && helpName.toLowerCase() === UI.en.hud.help.toLowerCase() && open.title === UI.en.nav.help && open.close && open.inert && open.paras[1] === UI.en.panels.controlsDesk && open.paras[2] === UI.en.panels.controlsTouch && cycle.every(Boolean) && back && !inertAfter, `card after the Tabs: ${cardAfterTab}; ${tabs} Tabs to "${helpName}"; ${JSON.stringify({ ...open, paras: open.paras.map((x) => x.slice(0, 40)) })}; Tab stayed inside: ${cycle.join(',')}; focus back on Help: ${back}; stage inert after: ${inertAfter}`);
+  // again, then "Show the short guide again"
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  let reached = false;
+  for (let i = 0; i < 6 && !reached; i++) { await p.keyboard.press('Tab'); reached = await on('#panel-body [data-guide]'); }
+  const label = await p.evaluate(() => document.querySelector('#panel-body [data-guide]')?.textContent);
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const g = await guideInfo(p);
+  const onHelp = await on('[data-action="help"]');
+  await p.keyboard.press('Tab');
+  const gone = await guideInfo(p);
+  step(`F1.5 Help, "${UI.en.panels.helpGuide}" by keyboard: the panel closes, focus is back on Help, the card shows again, and goes at the next key`, reached && label === UI.en.panels.helpGuide && g.shown && onHelp && !gone.shown, `reached ${reached} ("${label}"); card shown ${g.shown}, focus on Help ${onHelp}; after Tab: ${gone.shown}`);
+  // by mouse: Close clicked, focus to the 3D view; the language switched while it is open
+  await p.click('[data-action="help"]');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  await switchTo(p, 'hu');
+  const hu = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, guide: document.querySelector('#panel-body [data-guide]')?.textContent, close: document.getElementById('panel').contains(document.activeElement) }));
+  await switchTo(p, 'en');
+  await p.click('#panel [data-close]');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const view = await p.evaluate(() => document.activeElement === document.getElementById('scene'));
+  step('F1.6 Help by mouse: switched to Hungarian while open, it reads "Súgó" and its button in Hungarian, focus stays in the panel; Close clicked: focus on the 3D view', hu.title === UI.hu.nav.help && hu.guide === UI.hu.panels.helpGuide && hu.close && view, `${JSON.stringify(hu)}; focus on the view after Close: ${view}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+await guard(['F1.7'], async () => {
+  // a phone: Help is in the folded menu, not on the toolbar; closing it puts focus on Menu (C7);
+  // its button brings the touch hint back
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  const onBar = await p.evaluate(() => document.querySelector('[data-action="help"]').getClientRects().length > 0);
+  await p.tap('.nav-toggle');
+  await p.waitForFunction(() => document.getElementById('site-nav').classList.contains('open'), null, { timeout: 30000 }).catch(() => {});
+  const inMenu = await p.evaluate(() => document.querySelector('#nav-links [data-nav="help"]').getClientRects().length > 0);
+  await p.tap('#nav-links [data-nav="help"]');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const first = await p.evaluate(() => document.querySelectorAll('#panel-body p')[1]?.textContent);
+  await p.tap('#panel [data-close]');
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const onMenu = await p.evaluate(() => document.activeElement === document.querySelector('.nav-toggle'));
+  // the hint had gone (a touch on the view); Help's button brings it back
+  const touch = await finger(p);
+  await touch('touchStart', 190, 420);
+  await touch('touchMove', 240, 420);
+  await touch('touchEnd');
+  await p.waitForFunction(() => getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).catch(() => {});
+  await p.tap('.nav-toggle');
+  await p.tap('#nav-links [data-nav="help"]');
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  await p.tap('#panel-body [data-guide]');
+  const back = await p.waitForFunction(() => document.getElementById('panel').hidden && getComputedStyle(document.getElementById('click-to-look')).visibility === 'visible', null, { timeout: 30000 }).then(() => true, () => false);
+  const card = await guideInfo(p);
+  step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch controls first; closed with a tap, focus is on Menu; its button brings the touch hint back (the card is for a computer and does not show)', !onBar && inMenu && first === UI.en.panels.controlsTouch && onMenu && back && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; first paragraph "${(first || '').slice(0, 50)}…"; focus on Menu after Close: ${onMenu}; hint back: ${back}; card: ${card.shown}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();

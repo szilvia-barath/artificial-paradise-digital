@@ -81,6 +81,9 @@
             <div id="rooms-menu" hidden></div>
           </div>
           <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico" aria-hidden="true"><svg class="snd-on" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11.2 5.6a3.4 3.4 0 0 1 0 4.8M13.1 3.7a6 6 0 0 1 0 8.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><svg class="snd-off" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11 6l4 4M15 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
+          <!-- Help: the controls in a panel, and the first-use card again. In a narrow window it
+               is in the folded menu instead (the navbar's Help), where there is room. -->
+          <button data-action="help" title="How to move, and all the keys" data-i18n-attr="title:hud.helpTitle"><span class="ico" aria-hidden="true">?</span><span class="lbl" data-i18n="hud.help">Help</span></button>
         </nav>
         <div id="tour-caption"></div>
         <div id="joystick"><div id="joystick-knob"></div></div>
@@ -103,6 +106,21 @@
              them, and the tooltip sits on the visible part so it is not read as a description. -->
         <button id="zoom-level" class="mono" hidden><span class="sr-only" data-i18n="hud.keys.zoomReset">Reset zoom (0)</span> <span class="see" title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span class="val"></span> <span aria-hidden="true">✕</span></span></button>
         <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag the mouse to look around the room.</div>
+        <!-- First-use card (a computer): by the keys, once the sound question is answered; it
+             goes at the first key, click or turn of the wheel, and Help brings it back. Nothing
+             in it can take focus or a click. Hidden from screen readers: the 3D view's name,
+             read as focus comes to it, says the same keys. -->
+        <div id="guide" aria-hidden="true" hidden>
+          <p class="g-title" data-i18n="hud.guide.title">Moving around</p>
+          <ul>
+            <li data-i18n="hud.guide.walk">↑ ↓: walk · ← →: turn</li>
+            <li data-i18n="hud.guide.look">Drag with the mouse: look around</li>
+            <li data-i18n="hud.guide.next">Page Down: the next work</li>
+            <li data-i18n="hud.guide.open">Enter: open the work in front</li>
+            <li class="g-more" data-i18n="hud.guide.help">Help: all the keys</li>
+          </ul>
+          <p class="g-note" data-i18n="hud.guide.close">Goes at the first key or click</p>
+        </div>
       </div>
     </main>
 
@@ -117,6 +135,8 @@
         <button data-nav="works" data-i18n="nav.works">Works</button>
         <button data-nav="bts" data-i18n="nav.build">Behind the scenes</button>
         <button data-nav="contact" data-i18n="nav.contact">Contact</button>
+        <!-- The folded menu only: Help, which a wide window has on the toolbar -->
+        <button class="nav-narrow" data-nav="help" data-i18n="nav.help">Help</button>
         <!-- The folded menu only (narrow windows): what the footer holds, below a line, since
              the footer is put away inside the exhibition on a phone. Hidden in a wide window. -->
         <div class="nav-more">

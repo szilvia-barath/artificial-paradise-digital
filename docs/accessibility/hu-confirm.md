@@ -1,15 +1,21 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 41. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 53. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
 - `ui.sceneLabel`
   - HU: 3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása az akadálymentes változatban van, ez az oldal első hivatkozása.
   - EN: 3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link.
+- `ui.nav.help`
+  - HU: Súgó
+  - EN: Help
 - `ui.soundAsk.hintTouch`
   - HU: Fejhallgatóval izgalmasabb · a hang a lenti Hang gombbal bármikor be- és kikapcsolható
   - EN: Better with headphones · the Sound button at the bottom switches the sound on or off any time
+- `ui.loader.howtoDesk`
+  - HU: ↑↓: séta · ←→: fordulás · Page Down: következő mű · Enter: megnyitás · húzás egérrel: körülnézés
+  - EN: ↑↓ walk · ←→ turn · Page Down: next work · Enter: open · drag to look
 - `ui.loader.howtoTouch`
   - HU: A bal oldali karral lehet sétálni, húzással körülnézni, csippentéssel nagyítani, egy műre koppintva pedig megnyitni azt.
   - EN: Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.
@@ -34,6 +40,33 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.hud.tourAt`
   - HU: {at} / {total} · {no}. mű · {title}
   - EN: {at} / {total} · No. {no} · {title}
+- `ui.hud.help`
+  - HU: Súgó
+  - EN: Help
+- `ui.hud.helpTitle`
+  - HU: Mozgás és az összes billentyű
+  - EN: How to move, and all the keys
+- `ui.hud.guide.title`
+  - HU: Mozgás a kiállításban
+  - EN: Moving around
+- `ui.hud.guide.walk`
+  - HU: ↑ ↓: séta · ← →: fordulás
+  - EN: ↑ ↓: walk · ← →: turn
+- `ui.hud.guide.look`
+  - HU: Húzás egérrel: körülnézés
+  - EN: Drag with the mouse: look around
+- `ui.hud.guide.next`
+  - HU: Page Down: a következő mű
+  - EN: Page Down: the next work
+- `ui.hud.guide.open`
+  - HU: Enter: a nézet közepén lévő mű megnyitása
+  - EN: Enter: open the work in front
+- `ui.hud.guide.help`
+  - HU: Súgó: minden billentyű
+  - EN: Help: all the keys
+- `ui.hud.guide.close`
+  - HU: Az első billentyűre vagy kattintásra eltűnik
+  - EN: Goes at the first key or click
 - `ui.viewer.count`
   - HU: {no}. mű a {total} közül
   - EN: No. {no} of {total}
@@ -61,6 +94,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.panels.contactDigital` (only the accent in the name changed, asked by the reconstructor)
   - HU: Digitális kiállítás: Baráth Szilvia
   - EN: Digital exhibition: Szilvia Baráth
+- `ui.panels.helpGuide`
+  - HU: A rövid útmutató újbóli megjelenítése
+  - EN: Show the short guide again
 - `ui.wall.sheetMeta`
   - HU: KristofLab · MAMŰ Galéria · 2025. január 10–31.
   - EN: KristofLab · MAMŰ Gallery · 10–31 January 2025
