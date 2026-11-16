@@ -595,6 +595,8 @@ const E2SIZES = [['320 × 256 (1280 × 1024 at 400%), Hungarian', { viewport: { 
 for (const [name, opts, lang] of E2SIZES) {
   const w = await insideByKeys(lang, opts);
   const p = w.page;
+  // right after entry, before any key: is the first-use card marked as shown? (E2.3)
+  const card = await p.evaluate(() => ({ guiding: document.body.classList.contains('guiding'), hidden: document.getElementById('guide').hidden }));
   await p.evaluate(() => window.__ap.controls.zoomBy(2));
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const gone = ['#site-foot', '#keypad', '#zoompad', '#minimap', '#map-key', '#click-to-look', '#guide'];
@@ -621,6 +623,12 @@ for (const [name, opts, lang] of E2SIZES) {
     await p.waitForFunction(() => document.querySelector('#site-nav .nav-more')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});
     const more = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-more a, #site-nav .nav-more button')].filter((x) => x.getClientRects().length).length);
     step('E2.2 Computer 320 × 256: Tab from the 3D view goes through Tour, Rooms, Sound and Next work first, in that order, and every stop shows inside the window; the folded menu holds the footer\'s four links', bar.every((x, i) => x >= 0 && (i === 0 || x > bar[i - 1])) && bar[0] === 0 && stops.every((x) => x.ok) && more === 4, `${stops.map((x) => `${x.name}${x.ok ? '' : ' (off screen)'}`).join(' → ')}; links in the menu: ${more}`);
+    // with no card and no hint in this layer, Help offers no "Show the short guide again" that
+    // would close the panel and show nothing; nor was the body marked as showing the card
+    await p.evaluate(() => document.querySelector('[data-action="help"]').click());
+    await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+    const help = await p.evaluate(() => { const b = document.querySelector('#panel-body [data-guide]'); return { open: !document.getElementById('panel').hidden, button: !!b && b.getClientRects().length > 0 }; });
+    step('E2.3 Computer 320 × 256: right after entry the first-use card is not marked as shown (no "guiding", the card hidden), and Help opens without "Show the short guide again", which would show nothing here', !card.guiding && card.hidden && help.open && !help.button, `guiding ${card.guiding}, card hidden ${card.hidden}; Help open ${help.open}, the button shown ${help.button}`);
   }
   errors.push(...w.errors);
   await w.ctx.close();

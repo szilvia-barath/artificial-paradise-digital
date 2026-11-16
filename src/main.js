@@ -648,6 +648,9 @@ function showGuide(again = false) {
   guideAt = performance.now();
 }
 function guideFits() {
+  // not laid out at all (the compact control layer of a very small window hides it, E2): it
+  // does not fit, rather than an empty box at 0,0 that seems to
+  if (!guide.getClientRects().length) return false;
   const g = guide.getBoundingClientRect();
   if (g.top < 0 || g.left < 0 || g.right > window.innerWidth || g.bottom > window.innerHeight) return false;
   return ['minimap', 'map-key', 'room-label'].every((id) => {
