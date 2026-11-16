@@ -782,6 +782,73 @@ await guard(['H1.1'], async () => {
   await w.ctx.close();
 });
 
+// ---------------- H1.2: the panels are paper ("paper for words"). A panel is a paper card
+// with ink text; nothing in it is in the accent #8fa8ff (2.20:1 on paper); every text in it
+// reads at 4.5:1 or more on the paper; the focus ring in it is the blue #072fcc (white would
+// not show on paper), 2 px, at 3:1 or more. Over a panel opened from the title screen the
+// navbar keeps a steady dark band, so its text reads when the card passes under it.
+const PAPER = [251, 251, 249];
+const paperInfo = async (p, name) => {
+  await p.evaluate((n) => window.__ap.ui.show(n), name);
+  await p.waitForTimeout(700); // the navbar's colours change over 0.4 s
+  return p.evaluate((n) => {
+  const panel = document.getElementById('panel');
+  const card = panel.querySelector('.panel-card');
+  const style = (e) => getComputedStyle(e);
+  const tag = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}${typeof e.className === 'string' && e.className ? '.' + e.className.split(' ')[0] : ''}`;
+  for (const d of panel.querySelectorAll('details')) d.open = true;
+  const texts = [];
+  const accent = [];
+  for (const e of panel.querySelectorAll('*')) {
+    if (!e.getClientRects().length) continue;
+    const c = style(e);
+    for (const k of ['color', 'backgroundColor', 'borderTopColor', 'borderLeftColor', 'outlineColor', 'textDecorationColor', 'boxShadow']) if (/143,\s*168,\s*255/.test(c[k])) accent.push(`${tag(e)} ${k}`);
+    if ([...e.childNodes].some((x) => x.nodeType === 3 && x.textContent.trim())) texts.push({ el: tag(e), color: c.color });
+  }
+  const rings = [];
+  for (const sel of ['#panel [data-close]', '#panel-body a[href]', '#panel-body .link', '#panel-body .works-list button', '#panel-body summary']) {
+    const e = document.querySelector(sel);
+    if (!e) continue;
+    e.focus({ preventScroll: true });
+    const c = style(e);
+    rings.push({ sel, visible: e.matches(':focus-visible'), color: c.outlineColor, width: c.outlineWidth, line: c.outlineStyle });
+  }
+  const nav = style(document.getElementById('site-nav'));
+  const navBtn = style(document.querySelector('#site-nav [data-lang]'));
+  const out = { name: n, card: !!card, bg: style(card || panel).backgroundColor, texts, accent, rings, nav: { color: nav.color, bg: nav.backgroundColor, image: nav.backgroundImage, opacity: Number(navBtn.opacity) } };
+  window.__ap.ui.close();
+  return out;
+  }, name);
+};
+await guard(['H1.2'], async () => {
+  const w = await insideByKeys('en'); // by keys, so the focus ring shows when focus is moved
+  const t = await openWalk(browser, { lang: 'en' }); // the title screen, not entered
+  await t.page.keyboard.press('Tab');
+  const seen = [];
+  for (const name of ['about', 'works', 'contact', 'help', 'accessibility']) seen.push(await paperInfo(w.page, name));
+  seen.push({ ...(await paperInfo(t.page, 'about')), name: 'about (title screen)' });
+  const bad = [];
+  let lowText = 99; let lowRing = 99; let lowNav = 99; let rings = 0;
+  for (const s of seen) {
+    if (!s.card || s.bg !== 'rgb(251, 251, 249)') bad.push(`${s.name}: no paper card (${s.bg})`);
+    if (s.accent.length) bad.push(`${s.name}: accent on ${s.accent.slice(0, 3).join(', ')}`);
+    for (const x of s.texts) { const c = ratio(over(rgba(x.color), PAPER), PAPER); lowText = Math.min(lowText, c); if (c < 4.5) bad.push(`${s.name}: ${x.el} ${x.color} ${c.toFixed(2)}`); }
+    for (const x of s.rings) { rings++; const c = ratio(over(rgba(x.color), PAPER), PAPER); lowRing = Math.min(lowRing, c); if (!x.visible || x.color !== 'rgb(7, 47, 204)' || x.width !== '2px' || x.line !== 'solid' || c < 3) bad.push(`${s.name}: ring on ${x.sel} ${x.line} ${x.width} ${x.color} shown ${x.visible}`); }
+    // the navbar's text on its band, the band over the paper card
+    const band = rgba(s.nav.bg);
+    const under = over(band, PAPER);
+    const c = s.nav.image === 'none' && band[3] >= 0.8 ? ratio(over(rgba(s.nav.color), under), under) * (s.nav.opacity === 1 ? 1 : 0) : 0;
+    lowNav = Math.min(lowNav, c);
+    if (c < 4.5) bad.push(`${s.name}: navbar ${s.nav.color} on ${s.nav.bg} (${s.nav.image.slice(0, 24)}), buttons at ${s.nav.opacity}`);
+  }
+  step('H1.2 Panels (About, Works, Contact, Help, Accessibility inside, About from the title screen): a paper card #fbfbf9; every text in it ≥ 4.5 on paper; nothing in the accent #8fa8ff; the focus ring on Close, a link, a button, a row of the works list and the opening speech is the blue #072fcc, 2 px, ≥ 3 on paper; the navbar over the panel is on a steady band, its text ≥ 4.5 with the paper under it',
+    bad.length === 0 && rings >= 8 && lowText >= 4.5 && lowRing >= 3 && lowNav >= 4.5,
+    `${seen.length} panels; lowest text ${lowText.toFixed(2)}; ${rings} focus rings, lowest ${lowRing.toFixed(2)}; navbar over paper ${lowNav.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+  errors.push(...w.errors, ...t.errors);
+  await w.ctx.close();
+  await t.ctx.close();
+});
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

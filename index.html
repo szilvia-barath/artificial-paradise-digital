@@ -248,9 +248,13 @@
     </section>
 
     <!-- About / Behind the scenes panel -->
+    <!-- A paper card on a dark ground ("paper for words"): the Close button says its word and
+         sits inside the card, at its top right. -->
     <section id="panel" hidden role="dialog" aria-modal="true" aria-labelledby="panel-title">
-      <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
-      <div id="panel-body"></div>
+      <div class="panel-card">
+        <button class="close" data-close data-i18n="viewer.close">Close</button>
+        <div id="panel-body"></div>
+      </div>
     </section>
 
     <!-- The one live region: rooms, the work in front, tour captions (src/ui/announce.js) -->
