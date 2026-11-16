@@ -1,10 +1,11 @@
 // Weighs what the loading screen itself downloads, and checks that it does not move.
 // Usage: npm run build && npm run preview &   then   node tests/a11y/loader-weight.mjs [url]
+// (or AP_URL=..., as for the other checks)
 // The 3D engine (the main chunk) is blocked, so only the title screen's own files load and
 // its progress line stays still: any pixel that changes between two screenshots is motion.
 import { chromium } from 'playwright';
 
-const url = process.argv[2] || 'http://localhost:4173/';
+const url = process.argv[2] || process.env.AP_URL || 'http://localhost:4173/';
 const browser = await chromium.launch();
 const results = {};
 for (const [name, viewport] of [['desktop 1366x768', { width: 1366, height: 768 }], ['phone 375x667', { width: 375, height: 667 }]]) {
