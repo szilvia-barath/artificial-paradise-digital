@@ -1,6 +1,7 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
 // screen, the sound question's hint and the hint inside (D11); the tour caption's first line
-// (F3); the line before entering, the first-use card and Help (F1). Each step
+// (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
+// (F2). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -148,14 +149,17 @@ async function asked(lang, opts) {
   await d.ctx.close();
   step(`D11.1 Sound question on a phone: "${want.en}" (in Hungarian "${want.hu}", also after a switch while it shows); the Sound button is at the bottom; on a computer the words with M stay`, got.en === want.en && got.hu === want.hu && got.switched === want.hu && got.button.label === UI.en.hud.sound && got.button.bottom && desk === UI.en.soundAsk.hint, `phone EN "${got.en}"; HU "${got.hu}"; switched "${got.switched}"; button ${JSON.stringify(got.button)}; computer "${desk}"`);
 }
-for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu']]) {
+for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 640 × 360, Hungarian', { ...PHONE, viewport: { width: 640, height: 360 } }, 'hu']]) {
   const w = await inside(lang, opts);
   const p = w.page;
   const h = await hintState(p);
   const focus = await p.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
-  const b = await boxes(p, ['#click-to-look', '#joystick', '#toolbar', '#zoompad', '#minimap', '#map-key', '#room-label']);
-  const clear = ['#joystick', '#toolbar', '#zoompad', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#click-to-look'], b[s]));
-  step(`D11.2 Phone ${name}, inside: the touch hint shows ("${UI[lang].hud.touchHint}"), hidden from screen readers, takes no focus (focus stays on the 3D view), over none of the stick, the toolbar, the zoom keys, the map, its key and the room label`, h.text === UI[lang].hud.touchHint && h.hidden === 'true' && h.visibility === 'visible' && !h.focusable && focus === 'scene' && clear && !!b['#click-to-look'], `${JSON.stringify(h)}; focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  // zoomed in, so the zoom readout shows as well
+  await p.evaluate(() => window.__ap.controls.zoomBy(2));
+  await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
+  const b = await boxes(p, ['#click-to-look', '#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label']);
+  const clear = ['#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#click-to-look'], b[s]));
+  step(`D11.2 Phone ${name}, inside: the touch hint shows ("${UI[lang].hud.touchHint}"), hidden from screen readers, takes no focus (focus stays on the 3D view), over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key and the room label`, h.text === UI[lang].hud.touchHint && h.hidden === 'true' && h.visibility === 'visible' && !h.focusable && focus === 'scene' && clear && !!b['#click-to-look'], `${JSON.stringify(h)}; focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -482,6 +486,101 @@ await guard(['F1.7'], async () => {
   const back = await p.waitForFunction(() => document.getElementById('panel').hidden && getComputedStyle(document.getElementById('click-to-look')).visibility === 'visible', null, { timeout: 30000 }).then(() => true, () => false);
   const card = await guideInfo(p);
   step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch controls first; closed with a tap, focus is on Menu; its button brings the touch hint back (the card is for a computer and does not show)', !onBar && inMenu && first === UI.en.panels.controlsTouch && onMenu && back && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; first paragraph "${(first || '').slice(0, 50)}…"; focus on Menu after Close: ${onMenu}; hint back: ${back}; card: ${card.shown}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+
+// ---------------- F2: Next work on the toolbar, on every device
+const listen = (p) => p.evaluate(() => { window.__said = []; const el = document.getElementById('announcer'); new MutationObserver(() => window.__said.push(el.textContent.trim())).observe(el, { childList: true, characterData: true, subtree: true }); });
+const hear = async (p, parts) => {
+  await p.waitForFunction((x) => { const all = window.__said.join(' | '); return x.every((t) => all.includes(t)); }, parts, { timeout: 30000, polling: 100 }).catch(() => {});
+  return p.evaluate(() => window.__said.splice(0).join(' | '));
+};
+// the work whose viewing point the visitor stands at
+const standingAt = (p) => p.evaluate(() => { const { controls, visit } = window.__ap; const w = visit.find((k) => Math.hypot(k._focus.x - controls.pos.x, k._focus.z - controls.pos.y) < 0.02); return w ? w.no : null; });
+const atWork = (p, no) => p.waitForFunction((n) => { const { controls, visit } = window.__ap; const w = visit[n - 1]; return Math.hypot(w._focus.x - controls.pos.x, w._focus.z - controls.pos.y) < 0.02; }, no, { timeout: 30000 }).then(() => true, () => false);
+const said = (l, no, title) => fill(UI[l].announce.work, { no, title });
+for (const [name, opts, lang] of [['1366 × 768, English', {}, 'en'], ['1280 × 800, Hungarian', { viewport: { width: 1280, height: 800 } }, 'hu'], ['900 × 700, Hungarian', { viewport: { width: 900, height: 700 } }, 'hu'], ['800 × 600, Hungarian', { viewport: { width: 800, height: 600 } }, 'hu'], ['683 × 384 at 2×, Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu'], ['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu']]) {
+  const w = await insideByKeys(lang, opts);
+  const p = w.page;
+  const touch = !!opts.hasTouch;
+  const info = await p.evaluate(() => {
+    const b = document.querySelector('[data-action="next"]');
+    const bar = document.getElementById('toolbar').getBoundingClientRect();
+    const btns = [...document.querySelectorAll('#toolbar > button, #toolbar .rooms-wrap > button')].filter((x) => x.getClientRects().length).map((x) => { const r = x.getBoundingClientRect(); return Math.min(r.width, r.height); });
+    return { label: b?.querySelector('.lbl')?.textContent ?? null, title: b?.title ?? null, shown: !!b && b.getClientRects().length > 0, inside: bar.left >= 0 && bar.right <= innerWidth && bar.bottom <= innerHeight, smallest: Math.round(Math.min(...btns)) };
+  });
+  const b = await boxes(p, ['#toolbar', '#keypad', '#zoompad', '#joystick', '#minimap', '#map-key', '#room-label', '#guide']);
+  const clear = ['#keypad', '#zoompad', '#joystick', '#minimap', '#map-key', '#room-label', '#guide'].every((x) => !meets(b['#toolbar'], b[x]));
+  step(`F2.1 ${name}: "${UI[lang].hud.next}" is on the toolbar; the toolbar is inside the window and over none of the keys, the zoom keys, the stick, the map, its key, the room label and the first-use card${touch ? '; every button at least 44 × 44 px' : ''}`, info.shown && info.label === UI[lang].hud.next && info.title === UI[lang].hud.nextTitle && info.inside && clear && (!touch || info.smallest >= 44), `${JSON.stringify(info)}; ${Object.entries(b).map(([x, v]) => `${x} ${show(v)}`).join('; ')}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+await guard(['F2.2'], async () => {
+  // by mouse: the same jump and the same words as Page Down; focus to the 3D view, so Enter opens the work
+  const w = await insideByKeys('en');
+  const p = w.page;
+  await listen(p);
+  await p.click('[data-action="next"]');
+  const one = await atWork(p, 1);
+  const h1 = await hear(p, ['Room 1.', said('en', 1, 'Wrong Data Landscape Dresden')]);
+  const view = await p.evaluate(() => document.activeElement === document.getElementById('scene'));
+  await p.click('[data-action="next"]');
+  const two = await atWork(p, 2);
+  const h2 = await hear(p, [said('en', 2, 'Human as Error VI')]);
+  await p.keyboard.press('Enter');
+  const opened = await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => p.textContent('#viewer-title'), () => '(nothing)');
+  step('F2.2 Next work clicked: to no. 1, "Room 1. …" and "No. 1, Wrong Data Landscape Dresden. Press Enter to open." said, as Page Down says it, focus on the 3D view; clicked again: no. 2, said; Enter opens no. 2', one && h1.includes('Room 1.') && h1.includes(said('en', 1, 'Wrong Data Landscape Dresden')) && view && two && h2.includes(said('en', 2, 'Human as Error VI')) && opened === 'Human as Error VI', `at no. 1: ${one}, said "${h1}", focus on the view: ${view}; at no. 2: ${two}, said "${h2}"; Enter opened "${opened}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+await guard(['F2.3'], async () => {
+  // by keyboard: focus stays on the button; one jump per press, also when Enter is held
+  const w = await insideByKeys('hu');
+  const p = w.page;
+  await listen(p);
+  const on = () => p.evaluate(() => document.activeElement === document.querySelector('[data-action="next"]'));
+  let tabs = 0;
+  for (let i = 1; i <= 12; i++) { await p.keyboard.press('Tab'); if (await on()) { tabs = i; break; } }
+  await p.keyboard.press('Enter');
+  const one = await atWork(p, 1);
+  const h1 = await hear(p, [said('hu', 1, 'Wrong Data Landscape Dresden')]);
+  const stays = await on();
+  await p.keyboard.press('Enter');
+  const two = await atWork(p, 2);
+  // Enter held: one keydown and then repeats
+  await p.keyboard.down('Enter');
+  for (let i = 0; i < 4; i++) await p.keyboard.down('Enter');
+  await p.keyboard.up('Enter');
+  const three = await atWork(p, 3);
+  const after = await standingAt(p);
+  const viewer = await p.evaluate(() => !document.getElementById('viewer').hidden);
+  step('F2.3 Hungarian page, by keyboard: Tab from the 3D view to Next work, Enter: to no. 1, "1. mű, Wrong Data Landscape Dresden. Megnyitás: Enter." said, focus stays on the button; Enter again: no. 2; Enter held (four repeats): one jump only, to no. 3; nothing opens', tabs > 0 && one && h1.includes(said('hu', 1, 'Wrong Data Landscape Dresden')) && stays && two && three && after === 3 && !viewer, `${tabs} Tabs; no. 1 ${one}, said "${h1}", focus on the button ${stays}; no. 2 ${two}; after the held Enter at no. ${after}; viewer open ${viewer}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+await guard(['F2.4'], async () => {
+  // a phone: a tap, one jump, said; the first-use words name it
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  await listen(p);
+  const hint = await p.textContent('#click-to-look');
+  await p.tap('[data-action="next"]');
+  const one = await atWork(p, 1);
+  const h1 = await hear(p, [said('en', 1, 'Wrong Data Landscape Dresden')]);
+  await p.tap('[data-action="next"]');
+  const two = await atWork(p, 2);
+  const viewer = await p.evaluate(() => !document.getElementById('viewer').hidden);
+  step('F2.4 Phone 375 × 667: Next work tapped: to no. 1, said; tapped again: no. 2; nothing opens; the touch hint names Next work', one && h1.includes(said('en', 1, 'Wrong Data Landscape Dresden')) && two && !viewer && hint === UI.en.hud.touchHint && hint.includes(UI.en.hud.next), `no. 1 ${one}, said "${h1}"; no. 2 ${two}; viewer ${viewer}; hint "${hint}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+await guard(['F2.5'], async () => {
+  const w = await insideByKeys('en');
+  const en = (await guideInfo(w.page)).text;
+  await switchTo(w.page, 'hu');
+  const hu = (await guideInfo(w.page)).text;
+  step(`F2.5 The first-use card names Page Down and Next work: "${UI.en.hud.guide.next}" / "${UI.hu.hud.guide.next}"`, en.includes(UI.en.hud.guide.next) && UI.en.hud.guide.next.includes('Page Down') && UI.en.hud.guide.next.includes(UI.en.hud.next) && hu.includes(UI.hu.hud.guide.next) && UI.hu.hud.guide.next.includes(UI.hu.hud.next), `EN ${JSON.stringify(en)}; HU ${JSON.stringify(hu)}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });

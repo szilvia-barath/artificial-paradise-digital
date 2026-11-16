@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-16: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 34 of 34 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-16: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 35 of 35 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
@@ -112,7 +112,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: goes back to the last work
 - What happened: Room 4. Let it Flow, video. No. 17, Natural Life. Press Enter to open.
 
-## PASS: 5.1 Works panel (13 Tabs), Tab to no. 6 (6 Tabs), Enter: the viewer opens on a video work
+## PASS: 5.1 Works panel (14 Tabs), Tab to no. 6 (6 Tabs), Enter: the viewer opens on a video work
 
 - Expected: viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video's native controls are not in the round); Esc closes; the works list is back with focus on no. 6
 - What happened: "Artificial Paradise – Singapore", focus on button "Close"; 8 controls in the Tab round, stayed inside: true; closed: true; list open: true; focus now on button "6 Artificial Paradise – SingaporeVideo, Full HD, 2025 · Room"
@@ -152,7 +152,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: focus on the 3D view; M switches the sound; + zooms; W is taken as walking
 - What happened: focus on the view: true; sound after M: true; zoom after +: 1.25; W registered: true
 
-## PASS: 7.1 Tab back to the 3D view (26 presses); T starts the tour
+## PASS: 7.1 Tab back to the 3D view (27 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
 - What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
@@ -160,14 +160,14 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Tour stopped."
+- What happened: aria-pressed: false; announced: "Tour stopped. Room 1. Paintings, Paradise Factory. No. 2, Human as Error VI. Press Enter to open."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 
 - Expected: pressed true, then false
 - What happened: on button[data-action=tour] "▶Tour": true, then false
 
-## PASS: 8.1 Tab to HU (16 presses), Enter
+## PASS: 8.1 Tab to HU (17 presses), Enter
 
 - Expected: page language hu; address carries lang=hu; the skip link points to text/hu/; focus stays on HU
 - What happened: {"lang":"hu","url":"/?lang=hu","skip":"./text/hu/?lang=hu","focus":true,"pressed":"true"}
@@ -182,10 +182,15 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11
 - What happened: announced: "Room 3. Paintings, prints, video. No. 11, Artificial Paradise I. Press Enter to open."; Enter opened: "Artificial Paradise I"
 
-## PASS: 10.1 Tab from the 3D view to Help (4 presses), Enter, Tab round, Esc
+## PASS: 10.1 Tab from the 3D view to Help (5 presses), Enter, Tab round, Esc
 
 - Expected: the panel "Help" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help
 - What happened: opened with focus on button "Close"; dialog named "Help"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on Help: true
+
+## PASS: 10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)
+
+- Expected: focus on Next work; Enter: "No. 12, Artificial Paradise II. Press Enter to open." said, focus stays on the button; held: one more jump only, "No. 13, Artificial Paradise III. Press Enter to open."
+- What happened: focus on Next work: true; said "No. 12, Artificial Paradise II. Press Enter to open."; focus stays: true; held: "No. 13, Artificial Paradise III. Press Enter to open."; then ""
 
 ## PASS: Console errors during the whole run
 

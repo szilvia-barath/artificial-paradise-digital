@@ -330,6 +330,23 @@ await page.keyboard.press('Escape');
 await until(() => document.getElementById('panel').hidden);
 step(`10.1 Tab from the 3D view to Help (${tabs} presses), Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('[data-action="help"]')}`, tabs > 0 && at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('[data-action="help"]')));
 
+// Next work on the toolbar: the same jump as Page Down, said the same way; focus stays on it,
+// and a held Enter jumps once.
+await page.keyboard.press('Shift+Tab');
+const onNext = await isOn('[data-action="next"]');
+const nextUp = await page.evaluate(() => { const { visit } = window.__ap; const w = visit[visit.findIndex((k) => k.id === 'w11-artificial-paradise-i-print') + 1]; const v = visit[visit.findIndex((k) => k.id === 'w11-artificial-paradise-i-print') + 2]; return [w, v].map((k) => `No. ${k.no}, ${k.title}. Press Enter to open.`); });
+await said();
+await page.keyboard.press('Enter');
+heard = await hear([nextUp[0]]);
+const stays = await isOn('[data-action="next"]');
+await page.keyboard.down('Enter');
+for (let i = 0; i < 4; i++) await page.keyboard.down('Enter');
+await page.keyboard.up('Enter');
+const heard2 = await hear([nextUp[1]]);
+await wait(1500);
+const heard3 = (await said()).join(' | ');
+step('10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)', `focus on Next work; Enter: "${nextUp[0]}" said, focus stays on the button; held: one more jump only, "${nextUp[1]}"`, `focus on Next work: ${onNext}; said "${heard}"; focus stays: ${stays}; held: "${heard2}"; then "${heard3}"`, onNext && heard.includes(nextUp[0]) && stays && heard2.includes(nextUp[1]) && !/No\. \d+, /.test(heard3));
+
 step('Console errors during the whole run', 'none', errors.length ? errors.join(' | ') : 'none', errors.length === 0);
 await browser.close();
 

@@ -254,6 +254,14 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   else if (a === 'tour') toggleTour();
   else if (a === 'sound') toggleSound();
   else if (a === 'help') ui.show('help');
+  // Next work: the same jump as Page Down. Focus stays on the button (a mouse click or a tap
+  // then hands it to the view, below), so pressed again it goes on to the next work.
+  else if (a === 'next') stepWork(1, { focus: false });
+});
+// One jump for each press, as with Page Down: a held Enter repeats, and its repeats would click
+// the button again and cut from view to view that fast (WCAG 2.3.1).
+document.querySelector('[data-action="next"]').addEventListener('keydown', (e) => {
+  if (e.repeat && (e.key === 'Enter' || e.key === ' ')) e.preventDefault();
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
 // Not while the sound question is open: it lies over the navbar and footer, and a click
@@ -487,7 +495,8 @@ function announceRoom(id = currentRoomId) {
 // and sit in the same place on every keyboard layout.
 const visit = visitOrder(data.works);
 let visitAt = -1;
-function stepWork(d) {
+// focus false: from the toolbar's Next work button, where focus stays.
+function stepWork(d, { focus = true } = {}) {
   const here = front && front !== 'text' ? visit.indexOf(front) : -1;
   const base = here >= 0 ? here : visitAt;
   visitAt = base < 0 ? (d > 0 ? 0 : visit.length - 1) : (base + d + visit.length) % visit.length;
@@ -498,7 +507,7 @@ function stepWork(d) {
   keyNav = true;
   front = w;
   announceFront(w);
-  focusScene();
+  if (focus) focusScene();
 }
 window.addEventListener('keydown', (e) => {
   if (e.code !== 'PageDown' && e.code !== 'PageUp') return;

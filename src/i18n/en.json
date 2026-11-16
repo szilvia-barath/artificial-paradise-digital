@@ -74,7 +74,7 @@
         "videos": "Videos",
         "other": "Other works"
       },
-      "touchHint": "Drag to look around · push the stick to walk · tap a work to open it",
+      "touchHint": "Drag to look around · push the stick to walk · tap a work to open it · Next work: on to the next one",
       "tourAt": "{at} / {total} · No. {no} · {title}",
       "help": "Help",
       "helpTitle": "How to move, and all the keys",
@@ -82,11 +82,13 @@
         "title": "Moving around",
         "walk": "↑ ↓: walk · ← →: turn",
         "look": "Drag with the mouse: look around",
-        "next": "Page Down: the next work",
+        "next": "Page Down or Next work: the next work",
         "open": "Enter: open the work in front",
         "help": "Help: all the keys",
         "close": "Goes at the first key or click"
-      }
+      },
+      "next": "Next work",
+      "nextTitle": "Next work (Page Down)"
     },
     "viewer": {
       "artistSite": "On the artist's website",

@@ -74,7 +74,7 @@
         "videos": "Videók",
         "other": "A többi mű"
       },
-      "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás",
+      "touchHint": "Húzás: körülnézés · a kar eltolása: séta · koppintás egy műre: megnyitás · Következő mű: továbblépés",
       "tourAt": "{at} / {total} · {no}. mű · {title}",
       "help": "Súgó",
       "helpTitle": "Mozgás és az összes billentyű",
@@ -82,11 +82,13 @@
         "title": "Mozgás a kiállításban",
         "walk": "↑ ↓: séta · ← →: fordulás",
         "look": "Húzás egérrel: körülnézés",
-        "next": "Page Down: a következő mű",
+        "next": "Page Down vagy Következő mű: a következő mű",
         "open": "Enter: a nézet közepén lévő mű megnyitása",
         "help": "Súgó: minden billentyű",
         "close": "Az első billentyűre vagy kattintásra eltűnik"
-      }
+      },
+      "next": "Következő mű",
+      "nextTitle": "Következő mű (Page Down)"
     },
     "viewer": {
       "artistSite": "A művész honlapján",
