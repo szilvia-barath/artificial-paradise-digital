@@ -255,6 +255,53 @@ const clickTo = async (p, sel, title) => {
   await w.ctx.close();
 }
 
+// ---------------- B16: the installation photo's text says it is a photo of the room
+{
+  const w = await inside('en');
+  const p = w.page;
+  const situ = '#viewer-caption + button';
+  const altIs = (x) => p.waitForFunction((v) => document.getElementById('viewer-img').alt === v, x, { timeout: 30000 }).then(() => true, () => false);
+  const workAlt = await p.evaluate(() => { const k = window.__ap.data.works.find((x) => x.id === 'w16-let-it-flow'); return `${k.title}, ${k.medium}`; });
+  // the work shows as its video loop (the image is hidden then), so its text is read from the attribute
+  const altNow = () => p.getAttribute('#viewer-img', 'alt');
+  await openWork(p, 'w16-let-it-flow');
+  const a0 = await altNow();
+  await p.click(situ);
+  const one = fill(UI.en.viewer.situAlt, { n: 1, total: 2, title: 'Let it Flow' });
+  await altIs(one);
+  const a1 = await axName(p, '#viewer-img');
+  await p.click(situ);
+  const two = fill(UI.en.viewer.situAlt, { n: 2, total: 2, title: 'Let it Flow' });
+  await altIs(two);
+  const a2 = await axName(p, '#viewer-img');
+  await p.click(situ);
+  await altIs(workAlt);
+  const a3 = await altNow();
+  step('B16.1 No. 16: the work\'s own text, then (read from the accessibility tree) "Installation photo 1 of 2: Let it Flow in the gallery", "2 of 2", and the work\'s own text again', a0 === workAlt && a1 === one && a2 === two && a3 === workAlt, `"${a0}" → "${a1}" → "${a2}" → "${a3}"`);
+  await openWork(p, 'w01-dresden');
+  await p.click(situ);
+  const single = fill(UI.en.viewer.situAltOne, { title: 'Wrong Data Landscape Dresden' });
+  await altIs(single);
+  const b1 = await axName(p, '#viewer-img');
+  step('B16.2 No. 1, its one installation photo: "Installation photo: Wrong Data Landscape Dresden in the gallery"', b1 === single, `"${b1}"`);
+  // the language switched while a photo shows
+  await openWork(p, 'w16-let-it-flow');
+  await p.click(situ);
+  await altIs(one);
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  const huOne = fill(UI.hu.viewer.situAlt, { n: 1, total: 2, title: 'Let it Flow' });
+  await altIs(huOne);
+  const h1 = await axName(p, '#viewer-img');
+  await p.click('#site-nav [data-lang="en"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
+  await altIs(one);
+  const e1 = await axName(p, '#viewer-img');
+  step('B16.3 The language switched while the photo shows: "1. installációs fotó a 2 közül: Let it Flow a galériában", then the English again', h1 === huOne && e1 === one, `HU "${h1}"; EN "${e1}"`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

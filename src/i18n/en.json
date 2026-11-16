@@ -89,7 +89,9 @@
       "situNext": "Next installation photo",
       "pause": "Pause the video",
       "play": "Play the video",
-      "count": "No. {no} of {total}"
+      "count": "No. {no} of {total}",
+      "situAlt": "Installation photo {n} of {total}: {title} in the gallery",
+      "situAltOne": "Installation photo: {title} in the gallery"
     },
     "panels": {
       "credits": "Credits",

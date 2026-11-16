@@ -82,7 +82,11 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
 
   const renderInfo = () => {
     const w = works[index];
-    img.alt = `${w.title}, ${w.medium}`;
+    const photos = situPhotos(w).length;
+    // An installation photo is a view of the room, not the work: its text says so.
+    img.alt = !situ
+      ? `${w.title}, ${w.medium}`
+      : t(photos > 1 ? 'viewer.situAlt' : 'viewer.situAltOne', { n: situ, total: photos, title: w.title });
     room.textContent = `${data.rooms[w.room].name} · ${t('viewer.no', { no: w.no })}`;
     title.textContent = w.title;
     if (titleLang(w)) title.lang = titleLang(w);
@@ -101,7 +105,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     desc.innerHTML = d
       ? `<h3>${esc(d.heading)}</h3>${d.text.map((p) => `<p>${esc(p)}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`
       : '';
-    const photos = situPhotos(w).length;
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
     const back = w.video && w.video.loop ? 'viewer.loop' : 'viewer.photo';

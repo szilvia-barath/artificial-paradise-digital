@@ -89,7 +89,9 @@
       "situNext": "Következő installációs fotó",
       "pause": "Videó szüneteltetése",
       "play": "Videó lejátszása",
-      "count": "{no}. mű a {total} közül"
+      "count": "{no}. mű a {total} közül",
+      "situAlt": "{n}. installációs fotó a {total} közül: {title} a galériában",
+      "situAltOne": "Installációs fotó: {title} a galériában"
     },
     "panels": {
       "credits": "Közreműködők",
