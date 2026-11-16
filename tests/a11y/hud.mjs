@@ -80,9 +80,15 @@ const keyInfo = (p) => p.evaluate(() => {
   const c = worst(k.color, k.glass);
   const marks = k.other.round && !k.video.round && k.other.bg === 'rgb(255, 79, 163)' && k.video.bg === 'rgb(95, 231, 255)' && [k.other, k.video].every((x) => x.edgeW === '1px' && x.edge === 'rgba(11, 12, 14, 0.9)' && Math.round(x.w) === 7 && Math.round(x.h) === 7);
   step(`A4.1 Desktop: the key is one line just under the map, "${UI.en.hud.mapKey.videos}" and "${UI.en.hud.mapKey.other}", at least 11 px, 4.5:1 at worst; its marks are drawn as on the map (7 px with a dark edge, square cyan for videos, round magenta for the other works)`, k.text.join('|') === `${UI.en.hud.mapKey.videos}|${UI.en.hud.mapKey.other}` && k.lines === 1 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.lines} line, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify({ other: k.other, video: k.video })}; aria-hidden ${k.hidden}`);
-  // the map's marks are those colours: the map draws them from minimap.js's own values
+  // the key's marks have the map's own colours and edge: those minimap.js draws with, read from
+  // it, against the key's colours as the page shows them (fails if the key is missing or drifts)
   const src = readFileSync('src/ui/minimap.js', 'utf8');
-  step('A4.2 The key\'s colours and edge are the map\'s own (minimap.js draws #ff4fa3, #5fe7ff and rgba(11,12,14,0.9))', src.includes("'#5fe7ff' : '#ff4fa3'") && src.includes("'rgba(11,12,14,0.9)'"), 'read from src/ui/minimap.js');
+  const fill = src.match(/video \? '(#[0-9a-f]{6})' : '(#[0-9a-f]{6})'/i);
+  const edge = src.match(/\[3\.5, '(rgba\([^']+\))'\]/);
+  const rgb = (h) => `rgb(${[1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(', ')})`;
+  const flat = (c) => (c || '').replace(/\s/g, '');
+  const same = !!fill && !!edge && !k.missing && k.video.bg === rgb(fill[1]) && k.other.bg === rgb(fill[2]) && [k.video, k.other].every((x) => flat(x.edge) === flat(edge[1]));
+  step('A4.2 The key\'s marks have the map\'s own colours and edge, as minimap.js draws them (videos, the other works, the dark edge)', same, `minimap.js: ${fill ? `${fill[1]}, ${fill[2]}` : '(not found)'}, edge ${edge ? edge[1] : '(not found)'}; the key: video ${k.video.bg}, other ${k.other.bg}, edges ${k.video.edge} / ${k.other.edge}`);
   await switchTo(p, 'hu');
   const kh = await keyInfo(p);
   step(`A4.3 Switched to Hungarian: "${UI.hu.hud.mapKey.videos}", "${UI.hu.hud.mapKey.other}", still one line`, kh.text.join('|') === `${UI.hu.hud.mapKey.videos}|${UI.hu.hud.mapKey.other}` && kh.lines === 1 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.lines} line`);
