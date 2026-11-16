@@ -628,6 +628,12 @@ body.touch #click-to-look { top: auto; bottom: calc(50% + 14px); }
 @media (max-height: 519px) {
   body.touch #click-to-look { bottom: calc(84px + var(--safe-b)); max-width: calc(100% - 2 * (22px + 116px + 12px + max(var(--safe-l), var(--safe-r)))); }
 }
+/* A small phone on its side (under 360 px high): three lines of the hint reach up past the
+   bottom of the map, so the hint stays left of the map (whose left edge is 160 px from the
+   right) and takes another line instead. */
+@media (max-height: 359px) {
+  body.touch #click-to-look { max-width: calc(100% - 2 * (162px + max(var(--safe-l), var(--safe-r)))); }
+}
 /* Gone for good after the first look or move, or about 8 seconds (main.js); out of the way
    while the tour runs or the rooms menu is open. Hidden from screen readers as well. */
 body.looked #click-to-look, body.touring #click-to-look,
@@ -667,6 +673,8 @@ body.touch #guide { display: none; }
 @media (max-height: 519px) {
   #guide { bottom: calc(var(--foot-h) + 8px + var(--safe-b) + 84px + 8px); padding: 6px 12px; }
   #guide .g-title, #guide .g-more, #guide .g-note { display: none; }
+  /* wider, so each line stays one line and the card stays low, under the room label */
+  #guide { max-width: min(480px, calc(100% - 36px - var(--safe-l) - var(--safe-r))); }
 }
 /* A narrow window (under 560 px): the same four lines, so the card stays low, clear of the map
    and its key; where it still does not fit, main.js does not show it. */
