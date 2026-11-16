@@ -523,14 +523,15 @@ await guard(['F2.2'], async () => {
   await listen(p);
   await p.click('[data-action="next"]');
   const one = await atWork(p, 1);
-  const h1 = await hear(p, ['Room 1.', said('en', 1, 'Wrong Data Landscape Dresden')]);
+  // (the room is said only when it changes, as for Page Down: Room 1 was said on coming in)
+  const h1 = await hear(p, [said('en', 1, 'Wrong Data Landscape Dresden')]);
   const view = await p.evaluate(() => document.activeElement === document.getElementById('scene'));
   await p.click('[data-action="next"]');
   const two = await atWork(p, 2);
   const h2 = await hear(p, [said('en', 2, 'Human as Error VI')]);
   await p.keyboard.press('Enter');
   const opened = await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => p.textContent('#viewer-title'), () => '(nothing)');
-  step('F2.2 Next work clicked: to no. 1, "Room 1. …" and "No. 1, Wrong Data Landscape Dresden. Press Enter to open." said, as Page Down says it, focus on the 3D view; clicked again: no. 2, said; Enter opens no. 2', one && h1.includes('Room 1.') && h1.includes(said('en', 1, 'Wrong Data Landscape Dresden')) && view && two && h2.includes(said('en', 2, 'Human as Error VI')) && opened === 'Human as Error VI', `at no. 1: ${one}, said "${h1}", focus on the view: ${view}; at no. 2: ${two}, said "${h2}"; Enter opened "${opened}"`);
+  step('F2.2 Next work clicked: to no. 1, "No. 1, Wrong Data Landscape Dresden. Press Enter to open." said, as Page Down says it, focus on the 3D view; clicked again: no. 2, said; Enter opens no. 2', one && h1.includes(said('en', 1, 'Wrong Data Landscape Dresden')) && view && two && h2.includes(said('en', 2, 'Human as Error VI')) && opened === 'Human as Error VI', `at no. 1: ${one}, said "${h1}", focus on the view: ${view}; at no. 2: ${two}, said "${h2}"; Enter opened "${opened}"`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
