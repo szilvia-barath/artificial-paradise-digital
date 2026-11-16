@@ -23,6 +23,7 @@ import { focusDialog, BEHIND } from './ui/dialog.js';
 import { localize, onLangChange, setText, t, titleLang } from './i18n.js';
 import { announce, unannounce, setForeign } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
+import { isTouch } from './device.js';
 
 localize(data);
 // The live region marks the English work titles on the Hungarian page, in every message
@@ -30,10 +31,12 @@ localize(data);
 const markTitles = () => setForeign(data.works.filter(titleLang).map((w) => ({ text: w.title, lang: titleLang(w) })));
 markTitles();
 
-const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+// isTouch (device.js): a phone or a tablet, a touch screen with no mouse or trackpad. A laptop
+// with a touch screen is a computer here (D10): it keeps the keycaps, the footer, the mouse
+// and the computer's words, picture quality and field of view, and touch works on it as well.
 const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
 document.body.classList.toggle('touch', isTouch);
-// On a touch screen the sound question names the Sound button at the bottom, not the M key,
+// On a phone or tablet the sound question names the Sound button at the bottom, not the M key,
 // and the hint inside says how to move by touch (the desktop words stay as they are).
 // That hint is hidden from screen readers there: with VoiceOver or TalkBack on, a drag moves
 // the screen reader's focus and does not look round, so its gestures are not theirs.
@@ -257,7 +260,8 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   // Next work: the same jump as Page Down. Focus stays on the button (a mouse click or a tap
   // then hands it to the view, below), so pressed again it goes on to the next work. Only
   // after a mouse click does Enter open the work: from the keyboard Enter presses the button
-  // again, and a phone has no Enter key, so there the work is said without "Press Enter".
+  // again, and a phone has no Enter key, so there the work is said without "Press Enter"
+  // (a laptop with a touch screen has one: there a tap on the button counts as a click).
   else if (a === 'next') stepWork(1, { focus: false, enter: e.detail > 0 && !isTouch });
 });
 // One jump for each press, as with Page Down: a held Enter repeats, and its repeats would click
@@ -384,7 +388,13 @@ window.addEventListener('keydown', (e) => {
   if (controls.enabled) retireHint();
 });
 for (const type of ['pointerdown', 'wheel']) canvas.addEventListener(type, () => { keyNav = false; }, { passive: true });
-canvas.addEventListener('mousemove', (e) => {
+// The aim under the mouse follows the mouse (or a pen), not a finger: on a laptop with a touch
+// screen a touch on the view ends it until the mouse moves again, since a finger leaves no
+// cursor behind. Pointer events say which it was; the mouse events a browser sends after a
+// tap do not (D10).
+canvas.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') mouseInside = false; }, { passive: true });
+canvas.addEventListener('pointermove', (e) => {
+  if (e.pointerType === 'touch') return;
   mouseInside = true;
   keyNav = false;
   ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
