@@ -1,9 +1,12 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 28. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 29. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
+- `ui.sceneLabel`
+  - HU: 3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása az akadálymentes változatban van, ez az oldal első hivatkozása.
+  - EN: 3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link.
 - `ui.loader.howtoTouch`
   - HU: A bal oldali karral lehet sétálni, húzással körülnézni, csippentéssel nagyítani, egy műre koppintva pedig megnyitni azt.
   - EN: Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.

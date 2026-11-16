@@ -70,12 +70,12 @@ Written by `tests/a11y/keyboard.mjs` on 2026-11-16: Chromium (Playwright, headle
 ## PASS: 3.2 Esc answers "without sound" and closes it
 
 - Expected: question closed; focus on the 3D view; the room is announced
-- What happened: closed: true; focus on canvas#scene "3D view of the digital exh…; announced: ["Room 1. Paintings, Paradise Factory."]
+- What happened: closed: true; focus on canvas#scene "3D view. Page Down and Pag…; announced: ["Room 1. Paintings, Paradise Factory."]
 
 ## PASS: 3.3 The 3D view has a name
 
 - Expected: says what it is, names the accessible version and the keys
-- What happened: role application: "3D view of the digital exhibition: walk with the arrow keys, press Enter to open the work in front of you. The accessible version, the first link on the page, lists every work and all the keys."
+- What happened: role application: "3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link."
 
 ## PASS: 4.1 Page Down through all 17 works; at each, Enter opens it and Esc closes it
 

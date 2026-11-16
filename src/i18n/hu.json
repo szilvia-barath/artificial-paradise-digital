@@ -3,7 +3,7 @@
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
     "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10–31. között volt megtekinthető.",
-    "sceneLabel": "A digitális kiállítás 3D nézete: a nyílbillentyűkkel lehet sétálni, az Enter megnyitja a nézet közepén lévő művet. Az akadálymentes változat, az oldal első hivatkozása, felsorolja az összes művet és billentyűt.",
+    "sceneLabel": "3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása az akadálymentes változatban van, ez az oldal első hivatkozása.",
     "nav": {
       "main": "Fő menü",
       "about": "A kiállításról",

@@ -36,6 +36,15 @@ async function inside(lang, opts = {}) {
   await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
   return w;
 }
+// An element's accessible name, as the browser gives it to a screen reader (DevTools protocol).
+const axName = async (p, sel) => {
+  const cdp = await p.context().newCDPSession(p);
+  const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
+  const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel });
+  const { nodes } = await cdp.send('Accessibility.getPartialAXTree', { nodeId, fetchRelatives: false });
+  await cdp.detach();
+  return nodes[0]?.name?.value ?? null;
+};
 // Wait (up to 30 s) until the live region has said every one of `parts`, then take it all.
 const hear = async (p, parts, timeout = 30000) => {
   await p.waitForFunction((x) => { const all = window.__said.join(' | '); return x.every((s) => all.includes(s)); }, parts, { timeout, polling: 100 }).catch(() => {});
@@ -181,6 +190,37 @@ const clickTo = async (p, sel, title) => {
   await openWork(p, 'w01-dresden');
   const v = await p.getAttribute('#viewer-title', 'lang');
   step('B6.4 English page: no lang mark in the live region or on the viewer\'s title', !h.html.includes('lang=') && v === null, `live region: ${h.html}; viewer title lang: ${v}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- B7: the 3D view's name is short and has the keys that matter, and what it says is so
+{
+  const w = await inside('en');
+  const p = w.page;
+  const en = await axName(p, '#scene');
+  const words = en.split(/\s+/).length;
+  const has = ['3D view', 'Page Down', 'Page Up', 'Enter', 'arrow keys', 'accessible version', 'first link'].every((x) => en.includes(x));
+  step(`B7.1 The 3D view's name, shorter than the old one (37 words), has the keys: ${words} words, "${UI.en.sceneLabel}"`, en === UI.en.sceneLabel && en.startsWith('3D view.') && has && words < 37, `"${en}"`);
+  // what it says: the first link in the page is the accessible version, and it is the
+  // first thing Tab reaches; Page Down goes to a work and Enter opens it
+  const first = await p.evaluate(() => {
+    const link = document.querySelector('a[href]');
+    const focusable = [...document.querySelectorAll('a[href], button, [tabindex]')].filter((e) => e.tabIndex >= 0 && !e.closest('[inert]') && !e.disabled && e.getClientRects().length);
+    return { link: `${link.className} ${link.getAttribute('href')}`, firstTab: focusable[0] === link };
+  });
+  await p.focus('#scene');
+  await p.keyboard.press('PageDown');
+  await p.keyboard.press('PageDown');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  const opened = await p.evaluate(() => (document.getElementById('viewer').hidden ? '(nothing)' : document.getElementById('viewer-title').textContent));
+  await p.keyboard.press('Escape');
+  step('B7.2 What the name says is so: the first link is the accessible version and the first Tab stop; Page Down twice and Enter open no. 2', first.link.startsWith('skip-link ./text/') && first.firstTab && opened === 'Human as Error VI', `first link: ${first.link}, first Tab stop: ${first.firstTab}; Enter opened: ${opened}`);
+  await p.click('#site-nav [data-lang="hu"]');
+  await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
+  const hu = await axName(p, '#scene');
+  step('B7.3 Switched to Hungarian: the name is the Hungarian one', hu === UI.hu.sceneLabel && hu.includes('Page Down') && hu.includes('akadálymentes változat'), `"${hu}"`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
