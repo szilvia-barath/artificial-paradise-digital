@@ -524,6 +524,67 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   await w.ctx.close();
 }
 
+// ---------------- C7: in a narrow window a panel opened from the folded menu closes onto
+// the Menu button (the item that opened it is hidden with the menu by then)
+{
+  const w = await openWalk(browser, PHONE);
+  const p = w.page;
+  const onMenu = () => p.evaluate(() => document.activeElement === document.querySelector('#site-nav .nav-toggle'));
+  const menuOpen = () => p.waitForFunction(() => document.querySelector('#site-nav .nav-toggle').getAttribute('aria-expanded') === 'true', null, { timeout: 30000 });
+  const panelIs = (shut) => p.waitForFunction((x) => document.getElementById('panel').hidden === x, shut, { timeout: 30000 });
+  // by keyboard on the title screen: Menu, Tab to About, Enter, Esc
+  await p.focus('#site-nav .nav-toggle');
+  await p.keyboard.press('Enter');
+  await menuOpen();
+  await p.keyboard.press('Tab');
+  const fromAbout = await p.evaluate(() => document.activeElement === document.querySelector('#site-nav [data-nav="about"]'));
+  await p.keyboard.press('Enter');
+  await panelIs(false);
+  await p.keyboard.press('Escape');
+  await panelIs(true);
+  step('41 C7 Phone (375 x 667), title screen: Menu, About, Esc by keyboard: focus on the Menu button (not Enter)', fromAbout && (await onMenu()), `About had focus before Enter: ${fromAbout}; focus on ${await focusName(p)}`);
+
+  // an item under the line in the menu (what the footer holds): Legal notice
+  await p.focus('#site-nav .nav-toggle'); // where 41 left it, if it passed
+  await p.keyboard.press('Enter');
+  await menuOpen();
+  const t43 = await (async () => { for (let i = 1; i <= 12; i++) { await p.keyboard.press('Tab'); if (await p.evaluate(() => document.activeElement === document.querySelector('#site-nav .nav-more [data-nav="legal"]'))) return i; } return 0; })();
+  await p.keyboard.press('Enter');
+  await panelIs(false);
+  await p.keyboard.press('Escape');
+  await panelIs(true);
+  step(`42 C7 Phone, title screen: Menu, Tab to Legal notice under the line (${t43} Tabs), Enter, Esc: focus on the Menu button`, t43 > 0 && (await onMenu()), `focus on ${await focusName(p)}`);
+
+  // inside, by touch: Menu tapped, About tapped, Close tapped
+  await p.tap('#enter');
+  await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.tap('[data-sound="off"]');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.tap('#site-nav .nav-toggle');
+  await menuOpen();
+  await p.tap('#site-nav [data-nav="about"]');
+  await panelIs(false);
+  await p.tap('#panel [data-close]');
+  await panelIs(true);
+  step('43 C7 Phone, inside: Menu, About and Close tapped: focus on the Menu button (not the 3D view)', await onMenu(), `focus on ${await focusName(p)}`);
+
+  // with C6: Works from the menu, a work, Close: the list is back; Esc: the Menu button
+  await p.tap('#site-nav .nav-toggle');
+  await menuOpen();
+  await p.tap('#site-nav [data-nav="works"]');
+  await p.waitForFunction(() => !!document.querySelector('#panel:not([hidden]) .works-list'), null, { timeout: 30000 });
+  await p.tap('#panel-body [data-work="w08-wiena-wrong-landscape-i"]');
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  await p.tap('#viewer [data-close]');
+  await p.waitForFunction(() => document.getElementById('viewer').hidden && !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const row44 = await p.evaluate(() => document.activeElement.dataset.work || null);
+  await p.keyboard.press('Escape');
+  await panelIs(true);
+  step('44 C7 Phone, inside: Works from the menu, no. 8, Close tapped: the list is back on no. 8; Esc: focus on the Menu button', row44 === 'w08-wiena-wrong-landscape-i' && (await onMenu()), `focus after Close on row ${row44}; after Esc on ${await focusName(p)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
 await browser.close();
 process.exit(failed ? 1 : 0);

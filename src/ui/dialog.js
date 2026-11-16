@@ -38,6 +38,17 @@ function syncInert() {
   }
 }
 
+// A control in a folded menu that is shut again (the navbar's links in a narrow window):
+// the shown button that opens that menu (aria-controls) stands in for it.
+function standIn(n) {
+  for (let p = n?.parentElement; p; p = p.parentElement) {
+    if (!p.id) continue;
+    const b = document.querySelector(`[aria-expanded][aria-controls="${p.id}"]`);
+    if (shown(b)) return b;
+  }
+  return null;
+}
+
 // el: the dialog. initial(): the element to focus on opening (default: the first control).
 // fallback(why): where focus goes on closing if the opener is gone or hidden by then.
 // Called with 'mouse' when the dialog was closed with the mouse: if it returns an element
@@ -101,9 +112,10 @@ export function focusDialog(el, { initial, fallback, behind: back = BEHIND } = {
       // the page behind wakes first, so the opener can take focus again
       behind.delete(el);
       syncInert();
-      // Keyboard: back to the control that opened it. Mouse, inside the walk: to the 3D view.
+      // Keyboard: back to the control that opened it, or, if it was in a folded menu that is
+      // shut by now, to that menu's button. Mouse, inside the walk: to the 3D view.
       const viaMouse = byPointer && fallback && fallback('mouse');
-      const target = viaMouse || (shown(opener) ? opener : fallback && fallback());
+      const target = viaMouse || (shown(opener) ? opener : standIn(opener) || (fallback && fallback()));
       opener = null;
       if (refocus) target?.focus({ preventScroll: true });
     },
