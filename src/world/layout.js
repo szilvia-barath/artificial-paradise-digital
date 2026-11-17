@@ -165,7 +165,8 @@ export const BLOCKS = [
   // (DSC_0019–0023 and the panorama), doorway z 3.70–4.55
   { x0: R1.east, x1: 5.85, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
   { x0: R1.recess, x1: 5.85, z0: 3.2, z1: 3.7, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: R1.recess, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick' },
+  // (its Room 2 face is warm like the rest of Room 2's walls; it was cold white until 17 November 2026)
+  { x0: R1.recess, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick', faces: { px: 'warmBrick' } },
   { x0: R1.recess, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
   { x0: R1.east, x1: 5.85, z0: 5.0, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
 
