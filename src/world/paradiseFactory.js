@@ -101,6 +101,41 @@ function bladeGeometry(w, h, cup, arch) {
   return geo;
 }
 
+// In the build the model also travels gzipped (`<url>.gz`, written by vite.config.js): Netlify
+// does not compress a .glb, and this one shrinks from 1,005 KB to 436 KB. The
+// browser unzips it with DecompressionStream. In dev, without DecompressionStream, or if
+// anything goes wrong, the plain .glb is loaded instead. If a server has already unzipped it
+// (Content-Encoding: gzip), the bytes are a glb and are parsed as they are.
+function loadGzipped(loader, manager, url, onLoad) {
+  const plain = () => loader.load(url, onLoad);
+  if (!import.meta.env.PROD || typeof DecompressionStream === 'undefined') return plain();
+  const gz = `${url}.gz`;
+  manager.itemStart(gz);
+  (async () => {
+    const res = await fetch(gz);
+    if (!res.ok) throw new Error(`${gz}: ${res.status}`);
+    let buf = new Uint8Array(await res.arrayBuffer());
+    if (buf[0] === 0x1f && buf[1] === 0x8b) {
+      const stream = new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'));
+      buf = new Uint8Array(await new Response(stream).arrayBuffer());
+    }
+    return new Promise((resolve, reject) => loader.parse(buf.buffer, url.slice(0, url.lastIndexOf('/') + 1), resolve, reject));
+  })().then(
+    (gltf) => {
+      try {
+        onLoad(gltf);
+      } finally {
+        manager.itemEnd(gz);
+      }
+    },
+    (err) => {
+      console.warn('Gzipped model not loaded, loading the plain one:', err);
+      plain();
+      manager.itemEnd(gz);
+    },
+  );
+}
+
 function chain(mat, a, b) {
   const d = new THREE.Vector3().subVectors(b, a);
   const m = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, d.length(), 4), mat);
@@ -254,7 +289,7 @@ export function buildParadiseFactory(materials, manager) {
     rig.position.set(x, 0, z);
     g.add(rig);
     const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
-    loader.load(`${import.meta.env.BASE_URL}models/paradise-factory-plant.glb`, (gltf) => {
+    loadGzipped(loader, manager, `${import.meta.env.BASE_URL}models/paradise-factory-plant.glb`, (gltf) => {
       gltf.scene.traverse((o) => {
         if (!o.isMesh) return;
         // the model's part colours are sRGB values: convert them so they show as authored

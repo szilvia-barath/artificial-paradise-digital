@@ -46,7 +46,7 @@ if (process.argv.includes('--no-cache')) await cdp.send('Network.setCacheDisable
 let phase = 'load';
 const urls = new Map();
 const bytes = []; // { phase, kind, path, bytes }
-const kindOf = (p) => (/\.mp4$/.test(p) ? 'video' : /\.ktx2$/.test(p) ? 'texture (KTX2)' : /\/img\//.test(p) ? 'artwork image (WebP)' : /\.(glb)$/.test(p) ? 'model (glb)' : /\.(wasm)$/.test(p) ? 'wasm' : /\.js$/.test(p) ? 'JS' : /\.css$/.test(p) ? 'CSS' : /\/brand\//.test(p) ? 'title screen images' : /\.(webp|png|jpg|avif)$/.test(p) ? 'other image' : 'HTML and other');
+const kindOf = (p) => (/\.mp4$/.test(p) ? 'video' : /\.ktx2$/.test(p) ? 'texture (KTX2)' : /\/img\//.test(p) ? 'artwork image (WebP)' : /\.glb(\.gz)?$/.test(p) ? 'model (glb)' : /\.(wasm)$/.test(p) ? 'wasm' : /\.js$/.test(p) ? 'JS' : /\.css$/.test(p) ? 'CSS' : /\/brand\//.test(p) ? 'title screen images' : /\.(webp|png|jpg|avif)$/.test(p) ? 'other image' : 'HTML and other');
 cdp.on('Network.requestWillBeSent', (e) => urls.set(e.requestId, new URL(e.request.url).pathname));
 // bytes on the wire: each chunk's encodedDataLength (its dataLength is the decoded size and
 // would count the same data again)
