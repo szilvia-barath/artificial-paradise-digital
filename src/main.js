@@ -13,6 +13,7 @@ import { VIDEOS, enableVideoSound } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
 import { MAX_DPR, pixelCapFor, baseFovFor } from './fx/resolution.js';
+import { isOn } from './fx/switches.js';
 import { Ambience } from './audio/ambience.js';
 import { FirstPersonControls, LETTER_KEYS } from './controls.js';
 import { Tour } from './tour.js';
@@ -102,6 +103,8 @@ const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
 applyPlanAO(materials, arch.segments, { lowPower }); // after props and installations add their footprints
 const lights = buildLights(scene);
+// switch, off (src/fx/switches.js); loaded only when on, so the bundle does not grow
+if (isOn('probes')) import('./fx/probes.js').then(({ setupProbes }) => setupProbes(renderer, scene, lights));
 const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8, videoBudget: lowPower ? 5 : 8 });
 scene.add(gallery.group);
 
