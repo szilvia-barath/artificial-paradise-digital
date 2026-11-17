@@ -112,11 +112,19 @@ function poseAtWork(w) {
   // setPose again, so the camera itself turns now and not at the next frame
   controls.setPose(f.x, f.z, controls.yaw, Math.atan2(f.look[1] - EYE, d) * 0.8);
 }
-// A link to a work (?work=<id>, as the text edition's links carry): the walk opens at
-// that work instead of at the foot of the stairs. An unknown id is ignored.
-const linkedId = new URLSearchParams(location.search).get('work');
+// A link to a work (?work=<id>, as the accessible version's "Open No. …" links carry): the
+// visitor goes straight to that work, never to the title card. The 3D view stands at the
+// work, the sound question opens over it at once (the files go on loading behind it), and
+// once it is answered the work opens in the viewer. With ?sound=off, which the accessible
+// version hands on when the visitor had come from inside without sound, there is no question.
+// The title card is hidden before the first paint by index.html (html.direct); an unknown id
+// brings it back and the walk opens at the foot of the stairs as before.
+const linkParams = new URLSearchParams(location.search);
+const linkedId = linkParams.get('work');
 let linkedWork = (linkedId && data.works.find((w) => w.id === linkedId && w._focus)) || null;
+const linkedSoundOff = linkParams.get('sound') === 'off';
 if (linkedWork) poseAtWork(linkedWork);
+else document.documentElement.classList.remove('direct');
 
 const post = createPost(renderer, scene, camera, { lowPower });
 // prefers-reduced-motion switches the moving effects off, also when it changes mid-visit
@@ -546,15 +554,18 @@ window.addEventListener('keydown', (e) => {
   if (e.repeat) return;
   stepWork(e.code === 'PageDown' ? 1 : -1);
 });
-// On coming in: the room, and the work a link brought you to.
+// On coming in: the room; or, from a link to a work, that work opened in the viewer. Its
+// title names the viewer, and Close (or Esc) leaves focus on the 3D view in front of it, from
+// where Page Down and Page Up go on. The room is not said over the viewer (the viewer says it).
 function announceArrival() {
-  announceRoom();
-  if (!linkedWork) return;
-  front = linkedWork;
-  keyNav = true;
-  visitAt = visit.indexOf(linkedWork);
-  announceFront(linkedWork);
+  if (!linkedWork) { announceRoom(); return; }
+  const w = linkedWork;
   linkedWork = null;
+  roomSaid = w.room;
+  front = w;
+  keyNav = true;
+  visitAt = visit.indexOf(w);
+  viewer.open(w);
 }
 
 // ---------------------------------------------------------------- enter
@@ -565,6 +576,9 @@ const soundAsk = document.getElementById('sound-ask');
 // unlike behind a panel or the viewer: it lies under the question and does nothing then.
 const soundDialog = focusDialog(soundAsk, { initial: () => soundAsk.querySelector('[data-sound="off"]'), fallback: () => canvas, behind: [...BEHIND, '#site-nav'] });
 function setSound(on) {
+  // switched on by the visitor's own click or key: the sound may start (from a link to a work
+  // the mix was set up before any click, so the browser holds it until now)
+  if (on) audio.start();
   audio.setMuted(!on);
   soundBtn.classList.toggle('muted', !on);
   soundBtn.setAttribute('aria-pressed', String(on));
@@ -631,6 +645,18 @@ function enter(ask = true) {
   syncEnabled();
 }
 enterBtn.addEventListener('click', () => enter());
+// The links to the accessible version: from inside, with the sound off, they carry ?sound=off,
+// and its links to a work hand it back, so coming back to a work does not ask again. Nothing is
+// stored; the choice travels in the address only. With the sound on, the question has to come
+// again (a browser starts sound only after a click or key on the page itself).
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[data-i18n-attr~="href:textEdition.href"]');
+  if (!a) return;
+  const u = new URL(a.getAttribute('href'), location.href);
+  if (entered && audio.muted) u.searchParams.set('sound', 'off');
+  else u.searchParams.delete('sound');
+  a.setAttribute('href', u.pathname + u.search + u.hash);
+}, true);
 // The "drag to look" hint goes at the first look or move of any kind: a drag, a walking or
 // turning key, the wheel, an on-screen key, Page Down or Page Up, the tour, and on a touch
 // screen the first touch on the 3D view or the stick. Left alone, it goes about 8 seconds
@@ -771,8 +797,10 @@ function markReady() {
   progressBar.style.width = '100%';
   progressBar.parentElement.setAttribute('aria-valuenow', '100');
   setText(progressLabel, 'loader.ready');
-  announce(t('loader.ready'), 'loader');
   enterBtn.disabled = false;
+  // Arrived from a link to a work: already inside, the title card was never shown.
+  if (entered) return;
+  announce(t('loader.ready'), 'loader');
   // Enter gets focus when loading is done, unless the visitor has already tabbed
   // somewhere (to the skip link, the navbar, a panel): then focus stays where it is.
   if (document.activeElement === document.body || !document.activeElement) {
@@ -799,6 +827,8 @@ function showEnter() {
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.
 setTimeout(markReady, 12000);
+// From a link to a work: straight in, at the work (see linkedWork above).
+if (linkedWork) enter(!linkedSoundOff);
 
 // ---------------------------------------------------------------- language
 // Static markup is re-translated by i18n.js; here everything built from the data.

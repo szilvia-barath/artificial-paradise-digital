@@ -303,21 +303,20 @@ await wait(400);
 step('8.2 Shift+Tab to EN, Enter', 'page language en', await page.getAttribute('html', 'lang'), (await page.getAttribute('html', 'lang')) === 'en');
 
 // ---------------------------------------------------------------- 9. a link to a work
+// The accessible version's links to a work go straight to it: no title card, the sound
+// question over the work at once, and once it is answered the work open in the viewer.
 await page.goto(`${BASE}?lang=en&work=w11-artificial-paradise-i-print`, { waitUntil: 'domcontentloaded' });
-await ready();
-await said();
+// the sound question is open and has focus, with no Enter pressed
+await until(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, 90000);
+const card = await page.evaluate(() => getComputedStyle(document.getElementById('loader')).visibility);
 await page.keyboard.press('Enter');
-// the sound question is open and has focus before Enter answers it
-await until(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); });
-await page.keyboard.press('Enter');
-heard = await hear(['Room 3.', 'No. 11, Artificial Paradise I. Press Enter to open.']);
-await page.keyboard.press('Enter');
-await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer-title').textContent.trim() !== '');
-step('9.1 Open the walk from a link to a work (?work=w11-artificial-paradise-i-print)', 'after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11', `announced: "${heard}"; Enter opened: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(nothing)'}"`, heard.includes('Room 3.') && heard.includes('No. 11, Artificial Paradise I. Press Enter to open.') && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')));
+await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer').contains(document.activeElement) && document.getElementById('viewer-title').textContent.trim() !== '');
+at = await focusName(page);
+step('9.1 Open the digital exhibition from a link to a work (?work=w11-artificial-paradise-i-print)', 'no title card; the sound question has focus at once; Enter answers it and No. 11 opens in the viewer, focus in it', `title card ${card}; viewer: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(not open)'}", focus ${at}`, card === 'hidden' && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')) && (await inside('#viewer')));
 
 // ---------------------------------------------------------------- 10. Help
 // Help on the toolbar opens the controls as a panel, through the same dialog path as the
-// others. (The first-use card has gone at the Enter that opened the work in 9.1.)
+// others. (The first-use card has gone at the Esc that closes the viewer of 9.1.)
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'));
 tabs = await tabTo('[data-action="help"]');

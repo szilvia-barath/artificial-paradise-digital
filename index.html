@@ -19,6 +19,9 @@
         var l = q === 'hu' || q === 'en' ? q : s === 'hu' || s === 'en' ? s : /^hu\b/i.test(navigator.language || '') ? 'hu' : 'en';
         document.documentElement.lang = l;
         if (l !== 'en') document.documentElement.classList.add('i18n-wait');
+        // A link to a work (?work=, from the accessible version) goes straight to the work:
+        // the title card is never shown (main.js; it comes back if the id is unknown).
+        if (/[?&]work=[^&]/.test(location.search)) document.documentElement.classList.add('direct');
       })();
     </script>
     <link rel="preload" as="image" href="./brand/key-visual.avif" type="image/avif" media="(min-aspect-ratio: 4/5)" />

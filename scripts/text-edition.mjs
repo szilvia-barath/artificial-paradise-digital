@@ -48,7 +48,18 @@ nav ul{margin:.4rem 0;padding-left:1.2rem}
 // a choice, so only an explicit ?lang=en leaves it. Nothing is written to storage.
 const langScript = (here) => `(function(){var here='${here}',q=new URLSearchParams(location.search).get('lang'),s=null;try{s=localStorage.getItem('ap-lang')}catch(e){}var ok=function(v){return v==='hu'||v==='en'};var want=ok(q)?q:here==='hu'?'hu':ok(s)?s:/^hu\\b/i.test(navigator.language||'')?'hu':'en';if(want!==here)location.replace((want==='hu'?'hu/':'../')+location.search+location.hash)})();`;
 
-function page(lang, raw) {
+// Going to a work from here (D: the links "Open No. …, in the digital exhibition"), where
+// JavaScript is on. 1. While this page is open, the digital exhibition's engine is fetched in
+// the background (rel=prefetch, once the page has loaded, not with the browser's data saver),
+// so following a link to a work starts it from the browser's cache: the exhibition's script and
+// style and the texture decoder (`engine`, the files of this build; none on the dev server).
+// The rooms' own files (textures, models, pictures, videos) are not fetched here. 2. A visitor
+// who came here from inside the exhibition without sound arrives with ?sound=off; the links to a
+// work and to the other language hand it on, so going back to a work does not ask again.
+// Nothing is stored.
+const goScript = (engine) => `(function(){var q=new URLSearchParams(location.search);if(q.get('sound')==='off')document.addEventListener('DOMContentLoaded',function(){var as=document.querySelectorAll('a[href*="work="],a[hreflang]');for(var i=0;i<as.length;i++)as[i].href+='&sound=off'});var f=${JSON.stringify(engine)};if(!f.length)return;addEventListener('load',function(){var c=navigator.connection;if(c&&c.saveData)return;f.forEach(function(h){var l=document.createElement('link');l.rel='prefetch';l.href=h;l.crossOrigin='anonymous';document.head.appendChild(l)})})})();`;
+
+function page(lang, raw, engine = []) {
   const en = raw.en;
   const loc = raw[lang];
   const data = localizeData(structuredClone(raw.data), en, loc);
@@ -193,6 +204,7 @@ ${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : 
 <meta name="description" content="${esc(t('textEdition.docDescription'))}">
 <meta name="color-scheme" content="light dark">
 <script>${langScript(lang)}</script>
+<script>${goScript(engine.map((f) => (lang === 'hu' ? '../../' : '../') + f))}</script>
 <link rel="canonical" href="${SITE}text/${lang === 'hu' ? 'hu/' : ''}">
 <link rel="alternate" hreflang="en" href="${SITE}text/">
 <link rel="alternate" hreflang="hu" href="${SITE}text/hu/">
@@ -260,16 +272,33 @@ ${statementHTML}
 `;
 }
 
-// The two pages: [{ file: 'text/index.html', html }, { file: 'text/hu/index.html', html }]
-export function buildTextEdition() {
+// The two pages: [{ file: 'text/index.html', html }, { file: 'text/hu/index.html', html }].
+// engine: the build's files the exhibition needs before it can show a room (see goScript).
+export function buildTextEdition(engine = []) {
   const [data, en, hu] = SOURCES.map(readJSON);
   // the curator's line is found by position, so make sure it is still there
   if (en.credits[1][0] !== 'Curator') throw new Error('text edition: the second line of "credits" in en.json is no longer the curator');
   const raw = { data, en, hu };
   return [
-    { file: 'text/index.html', html: page('en', raw) },
-    { file: 'text/hu/index.html', html: page('hu', raw) },
+    { file: 'text/index.html', html: page('en', raw, engine) },
+    { file: 'text/hu/index.html', html: page('hu', raw, engine) },
   ];
+}
+
+// The exhibition's engine in this build: the entry script of index.html and every chunk it
+// imports, at once or later (main.js, which boot.js loads), their style sheets, and the texture
+// decoder that src/world/textures.js loads from public/basis/.
+function engineFiles(bundle) {
+  const out = new Set();
+  const visit = (name) => {
+    const c = bundle[name];
+    if (!c || c.type !== 'chunk' || out.has(c.fileName)) return;
+    out.add(c.fileName);
+    for (const css of c.viteMetadata?.importedCss || []) out.add(css);
+    for (const n of [...c.imports, ...c.dynamicImports]) visit(n);
+  };
+  for (const [name, c] of Object.entries(bundle)) if (c.type === 'chunk' && c.isEntry) visit(name);
+  return [...out, 'basis/basis_transcoder.js', 'basis/basis_transcoder.wasm'];
 }
 
 export function textEdition() {
@@ -278,8 +307,8 @@ export function textEdition() {
     buildStart() {
       for (const f of SOURCES) this.addWatchFile(f);
     },
-    generateBundle() {
-      for (const { file, html } of buildTextEdition()) this.emitFile({ type: 'asset', fileName: file, source: html });
+    generateBundle(_, bundle) {
+      for (const { file, html } of buildTextEdition(engineFiles(bundle))) this.emitFile({ type: 'asset', fileName: file, source: html });
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
