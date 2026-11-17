@@ -23,7 +23,7 @@ import { focusDialog, BEHIND } from './ui/dialog.js';
 import { localize, onLangChange, setText, t, titleLang } from './i18n.js';
 import { announce, unannounce, setForeign } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
-import { isTouch } from './device.js';
+import { isTouch, lowPower } from './device.js';
 
 localize(data);
 // The live region marks the English work titles on the Hungarian page, in every message
@@ -34,7 +34,7 @@ markTitles();
 // isTouch (device.js): a phone or a tablet, a touch screen with no mouse or trackpad. A laptop
 // with a touch screen is a computer here (D10): it keeps the keycaps, the footer, the mouse
 // and the computer's words, picture quality and field of view, and touch works on it as well.
-const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
+// lowPower (device.js) is a phone or tablet, or a device reporting 4 threads or fewer.
 document.body.classList.toggle('touch', isTouch);
 // On a phone or tablet the sound question names the Sound button at the bottom, not the M key,
 // and the hint inside says how to move by touch (the desktop words stay as they are).
