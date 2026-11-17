@@ -228,6 +228,12 @@
         "en": "angol",
         "hu": "magyar"
       }
+    },
+    "describe": {
+      "visual": "Leírás",
+      "video": "A videó leírása",
+      "videoDoc": "A videódokumentáció leírása",
+      "space": "A terem audionarrációja"
     }
   },
   "meta": {
@@ -405,6 +411,47 @@
       "text": [
         "A Natural Life című videómunka a Let It Flow projekt részeként egy kőfal repedéseiből előtörő páfrányok és mohák apró, ismétlődő életjelenségét mutatja be. A videóloop a természet egy elszigetelt szeletét jeleníti meg, amely a mesterséges és épített környezetben is képes megkapaszkodni és fennmaradni. A munka a projektben megjelenő, részben a Tisza folyóból származó műanyaghulladékból, illetve saját háztartási hulladékból megolvasztott plasztikobjektumok ellenpontjaként jelenik meg. A két anyagi és vizuális világ egymás mellé helyezése a természet és az emberi tevékenység által létrehozott környezetszennyezés ellentmondására irányítja a figyelmet. A Natural Life így egyfajta pszeudotermészeti jelképként értelmezhető: a természet törékeny jelenlétét idézi meg egy olyan környezetben, amelyet egyre inkább az ember által hátrahagyott anyagok határoznak meg."
       ]
+    }
+  },
+  "accessDescriptions": {
+    "_readme": "Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: [\"…\", \"…\"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem audionarrációja) és az akadálymentes változatban, és a Felolvasás felolvassa.",
+    "visual": {
+      "w01-dresden": "",
+      "w02-human-as-error-vi": "",
+      "w03-paradise-factory": "",
+      "w04-human-as-error-iii": "",
+      "w05-human-as-error-i": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w09-warsaw-g24-i": "",
+      "w10-warsaw-ii": "",
+      "w11-artificial-paradise-i-print": "",
+      "w12-artificial-paradise-ii-print": "",
+      "w13-artificial-paradise-iii-print": "",
+      "w14-warsaw-g24-ii": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoText": {
+      "w03-screen": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoDocText": {
+      "w03-paradise-factory": "",
+      "w16-let-it-flow": ""
+    },
+    "space": {
+      "r1": "",
+      "r2": "",
+      "r3": "",
+      "r4": ""
     }
   },
   "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról és a galéria alaprajzáról származnak, a művész javításaival. A termek alaprajza erről az alaprajzról készült, az épület OpenStreetMap-körvonalával összevetve.",

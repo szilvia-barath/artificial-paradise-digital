@@ -2,6 +2,7 @@ import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
 import { readAloudButton } from './readAloud.js';
+import { workDescriptions, roomDescription } from '../localize.js';
 import { isPart } from '../world/route.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
@@ -31,6 +32,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const site = document.getElementById('viewer-site');
   const caption = document.getElementById('viewer-caption');
   const desc = document.getElementById('viewer-desc');
+  const describe = document.getElementById('viewer-describe');
+  const space = document.getElementById('viewer-space');
   const room = document.getElementById('viewer-room');
   const text = document.getElementById('viewer-text');
   const count = document.getElementById('viewer-count');
@@ -46,7 +49,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let full = -1; // index of the full video shown from Drive, -1 = none
 
   // Read aloud (readAloud.js): the text column's words about the work, from the room line to
-  // the artist's text (not the buttons, the link or the folded exhibition text). It stands
+  // the artist's text, with the descriptions and the room's audio description where they are
+  // filled ([data-read]; not the buttons, the link or the folded exhibition text). It stands
   // under the title; none where the browser cannot speak.
   const readParts = () => [room, title, meta, caption, ...el.querySelectorAll('[data-read]')];
   const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => n.innerText).join('\n'));
@@ -113,6 +117,15 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     desc.innerHTML = d
       ? `<h3>${esc(d.heading)}</h3>${d.text.map((p) => `<p>${esc(p)}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`
       : '';
+    // The descriptions still to come (accessDescriptions in src/i18n): each under its heading
+    // once filled; while every field is empty there is nothing here, not even a heading.
+    const section = (key, paras) => `<h3>${esc(t(`describe.${key}`))}</h3>${paras.map((p) => `<p>${esc(p)}</p>`).join('')}`;
+    const own = workDescriptions(data, w);
+    describe.innerHTML = own.map(([k, p]) => section(k, p)).join('');
+    describe.hidden = !own.length;
+    const roomText = roomDescription(data, w.room);
+    space.innerHTML = roomText.length ? section('space', roomText) : '';
+    space.hidden = !roomText.length;
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
     const back = w.video && w.video.loop ? 'viewer.loop' : 'viewer.photo';

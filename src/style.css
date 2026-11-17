@@ -1020,8 +1020,8 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
 .viewer-info details { margin: 8px 0 22px; border-top: 1px solid var(--line); padding-top: 12px; }
 .viewer-info summary { font: 600 13px var(--sans); letter-spacing: 0.02em; color: var(--muted); cursor: pointer; }
 #viewer-text p { font-size: 13px; color: #cfcfcb; }
-#viewer-desc h3 { font: 600 15px var(--sans); color: var(--fg); margin: 22px 0 0; }
-#viewer-desc p { font-size: 14px; color: #dedcd6; }
+#viewer-desc h3, #viewer-describe h3, #viewer-space h3 { font: 600 15px var(--sans); color: var(--fg); margin: 22px 0 0; }
+#viewer-desc p, #viewer-describe p, #viewer-space p { font-size: 14px; color: #dedcd6; }
 #viewer-desc .note, #viewer-text .note { font: 13px/1.5 var(--sans); color: var(--muted); }
 .viewer-nav {
   margin-top: auto;
