@@ -15,7 +15,8 @@
       "legal": "Legal notice",
       "privacy": "Privacy",
       "accessibility": "Accessibility",
-      "help": "Help"
+      "help": "Help",
+      "concept": "Concept"
     },
     "soundAsk": {
       "question": "Start with sound?",
@@ -217,6 +218,15 @@
       "viewerWork": "{title}. No. {no} of {total}."
     },
     "concept": {
+      "title": "The concept of Artificial Paradise",
+      "eyebrow": "References, themes and works",
+      "tablist": "Views of the Concept page",
+      "tabs": {
+        "themes": "Themes",
+        "works": "Works",
+        "timeline": "Timeline",
+        "network": "Network"
+      },
       "newTab": "opens in a new tab",
       "in": {
         "en": "in English",
@@ -224,7 +234,62 @@
       },
       "footnote": "Footnote {n}",
       "notes": "Notes",
-      "backToText": "Back to the text, footnote {n}"
+      "backToText": "Back to the text, footnote {n}",
+      "type": {
+        "person": "person",
+        "place": "place",
+        "organisation": "organisation",
+        "text": "text",
+        "concept": "concept",
+        "event": "event",
+        "theme": "theme",
+        "work": "work"
+      },
+      "subtype": {
+        "river": "river",
+        "visitor attraction": "visitor attraction",
+        "country": "country",
+        "municipality of Hungary": "municipality of Hungary",
+        "historic county of England": "historic county of England"
+      },
+      "dates": {
+        "R01": "1859 (experiments begin)",
+        "R06": "1901 (greenhouse metaphor)",
+        "R10": "after the change of regime (1989–90)",
+        "R11": "2019-07-22"
+      },
+      "dateLabel": "Date in the texts",
+      "linksLabel": "Links",
+      "mentionedIn": "Mentioned in",
+      "source": "Source",
+      "wikipedia": "Wikipedia",
+      "passages": "In the texts",
+      "references": "References and concepts",
+      "works": "Works",
+      "themes": "Themes",
+      "allWorks": "All works in the exhibition",
+      "goto": "go to the work in the digital exhibition",
+      "openTheme": "open the theme",
+      "textKind": {
+        "videos": "videos",
+        "prints": "prints"
+      },
+      "supporters": "Supporters, in the credits",
+      "connections": "Connections",
+      "exhibition": "the exhibition at MAMŰ Gallery",
+      "netLabel": "Network of the themes, references, concepts and works",
+      "netNote": "The links come from the reconstructor's reading of the exhibition's texts. The position of a node has no meaning.",
+      "netHelp": "A node shows its links when the pointer or keyboard focus is on it. Enter or a click opens a reference's card or a theme, or goes to a work. Esc clears the highlight.",
+      "legend": "Key",
+      "legendTheme": "Theme: large circle",
+      "legendItem": "Reference or concept: small circle",
+      "legendWork": "Work: square",
+      "legendItemTheme": "Reference and theme: solid line",
+      "legendItemWork": "Reference and work: dashed line",
+      "legendThemeWork": "Theme and work: dotted line",
+      "nodeName": "{label}, {type}, {n} links",
+      "nodeNameOne": "{label}, {type}, 1 link",
+      "backToDiagram": "Back to the diagram"
     }
   },
   "meta": {

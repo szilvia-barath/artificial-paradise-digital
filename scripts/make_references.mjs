@@ -193,6 +193,15 @@ for (const it of items) for (const t of it.themes) if (!themeIds.has(t)) fail(`$
 // ---- Check the anchors against the texts, in both languages ----
 const LOCALES = { en: JSON.parse(read('src/i18n/en.json')), hu: JSON.parse(read('src/i18n/hu.json')) };
 const paragraphs = (loc, key) => (key === 'openingSpeech' ? loc.openingSpeech.text : loc.descriptions[key.slice(13)]?.text);
+// A date the table gives in words ("1859 (experiments begin)") is shown in Hungarian on the
+// Hungarian page: ui.concept.dates.<id> in src/i18n holds both, and the English one must be
+// the table's own words.
+for (const it of items) {
+  if (!it.date || /^\d{4}$/.test(it.date)) continue;
+  const en = LOCALES.en.ui.concept?.dates?.[it.id];
+  if (en === undefined || LOCALES.hu.ui.concept?.dates?.[it.id] === undefined) fail(`${it.id}: its date_in_text "${it.date}" needs ui.concept.dates.${it.id} in src/i18n/en.json and hu.json`);
+  if (en !== it.date) fail(`${it.id}: ui.concept.dates.${it.id} in en.json ("${en}") is not the table's date_in_text ("${it.date}")`);
+}
 const textKeysUsed = [...new Set(items.flatMap((it) => it.texts))].filter((k) => k !== 'credits.supporters');
 const report = { found: [], notFound: [], repeats: [], fallbacks: [] };
 for (const lang of ['en', 'hu']) {
@@ -295,11 +304,13 @@ const network = {
 };
 
 // ---- Texts: names and authors for "Mentioned in" and the quoted passages ----
+// (author and source come from texts.csv; a text with no row there has neither. The page
+// names the artist's texts by the artist's name from src/i18n.)
 const textRows = table('texts');
 const texts = {};
 for (const def of Object.values(TEXTS)) {
   const row = textRows.find((r) => r.text === def.row);
-  texts[def.key] = { title: def.title || '', kind: def.kind || '', author: row?.author || (def.key.startsWith('descriptions.') ? textRows.find((r) => r.text === 'Human as Error').author : ''), source: row?.source_id || '' };
+  texts[def.key] = { title: def.title || '', kind: def.kind || '', author: row?.author || '', source: row?.source_id || '' };
 }
 
 const out = {
