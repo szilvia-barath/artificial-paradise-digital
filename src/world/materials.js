@@ -343,6 +343,10 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // brightness in DSC_0016 (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
     // about 0.45 (15 November 2026).
     stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // worn; renders at about 0.45 of the whitewash
+    // the risers, the front faces of the steps: the same worn concrete, darker. In DSC_0014 to
+    // DSC_0016 they are 0.15 to 0.25 of the whitewash, the lit lower tread tops 0.33 to 0.47
+    // (Decision 1a, 17 November 2026; PROGRESS.md)
+    stairRiser: new THREE.MeshStandardMaterial({ color: 0xb0aca5, map: worn, roughness: 0.9 }),
     stairStain: new THREE.MeshStandardMaterial({ map: stainMap, transparent: true, depthWrite: false, roughness: 1, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }),
     stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),

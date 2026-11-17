@@ -162,7 +162,10 @@ export function buildProps(materials) {
     const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
     const baseTop = 0.25;
     const inRoom = Math.round((foot - WX) / run);
-    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps);
+    // two tones: the front face (+x, towards the foot) of each step is the darker riser
+    // material, every other face the tread concrete (BoxGeometry groups: +x, -x, +y, -y, +z, -z)
+    const treadMats = [materials.stairRiser, materials.stair, materials.stair, materials.stair, materials.stair, materials.stair];
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), treadMats, steps);
     const m = new THREE.Matrix4();
     const q0 = new THREE.Quaternion();
     // the treads run under both parapets; their ends are hidden in the brickwork
