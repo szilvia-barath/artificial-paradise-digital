@@ -2,7 +2,7 @@
 // (and so its letter keys dead, since they work only while the view has focus), or where
 // focus could go somewhere unexpected. Each step says what should happen.
 // Usage: npm run build && npm run preview &   then   node tests/a11y/focus-mouse.mjs
-import { launch, openWalk, focusName } from './lib.mjs';
+import { launch, openWalk, focusName, TOUCH_LAPTOP } from './lib.mjs';
 
 const browser = await launch();
 let failed = 0;
@@ -627,6 +627,29 @@ const has = (t, x) => t.some((n) => n === x || (x.endsWith('*') && n.startsWith(
   step('45 Phone, title screen: Menu, Works, a work, "Walk to this work", the sound question answered (by tap, by keyboard): focus on the 3D view (not the Menu button)', tap.view && key.view, `by tap: ${tap.focus}; by keyboard: ${key.focus}`);
   const wide = await viewAfter({ viewport: { width: 1280, height: 800 } }, 'key', false);
   step('46 Wide window, title screen: Works, a work, "Walk to this work", the sound question answered by keyboard: focus on the 3D view (not the Works button)', wide.view, `focus on ${wide.focus}`);
+}
+
+// ---------------- D10: on a laptop with a touch screen a mouse press on the view is a mouse
+// press (before, the press was dropped there, so the keyboard frame stayed on the view)
+{
+  const w = await openWalk(browser, TOUCH_LAPTOP);
+  const p = w.page;
+  await p.click('#enter');
+  await p.waitForFunction(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, { timeout: 30000 });
+  await p.click('[data-sound="off"]');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden && document.activeElement === document.getElementById('scene'), null, { timeout: 30000 }).catch(() => {});
+  const frame = () => p.evaluate(() => document.getElementById('scene').matches(':focus-visible'));
+  await p.keyboard.press('Shift+Tab');
+  await p.keyboard.press('Tab');
+  const byKey = (await viewHas(p)) && (await frame());
+  await p.mouse.move(640, 420);
+  await p.mouse.down();
+  await p.mouse.move(660, 420, { steps: 3 });
+  await p.mouse.up();
+  await p.waitForTimeout(200);
+  step('47 D10 Laptop with a touch screen and a mouse: focus by Tab shows the frame on the view; a mouse press on the view keeps focus and drops the frame, as on any computer', byKey && (await viewHas(p)) && !(await frame()), `frame after Tab: ${byKey}; after the mouse: focus on view ${await viewHas(p)}, frame ${await frame()}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
 }
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');

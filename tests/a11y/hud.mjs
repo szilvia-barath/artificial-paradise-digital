@@ -1,6 +1,6 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
 // screen, the sound question's hint and the hint inside, and the taps of the tour (D11), the stick held and the turning
-// keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
+// keys (D2); a laptop with a touch screen as a computer, by mouse and by touch (D10); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2); the look, its accent and states not told by colour alone (H1). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
@@ -8,7 +8,7 @@
 // worked out for the worst case, the glass over pure white, and over black.
 // Usage: npm run build && npm run preview &   then   node tests/a11y/hud.mjs
 import { readFileSync } from 'node:fs';
-import { launch, openWalk } from './lib.mjs';
+import { launch, openWalk, TOUCH_LAPTOP } from './lib.mjs';
 
 const UI = { en: JSON.parse(readFileSync('src/i18n/en.json', 'utf8')).ui, hu: JSON.parse(readFileSync('src/i18n/hu.json', 'utf8')).ui };
 
@@ -241,6 +241,120 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   const w = await inside('en');
   const h = await hintState(w.page);
   step('D11.6 Computer: the hint in the middle is unchanged ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- D10: a laptop with a touch screen is a computer, and touch works on it too
+// TOUCH_LAPTOP (lib.mjs) tells the page what Chrome on such a laptop answers about its
+// pointers. The mouse is Playwright's, the fingers are sent through the DevTools protocol.
+const face = (p) => p.evaluate(() => {
+  const shown = (s) => { const e = document.querySelector(s); return !!e && !e.closest('[hidden]') && getComputedStyle(e).display !== 'none' && getComputedStyle(e).visibility !== 'hidden' && e.getClientRects().length > 0; };
+  const hint = document.getElementById('click-to-look');
+  return {
+    touch: document.body.classList.contains('touch'),
+    caps: [...document.querySelectorAll('#keypad .cap')].filter((c) => c.getClientRects().length && getComputedStyle(c).visibility !== 'hidden').length,
+    foot: shown('#site-foot'), stick: shown('#joystick'), card: shown('#guide'),
+    hint: hint.textContent, hintHidden: hint.getAttribute('aria-hidden'), ask: document.getElementById('sound-ask-hint').textContent,
+  };
+});
+let d10 = 0; // steps of the laptop reported so far
+try {
+  const w = await inside('en', TOUCH_LAPTOP);
+  const p = w.page;
+  const NO5 = 'w05-human-as-error-i';
+  const [cx, cy] = [683, 384]; // the middle of the view
+  const yaw = () => p.evaluate(() => window.__ap.controls.yaw);
+  const turnedFrom = (y) => p.waitForFunction((v) => Math.abs(window.__ap.controls.yaw - v) > 0.1, y, { timeout: 30000 }).then(() => true, () => false);
+  const aim = (on) => p.waitForFunction((want) => document.getElementById('prompt').classList.contains('show') === want, on, { timeout: 30000 }).then(() => true, () => false);
+  const toNo5 = () => p.evaluate((id) => window.__ap.gotoWork(window.__ap.data.works.find((k) => k.id === id)), NO5);
+  const openTitle = () => p.evaluate(() => (document.getElementById('viewer').hidden ? '(nothing)' : document.getElementById('viewer-title').textContent));
+  const closeViewer = async () => { await p.keyboard.press('Escape'); await p.waitForFunction(() => document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {}); };
+
+  // D10.1 what shows and what it says
+  const f = await face(p);
+  await p.evaluate(() => window.__ap.ui.show('help'));
+  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  const helpFirst = await p.evaluate(() => document.querySelectorAll('#panel-body p')[1]?.textContent);
+  await p.evaluate(() => window.__ap.ui.close());
+  await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  d10++;
+  step(`D10.1 Laptop with a touch screen and a mouse, 1366 × 768: the computer's interface, not the phone's: the five keycaps (walk, turn, run) and the footer show, the first-use card shows, there is no stick; the hint in the middle and the sound question say the computer's words ("${UI.en.hud.clickToLook}", "${UI.en.soundAsk.hint}"), the hint is not hidden from screen readers, and Help has the computer's controls first`, !f.touch && f.caps === 5 && f.foot && f.card && !f.stick && f.hint === UI.en.hud.clickToLook && f.hintHidden === null && f.ask === UI.en.soundAsk.hint && helpFirst === UI.en.panels.controlsDesk, `${JSON.stringify(f)}; Help's first paragraph "${(helpFirst || '').slice(0, 40)}…"`);
+
+  // D10.2 the mouse: a drag looks round, the work under it is named, a click opens it
+  const y0 = await yaw();
+  await p.mouse.move(600, 300);
+  await p.mouse.down();
+  await p.mouse.move(700, 300, { steps: 5 });
+  await p.mouse.up();
+  const mouseLooked = await turnedFrom(y0);
+  await toNo5();
+  await p.mouse.move(cx - 4, cy);
+  await p.mouse.move(cx, cy);
+  const aimed = await aim(true);
+  const prompt = await p.evaluate(() => document.getElementById('prompt').textContent);
+  await p.mouse.click(cx, cy);
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  await p.waitForTimeout(1500);
+  const byMouse = await openTitle();
+  await closeViewer();
+  d10++;
+  step('D10.2 The same laptop, with the mouse: a drag on the 3D view looks round; with the mouse over the work in the middle the view names it ("Click to view · 5 Human as Error I"); a click opens it and it stays open', mouseLooked && aimed && prompt.includes('Human as Error I') && byMouse === 'Human as Error I', `drag turned the view: ${mouseLooked}; named under the mouse: ${aimed} ("${prompt}"); click opened: ${byMouse}`);
+
+  // D10.3 fingers on the same screen, then the mouse again
+  const touch = await finger(p);
+  const cdp = await p.context().newCDPSession(p);
+  const two = (type, d) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: cx - d, y: 300, id: 1 }, { x: cx + d, y: 300, id: 2 }] });
+  await p.mouse.move(cx - 4, cy);
+  await p.mouse.move(cx, cy);
+  const aimedAgain = await aim(true); // the mouse rests on no. 5 again
+  const y1 = await yaw();
+  await touch('touchStart', 600, 300);
+  await touch('touchMove', 650, 300);
+  await touch('touchMove', 700, 300);
+  await touch('touchEnd');
+  const touchLooked = await turnedFrom(y1);
+  const aimGone = await aim(false); // a finger leaves no cursor: the name under the mouse goes
+  await two('touchStart', 40);
+  for (const d of [60, 90, 120]) await two('touchMove', d);
+  await two('touchEnd');
+  const zoom = await p.evaluate(() => window.__ap.controls.zoomTarget);
+  await p.evaluate(() => window.__ap.controls.resetZoom(true));
+  // no stick here: by touch the keycaps walk. Back, away from the wall
+  const k = await p.evaluate(() => { const e = document.querySelector('#keypad .k-s'); const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2, shown: e.getClientRects().length > 0 }; });
+  const from = await p.evaluate(() => ({ x: window.__ap.controls.pos.x, z: window.__ap.controls.pos.y }));
+  if (k.shown) await touch('touchStart', k.x, k.y);
+  const walked = k.shown && await p.waitForFunction((a) => Math.hypot(window.__ap.controls.pos.x - a.x, window.__ap.controls.pos.y - a.z) > 0.2, from, { timeout: 20000 }).then(() => true, () => false);
+  if (k.shown) await touch('touchEnd');
+  const letGo = await p.waitForFunction(() => !window.__ap.controls.isDown('ArrowDown'), null, { timeout: 10000 }).then(() => true, () => false);
+  // a tap on the work in the middle: it opens and stays open (the mouse click the browser
+  // sends after a tap must not close it again, nor count as a mouse press on the view)
+  await p.evaluate(() => { window.__clicks = 0; addEventListener('click', () => window.__clicks++, true); });
+  await toNo5();
+  await p.touchscreen.tap(cx, cy);
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).catch(() => {});
+  const click = await p.waitForFunction(() => window.__clicks > 0, null, { timeout: 3000 }).then(() => true, () => false);
+  const byTap = await openTitle();
+  await closeViewer();
+  // and the mouse straight after the finger
+  const y2 = await yaw();
+  await p.mouse.move(600, 300);
+  await p.mouse.down();
+  await p.mouse.move(700, 300, { steps: 5 });
+  await p.mouse.up();
+  const mouseAgain = await turnedFrom(y2);
+  d10++;
+  step('D10.3 The same laptop, by touch: a finger dragged on the 3D view looks round, and the name under the resting mouse goes; two fingers pinch to zoom; the Back keycap held with a finger walks (there is no stick here) and lets go when the finger lifts; a tap on the work in the middle opens it and it stays open; the mouse dragged straight after looks round again', aimedAgain && touchLooked && aimGone && zoom > 1.5 && walked && letGo && byTap === 'Human as Error I' && mouseAgain, `named under the mouse first: ${aimedAgain}; finger drag turned the view: ${touchLooked}; the name gone at the touch: ${aimGone}; pinch zoomed to ${zoom.toFixed(2)}×; Back keycap shown: ${k.shown}, walked: ${walked}, let go: ${letGo}; tap opened: ${byTap} (the browser's click after the tap sent: ${click}); mouse drag after touch turned the view: ${mouseAgain}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+} catch (e) {
+  for (const n of ['D10.1', 'D10.2', 'D10.3'].slice(d10)) step(`${n} (stopped)`, false, String(e).split('\n')[0]);
+}
+{
+  // a phone has no mouse: it is as it was (this step is a guard; it passed before D10 as well)
+  const w = await inside('en', PHONE);
+  const f = await face(w.page);
+  step(`D10.4 Phone 375 × 667 (touch, no mouse): unchanged: the stick shows, of the keycaps only the two turning keys, no footer inside, no first-use card; the touch hint ("${UI.en.hud.touchHint}"), hidden from screen readers, and the sound question's touch words`, f.touch && f.stick && f.caps === 2 && !f.foot && !f.card && f.hint === UI.en.hud.touchHint && f.hintHidden === 'true' && f.ask === UI.en.soundAsk.hintTouch, JSON.stringify(f));
   errors.push(...w.errors);
   await w.ctx.close();
 }

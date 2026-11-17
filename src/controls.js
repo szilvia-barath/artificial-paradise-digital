@@ -1,13 +1,15 @@
 import * as THREE from 'three';
 import { EYE, OBSTACLES } from './world/layout.js';
 import { reducedMotion } from './motion.js';
+import { isTouch } from './device.js';
 
 // First-person controls: drag with the mouse to look on desktop (the cursor stays free for
 // the menus and other tabs, nothing to escape from); W/S or ↑/↓ to walk, ←/→ to
 // turn (so the keyboard alone is enough), A/D to step sideways (also held through the on-screen keys); the scroll
 // wheel glides forward and back; +/− (Ctrl+wheel, trackpad or two-finger pinch) zoom.
-// Virtual joystick + drag-to-look on touch devices. Collision is resolved in 2D against
-// wall segments and furniture boxes (circle vs. segment).
+// Virtual joystick + drag-to-look on touch devices. A laptop with a touch screen has both:
+// each press is taken as a mouse's or a finger's from the pointer that made it (D10).
+// Collision is resolved in 2D against wall segments and furniture boxes (circle vs. segment).
 
 const RADIUS = 0.28;
 const WALK = 1.9;
@@ -37,7 +39,7 @@ export class FirstPersonControls {
     this.zoomKeys = new Map(); // key code -> +1 / -1, from e.key so any layout works
     this.joy = new THREE.Vector2(0, 0);
     this.bob = 0;
-    this.isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+    this.isTouch = isTouch; // a phone or a tablet: a touch screen and no mouse (device.js)
     this.onTap = null; // (clientX, clientY, touch) => true if the tap opened something
     this.tapOnly = false; // the tour has the controls: nothing moves, but a tap on the view still reaches onTap
     this.onLook = null; // first drag-to-look on desktop (to retire the hint)
@@ -105,8 +107,15 @@ export class FirstPersonControls {
     let lastX = 0;
     let lastY = 0;
     let moved = 0;
+    // The kind of pointer that made the last press: 'mouse', 'pen' or 'touch'. After a tap
+    // the browser sends mouse events of its own (a move, a press and a click where the finger
+    // was). Those are not a mouse press: the touch listeners below have already dealt with
+    // the tap. A real mouse press is one, on a laptop with a touch screen too (D10): before,
+    // the mouse was shut out for good on any device that had a touch screen.
+    let pressBy = this.isTouch ? 'touch' : 'mouse';
+    window.addEventListener('pointerdown', (e) => { pressBy = e.pointerType || 'mouse'; }, { capture: true, passive: true });
     this.dom.addEventListener('mousedown', (e) => {
-      if (this.isTouch || e.button !== 0) return;
+      if (pressBy === 'touch' || e.button !== 0) return;
       // The browser's own click gives the view focus (it has tabindex once you are inside),
       // so its letter keys work. That counts as a mouse focus, so the keyboard frame
       // (:focus-visible) does not show; if the keyboard had put focus here, let go first so

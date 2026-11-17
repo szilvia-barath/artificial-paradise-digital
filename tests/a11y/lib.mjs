@@ -6,10 +6,30 @@ export const BASE = process.env.AP_URL || 'http://localhost:4173/';
 
 export const launch = () => chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 
+// A laptop with a touch screen and a mouse or trackpad (D10). Headless Chromium cannot be one
+// by itself: with touch on it reports one coarse pointer and nothing else, like a phone. So
+// the page is told what Chrome on such a laptop answers: the first pointer is fine and can
+// hover (the mouse), a coarse one is there as well, and the window has touch events. Only
+// what scripts ask through matchMedia is answered so; the style sheet's own media queries
+// still see headless Chromium's coarse pointer (the 44 px sizes of touch targets).
+export const TOUCH_LAPTOP = { viewport: { width: 1366, height: 768 }, hasTouch: true, touchLaptop: true };
+const asTouchLaptop = () => {
+  const answers = { '(pointer: fine)': true, '(pointer: coarse)': false, '(hover: hover)': true, '(hover: none)': false, '(any-pointer: fine)': true, '(any-pointer: coarse)': true, '(any-hover: hover)': true, '(any-hover: none)': false };
+  const real = window.matchMedia.bind(window);
+  window.matchMedia = (q) => {
+    const m = real(q);
+    const key = String(q).trim().toLowerCase().replace(/\s+/g, ' ');
+    if (!(key in answers)) return m;
+    return new Proxy(m, { get: (t, k) => (k === 'matches' ? answers[key] : typeof t[k] === 'function' ? t[k].bind(t) : t[k]) });
+  };
+  if (!('ontouchstart' in window)) window.ontouchstart = null;
+};
+
 // Opens the title screen and waits until the Enter button is ready.
-export async function openWalk(browser, { lang = 'en', query = '', viewport = { width: 1366, height: 768 }, reducedMotion = 'no-preference', ...context } = {}) {
+export async function openWalk(browser, { lang = 'en', query = '', viewport = { width: 1366, height: 768 }, reducedMotion = 'no-preference', touchLaptop = false, ...context } = {}) {
   const ctx = await browser.newContext({ viewport, reducedMotion, ...context });
   const page = await ctx.newPage();
+  if (touchLaptop) await page.addInitScript(asTouchLaptop);
   const errors = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('pageerror', (e) => errors.push(String(e)));
