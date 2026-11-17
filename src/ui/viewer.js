@@ -17,7 +17,9 @@ const situPhotos = (w) => w.situ || [`${w.image}-situ`];
 
 // onMedia(isVideo) tells the sound mix whether a video (with its own sound) is showing;
 // isMuted() is the site's sound switch.
-export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, focusFallback }) {
+// connections(work): the references and themes that touch a work (the Concept page's data);
+// onTheme(id): open the Concept page at a theme.
+export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, focusFallback, connections, onTheme }) {
   const el = document.getElementById('viewer');
   const closeBtn = el.querySelector('[data-close]');
   // Focus goes to the Close button on opening and back to the opener on closing.
@@ -30,6 +32,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const title = document.getElementById('viewer-title');
   const meta = document.getElementById('viewer-meta');
   const site = document.getElementById('viewer-site');
+  const conn = document.getElementById('viewer-connections');
   const caption = document.getElementById('viewer-caption');
   const desc = document.getElementById('viewer-desc');
   const room = document.getElementById('viewer-room');
@@ -101,6 +104,18 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
       site.href = link;
       site.textContent = `${t('viewer.artistSite')} ↗`;
     }
+    // Connections: the references that name the work (links, as in the texts) and the themes
+    // that lead to it (each opens the Concept page at that theme). Only for the works that
+    // have a section in the Concept page's Works view: those a reference names.
+    const c = connections ? connections(seq.find((x) => x.no === w.no) || w) : { items: [], themes: [] };
+    conn.hidden = !c.items.length;
+    if (c.items.length) {
+      const R = refHTML(refs, { t, lang: lang() });
+      conn.innerHTML = `<h3 id="viewer-connections-h">${esc(t('concept.connections'))}</h3><ul aria-labelledby="viewer-connections-h">${[
+        ...c.items.map((it) => `<li>${R.itemLink(it, esc(it.label[lang()] || it.label.en))}</li>`),
+        ...c.themes.map((th) => `<li><button class="conn-theme" data-theme="${esc(th.id)}">${esc(th.label[lang()] || th.label.en)}<span class="sr-only"> (${esc(t('concept.openTheme'))})</span></button></li>`),
+      ].join('')}</ul>`;
+    } else conn.innerHTML = '';
     caption.textContent = w.caption || '';
     caption.hidden = !w.caption;
     // the artist's text, with the links to what it mentions laid over it (references.json)
@@ -237,6 +252,10 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     renderInfo();
     // the buttons were rebuilt: keep focus on the one just pressed
     videoBtns.querySelector(`[data-full="${i}"]`)?.focus({ preventScroll: true });
+  });
+  conn.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-theme]');
+    if (b && onTheme) onTheme(b.dataset.theme);
   });
   closeBtn.addEventListener('click', () => close(true));
   // Previous and Next by tap or click: the new work's text starts at its title. By keyboard
