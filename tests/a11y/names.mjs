@@ -2,7 +2,7 @@
 // the language of the English titles on the Hungarian page, the 3D view's and the floor
 // plan's names, the installation photo's text and the names of the video players. Each
 // step waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
-// second). Nothing from Google is loaded: requests to Google are blocked.
+// second). Nothing from Google or YouTube is loaded: requests to them are blocked.
 // Usage: npm run build && npm run preview &   then   node tests/a11y/names.mjs
 import { readFileSync } from 'node:fs';
 import { launch, openWalk } from './lib.mjs';
@@ -22,7 +22,7 @@ const step = (name, ok, got) => {
 // (its text) and window.__saidHTML (its markup).
 async function inside(lang, opts = {}) {
   const w = await openWalk(browser, { lang, viewport: { width: 1280, height: 800 }, ...opts });
-  await w.ctx.route(/google|gstatic|ggpht|googleusercontent/, (r) => r.abort());
+  await w.ctx.route(/google|gstatic|ggpht|googleusercontent|youtube|ytimg/, (r) => r.abort());
   const p = w.page;
   await p.evaluate(() => {
     window.__said = [];
@@ -317,16 +317,18 @@ const clickTo = async (p, sel, title) => {
   await w.ctx.close();
 }
 
-// ---------------- B17: the video players have names; Esc inside the Google Drive player
-// Nothing from Google loads: every request to it is blocked, and the player's address is
-// answered by a stand-in page of this test (one button), served in its place, so the frame
-// is from another site as the real player is.
+// ---------------- B17: the video players have names; Esc inside the YouTube player
+// (no. 6's full video, from youtube-nocookie.com; the Drive player of nos. 8 and 15 is a
+// frame from another site in the same way, and tests/a11y/youtube.mjs checks it is made)
+// Nothing from Google or YouTube loads: every request to them is blocked, and the player's
+// address is answered by a stand-in page of this test (one button), served in its place, so
+// the frame is from another site as the real player is.
 {
   const w = await inside('en');
   const p = w.page;
   const asked = [];
-  p.on('request', (r) => { if (/google/.test(new URL(r.url()).hostname)) asked.push(r.url()); });
-  await w.ctx.route(/^https:\/\/drive\.google\.com\/file\//, (r) => r.fulfill({ contentType: 'text/html', body: '<!doctype html><title>stand-in</title><button>Play</button><script>window.keys = []; addEventListener("keydown", (e) => keys.push(e.key));</script>' }));
+  p.on('request', (r) => { if (/google|youtube|ytimg/.test(new URL(r.url()).hostname)) asked.push(r.url()); });
+  await w.ctx.route(/^https:\/\/www\.youtube-nocookie\.com\/embed\//, (r) => r.fulfill({ contentType: 'text/html', body: '<!doctype html><title>stand-in</title><button>Play</button><script>window.keys = []; addEventListener("keydown", (e) => keys.push(e.key));</script>' }));
   // The name is read from the accessibility tree; this Chromium cannot play the MP4 files
   // (no H.264), and once a video has failed it names it "Unable to play media." whatever its
   // label, so then the label itself is checked and the failure said.
@@ -361,13 +363,13 @@ const clickTo = async (p, sel, title) => {
   await fr.locator('button').waitFor({ timeout: 30000 });
   const loaded = asked.length;
   const frameName = await axName(p, '#viewer-frame');
-  const want = fill(UI.en.viewer.frameTitle, { title: 'Artificial Paradise – Singapore' });
+  const want = fill(UI.en.viewer.frameTitleYoutube, { title: 'Artificial Paradise – Singapore' });
   await p.click('#site-nav [data-lang="hu"]');
   await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
   const frameHu = await p.getAttribute('#viewer-frame', 'title');
   await p.click('#site-nav [data-lang="en"]');
   await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
-  step('B17.2 "Full video" pressed: the player\'s frame is named "Full video: Artificial Paradise – Singapore, Google Drive player"; in Hungarian "Teljes videó: …, Google Drive-lejátszó"; it loaded only after the press', frameName === want && frameHu === fill(UI.hu.viewer.frameTitle, { title: 'Artificial Paradise – Singapore' }) && before === 0 && loaded > 0, `"${frameName}"; HU "${frameHu}"; requests to Google before the press: ${before}, after it: ${loaded} (answered by the stand-in)`);
+  step('B17.2 "Full video" pressed: the player\'s frame is named "Full video: Artificial Paradise – Singapore, YouTube player"; in Hungarian "Teljes videó: …, YouTube-lejátszó"; it loaded only after the press', frameName === want && frameHu === fill(UI.hu.viewer.frameTitleYoutube, { title: 'Artificial Paradise – Singapore' }) && before === 0 && loaded > 0, `"${frameName}"; HU "${frameHu}"; requests to Google or YouTube before the press: ${before}, after it: ${loaded} (answered by the stand-in)`);
 
   // Esc with focus inside the player's frame: the page never hears it, so the viewer stays open
   const inFrame = () => p.evaluate(() => document.activeElement === document.getElementById('viewer-frame'));
@@ -376,7 +378,7 @@ const clickTo = async (p, sel, title) => {
   const focusedIn = await inFrame();
   await p.keyboard.press('Escape');
   // the frame's own page heard the Esc; the viewer's listener is on the page outside it
-  const player = p.frames().find((f) => f.url().startsWith('https://drive.google.com/'));
+  const player = p.frames().find((f) => f.url().startsWith('https://www.youtube-nocookie.com/'));
   const heardIn = await player.waitForFunction(() => window.keys.includes('Escape'), null, { timeout: 30000 }).then(() => true, () => false);
   const stillOpen = await viewerOpen();
   // Tab leaves the frame into the viewer; then Esc closes it
@@ -403,12 +405,13 @@ const clickTo = async (p, sel, title) => {
     await p.waitForFunction((x) => document.documentElement.lang === x, l, { timeout: 30000 });
     await p.evaluate(() => window.__ap.ui.show('accessibility'));
     await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
-    const want = JSON.parse(readFileSync(`src/i18n/${l}.json`, 'utf8')).accessibility.sections.find((x) => x.p.some((t) => t.includes('Google Drive') && t.includes('Shift+Tab')));
+    const gap = (t) => t.includes('YouTube') && t.includes('Google Drive') && t.includes('Shift+Tab');
+    const want = JSON.parse(readFileSync(`src/i18n/${l}.json`, 'utf8')).accessibility.sections.find((x) => x.p.some(gap));
     const text = await p.textContent('#panel-body');
-    says[l] = !!want && want.p.filter((t) => t.includes('Shift+Tab') && t.includes('Google Drive')).every((t) => text.includes(t));
+    says[l] = !!want && want.p.filter(gap).every((t) => text.includes(t));
     await p.evaluate(() => window.__ap.ui.close());
   }
-  step('B17.4 The accessibility statement says that Esc does not work inside the Google Drive player and how to get out, in English and in Hungarian', says.en && says.hu, JSON.stringify(says));
+  step('B17.4 The accessibility statement says that Esc does not work inside the YouTube or Google Drive player and how to get out, in English and in Hungarian', says.en && says.hu, JSON.stringify(says));
   errors.push(...w.errors);
   await w.ctx.close();
 }

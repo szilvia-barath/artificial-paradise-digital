@@ -4,7 +4,7 @@ import { announce, unannounce } from './announce.js';
 import { isPart } from '../world/route.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
-// request the full video or video documentation from Google Drive), caption, the artist's
+// request the full video from YouTube or Google Drive), caption, the artist's
 // text on the work or its series, exhibition text, prev/next, "in situ" photos, and a
 // "walk to this work" shortcut.
 
@@ -12,6 +12,15 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 
 // A work's installation photos: its own list, or the one cut from its source photo.
 const situPhotos = (w) => w.situ || [`${w.image}-situ`];
+
+// A full video's player, made only when its button is pressed: YouTube's embed from
+// youtube-nocookie.com where the entry has a 'youtube' id (it wins over 'drive'), otherwise
+// Google Drive's. No autoplay: the visitor starts the video in the player. rel=0 keeps the
+// videos suggested at the end to the same channel; hl gives the player's controls the
+// site's language.
+const playerSrc = (v) => (v.youtube
+  ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtube)}?rel=0&hl=${lang()}`
+  : `https://drive.google.com/file/d/${encodeURIComponent(v.drive)}/preview`);
 
 // onMedia(isVideo) tells the sound mix whether a video (with its own sound) is showing;
 // isMuted() is the site's sound switch.
@@ -42,7 +51,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const seqAt = (w) => (seq.includes(w) ? seq.indexOf(w) : seq.findIndex((x) => x.no === w.no));
   let index = -1;
   let situ = 0; // 0 = the work, n = its nth installation photo
-  let full = -1; // index of the full video shown from Drive, -1 = none
+  let full = -1; // index of the full video shown (YouTube or Drive player), -1 = none
 
   const renderText = () => {
     text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="note">${esc(data.textCredit)}</p>`;
@@ -107,29 +116,31 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
       : '';
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
-    const back = w.video && w.video.loop ? 'viewer.loop' : 'viewer.photo';
+    // the button that goes back names what the viewer shows without the full video
+    const back = w.video?.viewer ? 'viewer.backDoc' : w.video?.loop ? 'viewer.loop' : 'viewer.photo';
     videoBtns.innerHTML = vids
-      .map((v, i) => `<button class="link mono" data-full="${i}">${esc(t(full === i ? back : `viewer.${v.label}`))}</button>`)
+      .map((v, i) => `<button class="link mono" data-full="${i}">${esc(full === i ? t(back) : t(`viewer.${v.label}`, { title: v.title || w.title }))}</button>`)
       .join('');
     count.textContent = t('viewer.count', { no: w.no, total: seq.length });
     // the players' names: the clip that plays here (a loop, or video documentation for nos. 3
-    // and 16), and the Google Drive player, which loads only after "Full video" is pressed
+    // and 16), and the YouTube or Google Drive player, which loads only after "Full video" is
+    // pressed (named after the full video's own title where it has one: Siluett, in no. 16)
     video.setAttribute('aria-label', t(w.video?.viewer ? 'viewer.videoDocName' : 'viewer.videoLoopName', { title: w.title }));
-    frame.title = t('viewer.frameTitle', { title: w.title });
+    const fv = vids[full >= 0 ? full : 0];
+    frame.title = t(fv?.youtube ? 'viewer.frameTitleYoutube' : 'viewer.frameTitle', { title: fv?.title || w.title });
     syncPlay();
   };
 
-  // Which medium fills the left side: Drive player, video loop, or the photograph.
+  // Which medium fills the left side: the full video's player, the video loop, or the photograph.
   const showMedia = (w) => {
     const vids = w.video && !situ ? w.video : null;
-    const drive = vids && full >= 0 ? vids.full[full].drive : null;
-    frame.hidden = !drive;
-    if (drive) {
-      const src = `https://drive.google.com/file/d/${drive}/preview`;
-      if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+    const player = vids && full >= 0 ? playerSrc(vids.full[full]) : null;
+    frame.hidden = !player;
+    if (player) {
+      if (frame.getAttribute('src') !== player) frame.setAttribute('src', player);
     } else frame.removeAttribute('src');
     const clip = vids && (vids.viewer || vids.loop);
-    const loop = clip && !drive;
+    const loop = clip && !player;
     video.hidden = !loop;
     if (loop) {
       if (video.getAttribute('src') !== `${base}${clip}`) {
@@ -143,7 +154,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
       video.removeAttribute('src');
       video.load();
     }
-    const moving = !!(loop || drive);
+    const moving = !!(loop || player);
     img.hidden = moving;
     loading.hidden = moving || img.classList.contains('ready');
     syncPlay();

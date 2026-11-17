@@ -27,7 +27,7 @@ const PHONE_SIDE = { viewport: { width: 667, height: 375 }, hasTouch: true, isMo
 // The walk, entered without sound.
 async function inside(lang, opts = {}) {
   const w = await openWalk(browser, { lang, viewport: { width: 1366, height: 768 }, ...opts });
-  await w.ctx.route(/google|gstatic|ggpht|googleusercontent/, (r) => r.abort());
+  await w.ctx.route(/google|gstatic|ggpht|googleusercontent|youtube|ytimg/, (r) => r.abort());
   const p = w.page;
   await p.evaluate(() => document.getElementById('enter').click());
   await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
