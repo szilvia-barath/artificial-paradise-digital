@@ -45,7 +45,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let full = -1; // index of the full video shown from Drive, -1 = none
 
   const renderText = () => {
-    text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="mono" style="color:#8a8a88;font-size:11px">${esc(data.textCredit)}</p>`;
+    text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="note">${esc(data.textCredit)}</p>`;
   };
   renderText();
 

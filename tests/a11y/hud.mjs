@@ -2,7 +2,9 @@
 // screen, the sound question's hint and the hint inside, and the taps of the tour (D11), the stick held and the turning
 // keys (D2); a laptop with a touch screen as a computer, by mouse and by touch (D10); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
-// (F2); the look, its accent and states not told by colour alone (H1). Each step
+// (F2); the look: its accent and states not told by colour alone (H1.1), the paper panels (H1.2),
+// the glass chips and their focus ring (H1.3), the buttons (H1.4); the size, case and letter
+// spacing of the interface type (A7). Each step
 // waits for what it checks (the 3D view renders in software here, at 1 to 2 frames a
 // second). Sizes and colours are read from the page (no screenshot is taken); contrast is
 // worked out for the worst case, the glass over pure white, and over black.
@@ -535,9 +537,13 @@ const axTree = async (p) => {
   return nodes.filter((n) => !n.ignored).map((n) => `${n.role?.value}:${n.name?.value ?? ''}`);
 };
 // A block of steps that stops with an error (a control it needs is not there) fails its steps
-// and the run goes on.
+// and the run goes on. The pages it left open are closed: an open page goes on drawing the 3D
+// view and slows every step after it.
 const guard = async (names, fn) => {
-  try { await fn(); } catch (e) { for (const n of names) step(`${n} (stopped)`, false, String(e).split('\n')[0]); }
+  try { await fn(); } catch (e) {
+    for (const n of names) step(`${n} (stopped)`, false, String(e).split('\n')[0]);
+    for (const c of browser.contexts()) await c.close().catch(() => {});
+  }
 };
 const guideInfo = (p) => p.evaluate(() => {
   const g = document.getElementById('guide');
@@ -936,6 +942,315 @@ await guard(['H1.1'], async () => {
     `accent ${r.accent}; green on ${r.green.length ? r.green.join(', ') : 'nothing'}; zoom value ${onGlass.toFixed(2)}; pressed "${r.pressedShadow}", not pressed "${r.offShadow}"; current room weight ${r.hereWeight} bar ${r.hereBar}; pressed keycap letter ${capWorst.toFixed(2)} ("${r.capText}" on "${r.capTint}" on "${r.capBg}")`);
   errors.push(...w.errors);
   await w.ctx.close();
+});
+
+// ---------------- H1.2: the panels are paper ("paper for words"). A panel is a paper card
+// with ink text; nothing in it is in the accent #8fa8ff (2.20:1 on paper); every text in it
+// reads at 4.5:1 or more on the paper; the focus ring in it is the blue #072fcc (white would
+// not show on paper), 2 px, at 3:1 or more. Over a panel opened from the title screen the
+// navbar keeps a steady dark band, so its text reads when the card passes under it.
+const PAPER = [251, 251, 249];
+const paperInfo = async (p, name) => {
+  await p.evaluate((n) => window.__ap.ui.show(n), name);
+  await p.waitForTimeout(700); // the navbar's colours change over 0.4 s
+  return p.evaluate((n) => {
+  const panel = document.getElementById('panel');
+  const card = panel.querySelector('.panel-card');
+  const style = (e) => getComputedStyle(e);
+  const tag = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}${typeof e.className === 'string' && e.className ? '.' + e.className.split(' ')[0] : ''}`;
+  for (const d of panel.querySelectorAll('details')) d.open = true;
+  const texts = [];
+  const accent = [];
+  for (const e of panel.querySelectorAll('*')) {
+    if (!e.getClientRects().length) continue;
+    const c = style(e);
+    for (const k of ['color', 'backgroundColor', 'borderTopColor', 'borderLeftColor', 'outlineColor', 'textDecorationColor', 'boxShadow']) if (/143,\s*168,\s*255/.test(c[k])) accent.push(`${tag(e)} ${k}`);
+    if ([...e.childNodes].some((x) => x.nodeType === 3 && x.textContent.trim())) texts.push({ el: tag(e), color: c.color });
+  }
+  const rings = [];
+  for (const sel of ['#panel [data-close]', '#panel-body a[href]', '#panel-body .link', '#panel-body .works-list button', '#panel-body summary']) {
+    const e = document.querySelector(sel);
+    if (!e) continue;
+    e.focus({ preventScroll: true });
+    const c = style(e);
+    rings.push({ sel, visible: e.matches(':focus-visible'), color: c.outlineColor, width: c.outlineWidth, line: c.outlineStyle });
+  }
+  const nav = style(document.getElementById('site-nav'));
+  const navBtn = style(document.querySelector('#site-nav [data-lang]'));
+  const out = { name: n, card: !!card, bg: style(card || panel).backgroundColor, texts, accent, rings, nav: { color: nav.color, bg: nav.backgroundColor, image: nav.backgroundImage, opacity: Number(navBtn.opacity) } };
+  window.__ap.ui.close();
+  return out;
+  }, name);
+};
+await guard(['H1.2'], async () => {
+  const w = await insideByKeys('en'); // by keys, so the focus ring shows when focus is moved
+  const seen = [];
+  for (const name of ['about', 'works', 'contact', 'help', 'accessibility']) seen.push(await paperInfo(w.page, name));
+  errors.push(...w.errors);
+  await w.ctx.close();
+  const t = await openWalk(browser, { lang: 'en' }); // the title screen, not entered
+  await t.page.keyboard.press('Tab');
+  seen.push({ ...(await paperInfo(t.page, 'about')), name: 'about (title screen)' });
+  errors.push(...t.errors);
+  await t.ctx.close();
+  const bad = [];
+  let lowText = 99; let lowRing = 99; let lowNav = 99; let rings = 0;
+  for (const s of seen) {
+    if (!s.card || s.bg !== 'rgb(251, 251, 249)') bad.push(`${s.name}: no paper card (${s.bg})`);
+    if (s.accent.length) bad.push(`${s.name}: accent on ${s.accent.slice(0, 3).join(', ')}`);
+    for (const x of s.texts) { const c = ratio(over(rgba(x.color), PAPER), PAPER); lowText = Math.min(lowText, c); if (c < 4.5) bad.push(`${s.name}: ${x.el} ${x.color} ${c.toFixed(2)}`); }
+    for (const x of s.rings) { rings++; const c = ratio(over(rgba(x.color), PAPER), PAPER); lowRing = Math.min(lowRing, c); if (!x.visible || x.color !== 'rgb(7, 47, 204)' || x.width !== '2px' || x.line !== 'solid' || c < 3) bad.push(`${s.name}: ring on ${x.sel} ${x.line} ${x.width} ${x.color} shown ${x.visible}`); }
+    // the navbar's text on its band, the band over the paper card
+    const band = rgba(s.nav.bg);
+    const under = over(band, PAPER);
+    const c = s.nav.image === 'none' && band[3] >= 0.8 ? ratio(over(rgba(s.nav.color), under), under) * (s.nav.opacity === 1 ? 1 : 0) : 0;
+    lowNav = Math.min(lowNav, c);
+    if (c < 4.5) bad.push(`${s.name}: navbar ${s.nav.color} on ${s.nav.bg} (${s.nav.image.slice(0, 24)}), buttons at ${s.nav.opacity}`);
+  }
+  step('H1.2 Panels (About, Works, Contact, Help, Accessibility inside, About from the title screen): a paper card #fbfbf9; every text in it ≥ 4.5 on paper; nothing in the accent #8fa8ff; the focus ring on Close, a link, a button, a row of the works list and the opening speech is the blue #072fcc, 2 px, ≥ 3 on paper; the navbar over the panel is on a steady band, its text ≥ 4.5 with the paper under it',
+    bad.length === 0 && rings >= 8 && lowText >= 4.5 && lowRing >= 3 && lowNav >= 4.5,
+    `${seen.length} panels; lowest text ${lowText.toFixed(2)}; ${rings} focus rings, lowest ${lowRing.toFixed(2)}; navbar over paper ${lowNav.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+});
+
+// ---------------- H1.3: the glass chips. Every chip over the 3D view (room label, floor plan
+// and its key, toolbar, rooms menu, keycaps, wheel line, zoom readout, the hints, the first-use
+// card, the tour caption) is the glass with a light edge (white at 45%) and rounded corners;
+// the edge reads at 3:1 or more against the glass over a white wall and over black, and the
+// text on the chips at 4.5:1. The focus ring on glass is white, 2 px, at 3:1 or more against
+// the glass; where it reaches past its chip (a toolbar button, a keycap) it has a dark halo
+// round it, so it shows on a white wall; in the rooms menu it stays inside the row.
+await guard(['H1.3'], async () => {
+  const w = await insideByKeys('en'); // by keys, so the focus ring shows when focus is moved
+  const p = w.page;
+  const r = await p.evaluate(() => {
+    const style = (e, ps) => getComputedStyle(e, ps);
+    const chips = ['#room-label', '#minimap', '#map-key', '#toolbar', '#rooms-menu', '#tour-caption', '#click-to-look', '#guide', '#prompt', '#zoom-level', '.cap.k-w', '.cap.k-zin', '#keypad .wheel'].map((sel) => {
+      const e = document.querySelector(sel);
+      const c = style(e);
+      return { sel, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0 };
+    });
+    const texts = ['#room-label .room-name', '#room-label .room-sub', '#map-key', '#keypad .wheel', '.cap.k-w i', '#toolbar [data-action="tour"] .lbl', '#rooms-menu button', '#rooms-menu small', '#click-to-look', '#guide', '#guide .g-note'].map((sel) => {
+      const e = document.querySelector(sel);
+      return { sel, color: style(e).color };
+    });
+    const ring = (e, ps) => { const c = style(e, ps); return { color: c.outlineColor, width: c.outlineWidth, line: c.outlineStyle, offset: c.outlineOffset, shadow: style(e).boxShadow, shown: e.matches(':focus-visible') }; };
+    const tour = document.querySelector('#toolbar [data-action="tour"]');
+    tour.focus();
+    const onTour = ring(tour);
+    tour.setAttribute('aria-pressed', 'true');
+    const onTourPressed = ring(tour);
+    tour.setAttribute('aria-pressed', 'false');
+    const cap = document.querySelector('.cap.k-w');
+    cap.style.transition = 'none';
+    cap.focus();
+    const onCap = ring(cap);
+    cap.style.transition = '';
+    document.querySelector('#toolbar [data-action="rooms"]').click();
+    const row = document.querySelector('#rooms-menu button');
+    row.focus();
+    const onRow = ring(row, '::after');
+    const rowHover = 'rgba(255, 255, 255, 0.1)'; // #rooms-menu .room-row:hover, as in style.css
+    document.querySelector('#toolbar [data-action="rooms"]').click();
+    // the glass as the toolbar has it (the built stylesheet may write the token as a hex colour)
+    return { glass: getComputedStyle(document.getElementById('toolbar')).backgroundColor, chips, texts, onTour, onTourPressed, onCap, onRow, rowHover };
+  });
+  const bad = [];
+  let lowEdge = 99; let lowText = 99;
+  for (const c of r.chips) {
+    const e = worst(c.edge, c.bg);
+    lowEdge = Math.min(lowEdge, e);
+    if (rgba(c.bg)[3] < 0.85 || c.edgeW !== '1px' || rgba(c.edge)[3] < 0.45 || e < 3 || c.radius < 6) bad.push(`${c.sel}: glass ${c.bg}, edge ${c.edgeW} ${c.edge} (${e.toFixed(2)}), radius ${c.radius}`);
+  }
+  for (const x of r.texts) { const c = worst(x.color, r.glass); lowText = Math.min(lowText, c); if (c < 4.5) bad.push(`${x.sel}: ${x.color} ${c.toFixed(2)}`); }
+  // the works named in the rooms menu, on a row under the mouse: the row's tint on the glass
+  const hoverLow = Math.min(...[[255, 255, 255], [0, 0, 0]].map((under) => { const bg = over(rgba(r.rowHover), over(rgba(r.glass), under)); return ratio(over(rgba(r.texts.find((x) => x.sel === '#rooms-menu small').color), bg), bg); }));
+  if (hoverLow < 4.5) bad.push(`rooms menu, works on a row under the mouse: ${hoverLow.toFixed(2)}`);
+  const white = (x) => x.shown && x.line === 'solid' && x.width === '2px' && x.color === 'rgb(255, 255, 255)';
+  const halo = (x) => /rgb\(11, 12, 14\) 0px 0px 0px 5px/.test(x.shadow);
+  const ringOnGlass = worst('rgb(255, 255, 255)', r.glass);
+  const haloOnWall = ratio([11, 12, 14], [255, 255, 255]);
+  const ringOnHalo = ratio([255, 255, 255], [11, 12, 14]);
+  if (!white(r.onTour) || !halo(r.onTour)) bad.push(`Tour focused: ${JSON.stringify(r.onTour)}`);
+  if (!white(r.onTourPressed) || !halo(r.onTourPressed) || !/inset/.test(r.onTourPressed.shadow)) bad.push(`Tour pressed and focused: ${JSON.stringify(r.onTourPressed)}`);
+  if (!white(r.onCap) || !halo(r.onCap)) bad.push(`keycap focused: ${JSON.stringify(r.onCap)}`);
+  if (!(r.onRow.line === 'solid' && r.onRow.width === '2px' && r.onRow.color === 'rgb(255, 255, 255)' && parseFloat(r.onRow.offset) < 0)) bad.push(`rooms menu row focused: ${JSON.stringify(r.onRow)}`);
+  step('H1.3 Glass chips: each is the glass (0.85) with a 1 px edge of white at 45% (≥ 3 against the glass over white and black) and rounded corners; text on them ≥ 4.5, also the works on a rooms-menu row under the mouse; the focus ring on a toolbar button (pressed or not) and a keycap is white, 2 px, with a dark halo of 5 px round it; in the rooms menu it is white and inside the row; ring on glass ≥ 3, halo on a white wall ≥ 3',
+    bad.length === 0 && lowEdge >= 3 && lowText >= 4.5 && ringOnGlass >= 3 && haloOnWall >= 3 && ringOnHalo >= 3,
+    `${r.chips.length} chips, lowest edge ${lowEdge.toFixed(2)}; lowest text ${lowText.toFixed(2)}; works on a hovered row ${hoverLow.toFixed(2)}; ring on glass ${ringOnGlass.toFixed(2)}, halo on a white wall ${haloOnWall.toFixed(2)}, ring on its halo ${ringOnHalo.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+});
+
+// ---------------- H1.4: the buttons. Toolbar buttons are words in the sans, semibold, in
+// sentence case, with rounded corners; none of their states is told by colour alone: a pressed
+// one has an edge all round and a bar along its foot (none when not pressed), Sound changes
+// its sign, the current room is bold with a bar, a pressed keycap sinks by 1 px and gets an
+// edge, the open panel's button in the navbar and the chosen language are underlined. Close
+// says its word in a panel and in the viewer. Buttons on paper are in the blue #072fcc with a
+// blue edge (≥ 4.5 and ≥ 3 on paper) and turn to paper on blue under the mouse (≥ 4.5);
+// buttons in the dark viewer have the light edge (≥ 3 over white and black).
+await guard(['H1.4'], async () => {
+  const w = await insideByKeys('en');
+  const p = w.page;
+  const bar = await p.evaluate(() => {
+    const style = (e) => getComputedStyle(e);
+    const look = (e) => { const c = style(e); return { family: c.fontFamily.split(',')[0].replace(/"/g, ''), weight: Number(c.fontWeight), size: parseFloat(c.fontSize), upper: c.textTransform, radius: parseFloat(c.borderTopLeftRadius) || 0, edge: c.borderTopColor, edgeW: c.borderTopWidth, shadow: c.boxShadow, bg: c.backgroundColor, color: c.color, h: e.getBoundingClientRect().height }; };
+    const buttons = [...document.querySelectorAll('#toolbar > button, #toolbar .rooms-wrap > button')].map((b) => ({ action: b.dataset.action, ...look(b) }));
+    const tour = document.querySelector('#toolbar [data-action="tour"]');
+    tour.setAttribute('aria-pressed', 'true');
+    const pressed = look(tour);
+    tour.setAttribute('aria-pressed', 'false');
+    const off = look(tour);
+    const sound = document.querySelector('#toolbar [data-action="sound"]');
+    const signs = () => [style(sound.querySelector('.snd-on')).display, style(sound.querySelector('.snd-off')).display].join('/');
+    const was = sound.getAttribute('aria-pressed');
+    sound.setAttribute('aria-pressed', 'true');
+    const signOn = signs();
+    sound.setAttribute('aria-pressed', 'false');
+    const signOff = signs();
+    sound.setAttribute('aria-pressed', was);
+    const rows = [...document.querySelectorAll('#rooms-menu button')].map((b) => ({ here: b.hasAttribute('aria-current'), weight: Number(style(b).fontWeight), bar: style(b.closest('.room-row')).borderLeftColor }));
+    const cap = document.querySelector('.cap.k-w');
+    cap.style.transition = 'none';
+    const capOff = { edge: style(cap).borderTopColor, move: style(cap).transform };
+    cap.classList.add('pressed');
+    const capOn = { edge: style(cap).borderTopColor, move: style(cap).transform };
+    cap.classList.remove('pressed');
+    cap.style.transition = '';
+    const lang = [...document.querySelectorAll('#site-nav [data-lang]')].map((b) => ({ pressed: b.getAttribute('aria-pressed'), line: style(b).textDecorationLine }));
+    return { buttons, pressed, off, signOn, signOff, rows, capOff, capOn, lang, glass: style(document.getElementById('toolbar')).backgroundColor };
+  });
+  // a panel: Close and a button in it, and the navbar's mark for the open panel
+  await p.evaluate(() => window.__ap.ui.show('contact'));
+  await p.waitForTimeout(700);
+  const paperButtons = async () => {
+    const out = [];
+    for (const sel of ['#panel [data-close]', '#panel-body .link']) {
+      const read = () => p.evaluate((x) => { const e = document.querySelector(x); const c = getComputedStyle(e); return { text: e.textContent.trim(), color: c.color, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0, family: c.fontFamily.split(',')[0].replace(/"/g, ''), upper: c.textTransform }; }, sel);
+      const rest = await read();
+      await p.hover(sel);
+      const hover = await read();
+      await p.mouse.move(2, 400);
+      out.push({ sel, rest, hover });
+    }
+    return out;
+  };
+  const onPaper = await paperButtons();
+  const navMark = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
+  await p.evaluate(() => window.__ap.ui.close());
+  // the viewer
+  await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[0]));
+  await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
+  await p.waitForTimeout(700);
+  const dark = await p.evaluate(() => ({
+    ground: getComputedStyle(document.getElementById('viewer')).backgroundColor,
+    buttons: ['#viewer [data-close]', '#viewer-prev', '#viewer-next', '#viewer-goto'].map((sel) => { const e = document.querySelector(sel); const c = getComputedStyle(e); return { sel, text: e.textContent.trim(), color: c.color, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0, family: c.fontFamily.split(',')[0].replace(/"/g, ''), upper: c.textTransform }; }),
+  }));
+  errors.push(...w.errors);
+  await w.ctx.close();
+  // the same mark on the title screen, where the navbar is not on its dark band
+  const t = await openWalk(browser, { lang: 'en' });
+  await t.page.evaluate(() => window.__ap.ui.show('about'));
+  await t.page.waitForTimeout(700);
+  const navTitle = await t.page.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
+  errors.push(...t.errors);
+  await t.ctx.close();
+  const bad = [];
+  const sans = (f) => !/mono|menlo|consolas/i.test(f);
+  for (const b of bar.buttons) if (!sans(b.family) || b.weight < 600 || b.size < 13 || b.upper !== 'none' || b.radius < 6 || b.h < 32 || rgba(b.edge)[3] !== 0) bad.push(`toolbar ${b.action}: ${b.family} ${b.weight} ${b.size}px ${b.upper}, radius ${b.radius}, ${Math.round(b.h)} px high, edge ${b.edge}`);
+  const acc = /143,\s*168,\s*255/;
+  // a pressed toolbar button: the tint on the glass, over a white wall and over black
+  const tintOn = (under) => over(rgba(bar.pressed.bg), over(rgba(bar.glass), under));
+  const pressedText = Math.min(...[[255, 255, 255], [0, 0, 0]].map((u) => ratio(over(rgba(bar.pressed.color), tintOn(u)), tintOn(u))));
+  const pressedEdge = Math.min(...[[255, 255, 255], [0, 0, 0]].map((u) => ratio([143, 168, 255], tintOn(u))));
+  if (!(acc.test(bar.pressed.edge) && rgba(bar.pressed.edge)[3] === 1 && bar.pressed.edgeW === '1px' && /inset/.test(bar.pressed.shadow) && acc.test(bar.pressed.shadow) && acc.test(bar.pressed.bg))) bad.push(`pressed toolbar button: edge ${bar.pressed.edgeW} ${bar.pressed.edge}, shadow ${bar.pressed.shadow}, ground ${bar.pressed.bg}`);
+  if (acc.test(bar.off.edge) || acc.test(bar.off.shadow) || acc.test(bar.off.bg)) bad.push(`toolbar button not pressed: ${JSON.stringify(bar.off)}`);
+  if (pressedText < 4.5 || pressedEdge < 3) bad.push(`pressed toolbar button: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}`);
+  if (bar.signOn === bar.signOff) bad.push(`Sound keeps one sign: ${bar.signOn}`);
+  if (!bar.rows.some((x) => x.here) || !bar.rows.every((x) => (x.here ? x.weight >= 700 && acc.test(x.bar) : x.weight <= 400 && !acc.test(x.bar)))) bad.push(`rooms menu: ${JSON.stringify(bar.rows)}`);
+  if (!(acc.test(bar.capOn.edge) && !acc.test(bar.capOff.edge) && bar.capOn.move !== bar.capOff.move)) bad.push(`keycap: ${JSON.stringify([bar.capOff, bar.capOn])}`);
+  if (!bar.lang.every((x) => (x.pressed === 'true') === /underline/.test(x.line))) bad.push(`languages: ${JSON.stringify(bar.lang)}`);
+  for (const [where, marks, name] of [['inside', navMark, 'contact'], ['title screen', navTitle, 'about']]) if (!marks.length || !marks.every((x) => (x.nav === name) === (x.current === 'true') && (x.current === 'true') === /underline/.test(x.line))) bad.push(`navbar (${where}): ${JSON.stringify(marks)}`);
+  let lowPaper = 99;
+  for (const b of onPaper) {
+    const text = ratio(over(rgba(b.rest.color), PAPER), PAPER);
+    const edge = ratio(over(rgba(b.rest.edge), PAPER), PAPER);
+    const hover = ratio(over(rgba(b.hover.color), over(rgba(b.hover.bg), PAPER)), over(rgba(b.hover.bg), PAPER));
+    lowPaper = Math.min(lowPaper, text, hover);
+    if (b.rest.color !== 'rgb(7, 47, 204)' || b.rest.edge !== 'rgb(7, 47, 204)' || b.rest.edgeW !== '1px' || b.rest.radius < 6 || !sans(b.rest.family) || b.rest.upper !== 'none' || text < 4.5 || edge < 3 || b.hover.bg !== 'rgb(7, 47, 204)' || hover < 4.5) bad.push(`${b.sel}: ${JSON.stringify(b)}`);
+  }
+  if (onPaper[0]?.rest.text !== UI.en.viewer.close) bad.push(`Close in a panel reads "${onPaper[0]?.rest.text}"`);
+  let lowDark = 99;
+  for (const b of dark.buttons) {
+    const ground = rgba(b.bg)[3] > 0 ? b.bg : dark.ground;
+    const edge = worst(b.edge, ground);
+    const text = worst(b.color, ground);
+    lowDark = Math.min(lowDark, edge);
+    if (b.edgeW !== '1px' || edge < 3 || text < 4.5 || b.radius < 6 || !sans(b.family) || b.upper !== 'none') bad.push(`${b.sel}: ${JSON.stringify(b)} edge ${edge.toFixed(2)} text ${text.toFixed(2)}`);
+  }
+  if (dark.buttons[0].text !== UI.en.viewer.close) bad.push(`Close in the viewer reads "${dark.buttons[0].text}"`);
+  step('H1.4 Buttons: the toolbar in the sans, semibold, 13 px or more, sentence case, rounded, 32 px high or more; pressed: an edge all round and a bar along the foot in the accent on its tint (text ≥ 4.5, edge ≥ 3; none of them when not pressed); Sound changes its sign; the current room bold with a bar, the others regular; a pressed keycap gets an edge and sinks; the chosen language and the open panel in the navbar (inside and on the title screen) underlined; Close says "Close" in a panel and in the viewer; on paper Close and a button are blue with a blue edge (≥ 4.5, ≥ 3), paper on blue under the mouse (≥ 4.5); in the viewer the buttons have the light edge (≥ 3 over white and black)',
+    bad.length === 0,
+    `${bar.buttons.length} toolbar buttons (${bar.buttons.map((b) => `${b.action} ${b.size}px/${b.weight}/${Math.round(b.h)}h`).join(', ')}); pressed: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}; Sound signs ${bar.signOn} and ${bar.signOff}; on paper lowest ${lowPaper.toFixed(2)}; viewer edges lowest ${lowDark.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+});
+
+// ---------------- A7.1: interface type. No text in the interface is under 12 px, in capitals by
+// CSS, or with its letters more than 0.06em apart: the title screen, the sound question, the
+// navbar and footer, every control over the 3D view (also those not on screen at the moment:
+// the hints, the prompt, the tour caption, the zoom readout), the eight panels and the viewer.
+// In English and Hungarian at 1366 × 768, and in English on a phone (375 × 667). What is
+// drawn on the floor plan's canvas cannot be read from the page and is not checked here.
+const typeInfo = (p, root) => p.evaluate((sel) => {
+  const bad = [];
+  let n = 0; let low = 99; let wide = 0;
+  const tag = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}${typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).join('.') : ''}`;
+  const always = ['#prompt', '#tour-caption', '#zoom-level .val', '#viewer-count', '.viewer-loading', '#progress-label', '#room-label .room-name', '#room-label .room-sub'];
+  const scope = document.querySelector(sel);
+  if (!scope) return { n: 0, low: 0, wide: 9, bad: [`${sel} is not there`] };
+  for (const e of scope.querySelectorAll('*')) {
+    if (e.closest('.sr-only, #announcer, script, style, noscript, svg')) continue;
+    const own = [...e.childNodes].some((x) => x.nodeType === 3 && x.textContent.trim());
+    if (!own && !always.some((a) => e.matches(a))) continue;
+    const c = getComputedStyle(e);
+    const size = parseFloat(c.fontSize);
+    const gap = c.letterSpacing === 'normal' ? 0 : parseFloat(c.letterSpacing) / size;
+    n++;
+    low = Math.min(low, size);
+    wide = Math.max(wide, gap);
+    if (size < 12 || gap > 0.0601 || c.textTransform === 'uppercase') bad.push(`${tag(e)} ${size}px ${gap.toFixed(3)}em ${c.textTransform}`);
+  }
+  return { n, low, wide, bad };
+}, root);
+await guard(['A7.1'], async () => {
+  const seen = [];
+  const all = [];
+  for (const [lang, opts, where] of [['en', {}, 'EN 1366 × 768'], ['hu', {}, 'HU 1366 × 768'], ['en', PHONE, 'EN phone']]) {
+    const w = await inside(lang, opts);
+    const p = w.page;
+    // the tour caption's two lines, as tour.js writes them
+    await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = '<span class="t">1 / 17</span><span class="m">x</span>x'; });
+    await p.evaluate(() => document.querySelector('#toolbar [data-action="rooms"]').click());
+    const got = [['page', await typeInfo(p, 'body')]];
+    await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = ''; });
+    for (const name of ['about', 'works', 'bts', 'contact', 'help', 'accessibility', 'legal', 'privacy']) {
+      await p.evaluate((x) => { window.__ap.ui.show(x); for (const d of document.querySelectorAll('#panel details')) d.open = true; }, name);
+      got.push([`panel ${name}`, await typeInfo(p, '#panel')]);
+    }
+    await p.evaluate(() => window.__ap.ui.close());
+    for (const i of [0, 2]) {
+      await p.evaluate((x) => { window.__ap.viewer.open(window.__ap.data.works[x]); for (const d of document.querySelectorAll('#viewer details')) d.open = true; }, i);
+      got.push([`viewer work ${i + 1}`, await typeInfo(p, '#viewer')]);
+    }
+    for (const [what, g] of got) { all.push(g); for (const b of g.bad) seen.push(`${where}, ${what}: ${b}`); }
+    errors.push(...w.errors);
+    await w.ctx.close();
+  }
+  const n = all.reduce((a, g) => a + g.n, 0);
+  const low = Math.min(...all.map((g) => g.low));
+  const wide = Math.max(...all.map((g) => g.wide));
+  step('A7.1 Interface type: no text under 12 px, none in capitals by CSS, no letters more than 0.06em apart, on the title screen, the sound question, the navbar and footer, the controls over the 3D view, the eight panels and the viewer; English and Hungarian at 1366 × 768, English on a phone',
+    seen.length === 0 && n > 300 && low >= 12 && wide <= 0.0601,
+    `${n} texts read; smallest ${low} px; widest letter spacing ${wide.toFixed(3)}em; ${seen.length ? `${seen.length} wrong: ${seen.slice(0, 10).join(' | ')}` : 'nothing wrong'}`);
 });
 
 step('No console errors', errors.length === 0, errors.join(' | ') || 'none');
