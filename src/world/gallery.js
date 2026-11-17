@@ -135,11 +135,9 @@ function wrapText(g, text, x, y, maxW, lh) {
   return y;
 }
 
-// The exhibition text sheet. The type shrinks until the text fits the page, since the
-// Hungarian text runs longer than the English.
 // How sharp to draw the text sheets (rendering proposal, option 5): no sharper than this
-// screen can show them from the nearest point a visitor can stand (the walking radius,
-// 0.28 m from the wall), with the field of view and the capped pixel ratio main.js uses.
+// screen can show them from the nearest point a visitor can stand (0.27 m in front of the
+// sheet: the walking radius, 0.28 m from the wall), with the field of view and the capped pixel ratio main.js uses.
 // A phone or tablet is measured both upright and on its side. The result is a scale of the
 // sheet's 512 x 724 layout, never above the tier's old fixed scale (4 on a computer, 2.5 on
 // low power), so no screen gets a softer sheet than it can show at that distance. Zoomed in
@@ -161,6 +159,8 @@ function sheetScale(tierMax) {
   return Math.max(1, Math.min(tierMax, need / 724));
 }
 
+// The exhibition text sheet. The type shrinks until the text fits the page, since the
+// Hungarian text runs longer than the English.
 function drawTextSheet(g, data) {
   g.fillStyle = '#fbfaf7';
   g.fillRect(0, 0, 512, 724);
