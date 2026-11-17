@@ -381,9 +381,13 @@ const axTree = async (p) => {
   return nodes.filter((n) => !n.ignored).map((n) => `${n.role?.value}:${n.name?.value ?? ''}`);
 };
 // A block of steps that stops with an error (a control it needs is not there) fails its steps
-// and the run goes on.
+// and the run goes on. The pages it left open are closed: an open page goes on drawing the 3D
+// view and slows every step after it.
 const guard = async (names, fn) => {
-  try { await fn(); } catch (e) { for (const n of names) step(`${n} (stopped)`, false, String(e).split('\n')[0]); }
+  try { await fn(); } catch (e) {
+    for (const n of names) step(`${n} (stopped)`, false, String(e).split('\n')[0]);
+    for (const c of browser.contexts()) await c.close().catch(() => {});
+  }
 };
 const guideInfo = (p) => p.evaluate(() => {
   const g = document.getElementById('guide');
@@ -824,11 +828,15 @@ const paperInfo = async (p, name) => {
 };
 await guard(['H1.2'], async () => {
   const w = await insideByKeys('en'); // by keys, so the focus ring shows when focus is moved
-  const t = await openWalk(browser, { lang: 'en' }); // the title screen, not entered
-  await t.page.keyboard.press('Tab');
   const seen = [];
   for (const name of ['about', 'works', 'contact', 'help', 'accessibility']) seen.push(await paperInfo(w.page, name));
+  errors.push(...w.errors);
+  await w.ctx.close();
+  const t = await openWalk(browser, { lang: 'en' }); // the title screen, not entered
+  await t.page.keyboard.press('Tab');
   seen.push({ ...(await paperInfo(t.page, 'about')), name: 'about (title screen)' });
+  errors.push(...t.errors);
+  await t.ctx.close();
   const bad = [];
   let lowText = 99; let lowRing = 99; let lowNav = 99; let rings = 0;
   for (const s of seen) {
@@ -846,9 +854,6 @@ await guard(['H1.2'], async () => {
   step('H1.2 Panels (About, Works, Contact, Help, Accessibility inside, About from the title screen): a paper card #fbfbf9; every text in it ≥ 4.5 on paper; nothing in the accent #8fa8ff; the focus ring on Close, a link, a button, a row of the works list and the opening speech is the blue #072fcc, 2 px, ≥ 3 on paper; the navbar over the panel is on a steady band, its text ≥ 4.5 with the paper under it',
     bad.length === 0 && rings >= 8 && lowText >= 4.5 && lowRing >= 3 && lowNav >= 4.5,
     `${seen.length} panels; lowest text ${lowText.toFixed(2)}; ${rings} focus rings, lowest ${lowRing.toFixed(2)}; navbar over paper ${lowNav.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
-  errors.push(...w.errors, ...t.errors);
-  await w.ctx.close();
-  await t.ctx.close();
 });
 
 // ---------------- H1.3: the glass chips. Every chip over the 3D view (room label, floor plan
@@ -890,7 +895,8 @@ await guard(['H1.3'], async () => {
     const onRow = ring(row, '::after');
     const rowHover = 'rgba(255, 255, 255, 0.1)'; // #rooms-menu .room-row:hover, as in style.css
     document.querySelector('#toolbar [data-action="rooms"]').click();
-    return { glass: getComputedStyle(document.documentElement).getPropertyValue('--glass').trim(), chips, texts, onTour, onTourPressed, onCap, onRow, rowHover };
+    // the glass as the toolbar has it (the built stylesheet may write the token as a hex colour)
+    return { glass: getComputedStyle(document.getElementById('toolbar')).backgroundColor, chips, texts, onTour, onTourPressed, onCap, onRow, rowHover };
   });
   const bad = [];
   let lowEdge = 99; let lowText = 99;
@@ -956,7 +962,7 @@ await guard(['H1.4'], async () => {
     cap.classList.remove('pressed');
     cap.style.transition = '';
     const lang = [...document.querySelectorAll('#site-nav [data-lang]')].map((b) => ({ pressed: b.getAttribute('aria-pressed'), line: style(b).textDecorationLine }));
-    return { buttons, pressed, off, signOn, signOff, rows, capOff, capOn, lang, glass: style(document.documentElement).getPropertyValue('--glass').trim() };
+    return { buttons, pressed, off, signOn, signOff, rows, capOff, capOn, lang, glass: style(document.getElementById('toolbar')).backgroundColor };
   });
   // a panel: Close and a button in it, and the navbar's mark for the open panel
   await p.evaluate(() => window.__ap.ui.show('contact'));
@@ -976,11 +982,6 @@ await guard(['H1.4'], async () => {
   const onPaper = await paperButtons();
   const navMark = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
   await p.evaluate(() => window.__ap.ui.close());
-  // the same mark on the title screen, where the navbar is not on its dark band
-  const t = await openWalk(browser, { lang: 'en' });
-  await t.page.evaluate(() => window.__ap.ui.show('about'));
-  await t.page.waitForTimeout(700);
-  const navTitle = await t.page.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
   // the viewer
   await p.evaluate(() => window.__ap.viewer.open(window.__ap.data.works[0]));
   await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 });
@@ -989,6 +990,15 @@ await guard(['H1.4'], async () => {
     ground: getComputedStyle(document.getElementById('viewer')).backgroundColor,
     buttons: ['#viewer [data-close]', '#viewer-prev', '#viewer-next', '#viewer-goto'].map((sel) => { const e = document.querySelector(sel); const c = getComputedStyle(e); return { sel, text: e.textContent.trim(), color: c.color, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0, family: c.fontFamily.split(',')[0].replace(/"/g, ''), upper: c.textTransform }; }),
   }));
+  errors.push(...w.errors);
+  await w.ctx.close();
+  // the same mark on the title screen, where the navbar is not on its dark band
+  const t = await openWalk(browser, { lang: 'en' });
+  await t.page.evaluate(() => window.__ap.ui.show('about'));
+  await t.page.waitForTimeout(700);
+  const navTitle = await t.page.evaluate(() => [...document.querySelectorAll('#site-nav .nav-links > [data-nav]')].filter((b) => b.getClientRects().length).map((b) => ({ nav: b.dataset.nav, current: b.getAttribute('aria-current'), line: getComputedStyle(b).textDecorationLine })));
+  errors.push(...t.errors);
+  await t.ctx.close();
   const bad = [];
   const sans = (f) => !/mono|menlo|consolas/i.test(f);
   for (const b of bar.buttons) if (!sans(b.family) || b.weight < 600 || b.size < 13 || b.upper !== 'none' || b.radius < 6 || b.h < 32 || rgba(b.edge)[3] !== 0) bad.push(`toolbar ${b.action}: ${b.family} ${b.weight} ${b.size}px ${b.upper}, radius ${b.radius}, ${Math.round(b.h)} px high, edge ${b.edge}`);
@@ -1026,9 +1036,6 @@ await guard(['H1.4'], async () => {
   step('H1.4 Buttons: the toolbar in the sans, semibold, 13 px or more, sentence case, rounded, 32 px high or more; pressed: an edge all round and a bar along the foot in the accent on its tint (text ≥ 4.5, edge ≥ 3; none of them when not pressed); Sound changes its sign; the current room bold with a bar, the others regular; a pressed keycap gets an edge and sinks; the chosen language and the open panel in the navbar (inside and on the title screen) underlined; Close says "Close" in a panel and in the viewer; on paper Close and a button are blue with a blue edge (≥ 4.5, ≥ 3), paper on blue under the mouse (≥ 4.5); in the viewer the buttons have the light edge (≥ 3 over white and black)',
     bad.length === 0,
     `${bar.buttons.length} toolbar buttons (${bar.buttons.map((b) => `${b.action} ${b.size}px/${b.weight}/${Math.round(b.h)}h`).join(', ')}); pressed: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}; Sound signs ${bar.signOn} and ${bar.signOff}; on paper lowest ${lowPaper.toFixed(2)}; viewer edges lowest ${lowDark.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
-  errors.push(...w.errors, ...t.errors);
-  await w.ctx.close();
-  await t.ctx.close();
 });
 
 // ---------------- A7.1: interface type. No text in the interface is under 12 px, in capitals by
