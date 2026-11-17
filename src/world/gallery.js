@@ -327,7 +327,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     }
   }
 
-  // Exhibition texts, pinned up as in the photos: 50 x 71 cm sheets drawn at 4x on desktop
+  // Exhibition texts, pinned up as in the photos: A4 sheets (21 x 29.7 cm) drawn at 4x on desktop
   // so their small type stays sharp
   for (const sh of data.sheets || []) {
     const k = SHEET_SCALE;
@@ -335,7 +335,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       g.setTransform(k, 0, 0, k, 0, 0);
       drawTextSheet(g, data);
     }, 16);
-    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.707), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.21, 0.297), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;
