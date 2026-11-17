@@ -45,6 +45,10 @@ export const PHOTO_STAINS = [
   { box: [-0.4, 1.14, 3.43, -0.34, 1.19, 3.51], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 5 },
   { box: [-0.4, 1.15, 3.28, -0.34, 1.19, 3.33], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 6 },
   { box: [-0.4, 1.14, 3.15, -0.34, 1.19, 3.22], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 7 },
+  // Room 2, east wall: grey streaky marks high on the west face of the pillar between the
+  // storage gate and the doorway to Room 3 (x 9.85), perhaps from old fixings (DSC_0061, 0060;
+  // height against the 2.75 m ceiling, along the face from the gate to the doorway's arris)
+  { box: [9.82, 1.93, 1.82, 9.88, 2.12, 2.38], kind: 'marks', tint: [0.7, 0.71, 0.73], strength: 1, edge: 0.6, tide: 0, seed: 8 },
 ];
 const STAIN_COUNT = Math.min(PHOTO_STAINS.length, MAX_STAINS);
 
