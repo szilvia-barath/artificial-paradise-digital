@@ -26,9 +26,13 @@ export function createPost(renderer, scene, camera, { lowPower }) {
   // Read by the tone-mapping effect: Neutral is linear in the mid-tones where ACES (as
   // tuned before) brightened them, so lift the exposure to keep the rooms as bright.
   renderer.toneMappingExposure = 1.35;
+  // MSAA: 4 samples on the desktop path, 2 when the pixel ratio drawn is 1.75 or more (the
+  // pixels are then small enough that 2 samples look the same and the buffers are half the
+  // size), none on low power (FXAA instead).
+  const samplesFor = (ratio) => (lowPower ? 0 : Math.min(ratio >= 1.75 ? 2 : 4, renderer.capabilities.maxSamples));
   const composer = new EffectComposer(renderer, {
     frameBufferType: THREE.HalfFloatType,
-    multisampling: lowPower ? 0 : Math.min(4, renderer.capabilities.maxSamples),
+    multisampling: samplesFor(renderer.getPixelRatio()),
   });
   composer.addPass(new RenderPass(scene, camera));
 
@@ -78,7 +82,9 @@ export function createPost(renderer, scene, camera, { lowPower }) {
       if (calm) return;
       ca.offset.copy(baseCA);
     },
-    setSize(w, h) {
+    setSize(w, h, ratio = renderer.getPixelRatio()) {
+      const samples = samplesFor(ratio);
+      if (composer.multisampling !== samples) composer.multisampling = samples;
       composer.setSize(w, h, false);
     },
     render(dt) {

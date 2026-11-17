@@ -57,8 +57,15 @@ const renderer = new THREE.WebGLRenderer({
 });
 // Full resolution up to 2x on desktop; adapt() steps it down if frames get slow.
 const MAX_DPR = isTouch ? 1.5 : 2;
+// `dpr` is the pixel ratio wanted (the screen's, then adapt()'s); the one drawn is capped so
+// the drawing buffer never holds more than MAX_PIXELS (about 1920 x 1080). A 1440 x 900 laptop
+// at 2x would otherwise draw 5.2 million pixels, and the post-processing buffers grow with them
+// (docs/design/rendering-proposal.md, option 1). Only sharpness changes, nothing in the rooms.
+const MAX_PIXELS = 2.1e6;
 let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-renderer.setPixelRatio(dpr);
+const pixelCap = () => Math.sqrt(MAX_PIXELS / Math.max(1, window.innerWidth * window.innerHeight));
+const drawnRatio = () => Math.min(dpr, pixelCap());
+renderer.setPixelRatio(drawnRatio());
 renderer.setSize(window.innerWidth, window.innerHeight, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -704,17 +711,28 @@ function resize() {
   baseFov = w < h ? 78 : isTouch ? 72 : 66;
   camera.fov = baseFov / controls.zoom;
   camera.updateProjectionMatrix();
+  const ratio = drawnRatio();
+  if (renderer.getPixelRatio() !== ratio) renderer.setPixelRatio(ratio);
   renderer.setSize(w, h, false);
-  post.setSize(w, h);
+  post.setSize(w, h, ratio);
 }
 window.addEventListener('resize', resize);
 resize();
 
 // ---------------------------------------------------------------- adaptive resolution
 // Drop the pixel ratio if frames are slow for a while; raise it again when there's headroom.
+// Every change reallocates the post-processing buffers, so it may change at most once in 4 s,
+// it rises only after two fast spells in a row, and not within 10 s of a step down (so it does
+// not see-saw between two ratios). Under the pixel cap a rise that would draw no more pixels
+// is not made.
 let perfAcc = 0;
 let perfFrames = 0;
+let adaptClock = 0;
+let lastChange = -Infinity;
+let lastDown = -Infinity;
+let fastSpells = 0;
 function adapt(dt) {
+  adaptClock += dt;
   perfAcc += dt;
   perfFrames++;
   if (perfAcc < 2) return;
@@ -722,12 +740,18 @@ function adapt(dt) {
   perfAcc = 0;
   perfFrames = 0;
   const max = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  const slow = avg > 1 / 45;
+  fastSpells = avg < 1 / 58 ? fastSpells + 1 : 0;
+  if (adaptClock - lastChange < 4) return;
+  const cur = drawnRatio();
   let next = dpr;
-  if (avg > 1 / 45 && dpr > 0.75) next = Math.max(0.75, dpr - 0.25);
-  else if (avg < 1 / 58 && dpr < max) next = Math.min(max, dpr + 0.125);
+  if (slow && cur > 0.75) next = Math.max(0.75, cur - 0.25);
+  else if (fastSpells >= 2 && dpr < max && cur < pixelCap() && adaptClock - lastDown >= 10) next = Math.min(max, dpr + 0.125);
   if (next !== dpr) {
+    if (next < dpr) lastDown = adaptClock;
     dpr = next;
-    renderer.setPixelRatio(dpr);
+    lastChange = adaptClock;
+    fastSpells = 0;
     resize();
   }
 }
