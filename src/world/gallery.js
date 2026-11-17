@@ -4,6 +4,8 @@ import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
 import { createVideo, scheduleVideos } from './video.js';
+import { isTouch } from '../device.js';
+import { MAX_DPR, pixelCapFor, baseFovFor } from '../fx/resolution.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
 // screens playing the artist's videos (short loops, with the videos' sound where they
@@ -105,6 +107,30 @@ function wrapText(g, text, x, y, maxW, lh) {
 
 // The exhibition text sheet. The type shrinks until the text fits the page, since the
 // Hungarian text runs longer than the English.
+// How sharp to draw the text sheets (rendering proposal, option 5): no sharper than this
+// screen can show them from the nearest point a visitor can stand (the walking radius,
+// 0.28 m from the wall), with the field of view and the capped pixel ratio main.js uses.
+// A phone or tablet is measured both upright and on its side. The result is a scale of the
+// sheet's 512 x 724 layout, never above the tier's old fixed scale (4 on a computer, 2.5 on
+// low power), so no screen gets a softer sheet than it can show at that distance. Zoomed in
+// further than that, the letters soften a little. SHEET_HEIGHT is the sheets' height in
+// metres: keep it equal to the PlaneGeometry in buildGallery.
+const SHEET_HEIGHT = 0.707;
+const NEAREST = 0.27;
+function sheetScale(tierMax) {
+  const ratio = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  const a = window.screen.width || window.innerWidth;
+  const b = window.screen.height || window.innerHeight;
+  const views = isTouch ? [[Math.min(a, b), Math.max(a, b)], [Math.max(a, b), Math.min(a, b)]] : [[a, b]];
+  let need = 0;
+  for (const [w, h] of views) {
+    const px = h * Math.min(ratio, pixelCapFor(w, h)); // drawing-buffer height
+    const seen = 2 * NEAREST * Math.tan(THREE.MathUtils.degToRad(baseFovFor(w, h) / 2)); // metres of wall in view
+    need = Math.max(need, (SHEET_HEIGHT / seen) * px);
+  }
+  return Math.max(1, Math.min(tierMax, need / 724));
+}
+
 function drawTextSheet(g, data) {
   g.fillStyle = '#fbfaf7';
   g.fillRect(0, 0, 512, 724);
@@ -153,8 +179,9 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
   const wallTexts = [];
-  // the sheets are drawn at 4x (2.5x on phones) so the letters stay sharp up close
-  const SHEET_SCALE = hdBudget > 3 ? 4 : 2.5;
+  // the sheets are drawn at up to 4x (2.5x on low power), as sharp as the screen can show
+  // them up close (sheetScale)
+  const SHEET_SCALE = sheetScale(hdBudget > 3 ? 4 : 2.5);
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
     wallTexts.push(tex);

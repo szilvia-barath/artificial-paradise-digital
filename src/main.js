@@ -12,6 +12,7 @@ import { buildLetItFlow } from './world/letItFlow.js';
 import { VIDEOS, enableVideoSound } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
+import { MAX_DPR, pixelCapFor, baseFovFor } from './fx/resolution.js';
 import { Ambience } from './audio/ambience.js';
 import { FirstPersonControls, LETTER_KEYS } from './controls.js';
 import { Tour } from './tour.js';
@@ -55,15 +56,14 @@ const renderer = new THREE.WebGLRenderer({
   stencil: false,
   depth: false,
 });
-// Full resolution up to 2x on desktop; adapt() steps it down if frames get slow.
-const MAX_DPR = isTouch ? 1.5 : 2;
-// `dpr` is the pixel ratio wanted (the screen's, then adapt()'s); the one drawn is capped so
-// the drawing buffer never holds more than MAX_PIXELS (about 1920 x 1080). A 1440 x 900 laptop
-// at 2x would otherwise draw 5.2 million pixels, and the post-processing buffers grow with them
-// (docs/design/rendering-proposal.md, option 1). Only sharpness changes, nothing in the rooms.
-const MAX_PIXELS = 2.1e6;
+// Full resolution up to 2x on desktop (MAX_DPR, src/fx/resolution.js); adapt() steps it down
+// if frames get slow. `dpr` is the pixel ratio wanted (the screen's, then adapt()'s); the one
+// drawn is capped so the drawing buffer never holds more than MAX_PIXELS (about 1920 x 1080).
+// A 1440 x 900 laptop at 2x would otherwise draw 5.2 million pixels, and the post-processing
+// buffers grow with them (docs/design/rendering-proposal.md, option 1). Only sharpness
+// changes, nothing in the rooms.
 let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-const pixelCap = () => Math.sqrt(MAX_PIXELS / Math.max(1, window.innerWidth * window.innerHeight));
+const pixelCap = () => pixelCapFor(window.innerWidth, window.innerHeight);
 const drawnRatio = () => Math.min(dpr, pixelCap());
 renderer.setPixelRatio(drawnRatio());
 renderer.setSize(window.innerWidth, window.innerHeight, false);
@@ -708,7 +708,7 @@ function resize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
   camera.aspect = w / h;
-  baseFov = w < h ? 78 : isTouch ? 72 : 66;
+  baseFov = baseFovFor(w, h);
   camera.fov = baseFov / controls.zoom;
   camera.updateProjectionMatrix();
   const ratio = drawnRatio();
