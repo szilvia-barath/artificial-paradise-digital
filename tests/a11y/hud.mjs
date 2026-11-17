@@ -1,5 +1,5 @@
 // What the controls over the 3D view show and say: the floor plan's key (A4); on a touch
-// screen, the sound question's hint and the hint inside (D11), the stick held and the turning
+// screen, the sound question's hint and the hint inside, and the taps of the tour (D11), the stick held and the turning
 // keys (D2); the viewer side by side on a short screen on its side (D8); the compact control layer in a very small window (E2); the tour caption's first line
 // (F3); the line before entering, the first-use card and Help (F1); Next work on the toolbar
 // (F2); the look, its accent and states not told by colour alone (H1). Each step
@@ -359,6 +359,48 @@ const caption = (p) => p.evaluate(() => { const c = document.getElementById('tou
   await toStop(p, 'w16-let-it-flow');
   const c = await caption(p);
   step(`F3.4 Hungarian page: no. 16's caption reads "${fill(UI.hu.hud.tourAt, { at: 16, total: 17, no: 16, title: 'Let it Flow' })}", the title in a <span lang="en">`, c.first === fill(UI.hu.hud.tourAt, { at: 16, total: 17, no: 16, title: 'Let it Flow' }) && c.html.includes('<span lang="en">Let it Flow</span>'), `"${c.first}" (${c.html})`);
+  errors.push(...w.errors);
+  await w.ctx.close();
+}
+
+// ---------------- D11.7: on a phone, the taps of the tour hold
+// During the tour a tap on the view opens the work at that stop. The caption lets a tap
+// through to the view. The browser's mouse click after the tap must not follow: it landed
+// on the viewer that had just opened under the finger: on "View in situ" (no. 5), on the
+// artist's link, which opens a new tab (no. 16), or beside the picture, which closes the
+// viewer again (no. 1).
+{
+  const w = await inside('en', PHONE);
+  const p = w.page;
+  await p.evaluate(() => { window.__clicks = []; addEventListener('click', (e) => window.__clicks.push(e.target.id || e.target.className || e.target.tagName), true); });
+  const tapOn = async (sel) => { const c = await p.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }, sel); await p.touchscreen.tap(c.x, c.y); };
+  const touring = () => p.evaluate(() => window.__ap.tour.active);
+  const settled = () => p.waitForTimeout(2500); // a click, if the browser sends one, comes within a few frames
+  const got = [];
+  for (const [id, title, where] of [['w05-human-as-error-i', 'Human as Error I', '#tour-caption'], ['w16-let-it-flow', 'Let it Flow', '#tour-caption'], ['w01-dresden', 'Wrong Data Landscape Dresden', null]]) {
+    await p.evaluate(() => { window.__ap.viewer.close(); window.__ap.tour.stop(); window.__clicks.length = 0; });
+    await tapOn('[data-action="tour"]');
+    await settled();
+    const started = await touring();
+    const at = await toStop(p, id);
+    await p.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))); // the view drawn at the stop
+    await p.evaluate(() => { window.__clicks.length = 0; });
+    if (where) await tapOn(where);
+    else await p.touchscreen.tap(187, 280);
+    const opened = await p.waitForFunction(() => !document.getElementById('viewer').hidden, null, { timeout: 30000 }).then(() => true, () => false);
+    await settled();
+    const s = await p.evaluate(() => ({ viewer: document.getElementById('viewer').hidden ? '(closed)' : document.getElementById('viewer-title').textContent, clicks: window.__clicks.slice(), tour: window.__ap.tour.active }));
+    got.push({ id, where: where || 'the view', started, at, opened, ...s, tabs: w.ctx.pages().length, ok: started && at && opened && s.viewer === title && s.clicks.length === 0 && !s.tour && w.ctx.pages().length === 1 });
+  }
+  // the Tour button: a tap starts the tour and it stays on; a second tap stops it and it stays off
+  await p.evaluate(() => { window.__ap.viewer.close(); window.__ap.tour.stop(); });
+  await tapOn('[data-action="tour"]');
+  await settled();
+  const on = await touring();
+  await tapOn('[data-action="tour"]');
+  await settled();
+  const off = !(await touring());
+  step('D11.7 Phone, during the tour: a tap on the caption (no. 5, no. 16) or on the view (no. 1) opens the work at that stop, it stays open, and no mouse click follows the tap onto the viewer (no button or link in it pressed, no new tab); a tap on Tour starts the tour and it stays on, a second tap stops it', got.every((x) => x.ok) && on && off, got.map((x) => `${x.id}, tap on ${x.where}: tour started ${x.started}, at the stop ${x.at}, opened ${x.opened}, then "${x.viewer}", clicks after the tap: ${x.clicks.length ? x.clicks.join(', ') : 'none'}, tabs ${x.tabs}`).join('; ') + `; Tour tapped: on ${on}, tapped again: off ${off}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
