@@ -7,12 +7,46 @@ import * as THREE from 'three';
 //  - large, soft overlays by world position, which never repeat: a brightness drift, damp
 //    rising from the floor with a tide line, dirt around and run down below the pipes, and
 //    patchy whitewash (thick, flat coats and thin ones where the brick shows through).
+//  - stains placed from the 2025 photographs (PHOTO_STAINS below), each one on the wall or
+//    ceiling where a photograph shows it. The overlays above are invented; these are not.
 // Patched into the materials together with the plan AO (ao.js), which supplies vAoPos.
 
 const MAX_PIPES = 16;
 // Pipe axes [ax, ay, az, bx, by, bz] in metres, registered by props.js where the pipes are built.
 export const PIPES = [];
 export const dirtAlong = (ax, ay, az, bx, by, bz) => PIPES.push([ax, ay, az, bx, by, bz]);
+
+// Stains seen in the 2025 photographs (decision log, Brief 6, 17 November 2026). Each is a box
+// in world metres [x0, y0, z0, x1, y1, z1], a few centimetres thick across its wall or
+// ceiling; the shader finds which side is thin and draws in the other two. kind: 'blotch'
+// (an ellipse filling the box), 'rising' (from the bottom of the box up to a ragged edge),
+// 'hanging' (the same from the top down), 'specks' (scattered dots), 'marks' (streaky
+// patches). tint multiplies the wall colour (ratios read off the photo against clean wall
+// beside the stain); edge is how ragged the outline is, tide how dark its rim. Only room
+// walls and ceilings take them (the materials ao.js patches), never floors.
+const MAX_STAINS = 16;
+const KIND = { blotch: 0, rising: 1, hanging: 2, specks: 3, marks: 4 };
+export const PHOTO_STAINS = [
+  // Room 1. The ceiling's water stain in the south-west corner: DSC_0028-0031 (the corner and
+  // #4 Human as Error III below it). Hugs the south wall from the corner to above the east
+  // half of #4 (x 1.9 ±0.3) and reaches 0.65 m (±0.2) out; the ellipse is centred on the wall
+  // line, so only its inner half shows
+  { box: [-0.8, 2.97, 6.35, 1.9, 3.03, 7.65], kind: 'blotch', tint: [0.93, 0.9, 0.8], strength: 1, edge: 0.5, tide: 0.35, seed: 1 },
+  // ... and its faint yellowing on the top of the south wall by the corner (DSC_0030, 0031)
+  { box: [-0.15, 2.82, 6.97, 1.2, 3.0, 7.03], kind: 'hanging', tint: [0.95, 0.93, 0.85], strength: 0.8, edge: 0.6, tide: 0, seed: 2 },
+  // Room 1, east wall (south pier, x 4.85): dark mottled damp along the foot under the radiator
+  // and a brown streak between the radiator's south end and its pipe (DSC_0023, 0024; heights
+  // against the radiator, 0.85 m tall from 0.1 m)
+  { box: [4.82, 0, 5.05, 4.88, 0.12, 6.25], kind: 'rising', tint: [0.65, 0.62, 0.55], strength: 0.9, edge: 0.5, tide: 0.2, seed: 3 },
+  { box: [4.82, 0.16, 6.04, 4.88, 0.48, 6.16], kind: 'blotch', tint: [0.65, 0.62, 0.55], strength: 0.8, edge: 0.6, tide: 0, seed: 4 },
+  // Room 1, street wall: three flakes in the whitewash on the back of the round-vent window's
+  // niche (x -0.37), just above the hydroponic channel (DSC_0011; heights against the sill at
+  // 1.7 m and the radiator top at 0.95 m, along the wall against the 0.92 m window)
+  { box: [-0.4, 1.14, 3.43, -0.34, 1.19, 3.51], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 5 },
+  { box: [-0.4, 1.15, 3.28, -0.34, 1.19, 3.33], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 6 },
+  { box: [-0.4, 1.14, 3.15, -0.34, 1.19, 3.22], kind: 'blotch', tint: [0.87, 0.85, 0.74], strength: 1, edge: 0.7, tide: 0.3, seed: 7 },
+];
+const STAIN_COUNT = Math.min(PHOTO_STAINS.length, MAX_STAINS);
 
 export function surfaceUniforms() {
   const a = [];
@@ -22,7 +56,28 @@ export function surfaceUniforms() {
     a.push(new THREE.Vector3(p[0], p[1], p[2]));
     b.push(new THREE.Vector3(p[3], p[4], p[5]));
   }
-  return { pipeA: { value: a }, pipeB: { value: b }, pipeCount: { value: Math.min(PIPES.length, MAX_PIPES) } };
+  const lo = [];
+  const hi = [];
+  const tint = [];
+  const form = [];
+  for (let i = 0; i < MAX_STAINS; i++) {
+    const s = PHOTO_STAINS[i];
+    const box = s ? s.box : [0, -9, 0, 0, -9, 0];
+    lo.push(new THREE.Vector3(box[0], box[1], box[2]));
+    hi.push(new THREE.Vector3(box[3], box[4], box[5]));
+    tint.push(s ? new THREE.Vector4(...s.tint, s.strength) : new THREE.Vector4(1, 1, 1, 0));
+    form.push(s ? new THREE.Vector4(KIND[s.kind], s.edge, s.tide, s.seed) : new THREE.Vector4());
+  }
+  return {
+    pipeA: { value: a },
+    pipeB: { value: b },
+    pipeCount: { value: Math.min(PIPES.length, MAX_PIPES) },
+    stainLo: { value: lo },
+    stainHi: { value: hi },
+    stainTint: { value: tint },
+    stainForm: { value: form },
+    stainCount: { value: STAIN_COUNT },
+  };
 }
 
 export const SURFACE_PARS = /* glsl */ `
@@ -30,6 +85,11 @@ uniform vec2 surfOffset;
 uniform vec3 pipeA[${MAX_PIPES}];
 uniform vec3 pipeB[${MAX_PIPES}];
 uniform int pipeCount;
+uniform vec3 stainLo[${MAX_STAINS}];
+uniform vec3 stainHi[${MAX_STAINS}];
+uniform vec4 stainTint[${MAX_STAINS}];
+uniform vec4 stainForm[${MAX_STAINS}];
+uniform int stainCount;
 float sHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float sNoise(vec2 p) {
   vec2 i = floor(p);
@@ -103,6 +163,53 @@ export const SURFACE_FRAG = /* glsl */ `
     }
     dirt = clamp(dirt, 0.0, 1.0) * (0.6 + 0.4 * sFbm(sp * 3.0 + 7.0));
     diffuseColor.rgb *= mix(vec3(1.0), vec3(0.58, 0.53, 0.46), dirt);
+  #endif
+  #if AO_KIND != 0
+    // stains placed from the photographs (PHOTO_STAINS)
+    for (int i = 0; i < ${MAX_STAINS}; i++) {
+      if (i >= stainCount) break;
+      vec3 lo = stainLo[i];
+      vec3 hi = stainHi[i];
+      if (any(lessThan(wp, lo)) || any(greaterThan(wp, hi))) continue;
+      vec3 c = 0.5 * (lo + hi);
+      vec3 h = 0.5 * (hi - lo);
+      vec2 m;
+      vec2 hs;
+      if (h.x <= h.y && h.x <= h.z) { m = vec2(wp.z - c.z, wp.y - c.y); hs = h.zy; }
+      else if (h.z <= h.y) { m = vec2(wp.x - c.x, wp.y - c.y); hs = h.xy; }
+      else { m = vec2(wp.x - c.x, wp.z - c.z); hs = h.xz; }
+      vec2 q = m / hs;
+      vec4 f = stainForm[i];
+      vec2 n = m * 7.0 + f.w * 17.3;
+      float wob = f.y * (sFbm(n) - 0.5);
+      float s = 0.0;
+      if (f.x < 0.5) {
+        // blotch: an ellipse with a ragged edge, mottled inside, a darker rim
+        float d = length(q) + wob;
+        s = (1.0 - smoothstep(0.6, 1.0, d)) * (0.7 + 0.3 * sFbm(n * 1.9 + 5.0));
+        s = max(s, f.z * exp(-pow((d - 0.8) / 0.07, 2.0)));
+      } else if (f.x < 2.5) {
+        // rising (from the bottom) or hanging (from the top) to a ragged edge, a tide line on it
+        float t = f.x < 1.5 ? 0.5 * (q.y + 1.0) : 0.5 * (1.0 - q.y);
+        float e = 0.72 + f.y * 0.5 * (sFbm(vec2(m.x * 4.0 + f.w * 17.3, 3.0)) - 0.5);
+        float side = 1.0 - smoothstep(0.85, 1.0, abs(q.x));
+        s = (1.0 - smoothstep(e - 0.3, e, t)) * (0.6 + 0.4 * sFbm(n * 1.3 + 9.0));
+        s = max(s, f.z * exp(-pow((t - e) / 0.05, 2.0))) * side;
+      } else if (f.x < 3.5) {
+        // specks: one dot in some 2.5 cm cells, inside the ellipse
+        vec2 cell = floor(m / 0.025);
+        float r = sHash(cell + f.w * 7.1);
+        vec2 o = vec2(sHash(cell + 3.3), sHash(cell + 5.9)) * 0.6 + 0.2;
+        float rad = 0.003 + 0.005 * sHash(cell + 9.7);
+        float dd = length((fract(m / 0.025) - o) * 0.025);
+        s = step(1.0 - f.y, r) * (1.0 - smoothstep(rad * 0.6, rad, dd)) * (1.0 - smoothstep(0.75, 1.0, length(q)));
+      } else {
+        // marks: streaky patches inside the ellipse
+        float d = length(q) + wob;
+        s = (1.0 - smoothstep(0.7, 1.0, d)) * smoothstep(0.5, 0.62, sNoise(m * vec2(9.0, 26.0) + f.w * 17.3));
+      }
+      diffuseColor.rgb *= mix(vec3(1.0), stainTint[i].rgb, clamp(s, 0.0, 1.0) * stainTint[i].a);
+    }
   #endif
 }
 `;
