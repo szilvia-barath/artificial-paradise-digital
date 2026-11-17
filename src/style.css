@@ -14,6 +14,7 @@
   --blue: #072fcc; /* links and focus on paper; the same blue as the logotype */
   --text: #f2f1ed; /* text on glass */
   --paper-line: #8a8f99; /* lines on paper: 3.13:1 there */
+  --paper-edge: #c9ccd3; /* the paper card's pale hairline: decoration (1.55:1 on paper), 10:1 or more on the dark ground */
   /* pressed and on states over the 3D view only, never body text and never on paper
      (2.20:1 there): 5.76:1 on the glass over a white wall, 8.68:1 over black */
   --accent: #8fa8ff;
@@ -1073,7 +1074,7 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   padding: 24px 28px;
   background: var(--paper);
   color: var(--ink);
-  border: 1px solid #c9ccd3; /* a pale hairline, as in the mockup; the card is told from the dark ground by the paper itself */
+  border: 1px solid var(--paper-edge); /* a pale hairline, as in the mockup; the card is told from the dark ground by the paper itself */
   border-radius: 10px;
 }
 .panel-card::after { content: ""; display: block; clear: both; }

@@ -343,6 +343,39 @@ These entries are about presentation: how the site is shown and operated. None o
   | Touch hint (`#click-to-look`), text #f2f1ed, 11 px, on glass 0.85 (added 16 November 2026, computed from `style.css`) | 11.61 | 17.50 | 4.5 | yes |
   | First-use card (`#guide`), text #f2f1ed, 13 px, on glass 0.85 (same) | 11.61 | 17.50 | 4.5 | yes |
   | First-use card, note in --hud-muted #c4c3be, 12 px, on glass 0.85 (same) | 7.43 | 11.21 | 4.5 | yes |
+  | Step 2, paper panel: text, ink #16181d (`--ink`) on paper #fbfbf9 (`--paper`) (added 17 November 2026 for steps 2 to 4 of H1 and A7, computed from `style.css` as above; paper is opaque, so one figure) | 17.14 | | 4.5 | yes |
+  | Step 2, paper panel: secondary text (the line over the title, notes, the works' numbers and data, the credits' labels, the tags), `--ink-muted` #4a4f5a on paper | 7.93 | | 4.5 | yes |
+  | Step 2, paper panel: links, Close and the buttons, `--blue` #072fcc text on paper | 8.86 | | 4.5 | yes |
+  | Step 2, paper panel: the blue edge of Close and of a button, and the blue focus ring, on paper | 8.86 | | 3 | yes |
+  | Step 2, paper panel: Close or a button under the mouse, paper on blue | 8.86 | | 4.5 | yes |
+  | Step 2, paper panel: `--paper-line` #8a8f99 on paper (the lines between the works, which are the only edge of a row of the works list, and round the tags) | 3.13 | | 3 | yes, just (do not lighten it) |
+  | Step 2: the paper card against the panel's dark ground rgba(8, 8, 10, 0.9) | 15.57 | 19.41 | 3 | yes |
+  | Step 2: the card's hairline `--paper-edge` #c9ccd3 against the dark ground (1.55 against the paper: decoration; the paper itself marks the card, and the card is not a control) | 10.03 | 12.50 | 3 | yes |
+  | Step 2, navbar over a panel opened from the title screen: text #f2f1ed on the band rgba(11, 12, 14, 0.8) (9.80 with the paper card under the band) | 9.68 | 17.56 | 4.5 | yes |
+  | Step 2, navbar over a panel, a focused button: white text and white ring on its backing #0b0c0e | 19.57 | | 4.5 / 3 | yes |
+  | Step 2: the accent on the dark panel (the third row of this table) is no longer used: the panels are paper and the viewer has no accent | | | | |
+  | Step 3, glass chip: the edge `--edge`, white at 45%, against its glass 0.85. It is the boundary of the keycaps, the zoom readout and the toolbar. Outside the chip it is 1.00 against a white wall, where the glass itself (13.12 against white) shows the chip, and 4.41 against black | 3.97 | 4.50 | 3 | yes |
+  | Step 3: a keycap's edge under the mouse, white at 80%, against its glass | 9.00 | 12.57 | 3 | yes |
+  | Step 3, glass chip: text #f2f1ed on glass 0.85 (room name 15 px; the line that names the work in front and the hints 13 px) | 11.61 | 17.50 | 4.5 | yes |
+  | Step 3, glass chip: `--hud-muted` #c4c3be on glass 0.85 (room subtitle and the tour caption's data 13 px; the wheel line, the map key, the rooms menu's works and the keycap letters 12 px) | 7.43 | 11.21 | 4.5 | yes |
+  | Step 3, rooms menu: the works #c4c3be on a row under the mouse (white 0.1 on glass); the grey #9a9a98 they had is 3.40 there | 5.43 | 8.94 | 4.5 | yes |
+  | Step 3, focus ring #ffffff against the glass 0.85 (toolbar button, keycap, zoom readout) | 13.12 | 19.78 | 3 | yes |
+  | Step 3, `--halo` #0b0c0e round the white ring, where the ring reaches past its chip: the halo against a white wall; the ring against its halo is 19.57 too | 19.57 | 21.00 (the ring against black; the halo, 1.07 there, is not needed) | 3 | yes |
+  | Step 3, focus ring #ffffff inside a rooms-menu row under the mouse (white 0.1 on glass) | 9.58 | 15.79 | 3 | yes |
+  | Step 4, pressed toolbar button: text #f2f1ed on the accent tint (0.16) laid on the glass (the ground of a pressed button since step 4, in place of white 0.1) | 8.63 | 13.76 | 4.5 | yes |
+  | Step 4, pressed toolbar button: its edge, bar and sign in the accent against that tint (replaces the row for white 0.1 above, 4.20 and 6.93) | 4.28 | 6.82 | 3 | yes |
+  | Step 4, pressed toolbar button: focus ring #ffffff against that tint | 9.76 | 15.55 | 3 | yes |
+  | Step 4, toolbar button under the mouse: text #f2f1ed on white 0.1 on glass | 8.48 | 13.97 | 4.5 | yes |
+  | Step 4, viewer: the edge of Previous, Next and the other buttons, white at 45%, on the viewer's ground rgba(8, 8, 10, 0.9) | 4.36 | 4.48 | 3 | yes |
+  | Step 4, viewer: button text #f2f1ed on the ground (under the mouse, white 0.1 on it: 10.52 and 14.40) | 14.28 | 17.79 | 4.5 | yes |
+  | Step 4, viewer: Close, text #f2f1ed on the glass 0.85 laid on the ground (its edge, white at 45%: 4.53 and 4.51) | 16.95 | 17.39 | 4.5 / 3 | yes |
+  | Step 4, viewer: focus ring #ffffff on the ground | 16.13 | 20.11 | 3 | yes |
+  | A7, viewer: secondary text `--muted` #9a9a98, now 12 to 13 px, on the ground | 5.72 | 7.13 | 4.5 | yes |
+  | A7, viewer: the description's heading, now #f2f1ed at 15 px (it was the grey at 11 px) | 14.28 | 17.79 | 4.5 | yes |
+  | A7, title screen: the small lines, the navbar's buttons and the sound question's hint, now 13 px, blue #072fcc at 0.75 on paper | 5.10 | | 4.5 | yes |
+  | A7, title card: the progress line, now 12 px, blue at 0.7 on paper | 4.50 | | 4.5 | yes, just (4.5007; do not lower it) |
+  | A7, footer: #c9c9c6, now 12 px, on the band rgba(11, 12, 14, 0.8) | 6.59 | 11.96 | 4.5 | yes |
+  | A7, floor plan: room numbers, now 12 px, white at 85% on the map's glass | 9.94 | 14.19 | 4.5 | yes |
 
   Checked on a build: a new step in `tests/a11y/hud.mjs`, H1.1, reads from the page that the accent is #8fa8ff and that no element's colour, background, border, outline or shadow is the old green, works out the accent text on glass (5.76) and a pressed keycap's letter (8.63), and checks the bar on a pressed toolbar button (none when not pressed) and the bold name and accent bar of the current room; it fails if the accent goes back to green or any of those marks is taken out. `tests/a11y/reduced-motion.mjs` looks for the visitor's dot by its colour, so its colour there changed from #9dff6a to #8fa8ff on purpose (the expectation is the same). Results: on a build of this step, with the machine heavily loaded (load average 20 to 25 on 4 cores from other test runs), H1.1 passed in a run of its own (twice), and in `hud.mjs` A4.1 to A4.5, D11.1 to D11.6, D2.1, D2.2, D8.1, F3.1 to F3.4, F1.1, F1.2, F1.4 to F1.6, F1.8 and F1.9 passed (60 steps, no console errors); F1.3 and F1.7 stopped on a page load timeout and E2, F2 did not get to run (the page took over 90 s to load), so those are not checked for this step. `axe.mjs` (without --write): 37 pages with 0 violations, including the rooms menu open and the walk inside, before it stopped on a click timeout at the last Hungarian page. `loader-weight.mjs` passed (no change to the loading screen). `reduced-motion.mjs`: the map dot checks pass with the new colour (it keeps its size with reduced motion, swells for 3 s after a jump without); its still-frame screenshot timed out under the load and the wheel check found the wheel still running at the end, both timing under the load, not the colour. `focus-mouse.mjs`: steps 1 to 5 passed, then it timed out under the load; nothing about focus or its ring changed in this step. The full suite is still to run. Decided by: reconstructor (to carry out the proposal); assistant (the proposal and how it is built). Not a reconstruction decision (presentation).
 
