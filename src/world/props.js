@@ -177,7 +177,8 @@ export function buildProps(materials) {
     g.add(inst);
     // behind the wall-side parapet: open floor at the foot (DSC_0016); further up nobody has
     // seen it (folding chairs stood there, higher up the flight), so it is filled in steps
-    // 0.30 m below the treads (invented)
+    // 0.30 m below the treads (invented). The stacked folding chairs themselves (DSC_0014 to
+    // DSC_0016) are left out at the artist's request (PROGRESS.md, 17 November 2026).
     {
       const first = 2;
       const fill = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps - first);
