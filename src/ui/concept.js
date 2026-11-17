@@ -254,7 +254,7 @@ export function setupConcept(data, body, { onGotoWork }) {
       const lines = wrap(info.label, n.kind === 'theme' ? (narrow ? 14 : 20) : 26);
       const half = (Math.max(...lines.map((l) => l.length)) * font * 0.56) / 2;
       const x = Math.min(Math.max(p.x, half + 4), width - half - 4);
-      const text = el('text', { class: `lbl ${n.kind}`, 'data-for': n.id, x: x.toFixed(1), y: (p.y + r + font + 3).toFixed(1), 'text-anchor': 'middle', 'font-size': font });
+      const text = el('text', { class: `lbl ${n.kind}`, 'data-for': n.id, x: x.toFixed(1), y: (p.y + r + font + 3).toFixed(1), 'text-anchor': 'middle', 'font-size': font, ...(info.lang ? { lang: info.lang } : {}) });
       lines.forEach((l, i) => text.append(el('tspan', { x: x.toFixed(1), dy: i ? font * 1.2 : 0 }, l)));
       labels.append(text);
     }
