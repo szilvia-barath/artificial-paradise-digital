@@ -9,7 +9,7 @@ import { buildLights } from './world/lights.js';
 import { buildGallery } from './world/gallery.js';
 import { buildParadiseFactory } from './world/paradiseFactory.js';
 import { buildLetItFlow } from './world/letItFlow.js';
-import { VIDEOS, enableVideoSound } from './world/video.js';
+import { VIDEOS, enableVideoSound, scheduleByRoom, videoState, BY_ROOM } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
 import { Ambience } from './audio/ambience.js';
@@ -746,6 +746,7 @@ function frame() {
   audio.spotlight = tour.work;
   audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
+  scheduleByRoom(controls.pos.x, controls.pos.y); // phones and low-power devices only
   gallery.update(t, dt, camera, controls.zoom);
   letItFlow.update(t, lights.proj, camera.position);
   updateFront(dt);
@@ -815,4 +816,4 @@ onLangChange(() => {
 });
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap, videoState, videosByRoom: BY_ROOM, lowPower };
