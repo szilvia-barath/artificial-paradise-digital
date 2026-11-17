@@ -43,7 +43,9 @@ export function buildLights(scene) {
   lights.r3 = point(0xf4f6ff, 11, 12.85, 2.1, 3.744, 11);
   // Room 4: light thrown back off the projection wall (driven by letItFlow.update)
   lights.proj = point(0xd2e4d0, 0.4, 23.4, 1.3, 3.725, 9);
-  // Stair shaft: cold light falling from the street entrance
+  // Cold light at the top of the stairs (invented). It stood in the invented shaft; since
+  // 17 November 2026 the flight ends at a closed street door and this light, unchanged, stands
+  // outside it (no shadows, so it lights Room 1 as before). Open question in PROGRESS.md.
   lights.stair = point(0xbcd2ff, 4, -1.2, 4.6, 1.05, 7);
 
   return lights;

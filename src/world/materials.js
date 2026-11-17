@@ -327,6 +327,9 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // (lit only by bounce: the pendants shine down)
     planks: surface(new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }), [0, 1 / 8]),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
+    // the street door at the top of the stairs, seen from inside: dark blue-black paint
+    // (S34 room_1_stairs_important.webp; black in DSC_0014 and DSC_0015)
+    streetDoor: new THREE.MeshStandardMaterial({ color: 0x1b2030, roughness: 0.6, metalness: 0.2 }),
     beam: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: 0.6, metalness: 0.4 }),
     // furniture & fixtures
     bench: new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.7, metalness: 0.2 }),

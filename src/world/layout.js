@@ -215,9 +215,11 @@ export const BLOCKS = [
 ];
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.
-// Room 1's ceiling has the stairwell opening.
-export const STAIRWELL = { x0: R1.west, x1: R1.west + 1.4, z0: 0, z1: 1.95 };
-export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the stair shaft starts here)
+// The stairs' landing passes through Room 1's west wall to the street door, in the opening
+// z 0 to 1.95. Room 1's ceiling is closed over the flight (DSC_0014, DSC_0015; PROGRESS.md,
+// 17 November 2026): until then it had a hole x -0.15 to 1.25 for an invented shaft.
+export const STAIRWELL = { x0: R1.west - T, x1: R1.west, z0: 0, z1: 1.95 };
+export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the street door)
 export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
   { x0: 5.4, x1: 10, z0: 1.6, z1: 5.79, mat: 'floor' },
@@ -227,7 +229,7 @@ export const FLOORS = [
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
 ];
 export const CEILINGS = [
-  { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling', hole: STAIRWELL },
+  { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling' },
   { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },

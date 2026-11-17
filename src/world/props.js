@@ -130,8 +130,8 @@ export function buildProps(materials) {
   const RX = R1.recess;
   const SZ = R1.D;
 
-  // Stairs along the north wall, rising west through the wall into the stair shaft. This
-  // comment named "DSC_0013–0016, panorama, close-ups of the flight" as the source; by the
+  // Stairs along the north wall, rising west to a landing that runs through the west wall to
+  // the street door. This comment named "DSC_0013–0016, panorama, close-ups of the flight" as the source; by the
   // reconstructor's account (PROGRESS.md, note of 15 November 2026) the flight was built from
   // her written descriptions and her close-ups, not measured on the photographs, and only
   // the foot is measured (below). Treads are dark, worn concrete. The
@@ -140,14 +140,18 @@ export function buildProps(materials) {
   // rebuilt from the stair photographs DSC_0016, DSC_0014 and DSC_0015 (PROGRESS.md, decision log,
   // 15 November 2026): a little bare brick pier under the open side's last coping brick, and
   // on the wall side a brick laid flat on a grey rendered base, with open floor between the
-  // wall-side parapet and the north wall.
+  // wall-side parapet and the north wall. The slope, the number of steps and the landing's
+  // height are from all the stair photographs, DSC_0014 to DSC_0016 and the S34 photographs
+  // (PROGRESS.md, decision log, 17 November 2026, Decision 1b): 8 risers, the bottom one 0.12 m
+  // and seven of 0.16 m, treads 0.29 m deep, the eighth step the landing at 1.24 m, the street
+  // door's level.
   {
-    const run = 0.26;
-    const rise = 0.19;
+    const run = 0.29;
+    const rise = 0.16;
     const foot = EX - 2.54; // bottom riser; the last step ends ~50 cm before Wrong Data Landscape Dresden
-    const steps = 17;
-    // the bottom riser measures 0.11-0.12 m: the flight sits 0.07 m lower than rise x steps
-    const sunk = 0.07;
+    const steps = 8; // the last one is the landing
+    // the bottom riser measures 0.11-0.12 m: the flight sits 0.04 m lower than rise x steps
+    const sunk = 0.04;
     const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
     // across the flight, z from the north wall face (measured at the foot in DSC_0016)
     const backOut = 0.37; // wall-side parapet, back face (0.13 thick: inferred)
@@ -161,7 +165,11 @@ export function buildProps(materials) {
     const capTop = pierTop + 0.012;
     const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
     const baseTop = 0.25;
-    const inRoom = Math.round((foot - WX) / run);
+    // the parapets rise with the steps up to the landing's nosing, then run level to the wall
+    const inRoom = steps;
+    const xTop = foot - run * (steps - 1); // the landing's nosing (top riser)
+    const landing = tread(steps - 1);
+    const WO = WX - 0.4; // outer face of the west wall: the street door
     // two tones: the front face (+x, towards the foot) of each step is the darker riser
     // material, every other face the tread concrete (BoxGeometry groups: +x, -x, +y, -y, +z, -z)
     const treadMats = [materials.stairRiser, materials.stair, materials.stair, materials.stair, materials.stair, materials.stair];
@@ -174,10 +182,15 @@ export function buildProps(materials) {
     for (let i = 0; i < steps; i++) {
       const h = tread(i);
       const x1 = foot - run * i;
-      m.compose(new THREE.Vector3(x1 - run / 2, h / 2, (tz0 + tz1) / 2), q0, new THREE.Vector3(run + 0.002, h, tz1 - tz0));
+      // the landing runs from its nosing through the wall to the street door
+      const x0 = i === steps - 1 ? WO : x1 - run;
+      m.compose(new THREE.Vector3((x0 + x1) / 2, h / 2, (tz0 + tz1) / 2), q0, new THREE.Vector3(x1 - x0 + 0.002, h, tz1 - tz0));
       inst.setMatrixAt(i, m);
     }
     g.add(inst);
+    // in the wall's thickness the landing fills the whole opening (z 0 to 1.95)
+    g.add(slab(materials.stair, WO, WX, 0, landing, 0, tz0));
+    g.add(slab(materials.stair, WO, WX, 0, landing, tz1, 1.95));
     // behind the wall-side parapet: open floor at the foot (DSC_0016); further up nobody has
     // seen it (folding chairs stood there, higher up the flight), so it is filled in steps
     // 0.30 m below the treads (invented). The stacked folding chairs themselves (DSC_0014 to
@@ -261,7 +274,7 @@ export function buildProps(materials) {
     // wall side the inner face is flush with the parapet and the lowest brick meets the
     // brick on the base.
     {
-      const len = Math.hypot(run * inRoom, rise * inRoom);
+      const len = Math.hypot(run * (steps - 1), rise * (steps - 1));
       const L = Math.hypot(run, rise);
       const d = new THREE.Vector2(-run / L, rise / L); // up the slope
       const nrm = new THREE.Vector2(rise / L, run / L); // square to it, upwards
@@ -285,6 +298,15 @@ export function buildProps(materials) {
       const bed = box(bedX1 - foot, 0.02, 0.235, mortarMat);
       bed.position.set((foot + bedX1) / 2, tread(0) + 0.06 + 0.01, zOpen);
       g.add(bed);
+      // along the landing both copings run level to the west wall (inferred: S34
+      // room_1_stairs_important.webp shows the open side's coping ending level at the landing)
+      const flatX1 = xTop - 0.01;
+      const flatX0 = WX - 0.02;
+      for (const zc of [zOpen, backIn - 0.1175 - 0.003]) {
+        const flatBed = box(flatX1 - flatX0, 0.02, 0.235, mortarMat);
+        flatBed.position.set((flatX0 + flatX1) / 2, landing + 0.06 + 0.01, zc);
+        g.add(flatBed);
+      }
       // where the sloped bricks start, up the slope from the foot: on the open side one pitch
       // up, so the lowest stands beside the level brick; on the wall side 5 cm up, so it meets
       // the brick on the base without running into it
@@ -351,6 +373,10 @@ export function buildProps(materials) {
         [foot + 0.04, tread(0) + 0.06 + 0.02, zOpen, 0.0],
         [(pierX0 + pierX1) / 2 + 0.01, capTop, zOpen, -0.06],
       ];
+      // the level bricks along the landing, on both sides
+      for (let x = xTop - 0.07; x > WX + 0.01; x -= 0.077) {
+        extra.push([x, landing + 0.06 + 0.02, zOpen, 0], [x, landing + 0.06 + 0.02, zBack, 0]);
+      }
       const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
@@ -397,12 +423,14 @@ export function buildProps(materials) {
     // bottom riser (DSC_0016: 0.33 to 0.38 m)
     const railH = 0.9;
     const zRail = (openIn + openOut) / 2;
-    const top = (x) => ((foot - x) / run) * rise + tread(0) + 0.06;
+    // the coping's top line: up the slope to the landing's nosing, then level
+    const top = (x) => (Math.min(foot - x, foot - xTop) / run) * rise + tread(0) + 0.06;
     const firstPost = foot - 0.36;
     for (let x = firstPost; x > WX; x -= 0.75) {
       g.add(rod(materials.black, new THREE.Vector3(x, top(x), zRail), new THREE.Vector3(x, top(x) + railH, zRail), 0.014));
     }
-    g.add(rod(materials.black, new THREE.Vector3(firstPost, top(firstPost) + railH, zRail), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(firstPost, top(firstPost) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, zRail), 0.02));
     obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
   }
 
