@@ -12,6 +12,7 @@ import {
   FXAAEffect,
   BlendFunction,
 } from 'postprocessing';
+import { isOn } from './switches.js';
 
 // Post chain: bloom + neutral tone mapping (Khronos PBR Neutral keeps the artworks'
 // colours true, where ACES shifts hues) + vignette + light film grain, then FXAA on
@@ -48,14 +49,28 @@ export function createPost(renderer, scene, camera, { lowPower }) {
   const noise = new NoiseEffect({ premultiply: true, blendFunction: BlendFunction.SCREEN });
   noise.blendMode.opacity.value = 0.12;
   composer.addPass(new EffectPass(camera, bloom, tone, vignette, noise));
-  if (lowPower) composer.addPass(new EffectPass(camera, new FXAAEffect()));
+  // Switch "tone" (src/fx/switches.js, off). FXAA runs on linear values here, where the dark
+  // rooms' edges differ by too little to pass its default thresholds (0.0312 and 0.125, made
+  // for display values); under the switch they are a quarter of that, about what a step in
+  // the darks is worth in linear terms. The screens' half of the switch is in gallery.js.
+  const toneSwitch = isOn('tone');
+  const fxaa = new FXAAEffect();
+  if (toneSwitch) {
+    fxaa.minEdgeThreshold = 0.0078;
+    fxaa.maxEdgeThreshold = 0.031;
+  }
+  if (lowPower) composer.addPass(new EffectPass(camera, fxaa));
 
   const ca = new ChromaticAberrationEffect({
     offset: new THREE.Vector2(0.00035, 0.00025),
     radialModulation: true,
     modulationOffset: 0.25,
   });
-  composer.addPass(new EffectPass(camera, ca));
+  const last = new EffectPass(camera, ca);
+  // Switch "tone": dither the last pass, so the dark gradients of the vaults and the floor
+  // light pools do not band in 8-bit output.
+  if (toneSwitch) last.dithering = true;
+  composer.addPass(last);
 
   let calm = false;
   const baseCA = new THREE.Vector2(0.00035, 0.00025);

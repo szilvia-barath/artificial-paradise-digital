@@ -6,6 +6,7 @@ import { t } from '../i18n.js';
 import { createVideo, scheduleVideos } from './video.js';
 import { isTouch } from '../device.js';
 import { MAX_DPR, pixelCapFor, baseFovFor } from '../fx/resolution.js';
+import { isOn } from '../fx/switches.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
 // screens playing the artist's videos (short loops, with the videos' sound where they
@@ -74,8 +75,36 @@ const screenFrag = /* glsl */ `
     // faint LCD falloff at the panel edges
     vec2 d = abs(vUv - 0.5) * 2.0;
     col *= 1.0 - 0.1 * pow(max(d.x, d.y), 8.0);
-    gl_FragColor = vec4(col * brightness, 1.0);
+    #ifdef SCREEN_UNTONED
+      // Switch "tone" (src/fx/switches.js, off): the screen shows the video's own values. The
+      // composer's tone mapping (PBR Neutral at the renderer's exposure) is undone here in
+      // advance, so after it each pixel is the file's value (brightness is not applied).
+      // The curve's last few per cent cannot be reached, so the target stops at 0.97.
+      gl_FragColor = vec4(untone(min(col, vec3(0.97))), 1.0);
+    #else
+      gl_FragColor = vec4(col * brightness, 1.0);
+    #endif
     #include <colorspace_fragment>
+  }
+`;
+
+// The inverse of three.js's PBR Neutral tone mapping (r186, tonemapping_pars_fragment), for
+// the screens under the "tone" switch. It ignores the curve's small desaturation of very
+// bright colours, so near-white saturated colours come out a little paler than in the file.
+const UNTONE = /* glsl */ `
+  uniform float toneExposure;
+  vec3 untone(vec3 t) {
+    const float start = 0.8 - 0.04;
+    const float d = 1.0 - start;
+    float peakT = max(t.r, max(t.g, t.b));
+    vec3 c = t;
+    if (peakT >= start) {
+      float peak = d * d / (1.0 - peakT) + start - d;
+      c *= peak / peakT;
+    }
+    float m = min(c.r, min(c.g, c.b));
+    float x = m >= 0.04 ? m + 0.04 : sqrt(max(m, 0.0) / 6.25);
+    return (c + (x - m)) / toneExposure;
   }
 `;
 
@@ -188,6 +217,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     return tex;
   };
   const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.35, metalness: 0.4 });
+  const untoned = isOn('tone'); // screens out of the tone mapping (switch, off)
 
   const prepTex = (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
@@ -251,9 +281,12 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
             mixB: { value: 0 },
             brightness: { value: 1.1 },
             uvRect: { value: new THREE.Vector4(1, 1, 0, 0) },
+            // read at each upload: post.js sets the exposure after the gallery is built
+            toneExposure: { get value() { return renderer.toneMappingExposure; } },
           },
+          defines: untoned ? { SCREEN_UNTONED: '' } : {},
           vertexShader: screenVert,
-          fragmentShader: screenFrag,
+          fragmentShader: untoned ? UNTONE + screenFrag : screenFrag,
         });
         const screenGeo = new THREE.PlaneGeometry(w, h);
         // footage of another shape is cropped to the screen, not stretched
