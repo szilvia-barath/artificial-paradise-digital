@@ -7,6 +7,7 @@ import { createVideo, scheduleVideos } from './video.js';
 import { isTouch } from '../device.js';
 import { MAX_DPR, pixelCapFor, baseFovFor } from '../fx/resolution.js';
 import { isOn } from '../fx/switches.js';
+import { lazyKTX2 } from './textures.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
 // screens playing the artist's videos (short loops, with the videos' sound where they
@@ -222,9 +223,19 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const prepTex = (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = aniso;
+    if (t.isCompressedTexture) return t; // KTX2 brings its own mipmaps
     t.generateMipmaps = true;
     t.minFilter = THREE.LinearMipmapLinearFilter;
     return t;
+  };
+  // Switch "ktx2art" (src/fx/switches.js, off): the 1024 px and 1600 px images of the
+  // paintings and prints as KTX2 UASTC (scripts/make_art_ktx2.mjs, img/ktx2/), which the GPU
+  // keeps compressed; the WebP if a KTX2 is missing or cannot be transcoded.
+  const artKTX2 = isOn('ktx2art');
+  const loadArt = (name, onLoad, onError) => {
+    const webp = () => lazyLoader.load(url(`${name}.webp`), onLoad, undefined, onError);
+    if (!artKTX2) return webp();
+    lazyKTX2().load(url(`img/ktx2/${name.replace(/^img\//, '')}.ktx2`), onLoad, undefined, webp);
   };
 
   for (const work of data.works) {
@@ -430,7 +441,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       if (l.loaded || l.dist > 7.5 * zoom) continue;
       l.loaded = true;
       if (l.front) {
-        lazyLoader.load(url(`${l.work.image}-tex.webp`), (t) => {
+        loadArt(`${l.work.image}-tex`, (t) => {
           prepTex(t);
           const old = l.front.map;
           l.texMap = t;
@@ -439,7 +450,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
         });
       } else if (l.entry) {
         l.entry.frames.forEach((fr, i) => {
-          lazyLoader.load(url(`${fr}-tex.webp`), (t) => {
+          loadArt(`${fr}-tex`, (t) => {
             prepTex(t);
             const old = l.entry.textures[i];
             l.entry.textures[i] = t;
@@ -454,7 +465,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       const want = hd.includes(l);
       if (want && !l.hd && !l.hdLoading) {
         l.hdLoading = true;
-        lazyLoader.load(url(`${l.work.image}.webp`), (t) => {
+        loadArt(l.work.image, (t) => {
           l.hdLoading = false;
           prepTex(t);
           if (!l.wantHD) { t.dispose(); return; }

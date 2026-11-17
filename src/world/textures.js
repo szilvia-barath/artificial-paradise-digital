@@ -9,9 +9,20 @@ const BASE = import.meta.env.BASE_URL;
 let ktx2 = null;
 let webp = null;
 
+let ktx2Lazy = null;
+let rendererRef = null;
+
 export function initTextures(renderer, manager) {
+  rendererRef = renderer;
   ktx2 = new KTX2Loader(manager).setTranscoderPath(`${BASE}basis/`).detectSupport(renderer);
   webp = new THREE.TextureLoader(manager);
+}
+
+// A KTX2 loader outside the loading screen's count, for images that stream in while one walks
+// (switch "ktx2art", gallery.js). Made on first use, so it costs nothing while the switch is off.
+export function lazyKTX2() {
+  if (!ktx2Lazy) ktx2Lazy = new KTX2Loader().setTranscoderPath(`${BASE}basis/`).detectSupport(rendererRef);
+  return ktx2Lazy;
 }
 
 // One texture for any number of material slots, filled in when it arrives (the material

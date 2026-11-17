@@ -7,12 +7,14 @@
 //   ?render=tone          screens out of the tone mapping, dithering, FXAA on the dark rooms
 //   ?render=geoao         ambient occlusion baked from the 3D geometry in place of the plan AO
 //   ?render=probes        a light-probe grid baked from the scene in place of the hemisphere light
+//   ?render=ktx2art       the paintings' and prints' images as KTX2 UASTC (needs img/ktx2/, not in git)
 //   ?render=tone,geoao    several at once
 // Nothing is stored; the next page load without the parameter is as before.
 export const SWITCHES = {
   tone: false,
   geoao: false,
   probes: false,
+  ktx2art: false,
 };
 
 const asked = new Set(
