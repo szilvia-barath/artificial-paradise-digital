@@ -205,14 +205,16 @@ export const SURFACE_FRAG = /* glsl */ `
         // blotch: an ellipse with a ragged edge, mottled inside, a darker rim
         float d = length(q) + wob;
         s = (1.0 - smoothstep(0.6, 1.0, d)) * (0.7 + 0.3 * sFbm(n * 1.9 + 5.0));
-        s = max(s, f.z * exp(-pow((d - 0.8) / 0.07, 2.0)));
+        float rim = (d - 0.8) / 0.07;
+        s = max(s, f.z * exp(-rim * rim));
       } else if (f.x < 2.5) {
         // rising (from the bottom) or hanging (from the top) to a ragged edge, a tide line on it
         float t = f.x < 1.5 ? 0.5 * (q.y + 1.0) : 0.5 * (1.0 - q.y);
         float e = 0.72 + f.y * 0.5 * (sFbm(vec2(m.x * 4.0 + f.w * 17.3, 3.0)) - 0.5);
         float side = 1.0 - smoothstep(0.85, 1.0, abs(q.x));
         s = (1.0 - smoothstep(e - 0.3, e, t)) * (0.6 + 0.4 * sFbm(n * 1.3 + 9.0));
-        s = max(s, f.z * exp(-pow((t - e) / 0.05, 2.0))) * side;
+        float tl = (t - e) / 0.05;
+        s = max(s, f.z * exp(-tl * tl)) * side;
       } else if (f.x < 3.5) {
         // specks: one dot in some 2.5 cm cells, inside the ellipse
         vec2 cell = floor(m / 0.025);
