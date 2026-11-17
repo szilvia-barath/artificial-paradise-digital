@@ -149,6 +149,13 @@ function streetWall(z0, z1) {
   return out;
 }
 
+// The dark corridor to the toilets (DSC_0047 to DSC_0049, the plan S05 and the guide S33):
+// it opens in Room 2's south wall between the wall with the room sheet and the bar, and
+// runs south to a tiled end wall with a basin; the toilet itself is through a dark door
+// on its west side. x0/x1: its side walls, z1: its end wall, step: its floor above Room 2's,
+// ceiling: its height. Width and length measured on DSC_0047 (±0.1 m, ±0.3 m).
+export const TOILET = { x0: 6.63, x1: 7.408, z1: 7.68, step: 0.1, ceiling: 2.6 };
+
 export const BLOCKS = [
   // ---------- Room 1 ----------
   // Layout from the 360° panorama (camera solved from the corners, the four canvases of
@@ -176,8 +183,16 @@ export const BLOCKS = [
   { x0: 8.759, x1: 9.85, z0: 1.5, z1: 1.73, y0: DOOR, y1: 2.75, mat: 'warmBrick' },
   // storage alcove shell (only glimpsed through the gate)
   { x0: 5.85, x1: 10.2, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
-  // south: wall with the (closed) door to the toilets
-  { x0: 5.85, x1: 7.46, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
+  // south: the wall that carries the room sheet, then the mouth of the dark corridor to
+  // the toilets, next to the bar (TOILET); a lintel over the mouth (its height invented)
+  { x0: 5.85, x1: TOILET.x0, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.73, z1: 6.13, y0: DOOR, y1: 2.75, mat: 'warmBrick', reveal: 'dimBrick', faces: { pz: 'dimBrick' } },
+  // the corridor: whitewashed brick left in the dark, a step up at the back of the wall,
+  // the end wall (tiles, basin and mirror in props.js); not walkable, the step stops you
+  { x0: TOILET.x0 - 0.2, x1: TOILET.x0, z0: 6.13, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'dimBrick' },
+  { x0: TOILET.x1, x1: TOILET.x1 + 0.2, z0: 6.13, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'dimBrick' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: TOILET.z1, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'dimBrick' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.13, z1: 6.2, y1: TOILET.step, mat: 'darkFloor', faces: { nz: 'floor' } },
   // bar: low brick counter (you see over it from the Room 1 doorway, DSC_0021),
   // a brick pillar at its back corner and the back wall
   { x0: 7.772, x1: 9.85, z0: 4.694, z1: 5.122, y1: 1.0, mat: 'warmBrick' },
@@ -228,12 +243,16 @@ export const FLOORS = [
   { x0: 9.85, x1: 15.75, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
   { x0: 15.75, x1: 25.43, z0: 1.6, z1: 5.79, mat: 'floorDark' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
+  // the mouth of the toilet corridor, then its floor a step up
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.79, z1: 6.13, mat: 'floor' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.2, z1: TOILET.z1, mat: 'darkFloor', y: TOILET.step },
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling', hole: STAIRWELL },
   { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.13, z1: TOILET.z1, y: TOILET.ceiling, mat: 'darkCeiling' },
   { x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
 ];

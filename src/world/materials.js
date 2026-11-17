@@ -358,6 +358,11 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // the unlit space behind the curtain, where the eye gets past the cloth
     curtainShade: new THREE.MeshStandardMaterial({ color: 0x0c0c0d, roughness: 1 }),
     paper: new THREE.MeshStandardMaterial({ color: 0xf6f5f1, roughness: 0.9 }),
+    // the toilet corridor's end wall, basin and mirror, in the dark (DSC_0047): dim, so the
+    // Room 2 lights (no shadows here) do not light them up
+    toiletTile: new THREE.MeshStandardMaterial({ color: 0x5a5042, roughness: 0.45 }),
+    toiletWhite: new THREE.MeshStandardMaterial({ color: 0x77756f, roughness: 0.35 }),
+    toiletMirror: new THREE.MeshStandardMaterial({ color: 0x24262a, roughness: 0.12, metalness: 0.9 }),
   };
 }
 
