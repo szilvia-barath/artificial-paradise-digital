@@ -353,7 +353,10 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // frosted, grey-blue basement glass (the window by the stairs, close up)
     windowGlass: new THREE.MeshStandardMaterial({ color: 0x9aa1b3, emissive: 0x4a5064, roughness: 0.65 }),
     reededGlass: new THREE.MeshStandardMaterial({ color: 0xb4bac8, emissive: 0x5a6074, roughness: 0.5 }),
-    curtain: new THREE.MeshStandardMaterial({ color: 0xcdc7bb, roughness: 1, side: THREE.DoubleSide }),
+    // cream cloth, a little darker and warmer than the white plaster beside it (DSC_0127, 0128)
+    curtain: new THREE.MeshStandardMaterial({ color: 0xe2dac4, roughness: 1, side: THREE.DoubleSide }),
+    // the unlit space behind the curtain, where the eye gets past the cloth
+    curtainShade: new THREE.MeshStandardMaterial({ color: 0x0c0c0d, roughness: 1 }),
     paper: new THREE.MeshStandardMaterial({ color: 0xf6f5f1, roughness: 0.9 }),
   };
 }

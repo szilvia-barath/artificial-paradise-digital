@@ -205,6 +205,8 @@ export const BLOCKS = [
   { x0: 10.2, x1: 14.5, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'whiteBrick' },
   { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'dimBrick' },
   // closet block beside the south stub (#14 hangs on its west face)
+  // In the photographs this is a space between two thin walls, open to the north and closed
+  // there by a curtain (props.js). What is inside is not known, so the block stays solid.
   { x0: 14.5, x1: 15.6, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster' },
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
   { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: 2.9, mat: 'plaster' },

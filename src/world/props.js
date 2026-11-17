@@ -790,14 +790,45 @@ export function buildProps(materials) {
     g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
     dirtAlong(16.331, 0, 1.787, 16.331, 1.45, 1.787);
 
-    // curtain bunched at the south side of the opening between Room 3 and Room 4
-    const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);
-    const pos = cg.attributes.position;
-    for (let i = 0; i < pos.count; i++) pos.setZ(i, Math.sin(pos.getX(i) * 46) * 0.045);
-    cg.computeVertexNormals();
-    const curtain = new THREE.Mesh(cg, materials.curtain);
-    g.add(place(curtain, 15.986, 1.22, 4.362, Math.PI / 2));
-    obstacle(15.929, 16.063, 4.077, 4.666);
+    // The curtain by the opening between Room 3 and Room 4. It does not hang in the opening
+    // and does not divide the rooms: it closes the north side of the space between the two
+    // short walls south of the opening (the wall that carries #14 and the south stub), and
+    // it is drawn shut in every photograph (DSC_0064, 0069, 0097 from Room 3; DSC_0127,
+    // 0128 from Room 4). The cloth falls from the ceiling to a roll about 3 cm thick that
+    // hangs clear of the floor. No rail or rod shows in the photographs, so none is built.
+    // What is behind the cloth is not known and not built: the block in layout.js stays
+    // solid, and a dark panel on its face stands for the unlit space where the eye gets
+    // past the cloth (under the roll and at its edges). No obstacle of its own: the block
+    // behind it already stops the visitor.
+    {
+      const x0 = 14.58; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
+      const x1 = 15.6; // the west face of the south stub
+      const zc = 4.64; // 2.6 cm in front of the block's north face (z 4.666)
+      const top = 2.75; // Room 3's ceiling
+      const rollR = 0.015;
+      const clear = 0.04; // floor to the underside of the roll
+      const w = x1 - x0;
+      const y0 = clear + rollR;
+      const h = top - y0;
+      const cg = new THREE.PlaneGeometry(w, h, 64, 8);
+      const pos = cg.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const u = pos.getX(i) + w / 2;
+        const v = pos.getY(i) / h + 0.5;
+        // shallow, uneven folds every 14 cm or so, flattening over the last 20 cm, where
+        // the cloth is rolled up
+        const k = Math.min(1, v / 0.075);
+        const fold = 0.012 * Math.sin((u / 0.145) * Math.PI * 2 + 0.6) + 0.006 * Math.sin((u / 0.31) * Math.PI * 2 + 2.1);
+        pos.setZ(i, fold * k * k * (3 - 2 * k));
+      }
+      cg.computeVertexNormals();
+      g.add(place(new THREE.Mesh(cg, materials.curtain), (x0 + x1) / 2, y0 + h / 2, zc));
+      const roll = cyl(rollR, rollR, w, materials.curtain, 10);
+      roll.rotation.z = Math.PI / 2;
+      g.add(place(roll, (x0 + x1) / 2, y0, zc));
+      const shade = new THREE.Mesh(new THREE.PlaneGeometry(w, top), materials.curtainShade);
+      g.add(place(shade, (x0 + x1) / 2, top / 2, 4.662, Math.PI));
+    }
   }
 
   // ================================================================ track lights
