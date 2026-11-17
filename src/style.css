@@ -492,17 +492,19 @@ body.touch #crosshair { display: none; }
   pointer-events: auto;
   cursor: pointer;
 }
-/* The map's key, one line just under it, right-aligned with it: the two marks drawn as the
-   map draws them (5 px with a 1 px dark edge, round magenta and square cyan), then their words.
-   12 px in the HUD's muted colour on the same glass: 7.1:1 over pure white. */
+/* The map's key, just under it, right-aligned with it: its four groups in two rows of two, each
+   mark drawn as the map draws it (minimap.js: about 5 px of colour with a 1 px dark edge; round,
+   square, triangle, diamond), then its word. 12 px in the HUD's muted colour on the same glass:
+   7.1:1 over pure white. */
 #map-key {
   position: absolute;
   right: calc(14px + var(--safe-r));
   top: calc(var(--nav-h) + 8px + 150px + 4px);
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 12px;
+  row-gap: 2px;
   padding: 3px 8px;
   white-space: nowrap;
   font-family: var(--sans);
@@ -515,9 +517,8 @@ body.touch #crosshair { display: none; }
   border-radius: 8px;
   pointer-events: none;
 }
-#map-key .mk { flex: none; width: 5px; height: 5px; border: 1px solid rgba(11, 12, 14, 0.9); box-sizing: content-box; }
-#map-key .mk-other { background: var(--accent-2); border-radius: 50%; margin-left: 6px; }
-#map-key .mk-video { background: var(--cyan); }
+#map-key .mk-item { display: flex; align-items: center; gap: 4px; }
+#map-key .mk { flex: none; width: 10px; height: 10px; overflow: visible; }
 #toolbar {
   position: absolute;
   left: 50%;

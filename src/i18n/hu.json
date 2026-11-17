@@ -71,8 +71,10 @@
       "promptTextKey": "Enter: a kiállítási szöveg elolvasása",
       "minimapHere": "Alaprajz. Jelenlegi hely: {room}",
       "mapKey": {
+        "paintings": "Festmények",
         "videos": "Videók",
-        "other": "A többi mű"
+        "installations": "Installációk",
+        "other": "Egyéb művek"
       },
       "touchHint": "Húzás: körülnézés · a kar nyomva tartása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés",
       "tourAt": "{at} / {total} · {no}. mű · {title}",

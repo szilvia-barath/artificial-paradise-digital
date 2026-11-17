@@ -58,22 +58,36 @@ const boxes = (p, sels) => p.evaluate((list) => Object.fromEntries(list.map((s) 
 })), sels);
 const show = (b) => (b ? `${Math.round(b.x)},${Math.round(b.y)} ${Math.round(b.w)}×${Math.round(b.h)}` : 'not shown');
 
-// ---------------- A4: the floor plan's key, one line under the map
+// ---------------- A4: the floor plan's key, under the map: four groups of works in two rows
+const GROUPS = ['paintings', 'videos', 'installations', 'other'];
+const keyWords = (l) => GROUPS.map((g) => UI[l].hud.mapKey[g]).join('|');
 const keyInfo = (p) => p.evaluate(() => {
   const k = document.getElementById('map-key');
-  if (!k) return { text: [], other: {}, video: {}, color: 'rgb(0,0,0)', glass: 'rgb(0,0,0)', missing: true };
+  if (!k) return { text: [], marks: [], rows: 0, color: 'rgb(0,0,0)', glass: 'rgb(0,0,0)', missing: true };
   const cs = getComputedStyle(k);
   const r = k.getBoundingClientRect();
   const m = document.getElementById('minimap').getBoundingClientRect();
-  const mark = (sel) => { const e = k.querySelector(sel); const s = getComputedStyle(e); const b = e.getBoundingClientRect(); return { bg: s.backgroundColor, edge: s.borderTopColor, edgeW: s.borderTopWidth, round: s.borderTopLeftRadius === '50%', w: b.width, h: b.height }; };
+  const words = [...k.querySelectorAll('[data-i18n]')];
+  // each mark: the group it names, its shape, colour and edge, and its size on screen
+  const marks = [...k.querySelectorAll('svg[data-group]')].map((svg) => {
+    const path = svg.querySelector('path');
+    const b = (path || svg).getBoundingClientRect();
+    return { group: svg.dataset.group, shape: svg.dataset.shape, fill: path?.getAttribute('fill'), edge: path?.getAttribute('stroke'), edgeW: path?.getAttribute('stroke-width'), order: path?.getAttribute('paint-order'), w: Math.round(b.width * 10) / 10, h: Math.round(b.height * 10) / 10 };
+  });
   return {
-    text: [...k.querySelectorAll('[data-i18n]')].map((e) => e.textContent),
+    text: words.map((e) => e.textContent),
     hidden: k.getAttribute('aria-hidden'),
     font: parseFloat(cs.fontSize), color: cs.color, glass: cs.backgroundColor,
-    lines: Math.round((r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth)) / parseFloat(cs.lineHeight)),
+    // rows: the words' distinct lines; a word broken over two lines adds one
+    rows: new Set(words.map((e) => Math.round(e.getBoundingClientRect().top))).size + words.filter((e) => e.getClientRects().length > 1).length,
     under: Math.round(r.top - m.bottom), leftOf: Math.round(m.left - r.right), topLevel: Math.round(r.top - m.top), rightEdge: Math.round(m.right - r.right), inWindow: r.left >= 0 && r.right <= innerWidth,
-    other: mark('.mk-other'), video: mark('.mk-video'),
+    marks,
   };
+});
+// the groups as the map draws them (minimap.js, read through the page's debug handle)
+const mapGroups = (p) => p.evaluate(() => {
+  const mm = window.__ap.minimap;
+  return { groups: mm.groups.map((g) => ({ ...g })), works: window.__ap.data.works.map((w) => ({ id: w.id, no: w.no, type: w.type, group: mm.groupOf(w.type).id, pin: !!w._pin })) };
 });
 {
   const w = await inside('en');
@@ -81,20 +95,33 @@ const keyInfo = (p) => p.evaluate(() => {
   await p.waitForFunction(() => document.getElementById('map-key')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});
   const k = await keyInfo(p);
   const c = worst(k.color, k.glass);
-  const marks = k.other.round && !k.video.round && k.other.bg === 'rgb(255, 79, 163)' && k.video.bg === 'rgb(95, 231, 255)' && [k.other, k.video].every((x) => x.edgeW === '1px' && x.edge === 'rgba(11, 12, 14, 0.9)' && Math.round(x.w) === 7 && Math.round(x.h) === 7);
-  step(`A4.1 Desktop: the key is one line just under the map, "${UI.en.hud.mapKey.videos}" and "${UI.en.hud.mapKey.other}", at least 11 px, 4.5:1 at worst; its marks are drawn as on the map (7 px with a dark edge, square cyan for videos, round magenta for the other works)`, k.text.join('|') === `${UI.en.hud.mapKey.videos}|${UI.en.hud.mapKey.other}` && k.lines === 1 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.lines} line, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify({ other: k.other, video: k.video })}; aria-hidden ${k.hidden}`);
-  // the key's marks have the map's own colours and edge: those minimap.js draws with, read from
-  // it, against the key's colours as the page shows them (fails if the key is missing or drifts)
-  const src = readFileSync('src/ui/minimap.js', 'utf8');
-  const fill = src.match(/video \? '(#[0-9a-f]{6})' : '(#[0-9a-f]{6})'/i);
-  const edge = src.match(/\[3\.5, '(rgba\([^']+\))'\]/);
-  const rgb = (h) => `rgb(${[1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(', ')})`;
-  const flat = (c) => (c || '').replace(/\s/g, '');
-  const same = !!fill && !!edge && !k.missing && k.video.bg === rgb(fill[1]) && k.other.bg === rgb(fill[2]) && [k.video, k.other].every((x) => flat(x.edge) === flat(edge[1]));
-  step('A4.2 The key\'s marks have the map\'s own colours and edge, as minimap.js draws them (videos, the other works, the dark edge)', same, `minimap.js: ${fill ? `${fill[1]}, ${fill[2]}` : '(not found)'}, edge ${edge ? edge[1] : '(not found)'}; the key: video ${k.video.bg}, other ${k.other.bg}, edges ${k.video.edge} / ${k.other.edge}`);
+  const { groups, works } = await mapGroups(p);
+  // four marks, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), 6 to 9 px across
+  const marks = k.marks.length === 4 && new Set(k.marks.map((x) => x.shape)).size === 4 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 6 && x.w <= 9 && x.h >= 6 && x.h <= 9);
+  step(`A4.1 Desktop: the key is just under the map, right-aligned with it, in two rows: "${keyWords('en').replaceAll('|', '", "')}", at least 11 px, 4.5:1 at worst; four marks of four shapes, each with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en') && k.rows === 2 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shape, w: mw, h }) => ({ group, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
+  // the key's marks are the map's own: the same shape, colour and edge as minimap.js draws each
+  // group with (read from the page; fails if the key is missing or drifts from the map)
+  const same = !k.missing && GROUPS.every((g, i) => {
+    const m = k.marks[i];
+    const d = groups.find((x) => x.id === g);
+    return m && d && m.group === g && m.shape === d.shape && m.fill === d.colour && (m.edge || '').replace(/\s/g, '') === 'rgba(11,12,14,0.9)';
+  });
+  step("A4.2 The key's marks are the map's own, group by group: the same shape and colour as minimap.js draws, and the same dark edge", same, `minimap.js: ${groups.map((g) => `${g.id} ${g.shape} ${g.colour}`).join('; ')}; the key: ${k.marks.map((m) => `${m.group} ${m.shape} ${m.fill} edge ${m.edge}`).join('; ')}`);
+  // every work is in its group by its type in exhibition.json
+  const want = { painting: 'paintings', video: 'videos', projection: 'videos', installation: 'installations' };
+  const placed = works.every((x) => x.pin && x.group === (want[x.type] || 'other'));
+  const byGroup = Object.fromEntries(GROUPS.map((g) => [g, works.filter((x) => x.group === g).map((x) => x.id)]));
+  step('A4.6 Each work has a mark on the map in its group by its type in exhibition.json (painting: Paintings; video: Videos; installation: Installations; any other type, the prints: Other works)', placed, `${JSON.stringify(byGroup)}; works without a mark: ${works.filter((x) => !x.pin).map((x) => x.id).join(', ') || 'none'}`);
+  // each mark's colour against the map's glass over pure white (the worst case) and over black
+  const markC = groups.map((g) => {
+    const hex = [1, 3, 5].map((i) => parseInt(g.colour.slice(i, i + 2), 16));
+    const [white, black] = [[255, 255, 255], [0, 0, 0]].map((under) => ratio(hex, over(rgba(k.glass), under)));
+    return { id: g.id, colour: g.colour, white: +white.toFixed(2), black: +black.toFixed(2) };
+  });
+  step('A4.7 Every mark is 3:1 or more against the map\'s glass, over pure white and over black', markC.every((x) => x.white >= 3 && x.black >= 3), JSON.stringify(markC));
   await switchTo(p, 'hu');
   const kh = await keyInfo(p);
-  step(`A4.3 Switched to Hungarian: "${UI.hu.hud.mapKey.videos}", "${UI.hu.hud.mapKey.other}", still one line`, kh.text.join('|') === `${UI.hu.hud.mapKey.videos}|${UI.hu.hud.mapKey.other}` && kh.lines === 1 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.lines} line`);
+  step(`A4.3 Switched to Hungarian: "${keyWords('hu').replaceAll('|', '", "')}", still two rows`, kh.text.join('|') === keyWords('hu') && kh.rows === 2 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#click-to-look', '#prompt', '#zoom-level']);
   step('A4.4 Desktop, Hungarian: the key lies over none of the map, the room label and the hint in the middle', !meets(b['#map-key'], b['#minimap']) && !meets(b['#map-key'], b['#room-label']) && !meets(b['#map-key'], b['#click-to-look']), Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; '));
   errors.push(...w.errors);
@@ -112,7 +139,7 @@ for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, '
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look']);
   const clear = ['#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look'].every((s) => !meets(b['#map-key'], b[s])) && !meets(b['#click-to-look'], b['#minimap']);
-  step(`A4.5 ${name}: the key shows, one line ${beside ? 'at the left of the map, level with its top' : 'under the map'}, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.lines === 1 && k.inWindow && (beside ? k.leftOf >= 0 && k.leftOf <= 8 && Math.abs(k.topLevel) <= 2 : k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.lines} line, ${beside ? `${k.leftOf} px left of the map, top ${k.topLevel} px from its top` : `${k.under} px under the map`}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`A4.5 ${name}: the key shows, in two rows ${beside ? 'at the left of the map, level with its top' : 'under the map'}, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.rows === 2 && k.inWindow && (beside ? k.leftOf >= 0 && k.leftOf <= 8 && Math.abs(k.topLevel) <= 2 : k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.rows} rows, ${beside ? `${k.leftOf} px left of the map, top ${k.topLevel} px from its top` : `${k.under} px under the map`}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
