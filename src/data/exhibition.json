@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'photo' names the installation photograph that shows the work in place (the photographer's file name; the photographs are not in this repository); for a work without a 'situ' list, its in-situ view (the image's '-situ' file) was cut from it. Where the images a work shows were cut from other photographs, 'imageSources' names the file each image comes from, as in scripts/crops.json (\"repro\"); there 'photo' is a reference only and no image on the site is cut from it. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'photo' names the installation photograph that shows the work in place (the photographer's file name; the photographs are not in this repository); for a work without a 'situ' list, its in-situ view (the image's '-situ' file) was cut from it. Where the images a work shows were cut from other photographs, 'imageSources' names the file each image comes from, as in scripts/crops.json (\"repro\"); there 'photo' is a reference only and no image on the site is cut from it. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop. 'rights' is the work's rights statement ('uri', from rightsstatements.org) and its credit line, both from the Google Sheet 'works' (rights_statement, rights_holder): it covers the work only; the installation photographs and the documentation videos are credited apart (© Kristóf Szabó, see NOTICE). 'reconstruction' says how the work was reconstructed, from the paradata (src/data/paradata.json, a copy of the Google Sheet 'paradata', tab paradata_3): 'aspects' lists every paradata row that names the work, with the row's id, element and status as the Sheet gives them (measured, inferred, invented, not recorded); 'status' is filled in only when all the aspects have the same status, otherwise it is empty and 'note' says which aspects have which status. scripts/paradata-import.mjs writes 'reconstruction'; nothing in it is filled in by hand.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Baráth",
@@ -36,6 +36,41 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d25); invented (ap-d22); measured (ap-d23, ap-d24).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          }
+        ]
       }
     },
     {
@@ -64,6 +99,51 @@
       "link": {
         "en": "https://kristoflab.com/en/human-as-error-2/",
         "hu": "https://kristoflab.com/human-as-error/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d25, ap-d55); invented (ap-d22); measured (ap-d23, ap-d24, ap-d64).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d55",
+            "aspect": "Start position",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d64",
+            "aspect": "Human as Error: age of life",
+            "status": "measured"
+          }
+        ]
       }
     },
     {
@@ -97,7 +177,57 @@
       "video": {
         "viewer": "video/w03-documentation.mp4"
       },
-      "size": "250 × 250 cm"
+      "size": "250 × 250 cm",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d38, ap-d39); measured (ap-d23, ap-d32, ap-d34, ap-d37, ap-d52).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d32",
+            "aspect": "Years of two installations",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d34",
+            "aspect": "Paradise Factory: one work",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d37",
+            "aspect": "Paradise Factory: plant and rack",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d38",
+            "aspect": "Paradise Factory: channel",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d39",
+            "aspect": "Paradise Factory: details",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d52",
+            "aspect": "Videos: silent works",
+            "status": "measured"
+          }
+        ]
+      }
     },
     {
       "id": "w03-screen",
@@ -132,7 +262,52 @@
       },
       "desc": "paradise-factory",
       "monitor": "img/monitor-frame",
-      "mediaAspect": 0.8313
+      "mediaAspect": 0.8313,
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d26, ap-d35, ap-d36); invented (ap-d22); measured (ap-d23, ap-d34).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d34",
+            "aspect": "Paradise Factory: one work",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d35",
+            "aspect": "Paradise Factory: monitor",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d36",
+            "aspect": "Paradise Factory: monitor footage",
+            "status": "inferred"
+          }
+        ]
+      }
     },
     {
       "id": "w04-human-as-error-iii",
@@ -156,6 +331,46 @@
       "link": {
         "en": "https://kristoflab.com/en/human-as-error-2/",
         "hu": "https://kristoflab.com/human-as-error/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d25); invented (ap-d22); measured (ap-d23, ap-d24, ap-d64).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d64",
+            "aspect": "Human as Error: age of life",
+            "status": "measured"
+          }
+        ]
       }
     },
     {
@@ -180,6 +395,46 @@
       "link": {
         "en": "https://kristoflab.com/en/human-as-error-2/",
         "hu": "https://kristoflab.com/human-as-error/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d08, ap-d25); invented (ap-d22); measured (ap-d23, ap-d24, ap-d64).",
+        "aspects": [
+          {
+            "id": "ap-d08",
+            "aspect": "Room 1 arrangement",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d64",
+            "aspect": "Human as Error: age of life",
+            "status": "measured"
+          }
+        ]
       }
     },
     {
@@ -209,7 +464,57 @@
         ],
         "sound": true
       },
-      "desc": "artificial-paradise-videos"
+      "desc": "artificial-paradise-videos",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22, ap-d53, ap-d77); measured (ap-d23, ap-d33, ap-d51); inferred (ap-d26); not recorded (ap-d27).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d27",
+            "aspect": "Screens: size",
+            "status": "not recorded"
+          },
+          {
+            "id": "ap-d33",
+            "aspect": "Room 2 videos: titles",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d51",
+            "aspect": "Videos: own sound",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d53",
+            "aspect": "Sound: placing",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d77",
+            "aspect": "Sound: echo on the videos' sound",
+            "status": "invented"
+          }
+        ]
+      }
     },
     {
       "id": "w07-artificial-paradise-eden-project",
@@ -242,7 +547,57 @@
         ],
         "sound": true
       },
-      "desc": "artificial-paradise-videos"
+      "desc": "artificial-paradise-videos",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22, ap-d53, ap-d77); measured (ap-d23, ap-d33, ap-d51); inferred (ap-d26); not recorded (ap-d27).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d27",
+            "aspect": "Screens: size",
+            "status": "not recorded"
+          },
+          {
+            "id": "ap-d33",
+            "aspect": "Room 2 videos: titles",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d51",
+            "aspect": "Videos: own sound",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d53",
+            "aspect": "Sound: placing",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d77",
+            "aspect": "Sound: echo on the videos' sound",
+            "status": "invented"
+          }
+        ]
+      }
     },
     {
       "id": "w08-wiena-wrong-landscape-i",
@@ -276,6 +631,51 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d52); inferred (ap-d26, ap-d28, ap-d29); not recorded (ap-d27).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d27",
+            "aspect": "Screens: size",
+            "status": "not recorded"
+          },
+          {
+            "id": "ap-d28",
+            "aspect": "Wiena videos: display",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d29",
+            "aspect": "Wiena videos: which is which",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d52",
+            "aspect": "Videos: silent works",
+            "status": "measured"
+          }
+        ]
       }
     },
     {
@@ -300,6 +700,36 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d25).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          }
+        ]
       }
     },
     {
@@ -324,6 +754,36 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d25).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          }
+        ]
       }
     },
     {
@@ -344,7 +804,37 @@
         "w": 0.5,
         "h": 0.5
       },
-      "desc": "artificial-paradise-prints"
+      "desc": "artificial-paradise-prints",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d26).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          }
+        ]
+      }
     },
     {
       "id": "w12-artificial-paradise-ii-print",
@@ -364,7 +854,37 @@
         "w": 0.5,
         "h": 0.5
       },
-      "desc": "artificial-paradise-prints"
+      "desc": "artificial-paradise-prints",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d26).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          }
+        ]
+      }
     },
     {
       "id": "w13-artificial-paradise-iii-print",
@@ -384,7 +904,37 @@
         "w": 0.5,
         "h": 0.5
       },
-      "desc": "artificial-paradise-prints"
+      "desc": "artificial-paradise-prints",
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d26).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          }
+        ]
+      }
     },
     {
       "id": "w14-warsaw-g24-ii",
@@ -408,6 +958,36 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d24); inferred (ap-d25).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d24",
+            "aspect": "Paintings and prints: images",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d25",
+            "aspect": "Paintings: hanging height",
+            "status": "inferred"
+          }
+        ]
       }
     },
     {
@@ -442,6 +1022,56 @@
       "link": {
         "en": "https://kristoflab.com/en/wrong-data-series-2/",
         "hu": "https://kristoflab.com/wrong-data-series/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22); measured (ap-d23, ap-d52); inferred (ap-d26, ap-d28, ap-d29, ap-d62); not recorded (ap-d27).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d27",
+            "aspect": "Screens: size",
+            "status": "not recorded"
+          },
+          {
+            "id": "ap-d28",
+            "aspect": "Wiena videos: display",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d29",
+            "aspect": "Wiena videos: which is which",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d52",
+            "aspect": "Videos: silent works",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d62",
+            "aspect": "Landscape text at no. 15",
+            "status": "inferred"
+          }
+        ]
       }
     },
     {
@@ -480,6 +1110,116 @@
       "link": {
         "en": "https://kristoflab.com/en/let-it-flow-2024/",
         "hu": "https://kristoflab.com/let-it-flow-hu/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: inferred (ap-d15, ap-d40, ap-d41, ap-d42, ap-d43, ap-d44, ap-d45, ap-d46); measured (ap-d23, ap-d32, ap-d48, ap-d49, ap-d50, ap-d51, ap-d52, ap-d79); invented (ap-d47, ap-d53, ap-d77, ap-d81).",
+        "aspects": [
+          {
+            "id": "ap-d15",
+            "aspect": "Room 4 end wall",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d32",
+            "aspect": "Years of two installations",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d40",
+            "aspect": "Let it Flow: camera check",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d41",
+            "aspect": "Let it Flow: wall projection size",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d42",
+            "aspect": "Let it Flow: wall projection brightness",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d43",
+            "aspect": "Let it Flow: river outline",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d44",
+            "aspect": "Let it Flow: river relief",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d45",
+            "aspect": "Let it Flow: floor projection",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d46",
+            "aspect": "Let it Flow: lighting of the river",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d47",
+            "aspect": "Let it Flow: floor beside the projection",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d48",
+            "aspect": "Videos: loops",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d49",
+            "aspect": "Siluett: loop",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d50",
+            "aspect": "Floor video: tone",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d51",
+            "aspect": "Videos: own sound",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d52",
+            "aspect": "Videos: silent works",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d53",
+            "aspect": "Sound: placing",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d77",
+            "aspect": "Sound: echo on the videos' sound",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d79",
+            "aspect": "Let it Flow: loudness of the wall projection",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d81",
+            "aspect": "Generative projection (removed)",
+            "status": "invented"
+          }
+        ]
       }
     },
     {
@@ -513,6 +1253,56 @@
       "link": {
         "en": "https://kristoflab.com/en/let-it-flow-2024/",
         "hu": "https://kristoflab.com/let-it-flow-hu/"
+      },
+      "rights": {
+        "uri": "http://rightsstatements.org/vocab/InC/1.0/",
+        "credit": "© Kristóf Szabó / KristofLab"
+      },
+      "reconstruction": {
+        "status": "",
+        "note": "paradata_3 gives a status per aspect, not one for the work: invented (ap-d22, ap-d53, ap-d77); measured (ap-d23, ap-d51); inferred (ap-d26, ap-d63); not recorded (ap-d27).",
+        "aspects": [
+          {
+            "id": "ap-d22",
+            "aspect": "Lighting on the works",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d23",
+            "aspect": "Works: titles, media, sizes, years",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d26",
+            "aspect": "Prints and screens: hanging height",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d27",
+            "aspect": "Screens: size",
+            "status": "not recorded"
+          },
+          {
+            "id": "ap-d51",
+            "aspect": "Videos: own sound",
+            "status": "measured"
+          },
+          {
+            "id": "ap-d53",
+            "aspect": "Sound: placing",
+            "status": "invented"
+          },
+          {
+            "id": "ap-d63",
+            "aspect": "Natural Life and Let it Flow",
+            "status": "inferred"
+          },
+          {
+            "id": "ap-d77",
+            "aspect": "Sound: echo on the videos' sound",
+            "status": "invented"
+          }
+        ]
       }
     }
   ],
