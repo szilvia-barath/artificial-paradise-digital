@@ -1,5 +1,6 @@
 import { t, titleLang } from '../i18n.js';
 import { focusDialog, shown } from './dialog.js';
+import { readAloudButton } from './readAloud.js';
 
 // About / Works / Behind-the-scenes panels and the "jump to room" menu.
 
@@ -19,6 +20,10 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // Focus goes to the Close button on opening and back to the opener on closing.
   const dialog = focusDialog(panel, { initial: () => closeBtn, fallback: focusFallback });
   let current = null;
+  // Read aloud (readAloud.js): reads the panel's text as it shows, a closed fold left out.
+  // It sits after Close, so Tab reaches it next; none where the browser cannot speak.
+  const reader = readAloudButton(() => body.innerText);
+  if (reader) closeBtn.after(reader.button);
 
   const aboutHTML = () => {
     const m = data.meta;
@@ -165,6 +170,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // opts.work: the works list opens with focus on that work's row, scrolled into view.
   const show = (name, opts = {}) => {
     const wasOpen = !panel.hidden;
+    reader?.stop(); // another text: the reading of the old one stops
     current = name;
     body.innerHTML = PAGES[name]();
     panel.hidden = false;
@@ -181,6 +187,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // refocus false: focus is not handed back (a work opened from the list takes it).
   const close = ({ refocus = true } = {}) => {
     if (panel.hidden) return;
+    reader?.stop();
     panel.hidden = true;
     current = null;
     markNav();

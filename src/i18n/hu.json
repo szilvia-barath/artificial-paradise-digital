@@ -215,6 +215,19 @@
       "tourWork": "{no}. mű, {title}. {meta}.",
       "tourStopped": "A tárlatvezetés leállt.",
       "viewerWork": "{title}. {no}. mű a {total} közül."
+    },
+    "readAloud": {
+      "start": "Felolvasás",
+      "stop": "Felolvasás leállítása",
+      "noVoice": "Felolvasás: ezen az eszközön nincs {language} hang",
+      "noVoiceSaid": "A felolvasás nem lehetséges: ezen az eszközön nincs {language} hang.",
+      "started": "A felolvasás elindult.",
+      "stopped": "A felolvasás leállt.",
+      "done": "A felolvasás véget ért.",
+      "lang": {
+        "en": "angol",
+        "hu": "magyar"
+      }
     }
   },
   "meta": {
@@ -554,7 +567,8 @@
           "Ha a rendszerben be van kapcsolva a csökkentett mozgás, a digitális kiállításban nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés megállóról megállóra ugrik, a mozgásbillentyűk alatti kis egér és az alaprajzon a látogatót jelző pont pedig nem mozdul. A beállítás nélkül is csak egy pillanatra mozognak: az egér háromszor görget, a pont pedig egy ugrás után 3 másodpercig nő és zsugorodik. A betöltőképernyő mindenkinek állókép.",
           "A 3D nézet fölött a felső sáv és a lábléc sötét sávon, a terem neve, az alaprajz, az eszköztár, a teremmenü, a billentyűk és a feliratok sötét, áttetsző alapon állnak. A legvilágosabb fal, az 1. terem fehér téglafala előtt készült képernyőképeken a felső sáv, a lábléc, a terem neve, az eszköztár, a billentyűk és az alaprajz számainak kontrasztját legalább 5,1:1-nek mértem. A teremmenü címlistájának kontrasztját a színeiből számoltam ki: tiszta fehér fölött is 7,43:1, az egérmutató alatti sorban 5,43:1. Az alaprajz alatti jelmagyarázat kontrasztját a színeiből számoltam ki: tiszta fehér fölött is 7,16:1. A kezelőfelület kiemelőszíne világoskék: a színeiből számolva a sötét, áttetsző alapon tiszta fehér fölött is legalább 5,76:1. Egyetlen állapotot sem jelez csak a szín: az eszköztár lenyomott gombja körül szegély, alatta pedig egy sáv is megjelenik, a teremmenüben és az alaprajzon pedig félkövér az a terem, ahol a látogató éppen van.",
           "Érintőképernyőn a kart nyomva tartva azonnal el lehet indulni, húzni nem kell, mellette pedig két gomb, a ← és a →, fordít. Fektetett telefonon a műnéző egymás mellett mutatja a művet és a szövegét. Érintőképernyőn a felső sáv és menüje, az eszköztár, a teremmenü, a panelek, a hangra vonatkozó kérdés és a műnéző gombjai legalább 44 × 44 képpontosak. A lábléc hivatkozásai legfeljebb 760 képpont széles ablakban 24 képpont magasak. A nyitóképernyő, a panelek és a műnéző csippentéssel nagyíthatók, a 3D nézet pedig megtartja a saját mozdulatait: húzással körül lehet nézni, csippentéssel a nézetet lehet nagyítani. Mindkettőt Chromium telefonemulációjában ellenőriztem, valódi telefonon nem.",
-          "Nagyon kicsi ablakban, például 400%-ra nagyított oldalon (1280 × 1024-es képernyőn 320 × 256 képpont), a 3D nézet fölötti vezérlők kevesebb helyet foglalnak: az eszköztár alul, a terem neve és a nagyítás kijelzője felül áll, a képernyőn megjelenő billentyűk, az alaprajz és a lábléc pedig elmaradnak; a lábléc hivatkozásai és a Súgó a menüben vannak. Semmi sem takar mást, és a Tab minden vezérlőt az ablakon belül ér el."
+          "Nagyon kicsi ablakban, például 400%-ra nagyított oldalon (1280 × 1024-es képernyőn 320 × 256 képpont), a 3D nézet fölötti vezérlők kevesebb helyet foglalnak: az eszköztár alul, a terem neve és a nagyítás kijelzője felül áll, a képernyőn megjelenő billentyűk, az alaprajz és a lábléc pedig elmaradnak; a lábléc hivatkozásai és a Súgó a menüben vannak. Semmi sem takar mást, és a Tab minden vezérlőt az ablakon belül ér el.",
+          "A panelekben és a műnézőben Felolvasás gomb van. A böngésző beszédszintézisével, az eszközre telepített hanggal olvassa fel a szövegüket az oldal nyelvén: semmi nem kerül el sehova, és semmi nem tárolódik. Ha az eszközön nincs hang az adott nyelvhez, a gomb ezt kiírja."
         ]
       },
       {

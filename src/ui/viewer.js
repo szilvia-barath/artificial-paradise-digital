@@ -1,6 +1,7 @@
 import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
+import { readAloudButton } from './readAloud.js';
 import { isPart } from '../world/route.js';
 
 // Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
@@ -43,6 +44,13 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let index = -1;
   let situ = 0; // 0 = the work, n = its nth installation photo
   let full = -1; // index of the full video shown from Drive, -1 = none
+
+  // Read aloud (readAloud.js): the text column's words about the work, from the room line to
+  // the artist's text (not the buttons, the link or the folded exhibition text). It stands
+  // under the title; none where the browser cannot speak.
+  const readParts = () => [room, title, meta, caption, ...el.querySelectorAll('[data-read]')];
+  const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => n.innerText).join('\n'));
+  if (reader) title.after(reader.button);
 
   const renderText = () => {
     text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="note">${esc(data.textCredit)}</p>`;
@@ -199,6 +207,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     if (el.hidden) return;
     // a work stepped to just before closing and not yet said is no longer on screen
     unannounce('viewer');
+    reader?.stop();
     const ret = toList ? back : null;
     back = null;
     el.hidden = true;
@@ -212,6 +221,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   // The new work is said on its own topic of the live region, so a room or a work in the
   // 3D view said at the same moment does not take its place.
   const step = (d) => {
+    reader?.stop(); // the next work's text replaces the one being read
     index = works.indexOf(seq[(seqAt(works[index]) + d + seq.length) % seq.length]);
     situ = 0;
     full = -1;
