@@ -668,7 +668,8 @@ export function buildProps(materials) {
 
   // ================================================================ Room 4
   {
-    // ceiling-hung projector for Let it Flow
+    // ceiling-hung projector at the west end of the ceiling conduit: the wall projection's
+    // (Siluett on the end wall), inferred; the floor projector is on the north wall (below)
     const proj = new THREE.Group();
     proj.add(place(box(0.36, 0.13, 0.3, materials.black), 0, 2.38, 0));
     proj.add(place(cyl(0.02, 0.02, 0.45, materials.black, 6), 0, 2.66, 0));
@@ -706,11 +707,20 @@ export function buildProps(materials) {
       dirtAlong(20.305, 1.0, z, 20.305, 2.9, z);
       dirtAlong(20.976, 2.0, z, 20.976, 2.9, z);
     }
-    // small black box with a light and a round camera high on the north wall, right of the
-    // drains (DSC_0109, DSC_0111), just west of recess A's west arris (DSC_0112, 04-03)
-    g.add(place(box(0.11, 0.24, 0.1, materials.black), 21.8, 2.28, 1.79));
-    g.add(place(box(0.04, 0.03, 0.04, materials.led), 21.82, 2.42, 1.8));
-    g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), materials.black), 21.66, 2.15, 1.77));
+    // Let it Flow's floor projector, high on the north wall just under the big pipe, above
+    // Natural Life and at recess A's west arris (DSC_0108 to DSC_0112, 04-03). Until 17 November
+    // 2026 this was read as "a small black box with a light and a round camera"; the full-size
+    // photographs show a projector body standing on end (vents and a lit indicator on its
+    // side, light at its top) on a wall arm whose round plate was the "camera". Body and arm as
+    // photographed (size ±3 cm, place ±0.15 m along the wall); its lens is taken at the light
+    // at its top (scripts/fit_projector.mjs, POS). Which way the lens faces is not seen: the
+    // aim is fitted (letItFlow.js), the body is not turned to it.
+    g.add(place(box(0.12, 0.42, 0.17, materials.black), 21.82, 2.18, 1.86));
+    g.add(place(box(0.05, 0.025, 0.04, materials.led), 21.84, 2.375, 1.92));
+    const plate = cyl(0.06, 0.06, 0.02, materials.black, 14);
+    plate.rotation.x = Math.PI / 2;
+    g.add(place(plate, 21.66, 2.15, 1.74));
+    g.add(rod(materials.black, new THREE.Vector3(21.66, 2.15, 1.75), new THREE.Vector3(21.78, 2.2, 1.8), 0.015, 8));
     // a round pipe standing on recess A's sill against its east jamb, rising behind the big
     // pipe (DSC_0112, 04-03, w16-documentation.mp4 00:00); how far it stands from the back is
     // invented. Its top is hidden in every photograph: it runs on up into the wall over the
