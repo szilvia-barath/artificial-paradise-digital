@@ -22,7 +22,8 @@ export const dirtAlong = (ax, ay, az, bx, by, bz) => PIPES.push([ax, ay, az, bx,
 // (an ellipse filling the box), 'rising' (from the bottom of the box up to a ragged edge),
 // 'hanging' (the same from the top down), 'specks' (scattered dots), 'marks' (streaky
 // patches). tint multiplies the wall colour (ratios read off the photo against clean wall
-// beside the stain); edge is how ragged the outline is, tide how dark its rim. Only room
+// beside the stain); edge is how ragged the outline is (for specks, the share of 2.5 cm cells
+// that hold a dot), tide how dark its rim. Only room
 // walls and ceilings take them (the materials ao.js patches), never floors.
 const MAX_STAINS = 16;
 const KIND = { blotch: 0, rising: 1, hanging: 2, specks: 3, marks: 4 };
@@ -59,6 +60,9 @@ export const PHOTO_STAINS = [
   // Room 3: a white chip in the grey paint of the north wall's pier, under #8's west edge
   // (DSC_0088; against the screen's corner and the pier's arris)
   { box: [11.82, 0.8, 1.7, 11.9, 0.88, 1.76], kind: 'blotch', tint: [2.2, 2.2, 2.05], strength: 1, edge: 0.6, tide: 0, seed: 12 },
+  // Room 4: dark specks high on the south wall's west end (z 5.73) (DSC_0125, also 0123,
+  // 0124; height against the corner's wall height, along the wall only roughly, ±0.5 m)
+  { box: [16.3, 1.75, 5.7, 17.5, 2.25, 5.76], kind: 'specks', tint: [0.35, 0.33, 0.3], strength: 1, edge: 0.12, tide: 0, seed: 13 },
 ];
 const STAIN_COUNT = Math.min(PHOTO_STAINS.length, MAX_STAINS);
 
