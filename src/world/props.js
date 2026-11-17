@@ -714,14 +714,15 @@ export function buildProps(materials) {
     // a round pipe standing on recess A's sill against its east jamb, rising behind the big
     // pipe (DSC_0112, 04-03, w16-documentation.mp4 00:00); how far it stands from the back is
     // invented. Its top is hidden in every photograph: it runs on up into the wall over the
-    // recess (from 2.75 m), so no open end shows (inferred)
-    g.add(place(cyl(0.04, 0.04, 2.78 - 0.95, pipeMat, 10), 22.72, (2.78 + 0.95) / 2, 1.67));
+    // recess (from the vault's springing, 2.92 m), so no open end shows (inferred)
+    g.add(place(cyl(0.04, 0.04, 2.95 - 0.95, pipeMat, 10), 22.72, (2.95 + 0.95) / 2, 1.67));
     // the pale pipe with collars above the projection, and the dark one along the top of the
     // north wall. This comment named "DSC_0113; height and thickness from the 4 m wall's
     // scale" as the source of both. By the reconstructor's account (PROGRESS.md, note of 15
     // November 2026) the pale pipe was built from her written descriptions; it is now measured
     // on DSC_0113 (below). How the dark one's height and thickness were found is not
-    // recorded; DSC_0112 gives 2.40 to 2.57 m against its 2.46 to 2.66 here (not changed yet)
+    // recorded; it was at 2.46 to 2.66 m. Now 2.40 to 2.57 m (axis 2.485, Ø 0.17), as DSC_0112
+    // gives (decision log, 17 November 2026)
     const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
     // the pipe over the projection is white paint; the projector lights it (DSC_0113–0114)
     const endPipe = new THREE.MeshStandardMaterial({ color: 0x8e8a83, roughness: 0.6 });
@@ -732,7 +733,7 @@ export function buildProps(materials) {
     };
     // Measured on DSC_0113 (4 m wall, 652 px/m), DSC_0116 (brick courses) and mamu.jpg (2013),
     // see the decision log, 15 November 2026: Ø 0.16 m, axis 2.58 m (0.88 to 0.90 of the end
-    // wall's height in the photographs; the model's end wall shows 2.75 m), 2 cm off the wall
+    // wall's height in the photographs; the model's end wall is 2.92 m high), 2 cm off the wall
     // (invented); it comes out from behind the dark pipe's end and stops 5 cm short of the
     // south wall in a domed cap, tip at z 5.68
     const PX = 25.3;
@@ -745,11 +746,11 @@ export function buildProps(materials) {
     // five sockets, the last one the cap's: 12 cm long, Ø 0.19
     for (const z of [2.0, 2.45, 3.44, 4.45, 5.45]) g.add(along(0.095, 0.12, endPipe, PX, 2.58, z));
     // its branch near the north corner: off the top at z 2.30, rising south at about 47° to a
-    // rounded end just under the ceiling line (DSC_0113). The model's end wall shows only
-    // 2.75 m, where the last vault bay springs, so the end (top 2.75, centre z 2.33) is lower
-    // and nearer the pipe than the photograph's z 2.47 (decision log, fix of 15 November 2026)
+    // rounded end just under the ceiling line (DSC_0113): centre y 2.84, z 2.47, as measured.
+    // From 15 to 17 November 2026 it was cut short (centre 2.685, z 2.33) under the old 2.75 m
+    // end wall; with the end wall at 2.92 m it has its photographed length again
     const bA = new THREE.Vector3(PX, 2.58, 2.23);
-    const bB = new THREE.Vector3(PX, 2.685, 2.33);
+    const bB = new THREE.Vector3(PX, 2.84, 2.47);
     g.add(rod(endPipe, bA, bB, 0.062, 12));
     g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.062, 12, 8), endPipe), PX, bB.y, bB.z));
 
@@ -758,7 +759,9 @@ export function buildProps(materials) {
     {
       const x0 = 17.48;
       const x1 = 23.9;
-      g.add(slab(materials.black, x0, x1, 2.665, 2.72, 3.69, 3.76));
+      // under the beams' bottom flanges (2.89 m; it hung at 2.665 to 2.72 under the old 2.75 m
+      // springing and moved up with it on 17 November 2026)
+      g.add(slab(materials.black, x0, x1, 2.835, 2.89, 3.69, 3.76));
       const lampFace = new THREE.MeshStandardMaterial({ color: 0x9a9b9e, roughness: 0.4, metalness: 0.3 });
       for (const [x, tilt, side] of [[19.1, 0.7, 1], [20.4, 0.55, -1], [21.75, 0.7, 1], [23.0, 0.6, -1]]) {
         const f = new THREE.Group();
@@ -767,20 +770,21 @@ export function buildProps(materials) {
         f.add(place(box(0.02, 0.06, 0.02, materials.black), 0, 0.04, 0));
         f.rotation.z = tilt; // tipped towards the end wall
         f.rotation.x = side * 0.25;
-        g.add(place(f, x, 2.6, 3.725 + side * 0.03));
+        g.add(place(f, x, 2.77, 3.725 + side * 0.03));
       }
     }
     // (the big one is painted white like the walls and runs the whole room, as in the lit
     // photo of the empty room)
-    const top = cyl(0.1, 0.1, 9.5, palePipe, 12);
+    const TOPY = 2.485;
+    const top = cyl(0.085, 0.085, 9.5, palePipe, 12);
     top.rotation.z = Math.PI / 2;
-    g.add(place(top, 20.65, 2.56, 1.84));
+    g.add(place(top, 20.65, TOPY, 1.825));
     for (const x of [17.2, 19.6, 22.0, 24.4]) {
-      const c = cyl(0.115, 0.115, 0.09, palePipe, 12);
+      const c = cyl(0.1, 0.1, 0.09, palePipe, 12);
       c.rotation.z = Math.PI / 2;
-      g.add(place(c, x, 2.56, 1.84));
+      g.add(place(c, x, TOPY, 1.825));
     }
-    dirtAlong(15.9, 2.56, 1.84, 25.4, 2.56, 1.84);
+    dirtAlong(15.9, TOPY, 1.825, 25.4, TOPY, 1.825);
     // a whitewashed radiator standing on the concrete ledge by the entrance
     radiator(17.1, 1.79, 0, 0.96, 0.55, 0.46, palePipe);
 

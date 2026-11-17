@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS } from './layout.js';
+import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS, R4_VAULT } from './layout.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
 // plus Room 4's brick vaults and the stair shaft. UVs are world metres (u along the
@@ -106,8 +106,7 @@ export function buildArchitecture(materials) {
   // Room 4: shallow brick vaults between steel beams, as in DSC_0110–0116
   {
     const r = ROOMS.find((rm) => rm.id === 'r4');
-    const spring = 2.75;
-    const rise = 0.14;
+    const { spring, rise } = R4_VAULT;
     const bays = 8;
     const L = (r.x1 - r.x0) / bays;
     const segs = 10;
