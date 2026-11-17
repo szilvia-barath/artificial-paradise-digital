@@ -23,6 +23,7 @@ npm run preview    # serve dist/
 - `npm run images` re-cuts the images listed in `scripts/crops.json`: the reproductions and installation photos from `reproductions/` (the room folders from the exhibition's Drive folder, not in git), the rest from the original installation photos (`DSC_*.JPG`, `_01_panorama.jpg` and `room_1/`). Those are not in this repository: they are kept in the private folder `artificial-paradise-photos`, which is not shared. To re-cut, copy its contents into the repo root first (they are git-ignored, so they can't be committed by mistake).
 - `npm run textures -- <folder>` makes the brick wall textures from the redrawn patterns (the Drive folder's `brick-*-color.png` / `-bump.png`), sized for 7.7 cm courses, and their KTX2 versions.
 - `npm run plant -- <file.glb>` prepares the artist's 3D model of the Paradise Factory plant (`public/models/paradise-factory-plant.glb`).
+- `scripts/VERSIONS.md`: the versions of Node.js, FFmpeg and Python the assets were made with, and those that run today.
 
 ## Languages
 
