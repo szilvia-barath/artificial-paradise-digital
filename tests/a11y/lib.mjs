@@ -26,10 +26,13 @@ const asTouchLaptop = () => {
 };
 
 // Opens the title screen and waits until the Enter button is ready.
-export async function openWalk(browser, { lang = 'en', query = '', viewport = { width: 1366, height: 768 }, reducedMotion = 'no-preference', touchLaptop = false, ...context } = {}) {
+// threads: the number of processor threads the page is told the machine has (the site takes
+// 4 or fewer for a low-power device); left out, it is this machine's own.
+export async function openWalk(browser, { lang = 'en', query = '', viewport = { width: 1366, height: 768 }, reducedMotion = 'no-preference', touchLaptop = false, threads = null, ...context } = {}) {
   const ctx = await browser.newContext({ viewport, reducedMotion, ...context });
   const page = await ctx.newPage();
   if (touchLaptop) await page.addInitScript(asTouchLaptop);
+  if (threads) await page.addInitScript((n) => Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => n }), threads);
   const errors = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('pageerror', (e) => errors.push(String(e)));
