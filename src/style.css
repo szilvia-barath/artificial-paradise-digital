@@ -1221,43 +1221,43 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 }
 
 /* ---------------- The Concept page (src/ui/concept.js) ----------------
-   Built from the look's tokens only (--fg, --text, --muted, --line, --accent, --cyan), so it
-   follows the panel when the panel changes. The three --net-* colours are for the dark panel;
-   on paper they are --blue (theme), --ink (reference or concept) and --ink-muted (work), with
-   --net-bg the paper. Labels are 12 px at least, sentence case, letter spacing 0.06em at most. */
-#panel { --net-theme: var(--accent); --net-item: var(--text); --net-work: var(--cyan); --net-line: var(--muted); --net-bg: #0b0b0d; }
-.concept-tabs { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 22px 0 8px; border-bottom: 1px solid var(--line); }
-.concept-tabs [role="tab"] { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 12px 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.04em; color: #dedcd6; }
-.concept-tabs [role="tab"]:hover { color: var(--fg); border-bottom-color: var(--line); }
-/* the chosen tab: a bar in the accent and bold, never colour alone */
-.concept-tabs [role="tab"][aria-selected="true"] { color: var(--fg); font-weight: 700; border-bottom-color: var(--accent); }
+   A paper panel like the others (H1): ink on paper, muted ink for secondary text, the blue
+   only for links, buttons and the focus ring, lines in --paper-line (3.13:1). The network:
+   themes are filled circles in the blue, references and concepts ink rings, works squares in
+   muted ink, so shape and colour tell the kind together. Labels are 12 px at least. */
+#panel { --net-theme: var(--blue); --net-item: var(--ink); --net-work: var(--ink-muted); --net-line: var(--paper-line); --net-bg: var(--paper); }
+.concept-tabs { clear: both; display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 16px 0 8px; border-bottom: 1px solid var(--paper-line); }
+.concept-tabs [role="tab"] { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 12px 8px; font: 600 14px var(--sans); color: var(--ink-muted); cursor: pointer; }
+.concept-tabs [role="tab"]:hover { color: var(--ink); border-bottom-color: var(--paper-line); }
+/* the chosen tab: ink, bold and a bar in the blue, never colour alone */
+.concept-tabs [role="tab"][aria-selected="true"] { color: var(--ink); font-weight: 700; border-bottom-color: var(--blue); }
 .concept-tabs [role="tab"]:focus-visible { outline-offset: -2px; }
-#panel-body .concept h3 { font-family: var(--sans); font-size: 22px; line-height: 1.25; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--fg); margin: 44px 0 6px; }
+#panel-body .concept h3 { font: 400 22px/1.25 var(--sans); color: var(--ink); margin: 36px 0 6px; }
 #panel-body .concept h3:focus-visible, #panel-body .concept .ref-card :is(h3, h5):focus-visible { outline-offset: 4px; }
-#panel-body .concept h4 { font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: 0.04em; color: var(--muted); margin: 26px 0 10px; }
-#panel-body .concept .theme-wiki { margin: 0 0 8px; font-size: 14px; }
-.concept .passage { margin: 0 0 16px; padding-left: 14px; border-left: 2px solid var(--line); }
+#panel-body .concept h4 { font: 600 14px var(--sans); color: var(--ink-muted); margin: 22px 0 8px; }
+#panel-body .concept .theme-wiki { margin: 0 0 8px; font-size: 15px; }
+.concept .passage { margin: 0 0 14px; padding-left: 14px; border-left: 2px solid var(--paper-line); }
 .concept .passage blockquote { margin: 0; }
-#panel-body .concept .passage p { margin: 0 0 4px; font-size: 15px; line-height: 1.6; }
-.concept .passage figcaption { font-size: 13px; line-height: 1.5; color: var(--muted); }
+#panel-body .concept .passage p { margin: 0 0 4px; font-size: 15px; line-height: 1.5; }
+.concept .passage figcaption { font-size: 13px; line-height: 1.5; color: var(--ink-muted); }
 .concept .passage cite { font-style: italic; }
 .concept ul.ref-cards, .concept ul.work-links, .concept ul.plain, .concept ol.timeline, .concept ul.net-legend { list-style: none; margin: 0; padding: 0; }
 .concept ul.ref-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 10px; }
-.concept .ref-card { height: 100%; border: 1px solid var(--line); padding: 12px 14px 10px; }
-#panel-body .concept .ref-card :is(h3, h5) { font-family: var(--sans); font-size: 16px; line-height: 1.3; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--fg); margin: 0 0 2px; }
-#panel-body .concept .ref-type { font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0 0 8px; }
+.concept .ref-card { height: 100%; border: 1px solid var(--paper-line); border-radius: 6px; padding: 12px 14px 10px; }
+#panel-body .concept .ref-card :is(h3, h5) { font: 600 16px/1.3 var(--sans); color: var(--ink); margin: 0 0 2px; }
+#panel-body .concept .ref-type { font-size: 13px; line-height: 1.5; color: var(--ink-muted); margin: 0 0 8px; }
 #panel-body .concept span.ref-type { margin: 0 0 0 6px; }
-.concept .ref-card dl { margin: 0; font-size: 14px; line-height: 1.5; color: #dedcd6; }
-.concept .ref-card dt { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 6px; }
+.concept .ref-card dl { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ink); }
+.concept .ref-card dt { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-top: 6px; }
 .concept .ref-card dd { margin: 0; overflow-wrap: anywhere; }
 .concept .ref-card .cite { display: block; margin-top: 4px; font-size: 13px; }
-.concept ul.work-links li, .concept ul.plain li { margin-bottom: 4px; font-size: 15px; line-height: 1.5; color: #dedcd6; }
-/* a work or a theme as a link inside the page: the text's colour, underlined */
-.concept-work, .concept-theme-link, .conn-theme { background: none; border: 0; padding: 4px 0; font: inherit; color: var(--fg); text-align: left; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.concept-work:hover, .concept-theme-link:hover, .conn-theme:hover { text-decoration-thickness: 2px; }
-.concept-work .no { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-right: 6px; display: inline-block; text-decoration: none; }
-.concept ol.timeline li { display: grid; grid-template-columns: 4.5ch 1fr; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.5; color: #dedcd6; }
-.concept ol.timeline .year { font-family: var(--mono); font-size: 14px; color: var(--fg); }
+.concept ul.work-links li, .concept ul.plain li { margin-bottom: 4px; font-size: 15px; line-height: 1.5; color: var(--ink); }
+/* a work or a theme as a link inside the page: the blue, underlined, as the panel's links */
+.concept-work, .concept-theme-link { background: none; border: 0; padding: 4px 0; font: inherit; color: var(--blue); text-align: left; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: pointer; }
+.concept-work:hover, .concept-theme-link:hover { text-decoration-thickness: 2px; }
+.concept-work .no { font-family: var(--mono); font-size: 13px; color: var(--ink-muted); margin-right: 6px; display: inline-block; text-decoration: none; }
+.concept ol.timeline li { display: grid; grid-template-columns: 4.5ch 1fr; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--paper-line); font-size: 15px; line-height: 1.5; color: var(--ink); }
+.concept ol.timeline .year { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--ink); }
 /* the network */
 .concept-net-wrap { margin: 8px 0 6px; }
 .concept-net { display: block; max-width: 100%; overflow: visible; }
@@ -1270,25 +1270,26 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 .concept-net .hit { fill: transparent; stroke: none; }
 .concept-net .node { cursor: pointer; }
 .concept-net .node:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.concept-net .lbl { font-family: var(--sans); fill: var(--fg); stroke: var(--net-bg); stroke-width: 4px; paint-order: stroke; stroke-linejoin: round; pointer-events: none; visibility: hidden; }
-.concept-net .lbl.theme, .concept-net .lbl.on { visibility: visible; }
-.concept-net .lbl.on { font-weight: 700; }
-/* a node under the pointer or with focus: it, its neighbours and their lines stay, the rest dims */
+.concept-net .lbl { font-family: var(--sans); fill: var(--ink); stroke: var(--net-bg); stroke-width: 4px; paint-order: stroke; stroke-linejoin: round; pointer-events: none; visibility: hidden; }
+.concept-net .lbl.theme, .concept-net .lbl.on { visibility: visible; font-weight: 700; }
+/* a node under the pointer or with focus: it, its neighbours and their lines stay, the rest
+   fades; the shapes stay, so the fade is never the only thing that tells them apart */
 .concept-net .node, .concept-net .edge, .concept-net .lbl { transition: opacity 0.15s; }
 .concept-net.dim .node:not(.hl), .concept-net.dim .lbl:not(.hl) { opacity: 0.25; }
 .concept-net.dim .edge:not(.hl) { opacity: 0.12; }
-.concept-net.dim .edge.hl { stroke: var(--fg); stroke-width: 2; }
+.concept-net.dim .edge.hl { stroke: var(--ink); stroke-width: 2; }
 #panel-body .concept .net-note { font-size: 14px; line-height: 1.5; margin: 0 0 14px; }
 #concept-card { margin: 0 0 20px; }
-#panel-body .concept h3.legend-h { font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: 0.04em; color: var(--muted); margin: 18px 0 8px; }
-.concept ul.net-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 4px 16px; font-size: 13px; line-height: 1.5; color: #dedcd6; }
+#panel-body .concept h3.legend-h { font: 600 14px var(--sans); color: var(--ink-muted); margin: 18px 0 8px; }
+.concept ul.net-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 4px 16px; font-size: 13px; line-height: 1.5; color: var(--ink); }
 .concept ul.net-legend li { display: flex; align-items: center; gap: 8px; }
 .swatch { flex: none; }
-/* the viewer's Connections line */
+/* the viewer's Connections line (the viewer stays dark: its own text colour) */
 #viewer-connections { margin: 0 0 18px; }
-#viewer-connections h3 { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 4px; }
-#viewer-connections ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 14px; line-height: 1.5; color: #dedcd6; }
-.conn-theme { color: inherit; padding: 0; }
+#viewer-connections h3 { font: 600 13px var(--sans); color: var(--muted); margin: 0 0 4px; }
+#viewer-connections ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 14px; line-height: 1.5; color: var(--fg); }
+.conn-theme { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: pointer; }
+.conn-theme:hover { text-decoration-thickness: 2px; }
 @media (pointer: coarse) {
   .concept-tabs [role="tab"] { min-height: 44px; }
   .concept-work, .concept-theme-link, .conn-theme { min-height: 44px; }
