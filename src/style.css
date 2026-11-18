@@ -14,6 +14,7 @@
   --blue: #072fcc; /* links and focus on paper; the same blue as the logotype */
   --text: #f2f1ed; /* text on glass */
   --paper-line: #8a8f99; /* lines on paper: 3.13:1 there */
+  --paper-edge: #c9ccd3; /* the paper card's pale hairline: decoration (1.55:1 on paper), 10:1 or more on the dark ground */
   /* pressed and on states over the 3D view only, never body text and never on paper
      (2.20:1 there): 5.76:1 on the glass over a white wall, 8.68:1 over black */
   --accent: #8fa8ff;
@@ -1073,7 +1074,7 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
   padding: 24px 28px;
   background: var(--paper);
   color: var(--ink);
-  border: 1px solid #c9ccd3; /* a pale hairline, as in the mockup; the card is told from the dark ground by the paper itself */
+  border: 1px solid var(--paper-edge); /* a pale hairline, as in the mockup; the card is told from the dark ground by the paper itself */
   border-radius: 10px;
 }
 .panel-card::after { content: ""; display: block; clear: both; }
@@ -1177,7 +1178,9 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 /* A phone: four buttons with words do not fit in one row beside their signs, so the words go
    under the signs (as in the mockup) and "Next work" may take two lines. */
 @media (max-width: 480px) {
-  #toolbar > button, #toolbar .rooms-wrap > button { flex-direction: column; justify-content: center; gap: 3px; padding: 6px 7px; font-size: 12px; }
+  /* 4 px above and below (6 px before H1): with the edge and the 12 px words of H1 and A7 the
+     bar grew to 70 px and its top met the stick by 2 px at 375 × 667; at 66 px it stays clear */
+  #toolbar > button, #toolbar .rooms-wrap > button { flex-direction: column; justify-content: center; gap: 3px; padding: 4px 7px; font-size: 12px; }
   #toolbar .rooms-wrap { display: flex; }
   #toolbar [data-action="next"] .lbl { white-space: normal; text-align: center; max-width: 10ch; line-height: 1.15; }
 }
