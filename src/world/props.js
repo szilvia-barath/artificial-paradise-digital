@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
-import { uvMetres } from './materials.js';
+import { uvMetres, R4_NORTH_PIPE, R4_END_PIPE } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
@@ -678,7 +678,9 @@ export function buildProps(materials) {
     proj.add(place(lens, 0.19, 2.38, 0));
     g.add(place(proj, 17.48, 0, 3.725));
 
-    const pipeMat = new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.6 });
+    // the north wall's pipes carry the wall's paint (DSC_0099 to DSC_0112; until 17 November
+    // 2026 a light grey, 0x55575c)
+    const pipeMat = new THREE.MeshStandardMaterial({ color: R4_NORTH_PIPE, roughness: 0.6 });
     // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
     const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
@@ -714,7 +716,7 @@ export function buildProps(materials) {
     // side, light at its top) on a wall arm whose round plate was the "camera". Body and arm as
     // photographed (size ±3 cm, place ±0.15 m along the wall); its lens is taken at the light
     // at its top (scripts/fit_projector.mjs, POS). Which way the lens faces is not seen: the
-    // aim is fitted (letItFlow.js), the body is not turned to it.
+    // picture's place on the floor is fitted (scripts/fit_projector.mjs), the body is not turned to it.
     g.add(place(box(0.12, 0.42, 0.17, materials.black), 21.82, 2.18, 1.86));
     g.add(place(box(0.05, 0.025, 0.04, materials.led), 21.84, 2.375, 1.92));
     const plate = cyl(0.06, 0.06, 0.02, materials.black, 14);
@@ -733,9 +735,12 @@ export function buildProps(materials) {
     // on DSC_0113 (below). How the dark one's height and thickness were found is not
     // recorded; it was at 2.46 to 2.66 m. Now 2.40 to 2.57 m (axis 2.485, Ø 0.17), as DSC_0112
     // gives (decision log, 17 November 2026)
-    const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
-    // the pipe over the projection is white paint; the projector lights it (DSC_0113–0114)
-    const endPipe = new THREE.MeshStandardMaterial({ color: 0x8e8a83, roughness: 0.6 });
+    // the big pipe too carries the north wall's paint (DSC_0104 to DSC_0112; it was 0x3f3c37)
+    const palePipe = new THREE.MeshStandardMaterial({ color: R4_NORTH_PIPE, roughness: 0.65 });
+    const radiatorMat = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
+    // the pipe over the projection carries the end wall's paint: on DSC_0113 and DSC_0116 it is
+    // as bright as the wall around it (0.93 to 1.07). It was 0x8e8a83, about 2.5 times the wall
+    const endPipe = new THREE.MeshStandardMaterial({ color: R4_END_PIPE, roughness: 0.6 });
     const along = (r, len, mat, x, y, z) => {
       const m = cyl(r, r, len, mat, 14);
       m.rotation.x = Math.PI / 2;
@@ -783,8 +788,8 @@ export function buildProps(materials) {
         g.add(place(f, x, 2.77, 3.725 + side * 0.03));
       }
     }
-    // (the big one is painted white like the walls and runs the whole room, as in the lit
-    // photo of the empty room)
+    // (the big one runs the whole room; this comment said it was painted white like the walls,
+    // as in the lit photo of the empty room: in 2025 it has the north wall's dark paint)
     const TOPY = 2.485;
     const top = cyl(0.085, 0.085, 9.5, palePipe, 12);
     top.rotation.z = Math.PI / 2;
@@ -796,7 +801,7 @@ export function buildProps(materials) {
     }
     dirtAlong(15.9, TOPY, 1.825, 25.4, TOPY, 1.825);
     // a whitewashed radiator standing on the concrete ledge by the entrance
-    radiator(17.1, 1.79, 0, 0.96, 0.55, 0.46, palePipe);
+    radiator(17.1, 1.79, 0, 0.96, 0.55, 0.46, radiatorMat);
 
     // gas meter by the partition (DSC_0098–0101)
     g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));

@@ -244,6 +244,16 @@ function planksCanvas(seed = 5) {
 
 const BASE = import.meta.env.BASE_URL;
 
+// Room 4's paints and light, matched to the 2025 photographs (decision log, 18 November 2026,
+// Decision 3): set so that, seen from where DSC_0113 and DSC_0110 were taken, the surfaces
+// stand to the end wall as they do in the photographs (floor, side walls, ceiling, pipes).
+// The north wall's paint is a dark blue-grey tint over the grey brick texture; props.js paints
+// the pipes on that wall with it, and the pipe over the projection with the end wall's paint,
+// so each reads like the wall it runs on (DSC_0110, DSC_0113, DSC_0116).
+export const R4_NORTH_PAINT = 0x706e7c;
+export const R4_NORTH_PIPE = 0x444252;
+export const R4_END_PIPE = 0x81746d;
+
 export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   // Strong anisotropic filtering keeps floor tiles and brick sharp at grazing angles.
   const aniso = Math.min(lowPower ? 4 : 16, renderer.capabilities.getMaxAnisotropy());
@@ -297,12 +307,19 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // Room 4 is nearly black in the photos and the ambient light is shared by all rooms,
     // so its surfaces are dark here; the projection wall only just shows under the video
     darkBrick: brickMat('brick-grey', 0x131418, 0.95, 1.6),
-    // Room 4's north wall is bare, unpainted brick: browner and rougher than the whitewash
-    rawBrick: brickMat('brick-warm', 0x241e18, 0.97, 2.6),
+    // Room 4's north wall: in January 2025 painted a dark blue-grey, its pipes with it
+    // (DSC_0099 to DSC_0112; median colour #212027 on DSC_0110). Bare brown brick until 17
+    // November 2026, from the photograph of 2013. The key keeps its old name.
+    rawBrick: brickMat('brick-grey', R4_NORTH_PAINT, 0.97, 2.6),
     ledge: surface(new THREE.MeshStandardMaterial({ color: 0x2a2926, roughness: 0.95, map: concrete }), [0, 0]),
-    dimBrick: brickMat('brick-white', 0x34302c, 0.95, 2.2, true),
-    projWall: brickMat('brick-white', 0x645a54, 0.95, 1.2),
-    vault: brickMat('brick-white', 0x191817, 0.95, 1.6),
+    // Room 4 (until 18 November 2026: south wall 0x34302c, end wall 0x645a54, vaults 0x191817,
+    // floor 0x151412, beams black 0x101012; the room was far darker against its projections than
+    // in the photographs). The whitewashed vaults and beams glow a little (emissive): in the
+    // photographs the ceiling is 0.7 to 0.8 of the end wall's brightness, lit from below by the
+    // projections and the room, which the shared ambient light cannot give a downward face.
+    dimBrick: brickMat('brick-white', 0x6f6961, 0.95, 2.2, true),
+    projWall: brickMat('brick-white', 0x8a7c75, 0.95, 1.2),
+    vault: Object.assign(brickMat('brick-white', 0x797672, 0.95, 1.6), { emissive: new THREE.Color(0x1a1918) }),
     shaft: brickMat('brick-grey', 0x3b3c41),
     plaster: surface(new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.95, map: concrete }), [0, 0]),
     // (offsets in whole 30 cm tiles keep the grout grid)
@@ -321,13 +338,13 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
       bumpScale: 0.6,
       roughness: 0.55,
     }), [0.25, 0.25]),
-    floorDark: surface(new THREE.MeshStandardMaterial({ color: 0x151412, map: tileAlbedo, roughness: 0.62 }), [0.25, 0.25]),
+    floorDark: surface(new THREE.MeshStandardMaterial({ color: 0x44433b, map: tileAlbedo, roughness: 0.62 }), [0.25, 0.25]),
     darkFloor: new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.9 }),
     ceiling: surface(new THREE.MeshStandardMaterial({ color: 0xf1f0ec, map: concrete, roughness: 1, emissive: 0x2a2a2a }), [0, 0]),
     // (lit only by bounce: the pendants shine down)
     planks: surface(new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }), [0, 1 / 8]),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
-    beam: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: 0.6, metalness: 0.4 }),
+    beam: new THREE.MeshStandardMaterial({ color: 0x797672, emissive: 0x1a1918, roughness: 0.8 }), // painted like the vaults (DSC_0110, DSC_0113)
     // furniture & fixtures
     bench: new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.7, metalness: 0.2 }),
     benchTop: new THREE.MeshStandardMaterial({ color: 0x6b6d72, roughness: 0.8 }),
