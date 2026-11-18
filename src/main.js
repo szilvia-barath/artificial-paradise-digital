@@ -289,10 +289,12 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   // again, and a phone has no Enter key, so there the work is said without "Press Enter"
   // (a laptop with a touch screen has one: there a tap on the button counts as a click).
   else if (a === 'next') stepWork(1, { focus: false, enter: e.detail > 0 && !isTouch });
+  // Previous work: the same jump as Page Up, in the same way
+  else if (a === 'prev') stepWork(-1, { focus: false, enter: e.detail > 0 && !isTouch });
 });
 // One jump for each press, as with Page Down: a held Enter repeats, and its repeats would click
 // the button again and cut from view to view that fast (WCAG 2.3.1).
-document.querySelector('[data-action="next"]').addEventListener('keydown', (e) => {
+for (const b of document.querySelectorAll('[data-action="next"], [data-action="prev"]')) b.addEventListener('keydown', (e) => {
   if (e.repeat && (e.key === 'Enter' || e.key === ' ')) e.preventDefault();
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.

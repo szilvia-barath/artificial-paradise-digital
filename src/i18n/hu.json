@@ -85,6 +85,8 @@
         "open": "Enter: a nézet közepén lévő mű megnyitása",
         "help": "Súgó: minden billentyű"
       },
+      "prev": "Előző mű",
+      "prevTitle": "Előző mű (Page Up)",
       "next": "Következő mű",
       "nextTitle": "Következő mű (Page Down)"
     },

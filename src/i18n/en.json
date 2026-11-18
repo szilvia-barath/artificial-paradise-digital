@@ -60,7 +60,7 @@
         "left": "Turn left (←)",
         "right": "Turn right (→)",
         "run": "Run (Shift)",
-        "wheel": "The mouse wheel also walks",
+        "wheel": "The mouse wheel can be used for walking, too",
         "zoom": "Zoom",
         "zoomIn": "Zoom in (+)",
         "zoomOut": "Zoom out (−)",
@@ -85,6 +85,8 @@
         "open": "Enter: open the work in front",
         "help": "Help: all the keys"
       },
+      "prev": "Previous work",
+      "prevTitle": "Previous work (Page Up)",
       "next": "Next work",
       "nextTitle": "Next work (Page Down)"
     },

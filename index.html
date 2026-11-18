@@ -83,6 +83,8 @@
           <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico" aria-hidden="true">▶</span><span class="lbl" data-i18n="hud.tour">Tour</span></button>
           <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico" aria-hidden="true"><svg class="snd-on" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11.2 5.6a3.4 3.4 0 0 1 0 4.8M13.1 3.7a6 6 0 0 1 0 8.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><svg class="snd-off" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11 6l4 4M15 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
           <!-- Next work: the same jump as Page Down, one per press or tap -->
+          <!-- Previous work: the same jump as Page Up, one per press or tap -->
+          <button data-action="prev" title="Previous work (Page Up)" data-i18n-attr="title:hud.prevTitle"><span class="ico" aria-hidden="true">‹</span><span class="lbl" data-i18n="hud.prev">Previous work</span></button>
           <button data-action="next" title="Next work (Page Down)" data-i18n-attr="title:hud.nextTitle"><span class="ico" aria-hidden="true">›</span><span class="lbl" data-i18n="hud.next">Next work</span></button>
         </nav>
         <div id="tour-caption"></div>
@@ -96,7 +98,7 @@
           <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left"><i aria-hidden="true">←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
           <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back"><i aria-hidden="true">S</i><span class="glyph" data-glyph="↓" aria-hidden="true"></span></button>
           <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right"><i aria-hidden="true">→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
-          <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">The mouse wheel also walks</span></span>
+          <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">The mouse wheel can be used for walking, too</span></span>
         </div>
         <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
           <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn"><i aria-hidden="true">+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>

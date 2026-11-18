@@ -1154,13 +1154,6 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
   sup.fn a, #panel-body .footnotes .fn-back { position: relative; }
   sup.fn a::after, #panel-body .footnotes .fn-back::after { content: ""; position: absolute; left: -12px; right: -12px; top: -14px; bottom: -14px; }
 }
-/* Read aloud (src/ui/readAloud.js): a button like the others in its place, under the title in
-   the viewer and after Close in a panel. Its word says the state (Read aloud / Stop reading);
-   while it reads it also looks pressed, in the pairs the hover already uses (no new colour). */
-#viewer .read-aloud { margin: 4px 0 14px; }
-#viewer .read-aloud[aria-pressed="true"] { border-color: var(--fg); background: rgba(255, 255, 255, 0.1); }
-#panel .read-aloud { margin: 0 0 12px; }
-#panel .read-aloud[aria-pressed="true"] { background: var(--blue); color: var(--paper); }
 
 @media (max-width: 820px) {
   #viewer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 55vh) minmax(0, 1fr); }
@@ -1362,3 +1355,6 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 }
 #panel-body details.help-more { margin: 14px 0 0; }
 #panel-body details.help-more summary { cursor: pointer; font-weight: 600; }
+/* A touch screen: no turn keys (the keyboard's ← and →) and no short help in the middle;
+   the zoom buttons stay (the reconstructor, 18 November 2026) */
+body.touch #keypad, body.touch #click-to-look { display: none !important; }

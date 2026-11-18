@@ -1,7 +1,6 @@
 import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
-import { readAloudButton, bodyText } from './readAloud.js';
 import { workDescriptions } from '../localize.js';
 import { isPart } from '../world/route.js';
 import refs from '../data/references.json';
@@ -61,14 +60,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let situ = 0; // 0 = the work, n = its nth installation photo
   let full = -1; // index of the full video shown (YouTube or Drive player), -1 = none
 
-  // Read aloud (readAloud.js): the text column's words about the work, from the room line to
-  // the artist's text, with the descriptions where they are filled ([data-read]; not the
-  // buttons, the link or the folded exhibition text), without the title and the headings
-  // (the reconstructor's answer, 18 November 2026). It stands under the title; none where the
-  // browser cannot speak. The room's audio description is in the accessible version only.
-  const readParts = () => [room, meta, caption, ...el.querySelectorAll('[data-read]')];
-  const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => bodyText(n)).join('\n'));
-  if (reader) title.after(reader.button);
 
   const renderText = () => {
     text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="note">${esc(data.textCredit)}</p>`;
@@ -246,7 +237,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     if (el.hidden) return;
     // a work stepped to just before closing and not yet said is no longer on screen
     unannounce('viewer');
-    reader?.stop();
     const ret = toList ? back : null;
     back = null;
     el.hidden = true;
@@ -260,7 +250,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   // The new work is said on its own topic of the live region, so a room or a work in the
   // 3D view said at the same moment does not take its place.
   const step = (d) => {
-    reader?.stop(); // the next work's text replaces the one being read
     index = works.indexOf(seq[(seqAt(works[index]) + d + seq.length) % seq.length]);
     situ = 0;
     full = -1;
