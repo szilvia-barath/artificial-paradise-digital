@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1, R1_NICHES, NICHE, TOILET } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
@@ -154,7 +154,7 @@ export function buildProps(materials) {
     const sunk = 0.04;
     const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
     // across the flight, z from the north wall face (measured at the foot in DSC_0016)
-    const backOut = 0.37; // wall-side parapet, back face (0.13 thick: inferred)
+    const backOut = 0.25; // wall-side parapet, back face (0.25 thick, as wide as the coping brick; was 0.37 with the brick overhanging the gap, 18 November 2026)
     const backIn = 0.5; // wall-side parapet, face towards the treads
     const openIn = 1.69; // open-side parapet, face towards the treads (0.23 thick: inferred)
     const openOut = 1.92; // open-side parapet, face towards the room
@@ -164,7 +164,7 @@ export function buildProps(materials) {
     const pierTop = 0.19;
     const capTop = pierTop + 0.012;
     const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
-    const baseTop = 0.25;
+    const baseTop = 0.17; // level with the start of the sloping coping (was 0.25, a block standing proud of it)
     // the parapets rise with the steps up to the landing's nosing, then run level to the wall
     const inRoom = steps;
     const xTop = foot - run * (steps - 1); // the landing's nosing (top riser)
@@ -280,7 +280,7 @@ export function buildProps(materials) {
       const nrm = new THREE.Vector2(rise / L, run / L); // square to it, upwards
       const angle = -Math.atan2(rise, run);
       const zOpen = (openIn + openOut) / 2;
-      const zBack = backIn - 0.125;
+      const zBack = backIn - 0.125; // the 0.25 m brick covers the parapet exactly (z 0.25 to 0.5)
       const base = (s) => new THREE.Vector2(foot, tread(0) + 0.06).addScaledVector(d, s);
       const mortarMat = new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 });
       // on the wall side the mortar's inner face stands 3 mm back from the parapet's face and
@@ -426,11 +426,16 @@ export function buildProps(materials) {
     // the coping's top line: up the slope to the landing's nosing, then level
     const top = (x) => (Math.min(foot - x, foot - xTop) / run) * rise + tread(0) + 0.06;
     const firstPost = foot - 0.36;
-    for (let x = firstPost; x > WX; x -= 0.75) {
+    // the handrail runs the whole flight, from the foot to the street door at the top: down
+    // the slope past the first post to the end of the flight (DSC_0015, DSC_0016: the rail
+    // runs on a little below the lowest post), level over the landing and through the wall
+    const railFoot = foot + 0.02;
+    const railEnd = WO + 0.05;
+    for (let x = firstPost; x > railEnd; x -= 0.75) {
       g.add(rod(materials.black, new THREE.Vector3(x, top(x), zRail), new THREE.Vector3(x, top(x) + railH, zRail), 0.014));
     }
-    g.add(rod(materials.black, new THREE.Vector3(firstPost, top(firstPost) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
-    g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(railFoot, top(railFoot) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(railEnd, top(railEnd) + railH, zRail), 0.02));
     obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
   }
 
@@ -672,33 +677,9 @@ export function buildProps(materials) {
       g.add(place(lamp, x, 0, z));
     }
 
-    // The dark corridor to the toilets (walls in layout.js, TOILET), as DSC_0047 shows it
-    // from its mouth: the end wall tiled to about 1.37 m, a small basin and a round mirror
-    // in a square black frame above it, and on the right (west) the toilet's door, dark,
-    // towards the end. Sizes and places measured on DSC_0047 against the corridor's width
-    // (±20 %); the door is built shut (whether it stood open is not clear).
-    {
-      const T = TOILET;
-      const y0 = T.step;
-      const zEnd = T.z1;
-      g.add(slab(materials.toiletTile, T.x0, T.x1, y0, y0 + 1.37, zEnd - 0.012, zEnd));
-      const basin = cyl(0.23, 0.17, 0.15, materials.toiletWhite, 20);
-      basin.scale.z = 0.62;
-      g.add(place(basin, T.x1 - 0.25, y0 + 0.725, zEnd - 0.155));
-      g.add(place(cyl(0.025, 0.025, 0.3, materials.steel, 8), T.x1 - 0.25, y0 + 0.5, zEnd - 0.06));
-      const mx = T.x1 - 0.33;
-      const my = y0 + 1.61;
-      const frame = 0.012;
-      for (const [a, b, c, d] of [[-0.21, 0.21, 0.2, 0.21], [-0.21, 0.21, -0.21, -0.2], [-0.21, -0.2, -0.21, 0.21], [0.2, 0.21, -0.21, 0.21]]) {
-        g.add(slab(materials.black, mx + a, mx + b, my + c, my + d, zEnd - 0.03, zEnd - 0.03 + frame));
-      }
-      const mirror = new THREE.Mesh(new THREE.CircleGeometry(0.195, 32), materials.toiletMirror);
-      g.add(place(mirror, mx, my, zEnd - 0.014, Math.PI));
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.195, 0.006, 6, 40), materials.black);
-      g.add(place(ring, mx, my, zEnd - 0.016));
-      // the toilet's door in the west wall, near the end
-      g.add(slab(materials.black, T.x0, T.x0 + 0.03, y0, y0 + 2.0, 6.72, 7.58));
-    }
+    // The mouth of the toilet corridor (layout.js, TOILET) shows only darkness: its walls,
+    // floor and ceiling are the black 'void' material and nothing is built inside (the
+    // fittings drawn here on 17 November 2026 were invented and are gone, 18 November 2026).
 
     // grille in front of the storage alcove (DSC_0058–0060): dark galvanised steel, round
     // rods ending in points above the top bar, three flat bars; lumber stored behind
@@ -854,7 +835,7 @@ export function buildProps(materials) {
     // past the cloth (under the roll and at its edges). No obstacle of its own: the block
     // behind it already stops the visitor.
     {
-      const x0 = 14.58; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
+      const x0 = 14.88; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
       const x1 = 15.6; // the west face of the south stub
       const zc = 4.64; // 2.6 cm in front of the block's north face (z 4.666)
       const top = 2.75; // Room 3's ceiling

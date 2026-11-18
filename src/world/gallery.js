@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { wallFrame } from './layout.js';
+import { wallFrame, ROOMS } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
@@ -137,6 +137,70 @@ function drawTextSheet(g, data) {
   g.fillStyle = '#666';
   g.font = `italic ${size - 1}px Helvetica, Arial, sans-serif`;
   wrapText(g, data.textCredit, 36, y + 4, 440, (size - 1) * 1.3);
+}
+
+// Shortens text with an ellipsis until it fits maxW at the current font.
+function fit(g, text, maxW) {
+  if (g.measureText(text).width <= maxW) return text;
+  let s = text;
+  while (s.length > 1 && g.measureText(`${s}…`).width > maxW) s = s.slice(0, -1);
+  return `${s.trimEnd()}…`;
+}
+
+// The room sheet beside the toilet corridor (DSC_0047 to DSC_0049): the heading, the plan with
+// the numbered places, the works list in two columns and the exhibition text in small type,
+// on an A4 page. Drawing code first written for the bar pillar's sheet (removed 9 November
+// 2026), now adjusted to A4 and to the text's length.
+function drawRoomSheet(g, data) {
+  g.fillStyle = '#fbfaf7';
+  g.fillRect(0, 0, 512, 724);
+  g.fillStyle = '#222';
+  g.font = '20px "Courier New", monospace';
+  g.fillText('|Artificial Paradise|KristofLab|', 26, 38);
+  const x0 = Math.min(...ROOMS.map((r) => r.x0));
+  const z0 = Math.min(...ROOMS.map((r) => r.z0));
+  const x1 = Math.max(...ROOMS.map((r) => r.x1));
+  const s = 460 / (x1 - x0);
+  const ox = 26 - x0 * s;
+  const oy = 56 - z0 * s;
+  g.strokeStyle = '#333';
+  g.lineWidth = 1.5;
+  for (const r of ROOMS) g.strokeRect(ox + r.x0 * s, oy + r.z0 * s, (r.x1 - r.x0) * s, (r.z1 - r.z0) * s);
+  g.font = 'bold 9px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#111';
+  for (const w of data.works) {
+    const p = w.hang ? { x: w.hang.face.includes('x') ? w.hang.at : w.hang.along, z: w.hang.face.includes('z') ? w.hang.at : w.hang.along } : w.anchor;
+    if (!p || w.id.endsWith('-screen')) continue;
+    g.fillText(String(w.no), ox + p.x * s - 3, oy + p.z * s + 3);
+  }
+  const list = data.works.filter((w) => !w.id.endsWith('-screen'));
+  g.font = '8px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#222';
+  let y = oy + Math.max(...ROOMS.map((r) => r.z1)) * s + 20;
+  const half = Math.ceil(list.length / 2);
+  list.forEach((w, i) => {
+    const bits = [w.title, w.size, (w.medium || '').split(':')[0], w.year].filter(Boolean);
+    g.fillText(fit(g, `${w.no} · ${bits.join(', ')}`, 228), i < half ? 26 : 262, y + (i % half) * 11);
+  });
+  y += half * 11 + 12;
+  let size = 8;
+  const count = (sz) => {
+    g.font = `${sz}px Helvetica, Arial, sans-serif`;
+    let n = 0;
+    for (const p of data.text) {
+      let line = '';
+      for (const wd of p.split(' ')) {
+        const test = line ? `${line} ${wd}` : wd;
+        if (g.measureText(test).width > 460) { n++; line = wd; } else line = test;
+      }
+      n++;
+    }
+    return n * sz * 1.3 + data.text.length * 5;
+  };
+  while (size > 4 && y + count(size) > 700) size -= 0.25;
+  g.fillStyle = '#111';
+  g.font = `${size}px Helvetica, Arial, sans-serif`;
+  for (const p of data.text) y = wrapText(g, p, 26, y, 460, size * 1.3) + 5;
 }
 
 export function buildGallery(data, materials, manager, renderer, { hdBudget = 6, videoBudget = 3 } = {}) {
@@ -333,7 +397,8 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     const k = SHEET_SCALE;
     const tex = wallText(Math.round(512 * k), Math.round(724 * k), (g) => {
       g.setTransform(k, 0, 0, k, 0, 0);
-      drawTextSheet(g, data);
+      if (sh.draw === 'plan') drawRoomSheet(g, data);
+      else drawTextSheet(g, data);
     }, 16);
     const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.21, 0.297), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
