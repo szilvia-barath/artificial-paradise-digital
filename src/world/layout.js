@@ -52,10 +52,17 @@ export const ROOMS = [
   {
     id: 'r4',
     x0: 15.9, x1: 25.4, z0: 1.73, z1: 5.73,
-    ceiling: 2.9,
+    ceiling: 3.06, // crown of the vaults (R4_VAULT)
     spawn: { x: 16.714, z: 3.792, look: { x: 25.4, z: 3.697 } },
   },
 ];
+
+// Room 4's ceiling: shallow brick vaults between steel beams (architecture.js). They spring
+// at 2.92 m, the end wall's height on DSC_0113 (0.72 to 0.73 of its 4.00 m width: 2.90 to
+// 2.94 m); the beams' ends on the south wall stand as high as the end wall's top on the same
+// photograph, so the whole room springs there (decision log, 17 November 2026). Until then
+// 2.75 m. The walls run up to 3.1 m, behind the vaults.
+export const R4_VAULT = { spring: 2.92, rise: 0.14, wallTop: 3.1 };
 
 export const CEILING = 3.0; // tallest room (used for shafts / light rigs)
 
@@ -110,20 +117,21 @@ const R4_RECESSES = {
   back: 1.61, // z of the bricked-up backs (wall face 1.73)
   A: { x0: 21.86, x1: 22.78, sill: 0.95 },
   B: { x0: 24.1, x1: 25.4 },
-  top: 2.75, // the vault springing
+  top: 2.92, // the vault springing (R4_VAULT.spring; 2.75 until 17 November 2026)
 };
 function room4NorthWall() {
   const z0 = 1.33;
   const z1 = 1.73;
   const { back, A, B, top } = R4_RECESSES;
+  const H = R4_VAULT.wallTop;
   const r = (x0, x1, y0, y1, zA = z0, zB = z1) => ({ x0, x1, z0: zA, z1: zB, y0, y1, mat: 'rawBrick', pd: 'r4-north-wall' });
   const out = [
-    r(15.6, A.x0, 0, 2.9), // the wall west of A
-    r(A.x1, B.x0, 0, 2.9), // the pier between A and B
+    r(15.6, A.x0, 0, H), // the wall west of A
+    r(A.x1, B.x0, 0, H), // the pier between A and B
   ];
   for (const R of [A, B]) {
-    out.push(r(R.x0, R.x1, 0, 2.9, z0, back)); // the bricked-up back
-    out.push(r(R.x0, R.x1, top, 2.9, back, z1)); // the wall above, where the vault springs
+    out.push(r(R.x0, R.x1, 0, H, z0, back)); // the bricked-up back
+    out.push(r(R.x0, R.x1, top, H, back, z1)); // the wall above, where the vault springs
   }
   // A: wall face up to the sill, then the toothed fill standing 5 cm proud of the back
   // (the 5 cm is invented); [x0, x1, top of the step]
@@ -221,18 +229,18 @@ export const BLOCKS = [
   { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge', pd: 'r4-north-wall' },
   // south wall: white brick
   { x0: 10.2, x1: 14.8, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'whiteBrick', pd: 'r3-walls' },
-  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'dimBrick', pd: 'r4-walls' },
+  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'dimBrick', pd: 'r4-walls' },
   // closet block beside the south stub (#14 hangs on its west face). Its west face stands at
   // x 14.8 (was 14.5: the gap closed by the curtain was about 0.3 m too wide, 18 Nov 2026)
   // In the photographs this is a space between two thin walls, open to the north and closed
   // there by a curtain (props.js). What is inside is not known, so the block stays solid.
   { x0: 14.8, x1: 15.6, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster', pd: 'r3-closet' },
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
-  { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: 2.9, mat: 'plaster', pd: 'r3-r4-opening' },
-  { x0: 15.6, x1: 15.9, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster', pd: 'r3-r4-opening' },
-  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.45, y1: 2.9, mat: 'plaster', pd: 'r3-r4-opening' },
+  { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: R4_VAULT.wallTop, mat: 'plaster', pd: 'r3-r4-opening' },
+  { x0: 15.6, x1: 15.9, z0: 4.666, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'plaster', pd: 'r3-r4-opening' },
+  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.45, y1: R4_VAULT.wallTop, mat: 'plaster', pd: 'r3-r4-opening' },
   // projection wall (east end)
-  { x0: 25.4, x1: 25.4 + T, z0: 1.33, z1: 6.13, y1: 2.9, mat: 'dimBrick', faces: { nx: 'projWall' }, pd: 'r4-end-wall' },
+  { x0: 25.4, x1: 25.4 + T, z0: 1.33, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' }, pd: 'r4-end-wall' },
 ];
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.

@@ -3,12 +3,18 @@
 
   python3 scripts/make_river.py "PLANE javított.png" public/tex src/data/river.json
 
-The composite is cut out (alpha) and laid out in the frame of the floor video Let it Flow
-(both 16:9), on the video's own river, so placing the frame places the plastic and the two
-coincide. Scale: the installation is 4 x 7 m (the artist's measure), so the frame is 7 m
-long and, at 16:9, 3.94 m wide: the room's full width, centred across it. The plastic
-scales with it (about 4.7 m long). Image left = towards the end wall (east), image up =
-south; the wall tip touches the wall.
+The composite is cut out (alpha). It is drawn in the frame of the floor video Let it Flow
+(both 16:9), on the video's own river. Scale: the plastic river is RIVER_M long from the
+wall tip to the far end of the white heap (4.74 m, the artist's figure, 16 November 2026);
+the scale of the image follows from that, and the composite's frame takes the same scale
+("composite" in river.json: where the video's river is, which scripts/fit_projector.mjs
+needs). The frame is no longer the floor picture: the projector and its lit area on the
+floor are fitted by scripts/fit_projector.mjs ("projector"). Until 17 November 2026 the
+frame was set to 7 m (FRAME_M) and the river followed it, which gave the same 4.74 m.
+Image left = towards the end wall (east), image up = south; the wall tip touches the wall.
+After running this, run node scripts/fit_projector.mjs.
+To change only the river's length in river.json without NumPy, SciPy and Pillow:
+node scripts/set_river_length.mjs <metres> (same numbers as RIVER_M here, textures unchanged).
 
 The relief is read from the photo: soft lumps from the shape and the broad light and shade,
 folds from the finer shading, thickness growing from the thin strip at the wall (~3 cm) to
@@ -24,9 +30,10 @@ from scipy import ndimage as ndi
 
 Image.MAX_IMAGE_PIXELS = None
 src, outdir, meta_path = sys.argv[1], sys.argv[2], sys.argv[3]
-FRAME_M = 7.0                  # length of the floor video's frame on the floor, metres
+RIVER_M = 4.7447               # the plastic's length, wall tip to the heap's end, metres (the
+                               # artist's 4.74; the 4.7447 the 7 m frame gave until 17 Nov 2026)
 WALL_X = 25.38                 # room x of the wall tip
-Z_CENTRE = 3.73                # room z of the frame's centre: the middle of the 4 m room
+Z_CENTRE = 3.73                # room z of the composite frame's centre: the middle of the room
 HMAX = 0.13                    # thickest lumps, metres
 CELL = 0.008                   # geometry grid, metres
 k = 605.8 / 1100               # filter sizes in image pixels, as tuned on this composite
@@ -34,12 +41,12 @@ gauss = ndi.gaussian_filter
 
 full = np.asarray(Image.open(src)).astype(np.float32)
 FH, FW = full.shape[:2]
-PPM = FW / FRAME_M             # image pixels per metre
 mask = ndi.binary_opening(full[..., 3] > 127, iterations=2)
 lab, n = ndi.label(mask)
 sizes = ndi.sum(mask, lab, range(1, n + 1))
 keep = np.isin(lab, 1 + np.where(sizes > 2500 * k * k)[0])      # drop specks and stray flecks
 ys, xs = np.where(keep)
+PPM = (xs.max() + 1 - xs.min()) / RIVER_M   # image pixels per metre, from the river's length
 pad = int(20 * k)
 y0, y1, x0, x1 = ys.min() - pad, ys.max() + pad, xs.min() - pad, xs.max() + pad
 x_east = WALL_X + (xs.min() / PPM)
@@ -125,9 +132,10 @@ meta.update({
   'widthM': round(width, 4), 'lengthM': round(length, 4),
   'grid': [gw, gh],
   'obstacles': obstacles,
-  # the floor video's frame, which is the composite's frame
-  'projection': {'xEast': round(float(x_east), 3), 'lengthM': round(FW / PPM, 3), 'zCentre': Z_CENTRE, 'widthM': round(FH / PPM, 3)},
+  # the composite's frame (the video's frame at the river's scale): where the video's river is
+  'composite': {'xEast': round(float(x_east), 3), 'lengthM': round(FW / PPM, 3), 'zCentre': Z_CENTRE, 'widthM': round(FH / PPM, 3)},
 })
+meta.pop('projection', None)   # the old name of 'composite'
 with open(meta_path, 'w') as f:
     json.dump(meta, f, indent=2)
 print({k_: meta[k_] for k_ in ('xTop', 'zLeft', 'widthM', 'lengthM', 'grid', 'projection')}, 'tex', W, H, 'cells used', int(mg.sum()), 'obstacles', len(obstacles))

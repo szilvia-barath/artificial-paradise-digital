@@ -9,10 +9,14 @@ import { createVideo, BY_ROOM } from './video.js';
 // trees on the dark wall. On the floor a river of melted plastic, rebuilt from the artist's
 // top-down photograph of it (PLANE copy.png, scaled by its 30 cm tiles and checked against
 // DSC_0113 and the photos' EXIF focal length): one relief mesh, soft lumps and folds read
-// from the photo (scripts/make_river.py). From above, the video Let it Flow (a night sky with
-// the river glowing in it) is projected over the floor, turned so its river lies on the
-// plastic; its specks are the dots on the floor in the photos. That projection is all that
-// lights the plastic, so its folds are shaded here against the lamp.
+// from the photo (scripts/make_river.py). The video Let it Flow (a night sky with the river
+// glowing in it) is thrown onto the floor by the projector on the north wall above Natural
+// Life (DSC_0108 to DSC_0112), its river on the plastic; its specks are the dots on the floor
+// in the photos. The artist fitted the picture to the river with Resolume's keystone; where
+// it landed is fitted in scripts/fit_projector.mjs (river.json "projector": the lens's
+// place, and the projective map from the floor to the frame). The floor and the plastic take
+// the picture by that projective texture mapping, the plastic's relief along the rays from
+// the lens, so the same mapping lights the plastic, whose folds are shaded against the lens.
 
 const BASE = import.meta.env.BASE_URL;
 const WALL_X = 25.4;
@@ -28,10 +32,10 @@ const WALL_GAIN = 1.3; // the file's trees are mid grey; a projector in the dark
 const WALL_TINT = new THREE.Color(0.88, 1, 1); // the lamp is cool in the photos
 const FLOOR_TINT = new THREE.Color(1, 1.12, 1.32);
 const FLOOR_PEAK = 0.34; // the black floor returns far less of the lamp than white plastic does
-// over the middle of the river
-const LAMP = new THREE.Vector3(RIVER.xTop - RIVER.lengthM / 2, 2.8, RIVER.zLeft + RIVER.widthM / 2);
+const PJ = RIVER.projector;
+// the light comes from the projector's lens
+const LAMP = new THREE.Vector3(...PJ.position);
 const AMBIENT = 0.14; // the little room light the plastic gets besides the projection
-const P = RIVER.projection;
 
 // Shows a texture on the end wall without stretching it: it fills the wall's height and
 // what is too wide for the wall falls off both sides, as with a projector.
@@ -41,11 +45,23 @@ function coverWall(tex, aspect) {
   tex.offset.x = (1 - shown) / 2;
 }
 
-// floor projection frame (video turned 180°): u runs west from xEast, v runs north
+// A world point's place in the video frame: along the ray from the lens down to the floor,
+// then the floor-to-frame homography. s runs from the east end of the picture (0) to the west
+// (1), t from the north side (0) to the south (1), the orientation the video had on the floor
+// before (river.json "projector", _note).
+const f7 = (v) => v.toFixed(7);
+const M = PJ.floorToFrame;
 const projUV = /* glsl */ `
   vec2 letItFlowUV(vec3 w) {
-    return vec2((${P.xEast.toFixed(3)} - w.x) / ${P.lengthM.toFixed(3)},
-                0.5 + (w.z - ${P.zCentre.toFixed(3)}) / ${P.widthM.toFixed(3)});
+    vec3 L = vec3(${PJ.position.map(f7).join(', ')});
+    vec2 f = L.xz + (w.xz - L.xz) * (L.y / max(L.y - w.y, 1e-3));
+    vec3 q = mat3(${[0, 1, 2].map((c) => [0, 1, 2].map((r) => f7(M[r][c])).join(', ')).join(', ')}) * vec3(f, 1.0);
+    return q.xy / q.z;
+  }
+  // 1 inside the picture, 0 outside; the edge softened over half a percent of the frame
+  float letItFlowIn(vec2 uv) {
+    vec2 e = smoothstep(0.0, 0.005, uv) * smoothstep(0.0, 0.005, 1.0 - uv);
+    return e.x * e.y;
   }
 `;
 
@@ -89,47 +105,50 @@ export function buildLetItFlow(manager) {
 
   // ---------------------------------------------------------------- floor projection
   const floorVideo = createVideo('video/w16-floor.mp4');
-  // The frame is narrower than the room and scaled so that its river is the plastic's size,
-  // so zooming it to the walls would pull the two apart. It stays put, and the strips
-  // between its long edges and the side walls continue its specks in reflection.
-  for (const tex of floorVideo.textures) tex.wrapT = THREE.MirroredRepeatWrapping;
+  // Only the projector's picture is lit: no mirrored strips beside it and no fade at its west
+  // end (until 17 November 2026 the frame was a 7.0 × 3.94 m rectangle, its specks mirrored out
+  // to the side walls and faded over its last 1.4 m; the photographs and the documentation
+  // video show neither).
   const floorMat = new THREE.MeshBasicMaterial({
     color: FLOOR_TINT,
     transparent: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     toneMapped: false,
-    vertexColors: true,
     opacity: 0,
   });
   // Whatever the video's brightness, the dark floor only rises so far: the river of light
   // that misses the plastic stays as faint as the specks, as in the photos.
+  // The picture's place in the frame comes from the projector, per pixel (projective texture
+  // mapping), so its keystone is the projector's.
   floorMat.onBeforeCompile = (sh) => {
-    sh.fragmentShader = sh.fragmentShader.replace(
-      '#include <map_fragment>',
-      `#include <map_fragment>
-      diffuseColor.rgb = ${FLOOR_PEAK.toFixed(2)} * (1.0 - exp(-diffuseColor.rgb / ${FLOOR_PEAK.toFixed(2)}));`,
-    );
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vLifPos;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\nvLifPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>\nvarying vec3 vLifPos;\n${projUV}`)
+      .replace(
+        '#include <map_fragment>',
+        `#ifdef USE_MAP
+          vec2 lifUV = letItFlowUV(vLifPos);
+          vec4 lifTex = texture2D(map, clamp(lifUV, 0.0, 1.0));
+          #ifdef DECODE_VIDEO_TEXTURE
+            lifTex = sRGBTransferEOTF(lifTex); // as three's own map_fragment does for video
+          #endif
+          diffuseColor *= lifTex * letItFlowIn(lifUV);
+        #endif
+        diffuseColor.rgb = ${FLOOR_PEAK.toFixed(2)} * (1.0 - exp(-diffuseColor.rgb / ${FLOOR_PEAK.toFixed(2)}));`,
+      );
   };
   {
-    // a plane from wall to wall, its UVs following letItFlowUV; on the dark floor the far
-    // end of the frame would be a hard line, so the last metre fades out
-    const x0 = P.xEast - P.lengthM;
-    const zMid = (Z0 + Z1) / 2;
-    const geo = new THREE.PlaneGeometry(P.lengthM, Z1 - Z0, 5, 1);
+    // a plane over the lit area's bounding box, cut to the room
+    const xs = PJ.quad.map((q) => q[0]);
+    const x0 = Math.max(Math.min(...xs) - 0.05, 15.9);
+    const x1 = Math.min(Math.max(...xs) + 0.05, WALL_X);
+    const geo = new THREE.PlaneGeometry(x1 - x0, Z1 - Z0);
     geo.rotateX(-Math.PI / 2);
-    const pos = geo.attributes.position;
-    const uv = geo.attributes.uv;
-    const fade = new Float32Array(pos.count * 3);
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i) + x0 + P.lengthM / 2;
-      const z = pos.getZ(i) + zMid;
-      uv.setXY(i, (P.xEast - x) / P.lengthM, 0.5 + (z - P.zCentre) / P.widthM);
-      fade.fill(x - x0 < 0.01 ? 0 : 1, i * 3, i * 3 + 3);
-    }
-    geo.setAttribute('color', new THREE.BufferAttribute(fade, 3));
     const floorProj = new THREE.Mesh(geo, floorMat);
-    floorProj.position.set(x0 + P.lengthM / 2, 0.004, zMid);
+    floorProj.position.set((x0 + x1) / 2, 0.004, (Z0 + Z1) / 2);
     floorProj.renderOrder = 2;
     floorProj.userData.paradata = 'lif-floor-projection';
     group.add(floorProj);
@@ -169,9 +188,11 @@ export function buildLetItFlow(manager) {
           vec3 lifLight = vec3(0.1, 0.11, 0.14);
           for (int i = 0; i < 8; i++) {
             float a = float(i) * 0.7854;
-            lifLight = max(lifLight, texture2D(lifProj, letItFlowUV(vLifPos + vec3(cos(a), 0.0, sin(a)) * 0.06)).rgb);
+            vec2 q = letItFlowUV(vLifPos + vec3(cos(a), 0.0, sin(a)) * 0.06);
+            lifLight = max(lifLight, texture2D(lifProj, clamp(q, 0.0, 1.0)).rgb * letItFlowIn(q));
           }
-          lifLight = max(lifLight, texture2D(lifProj, letItFlowUV(vLifPos)).rgb) * vec3(0.92, 0.96, 1.1) * lifStrength;
+          vec2 q0 = letItFlowUV(vLifPos);
+          lifLight = max(lifLight, texture2D(lifProj, clamp(q0, 0.0, 1.0)).rgb * letItFlowIn(q0)) * vec3(0.92, 0.96, 1.1) * lifStrength;
           vec3 lifL = normalize((viewMatrix * vec4(lifLamp, 1.0)).xyz + vViewPosition);
           vec3 lifH = normalize(lifL + normalize(vViewPosition));
           float lifDiff = 0.22 + 0.78 * max(dot(normal, lifL), 0.0);

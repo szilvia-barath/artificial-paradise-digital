@@ -1,105 +1,186 @@
 {
-  "source": "PLANE jav\u00edtott.png (top-down composite of the installed river, in the frame of the floor video)",
-  "pxPerMetre": 457.14285714285717,
+  "source": "PLANE javított.png (top-down composite of the installed river, in the frame of the floor video)",
+  "pxPerMetre": 535.5569664902998,
   "hmax": 0.13,
-  "xTop": 25.4041,
-  "zLeft": 2.8178,
-  "widthM": 1.6056,
-  "lengthM": 4.7447,
+  "xTop": 25.4006,
+  "zLeft": 2.9514,
+  "widthM": 1.3705,
+  "lengthM": 4.05,
   "grid": [
     200,
     593
   ],
   "obstacles": [
     [
-      25.054,
-      25.404,
-      3.761,
-      4.427
+      25.102,
+      25.401,
+      3.756,
+      4.325
     ],
     [
-      24.704,
-      25.054,
-      2.81,
-      4.268
+      24.803,
+      25.102,
+      2.945,
+      4.189
     ],
     [
-      24.354,
-      24.704,
-      2.928,
-      3.823
+      24.504,
+      24.803,
+      3.045,
+      3.809
     ],
     [
-      24.004,
-      24.354,
-      2.965,
-      3.548
+      24.206,
+      24.504,
+      3.077,
+      3.575
     ],
     [
-      23.654,
-      24.004,
-      2.899,
-      3.347
+      23.907,
+      24.206,
+      3.021,
+      3.403
     ],
     [
-      23.304,
-      23.654,
-      2.983,
-      3.522
+      23.608,
+      23.907,
+      3.092,
+      3.553
     ],
     [
-      22.954,
-      23.304,
-      3.035,
-      3.609
+      23.309,
+      23.608,
+      3.137,
+      3.627
     ],
     [
-      22.604,
-      22.954,
-      3.245,
-      3.6
+      23.011,
+      23.309,
+      3.316,
+      3.619
     ],
     [
-      22.254,
-      22.604,
-      3.21,
-      3.559
+      22.712,
+      23.011,
+      3.286,
+      3.584
     ],
     [
-      21.904,
-      22.254,
-      3.21,
-      3.677
+      22.413,
+      22.712,
+      3.286,
+      3.685
     ],
     [
-      21.554,
-      21.904,
-      3.302,
-      3.791
+      22.114,
+      22.413,
+      3.365,
+      3.782
     ],
     [
-      21.204,
-      21.554,
-      3.545,
-      4.075
+      21.815,
+      22.114,
+      3.572,
+      4.024
     ],
     [
-      20.854,
-      21.204,
-      3.722,
-      4.283
+      21.517,
+      21.815,
+      3.723,
+      4.202
     ],
     [
-      20.659,
-      20.854,
-      3.919,
-      4.292
+      21.35,
+      21.517,
+      3.891,
+      4.21
     ]
   ],
-  "projection": {
-    "xEast": 25.739,
-    "lengthM": 7.0,
+  "composite": {
+    "xEast": 25.686,
+    "lengthM": 5.975,
     "zCentre": 3.73,
-    "widthM": 3.938
+    "widthM": 3.361
+  },
+  "projector": {
+    "_note": "Written by scripts/fit_projector.mjs. position: the lens (measured, DSC_0108 to DSC_0112). floorToFrame: the 3 x 3 homography from a floor point (x, z, 1) to the frame (s, t, 1) (inferred: projector and Resolume keystone together); quad: the floor corners of the frame at (s,t) = (0,0), (1,0), (1,1), (0,1), s from the east end, t from the north side. A point above the floor takes the picture along the ray from the lens. aim: from the lens to the frame centre (inferred, for the record).",
+    "position": [
+      21.82,
+      2.36,
+      1.87
+    ],
+    "floorToFrame": [
+      [
+        -0.1483397,
+        0.030748,
+        3.6972862
+      ],
+      [
+        0.0034364,
+        0.3911767,
+        -1.0837155
+      ],
+      [
+        -0.0117598,
+        0.0407054,
+        1
+      ]
+    ],
+    "quad": [
+      [
+        25.452,
+        2.547
+      ],
+      [
+        19.559,
+        2.599
+      ],
+      [
+        19.377,
+        5.105
+      ],
+      [
+        25.924,
+        4.821
+      ]
+    ],
+    "aim": [
+      0.2866,
+      -0.7571,
+      0.5871
+    ],
+    "fit": {
+      "cost": 15.886,
+      "riverCentreLineErrorM": {
+        "mean": 0.065,
+        "max": 0.198
+      },
+      "sides": [
+        "north limit at x 22.75: wanted z 2.55, fitted 2.57",
+        "north limit at x 20.5: wanted z 2.78, fitted 2.59",
+        "south limit at x 23: wanted z 5.03, fitted 4.95",
+        "south limit at x 20.5: wanted z 4.88, fitted 5.06"
+      ],
+      "widthM": {
+        "x20_5": 2.47,
+        "x23": 2.38
+      },
+      "lengthM": {
+        "north": 5.96,
+        "middle": 6.24,
+        "south": 6.52
+      },
+      "eastEndX": [
+        25.69,
+        25.88
+      ],
+      "westEndX": 19.47,
+      "rms": {
+        "river": 0.56,
+        "side": 1.16,
+        "east": 0,
+        "west": 1.36
+      }
+    }
   }
 }
