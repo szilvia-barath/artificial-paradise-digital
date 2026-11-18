@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, ROOMS } from './layout.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
-// plus Room 4's brick vaults and the stair shaft. UVs are world metres (u along the
+// plus Room 4's brick vaults and the opening to the street door. UVs are world metres (u along the
 // wall, v = height), so brick courses line up across every wall and doorway.
 // Geometry is merged per material to keep draw calls low.
 // Returns { group, segments } where segments are 2D collision lines [[x,z],[x,z]].
