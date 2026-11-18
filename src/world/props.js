@@ -859,7 +859,7 @@ export function buildProps(materials) {
     // past the cloth (under the roll and at its edges). No obstacle of its own: the block
     // behind it already stops the visitor.
     {
-      const x0 = 14.58; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
+      const x0 = 14.88; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
       const x1 = 15.6; // the west face of the south stub
       const zc = 4.64; // 2.6 cm in front of the block's north face (z 4.666)
       const top = 2.75; // Room 3's ceiling
