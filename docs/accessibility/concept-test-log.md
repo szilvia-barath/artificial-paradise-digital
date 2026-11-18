@@ -1,6 +1,6 @@
 # Concept page and references: test log
 
-Written by `tests/a11y/concept.mjs` on 2026-11-18 (Chromium, Playwright, headless, real key presses). 34 steps, 0 failed.
+Written by `tests/a11y/concept.mjs` on 2026-11-18 (Chromium, Playwright, headless, real key presses). 35 steps, 0 failed.
 
 | Step | Expected | Got | Result |
 |---|---|---|---|
@@ -29,6 +29,7 @@ Written by `tests/a11y/concept.mjs` on 2026-11-18 (Chromium, Playwright, headles
 | 2.9 Esc clears the highlight; a second Esc closes the panel; focus returns to "Concept" in the navbar | highlight on → off with the panel open → panel closed, focus on the navbar button | highlight true → false, panel open true → panel open false, focus on concept | pass |
 | 2.10 Enter on a theme node opens its section in Themes | tab themes, focus on concept-theme-T4 | tab themes, focus on concept-theme-T4 | pass |
 | 2.11 Hovering a node highlights it and its neighbours and dims the rest | 12 nodes highlighted, the rest dimmed | 12 highlighted, dimmed: true | pass |
+| 2.12a Highlighted labels do not overlap theme labels | none, EN and HU, 1366 and 375 wide | 1366 en: none; 1366 hu: none; 375 en: none; 375 hu: none | pass |
 | 2.12 A language switch keeps the view and redraws it in Hungarian | tab network, "A mesterséges mennyország fogalma", 61 nodes | tab network, "A mesterséges mennyország fogalma", 61 nodes | pass |
 | 2.13 A work's link closes the panel and goes to the work; focus is on the 3D view | panel closed, focus on scene, Room 4 | panel open false, focus on scene, Room 4 | pass |
 | 2.14 The viewer's "Connections" line: the work's references and themes; a theme opens the Concept page at that theme | "Connections" with R09 to R12 and themes T2, T3, T4; then the viewer closed, the Concept page on Themes, focus on concept-theme-T4 | "Connections": IUCN (International Union for Conservation of Nature), Szentkirályszabadja, The former Soviet barracks at Szentkirályszabadja (Index, 2019), Caspar David Friedrich; themes T2, T3, T4; viewer hidden true, panel open true, tab themes, focus on concept-theme-T4 | pass |
