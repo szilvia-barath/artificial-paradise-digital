@@ -361,7 +361,6 @@
       "connections": "Connections",
       "exhibition": "the exhibition at MAMŰ Gallery",
       "netLabel": "Network of the themes, references, concepts and works",
-      "netNote": "The links come from the reconstructor's reading of the exhibition's texts. The position of a node has no meaning.",
       "netHelp": "A node shows its links when the pointer or keyboard focus is on it. Enter or a click opens a reference's card or a theme, or goes to a work. Esc clears the highlight.",
       "legend": "Key",
       "legendTheme": "Theme: large circle",

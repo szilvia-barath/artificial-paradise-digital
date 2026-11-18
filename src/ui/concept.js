@@ -156,7 +156,6 @@ export function setupConcept(data, body, { onGotoWork }) {
   const networkHTML = () => `
     <p class="note">${esc(t('concept.netHelp'))}</p>
     <div class="concept-net-wrap"><svg class="concept-net" role="group" aria-label="${esc(t('concept.netLabel'))}"></svg></div>
-    <p class="net-note">${esc(t('concept.netNote'))}</p>
     <div id="concept-card" hidden></div>
     <h3 class="legend-h">${esc(t('concept.legend'))}</h3>
     <ul class="net-legend">

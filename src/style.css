@@ -1363,7 +1363,6 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 .concept-net.dim .node:not(.hl), .concept-net.dim .lbl:not(.hl) { opacity: 0.25; }
 .concept-net.dim .edge:not(.hl) { opacity: 0.12; }
 .concept-net.dim .edge.hl { stroke: var(--ink); stroke-width: 2; }
-#panel-body .concept .net-note { font-size: 14px; line-height: 1.5; margin: 0 0 14px; }
 #concept-card { margin: 0 0 20px; }
 #panel-body .concept h3.legend-h { font: 600 14px var(--sans); color: var(--ink-muted); margin: 18px 0 8px; }
 .concept ul.net-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 4px 16px; font-size: 13px; line-height: 1.5; color: var(--ink); }

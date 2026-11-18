@@ -361,7 +361,6 @@
       "connections": "Kapcsolatok",
       "exhibition": "a kiállítás a MAMŰ Galériában",
       "netLabel": "A témák, hivatkozások, fogalmak és művek hálózata",
-      "netNote": "A kapcsolatok a rekonstruktőr szövegolvasatán alapulnak. A pontok helyének nincs jelentése.",
       "netHelp": "Egy pont kapcsolatai akkor látszanak, amikor a mutató vagy a billentyűzetfókusz rajta áll. Az Enter vagy egy kattintás megnyitja a hivatkozás kártyáját vagy a témát, illetve a műhöz visz. Az Esc megszünteti a kiemelést.",
       "legend": "Jelmagyarázat",
       "legendTheme": "Téma: nagy kör",
