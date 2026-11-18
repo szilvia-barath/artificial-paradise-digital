@@ -15,6 +15,9 @@ const data = JSON.parse(readFileSync('src/data/exhibition.json', 'utf8'));
 const UI = { en: JSON.parse(readFileSync('src/i18n/en.json', 'utf8')).ui, hu: JSON.parse(readFileSync('src/i18n/hu.json', 'utf8')).ui };
 const fill = (s, vars) => String(s ?? '(no such string)').replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
 const SHOTS = process.env.AP_SHOTS;
+// a screenshot is slow while the 3D view renders in software: it may take long, and a failed
+// one is said but does not fail the test
+const shot = (page, path) => page.screenshot({ path, timeout: 180000 }).catch((e) => console.log(`(screenshot ${path} not taken: ${e.message.split(/\r?\n/)[0]})`));
 
 const browser = await launch();
 let failed = 0;
@@ -74,11 +77,11 @@ for (const lang of ['en', 'hu']) {
     const btn = '#viewer-videos [data-full="0"]';
     const label = await page.textContent(btn);
     const wantLabel = fill(L[v.label], { title: v.title || w.title });
-    if (SHOTS && lang === 'en' && (id === 'w06-artificial-paradise-singapore' || id === 'w16-let-it-flow')) await page.screenshot({ path: `${SHOTS}/viewer-${w.no}-before-ARTWORK.png` });
+    if (SHOTS && lang === 'en' && (id === 'w06-artificial-paradise-singapore' || id === 'w16-let-it-flow')) await shot(page, `${SHOTS}/viewer-${w.no}-before-ARTWORK.png`);
     await page.click(btn);
     await page.waitForFunction(() => !document.getElementById('viewer-frame').hidden, null, { timeout: 30000 });
     await page.frameLocator('#viewer-frame').locator('button').waitFor({ timeout: 30000 });
-    if (SHOTS && lang === 'en' && (id === 'w06-artificial-paradise-singapore' || id === 'w16-let-it-flow')) await page.screenshot({ path: `${SHOTS}/viewer-${w.no}-after-ARTWORK.png` });
+    if (SHOTS && lang === 'en' && (id === 'w06-artificial-paradise-singapore' || id === 'w16-let-it-flow')) await shot(page, `${SHOTS}/viewer-${w.no}-after-ARTWORK.png`);
     const after = await page.evaluate(() => {
       const f = document.getElementById('viewer-frame');
       return { src: f.getAttribute('src'), title: f.title, frames: document.querySelectorAll('#viewer iframe[src]').length, back: document.querySelector('#viewer-videos [data-full="0"]').textContent, focus: document.activeElement?.dataset?.full ?? null };
