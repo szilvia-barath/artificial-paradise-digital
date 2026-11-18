@@ -159,6 +159,8 @@ const ui = setupPanels(data, {
   onOpenPanel: () => { blockers.panel = true; if (tour.active) tour.stop(); syncEnabled(); },
   // walking stays locked while the sound question is still open (it holds blockers.panel too)
   onClosePanel: () => { blockers.panel = soundAsking(); syncEnabled(); },
+  // a work's link on the Concept page: the panel has closed; go to the work, focus on the 3D view
+  onGotoWork: (w) => { gotoWork(w); focusScene(); },
   onJumpRoom: (id) => jumpToRoom(id),
   onGuide: () => showGuide(true),
   inside: () => entered,
@@ -171,6 +173,10 @@ const viewer = setupViewer(data, {
   onClose: () => { blockers.viewer = false; audio.setFocus(1); syncEnabled(); },
   onGoto: (w) => { gotoWork(w); focusScene(); },
   focusFallback,
+  connections: (w) => ui.connections(w),
+  // a theme in the viewer's Connections line: the viewer closes (focus goes back to what
+  // opened it, which then counts as the panel's opener) and the Concept page opens there
+  onTheme: (id) => { viewer.close(); ui.show('concept', { theme: id }); },
   // the viewer plays a video's sound itself, so the walk's mix steps aside
   onMedia: (isVideo) => audio.setFocus(isVideo ? 0 : 0.4),
   isMuted: () => audio.muted,

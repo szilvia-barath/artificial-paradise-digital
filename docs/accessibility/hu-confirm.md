@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 64. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 118. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -10,6 +10,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.nav.help`
   - HU: Súgó
   - EN: Help
+- `ui.nav.concept`
+  - HU: Koncepció
+  - EN: Concept
 - `ui.soundAsk.hintTouch`
   - HU: Fejhallgatóval izgalmasabb · a hang az alsó Hang gombbal bármikor be- és kikapcsolható
   - EN: Better with headphones · the Sound button at the bottom switches the sound on or off any time
@@ -112,6 +115,162 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.announce.viewerWork`
   - HU: {title}. {no}. mű a {total} közül.
   - EN: {title}. No. {no} of {total}.
+- `ui.concept.eyebrow`
+  - HU: Hivatkozások, témák és művek
+  - EN: References, themes and works
+- `ui.concept.tablist`
+  - HU: A Koncepció oldal nézetei
+  - EN: Views of the Concept page
+- `ui.concept.tabs.themes`
+  - HU: Témák
+  - EN: Themes
+- `ui.concept.tabs.timeline`
+  - HU: Idővonal
+  - EN: Timeline
+- `ui.concept.tabs.network`
+  - HU: Hálózat
+  - EN: Network
+- `ui.concept.newTab`
+  - HU: új lapon nyílik meg
+  - EN: opens in a new tab
+- `ui.concept.in.en`
+  - HU: angol nyelven
+  - EN: in English
+- `ui.concept.in.hu`
+  - HU: magyar nyelven
+  - EN: in Hungarian
+- `ui.concept.footnote`
+  - HU: {n}. lábjegyzet
+  - EN: Footnote {n}
+- `ui.concept.notes`
+  - HU: Jegyzetek
+  - EN: Notes
+- `ui.concept.backToText`
+  - HU: Vissza a szöveghez, {n}. lábjegyzet
+  - EN: Back to the text, footnote {n}
+- `ui.concept.type.person`
+  - HU: személy
+  - EN: person
+- `ui.concept.type.place`
+  - HU: hely
+  - EN: place
+- `ui.concept.type.organisation`
+  - HU: szervezet
+  - EN: organisation
+- `ui.concept.type.text`
+  - HU: szöveg
+  - EN: text
+- `ui.concept.type.concept`
+  - HU: fogalom
+  - EN: concept
+- `ui.concept.type.event`
+  - HU: esemény
+  - EN: event
+- `ui.concept.type.theme`
+  - HU: téma
+  - EN: theme
+- `ui.concept.type.work`
+  - HU: mű
+  - EN: work
+- `ui.concept.subtype.river`
+  - HU: folyó
+  - EN: river
+- `ui.concept.subtype.visitor attraction`
+  - HU: turisztikai látványosság
+  - EN: visitor attraction
+- `ui.concept.subtype.country`
+  - HU: ország
+  - EN: country
+- `ui.concept.dates.R01`
+  - HU: 1859 (a kísérletek kezdete)
+  - EN: 1859 (experiments begin)
+- `ui.concept.dates.R06`
+  - HU: 1901 (az üvegház-metafora)
+  - EN: 1901 (greenhouse metaphor)
+- `ui.concept.dates.R10`
+  - HU: a rendszerváltás után (1989–90)
+  - EN: after the change of regime (1989–90)
+- `ui.concept.dates.R11`
+  - HU: 2019. július 22.
+  - EN: 2019-07-22
+- `ui.concept.dateLabel`
+  - HU: Dátum a szövegekben
+  - EN: Date in the texts
+- `ui.concept.linksLabel`
+  - HU: Linkek
+  - EN: Links
+- `ui.concept.source`
+  - HU: Forrás
+  - EN: Source
+- `ui.concept.wikipedia`
+  - HU: Wikipédia
+  - EN: Wikipedia
+- `ui.concept.passages`
+  - HU: A szövegekben
+  - EN: In the texts
+- `ui.concept.references`
+  - HU: Hivatkozások és fogalmak
+  - EN: References and concepts
+- `ui.concept.themes`
+  - HU: Témák
+  - EN: Themes
+- `ui.concept.allWorks`
+  - HU: A kiállítás összes műve
+  - EN: All works in the exhibition
+- `ui.concept.openTheme`
+  - HU: a téma megnyitása
+  - EN: open the theme
+- `ui.concept.textKind.videos`
+  - HU: videók
+  - EN: videos
+- `ui.concept.textKind.prints`
+  - HU: nyomatok
+  - EN: prints
+- `ui.concept.supporters`
+  - HU: Támogatók, a közreműködők között
+  - EN: Supporters, in the credits
+- `ui.concept.connections`
+  - HU: Kapcsolatok
+  - EN: Connections
+- `ui.concept.exhibition`
+  - HU: a kiállítás a MAMŰ Galériában
+  - EN: the exhibition at MAMŰ Gallery
+- `ui.concept.netLabel`
+  - HU: A témák, hivatkozások, fogalmak és művek hálózata
+  - EN: Network of the themes, references, concepts and works
+- `ui.concept.netHelp`
+  - HU: Egy pont kapcsolatai akkor látszanak, amikor a mutató vagy a billentyűzetfókusz rajta áll. Az Enter vagy egy kattintás megnyitja a hivatkozás kártyáját vagy a témát, illetve a műhöz visz. Az Esc megszünteti a kiemelést.
+  - EN: A node shows its links when the pointer or keyboard focus is on it. Enter or a click opens a reference's card or a theme, or goes to a work. Esc clears the highlight.
+- `ui.concept.legend`
+  - HU: Jelmagyarázat
+  - EN: Key
+- `ui.concept.legendTheme`
+  - HU: Téma: nagy kör
+  - EN: Theme: large circle
+- `ui.concept.legendItem`
+  - HU: Hivatkozás vagy fogalom: kis kör
+  - EN: Reference or concept: small circle
+- `ui.concept.legendWork`
+  - HU: Mű: négyzet
+  - EN: Work: square
+- `ui.concept.legendItemTheme`
+  - HU: Hivatkozás és téma: folytonos vonal
+  - EN: Reference and theme: solid line
+- `ui.concept.legendItemWork`
+  - HU: Hivatkozás és mű: szaggatott vonal
+  - EN: Reference and work: dashed line
+- `ui.concept.legendThemeWork`
+  - HU: Téma és mű: pontozott vonal
+  - EN: Theme and work: dotted line
+- `ui.concept.nodeName`
+  - HU: {label}, {type}, {n} kapcsolat
+  - EN: {label}, {type}, {n} links
+- `ui.concept.nodeNameOne`
+  - HU: {label}, {type}, 1 kapcsolat
+  - EN: {label}, {type}, 1 link
+- `ui.concept.backToDiagram`
+  - HU: Vissza az ábrához
+  - EN: Back to the diagram
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
@@ -136,6 +295,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.updated` (the date only)
   - HU: Utolsó frissítés: 2026. november 15.
   - EN: Last updated: 15 November 2026
+- `privacy.updated`
+  - HU: Utolsó frissítés: 2026. november 16.
+  - EN: Last updated: 16 November 2026
 - `accessibility.sections[1].p[0]`
   - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél, a Súgóban és a műnézőben, a teljes videó keretével is (a Google lejátszóját letiltva). Eredmény 2026. november 16-án: a 38 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját; a 3D nézet fölötti kontrasztot ezért képernyőképeken mértem meg (lásd: Mi működik).
   - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the accessible version (text format) in both languages (light and dark) and on the digital exhibition in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu, Help and the artwork viewer, also with the frame of the full video (with Google's player blocked). Result on 16 November 2026: no violations in any of the 38 states. axe could not judge the contrast of text that lies over the 3D view or a picture; I measured the contrast over the 3D view in screenshots instead (see What works).
