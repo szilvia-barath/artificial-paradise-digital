@@ -2,9 +2,11 @@
 # Short web loops of the artist's videos for the screens in 3D (public/video), with the
 # videos' own sound where they have one (the 3D view plays it from the screen's place).
 # The full videos stay on Google Drive and play in the artwork viewer.
-#   scripts/make_videos.sh <folder with the downloaded Drive videos> [all|loops|light]
+#   scripts/make_videos.sh <folder with the downloaded Drive videos> [all|loops|light|wiena]
 # all (the default) makes the loops and their light versions; loops only the loops; light
-# only the light versions and the sound files, leaving the loops as they are.
+# only the light versions and the sound files, leaving the loops as they are; wiena only the
+# two Wiena loops (nos 8 and 15), from the loops already in public/video where the artist's
+# files are not in the folder (see wiena() below).
 # FFMPEG names the ffmpeg to use if it is not on the PATH. The loops need libx264 and the aac
 # encoder. The light versions and sound files need no aac encoder (their sound is copied
 # from the loops), and with H264=qsv their picture is encoded by Intel Quick Sync instead of
@@ -154,6 +156,37 @@ enc_loop_light() { # file, loop name, start s, duration s, size, fps, bitrate
 sound_of() { # loop name
   ffmpeg -v error -y -i "$OUT/$1.mp4" -vn -c:a copy -movflags +faststart "$OUT/$1-sound.m4a"
 }
+# ---------------------------------------------------------------- the Wiena videos
+# The two Wiena loops are 16:9: the gallery's TVs showed 16:9 cuts made by the artist. Until
+# he sends them, the 4:3 files are cut to 16:9 by taking equal strips from the top and the
+# bottom (the full width, centred; the artist, 17 November 2026). Where the artist's file is
+# not in the folder, the 4:3 loop in public/video is cut instead, once (a loop that is
+# already 16:9 is left as it is): an encode of an encode, at a set bitrate, three quarters
+# of the 4:3 loop's (the same bits for each pixel kept).
+WIENA_CROP="crop=iw:trunc(iw*9/32)*2"
+wiena() { # encode function, file, loop name, start s, duration s, size, fps, crf, bitrate from the loop
+  local fn=$1 file=$2 name=$3
+  if [ -f "$SRC/$file" ]; then
+    echo "$name: from '$file'" >&2
+    "$fn" "$file" "$name" "$4" "$5" "$WIENA_CROP,scale=$6:flags=lanczos" "$7" "$8"
+  else
+    local h; h=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$OUT/$name.mp4" | tr -d '\r')
+    if [ "$h" = "${6#*:}" ]; then echo "$name: already 16:9 ($6), left as it is" >&2; return; fi
+    echo "$name: '$file' is not in $SRC; cut from the 4:3 loop in $OUT (second generation)" >&2
+    local tmp; tmp=$(mktemp -d)
+    cp "$OUT/$name.mp4" "$tmp/$name.mp4"
+    (SRC=$tmp; "$fn" "$name.mp4" "$name" 0 "$5" "$WIENA_CROP,scale=$6:flags=lanczos" "$7" "$9")
+    rm -r "$tmp"
+  fi
+}
+wiena_loops() {
+  # the cyan Wiena barely moves (only the grass in the lower half sways): at the usual settings
+  # the encoder drops that motion and the screen looks frozen, so no skipped blocks and a lower crf
+  # (the 4:3 loops: 1330 and 1000 kbit/s)
+  wiena enc_subtle "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-i 0 37.6 960:540 25 26 1000k
+  wiena enc "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-ii 0 37.6 960:540 25 30 750k
+}
+if [ "$WHAT" = wiena ]; then wiena_loops; exit 0; fi
 
 if [ "$WHAT" != light ]; then
 # with sound: Singapore and The Eden Project as they are (about -24 and -26 LUFS), the
@@ -162,13 +195,8 @@ if [ "$WHAT" != light ]; then
 enc "artifical paradise_singapore.mp4" w06-artificial-paradise-singapore 30 40 "scale=960:540" 30 30 -2
 enc "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-eden-project 0 58 "scale=960:540" 30 30 0
 # silent: the Wiena files have no sound track, Paradise Factory and Let it flow a silent one
-# the cyan Wiena hangs in Room 3 (#8), the red one in Room 4 (#15); the files stay 4:3. The
-# gallery's 16:9 TVs cropped the picture, they did not stretch it (the artist, 13 November
-# 2026; DSC_0089, DSC_0120): the walk crops it too (video.mediaAspect and cropTop in exhibition.json)
-# the cyan Wiena barely moves (only the grass in the lower half sways): at the usual settings
-# the encoder drops that motion and the screen looks frozen, so no skipped blocks and a lower crf
-enc_subtle "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-i 0 37.6 "scale=960:720:flags=lanczos" 25 26
-enc "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-ii 0 37.6 "scale=960:720" 25 30
+# the cyan Wiena hangs in Room 3 (#8), the red one in Room 4 (#15), both cut to 16:9 (above)
+wiena_loops
 enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:540" 25 30 15
 # the Paradise Factory monitor stands on its side: the footage turned counter-clockwise is
 # upright on it, as in the documentation video, and cropped to the panel (0.831 wide to 1 high)
@@ -193,8 +221,8 @@ if [ "$WHAT" != loops ]; then
 # (PROGRESS.md, "Videos by room": calculated from layout.js, not measured in the gallery.)
 enc_light "artifical paradise_singapore.mp4" w06-artificial-paradise-singapore 30 "" 320:180 "" 25 180k
 enc_light "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-eden-project 0 "" 320:180 "" 25 180k
-enc_subtle_light "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-i 0 "" 320:240 "" 25 180k
-enc_light "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-ii 0 "" 320:240 "" 25 180k
+enc_subtle_light "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-i 0 "$WIENA_CROP" 320:180 "" 25 180k
+enc_light "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-ii 0 "$WIENA_CROP" 320:180 "" 25 180k
 enc_light "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 "" 320:180 "" 25 120k
 enc_light "paradise factory_.mp4" w03-screen 20 "transpose=2,crop=1024:1232" 128:154 "" 25 120k
 enc_loop_light "siluett_short.mp4" w16-projection 0 9 640:360 25 400k
