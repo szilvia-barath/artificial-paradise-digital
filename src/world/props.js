@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE, TOILET } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
@@ -672,12 +672,33 @@ export function buildProps(materials) {
       g.add(place(lamp, x, 0, z));
     }
 
-    // closed door to the toilets
-    g.add(slab(materials.door, 6.089, 6.962, 0, 2.02, 5.692, 5.73));
-    g.add(slab(materials.white, 6.027, 6.089, 0, 2.08, 5.682, 5.73));
-    g.add(slab(materials.white, 6.962, 7.024, 0, 2.08, 5.682, 5.73));
-    g.add(slab(materials.white, 6.027, 7.024, 2.02, 2.08, 5.682, 5.73));
-    g.add(place(box(0.12, 0.02, 0.04, materials.steel), 6.837, 1.02, 5.673));
+    // The dark corridor to the toilets (walls in layout.js, TOILET), as DSC_0047 shows it
+    // from its mouth: the end wall tiled to about 1.37 m, a small basin and a round mirror
+    // in a square black frame above it, and on the right (west) the toilet's door, dark,
+    // towards the end. Sizes and places measured on DSC_0047 against the corridor's width
+    // (±20 %); the door is built shut (whether it stood open is not clear).
+    {
+      const T = TOILET;
+      const y0 = T.step;
+      const zEnd = T.z1;
+      g.add(slab(materials.toiletTile, T.x0, T.x1, y0, y0 + 1.37, zEnd - 0.012, zEnd));
+      const basin = cyl(0.23, 0.17, 0.15, materials.toiletWhite, 20);
+      basin.scale.z = 0.62;
+      g.add(place(basin, T.x1 - 0.25, y0 + 0.725, zEnd - 0.155));
+      g.add(place(cyl(0.025, 0.025, 0.3, materials.steel, 8), T.x1 - 0.25, y0 + 0.5, zEnd - 0.06));
+      const mx = T.x1 - 0.33;
+      const my = y0 + 1.61;
+      const frame = 0.012;
+      for (const [a, b, c, d] of [[-0.21, 0.21, 0.2, 0.21], [-0.21, 0.21, -0.21, -0.2], [-0.21, -0.2, -0.21, 0.21], [0.2, 0.21, -0.21, 0.21]]) {
+        g.add(slab(materials.black, mx + a, mx + b, my + c, my + d, zEnd - 0.03, zEnd - 0.03 + frame));
+      }
+      const mirror = new THREE.Mesh(new THREE.CircleGeometry(0.195, 32), materials.toiletMirror);
+      g.add(place(mirror, mx, my, zEnd - 0.014, Math.PI));
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.195, 0.006, 6, 40), materials.black);
+      g.add(place(ring, mx, my, zEnd - 0.016));
+      // the toilet's door in the west wall, near the end
+      g.add(slab(materials.black, T.x0, T.x0 + 0.03, y0, y0 + 2.0, 6.72, 7.58));
+    }
 
     // grille in front of the storage alcove (DSC_0058–0060): dark galvanised steel, round
     // rods ending in points above the top bar, three flat bars; lumber stored behind
@@ -822,14 +843,45 @@ export function buildProps(materials) {
     g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
     dirtAlong(16.331, 0, 1.787, 16.331, 1.45, 1.787);
 
-    // curtain bunched at the south side of the opening between Room 3 and Room 4
-    const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);
-    const pos = cg.attributes.position;
-    for (let i = 0; i < pos.count; i++) pos.setZ(i, Math.sin(pos.getX(i) * 46) * 0.045);
-    cg.computeVertexNormals();
-    const curtain = new THREE.Mesh(cg, materials.curtain);
-    g.add(place(curtain, 15.986, 1.22, 4.362, Math.PI / 2));
-    obstacle(15.929, 16.063, 4.077, 4.666);
+    // The curtain by the opening between Room 3 and Room 4. It does not hang in the opening
+    // and does not divide the rooms: it closes the north side of the space between the two
+    // short walls south of the opening (the wall that carries #14 and the south stub), and
+    // it is drawn shut in every photograph (DSC_0064, 0069, 0097 from Room 3; DSC_0127,
+    // 0128 from Room 4). The cloth falls from the ceiling to a roll about 3 cm thick that
+    // hangs clear of the floor. No rail or rod shows in the photographs, so none is built.
+    // What is behind the cloth is not known and not built: the block in layout.js stays
+    // solid, and a dark panel on its face stands for the unlit space where the eye gets
+    // past the cloth (under the roll and at its edges). No obstacle of its own: the block
+    // behind it already stops the visitor.
+    {
+      const x0 = 14.58; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
+      const x1 = 15.6; // the west face of the south stub
+      const zc = 4.64; // 2.6 cm in front of the block's north face (z 4.666)
+      const top = 2.75; // Room 3's ceiling
+      const rollR = 0.015;
+      const clear = 0.04; // floor to the underside of the roll
+      const w = x1 - x0;
+      const y0 = clear + rollR;
+      const h = top - y0;
+      const cg = new THREE.PlaneGeometry(w, h, 64, 8);
+      const pos = cg.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const u = pos.getX(i) + w / 2;
+        const v = pos.getY(i) / h + 0.5;
+        // shallow, uneven folds every 14 cm or so, flattening over the last 20 cm, where
+        // the cloth is rolled up
+        const k = Math.min(1, v / 0.075);
+        const fold = 0.012 * Math.sin((u / 0.145) * Math.PI * 2 + 0.6) + 0.006 * Math.sin((u / 0.31) * Math.PI * 2 + 2.1);
+        pos.setZ(i, fold * k * k * (3 - 2 * k));
+      }
+      cg.computeVertexNormals();
+      g.add(place(new THREE.Mesh(cg, materials.curtain), (x0 + x1) / 2, y0 + h / 2, zc));
+      const roll = cyl(rollR, rollR, w, materials.curtain, 10);
+      roll.rotation.z = Math.PI / 2;
+      g.add(place(roll, (x0 + x1) / 2, y0, zc));
+      const shade = new THREE.Mesh(new THREE.PlaneGeometry(w, top), materials.curtainShade);
+      g.add(place(shade, (x0 + x1) / 2, top / 2, 4.662, Math.PI));
+    }
   }
 
   // ================================================================ track lights

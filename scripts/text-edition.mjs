@@ -137,10 +137,10 @@ ${artistText(w)}
       i === 0 ? t('textEdition.enterStairs') : t('textEdition.enterFrom', { room: roomName(ROOMS[i - 1].id) }),
       t('textEdition.roomCount', { n: inRoom.length }),
     ];
-    for (const sh of data.sheets || []) {
-      const p = placeOf({ hang: sh }, data.works);
-      if (p && p.room === r.id) lead.push(t('textEdition.sheet', { where: where({ hang: sh }, { order: false }) }));
-    }
+    // the sheets in this room (Room 2 has two: the exhibition text and the room sheet by the
+    // toilet corridor), in one sentence
+    const sheetsHere = (data.sheets || []).filter((sh) => placeOf({ hang: sh }, data.works)?.room === r.id);
+    if (sheetsHere.length) lead.push(t('textEdition.sheet', { where: sheetsHere.map((sh) => where({ hang: sh }, { order: false })).join(' ') }));
     return `<section id="room-${r.id}" aria-labelledby="room-${r.id}-h">
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
 <p class="sub">${titled(data.rooms[r.id].subtitle)}</p>

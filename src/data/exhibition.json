@@ -532,6 +532,14 @@
       "at": 1.73,
       "along": 8.395,
       "y": 1.5
+    },
+    {
+      "id": "roomsheet",
+      "kind": "text",
+      "face": "-z",
+      "at": 5.73,
+      "along": 6.445,
+      "y": 1.22
     }
   ],
   "contacts": [
