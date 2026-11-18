@@ -21,7 +21,8 @@ const EN = JSON.parse(readFileSync('src/i18n/en.json', 'utf8')).ui;
 const WORKS = JSON.parse(readFileSync('src/data/exhibition.json', 'utf8')).works;
 const title = (id) => WORKS.find((w) => w.id === id).title;
 const no = (id) => WORKS.find((w) => w.id === id).no;
-const linkName = (id, hint) => `Open No. ${no(id)}, ${title(id)}, in the digital exhibition${hint ? ` ${EN.textEdition.otherTab}` : ''}`;
+// one short name; where the link opens a tab (no exhibition tab entered) a screen reader hears so
+const linkName = (id, entered) => `${EN.textEdition.openInWalk}${entered ? '' : ` ${EN.textEdition.newTab}`}`;
 const shots = process.argv[2];
 const browser = await launch();
 let failed = 0;
@@ -40,6 +41,8 @@ const watch = () => {
   window.__seen = seen;
   addEventListener('hashchange', () => { if (/work=/.test(location.hash)) seen.watching = true; });
   const look = () => {
+    // a tab opened by a link starts as an empty page: look at the address again
+    if (!seen.watching && /[?&]work=/.test(location.search)) seen.watching = true;
     if (seen.watching) {
       const l = document.getElementById('loader');
       if (l) {
@@ -128,16 +131,22 @@ async function openTextTab(ctx, p, key) {
 // ---------------- A. no exhibition tab
 {
   const id = 'w06-artificial-paradise-singapore';
-  const { ctx, page: p } = await context();
-  await p.goto(`${BASE}text/`);
-  await until(p, () => document.querySelectorAll('link[rel="prefetch"]').length > 0, null, 10000);
-  const prefetch = await p.locator('link[rel="prefetch"]').count();
-  const tabs = await tabTo(p, `a[data-work="${id}"]`);
-  const link = await ax(p);
-  const target = await p.evaluate(() => document.activeElement.getAttribute('target'));
-  if (shots) await p.screenshot({ path: `${shots}/goto-A-1-link.png` });
-  await Promise.all([p.waitForURL((u) => u.searchParams.get('work') === id), p.keyboard.press('Enter')]);
-  step('A.1 No exhibition tab: the accessible version on its own fetches the engine in the background; Tab reaches the link to no. 6, a plain link in this tab (its name says nothing of another tab); Enter loads the exhibition here', prefetch === 5 && tabs > 0 && link.role === 'link' && link.name === linkName(id) && target === null && ctx.pages().length === 1, `${prefetch} files prefetched; ${tabs} Tabs to ${link.role} "${link.name}", target ${target}; ${ctx.pages().length} tab(s), now at ${p.url().replace(BASE, '/')}`);
+  const { ctx, page: tp } = await context();
+  await tp.goto(`${BASE}text/`);
+  await until(tp, () => document.querySelectorAll('link[rel="prefetch"]').length > 0, null, 10000);
+  const prefetch = await tp.locator('link[rel="prefetch"]').count();
+  const tabs = await tabTo(tp, `a[data-work="${id}"]`);
+  const link = await ax(tp);
+  const target = await tp.evaluate(() => document.activeElement.getAttribute('target'));
+  if (shots) await tp.screenshot({ path: `${shots}/goto-A-1-link.png` });
+  // the exhibition opens in a new tab, at the work
+  const [p] = await Promise.all([ctx.waitForEvent('page'), tp.keyboard.press('Enter')]);
+  await p.bringToFront();
+  await p.waitForURL((u) => u.searchParams.get('work') === id);
+  // a tab opened by a link: the context's init script ran in its first, empty page only, so the
+  // watcher is started again here, as soon as the exhibition's page is there
+  await p.evaluate(watch);
+  step('A.1 No exhibition tab: the accessible version on its own fetches the engine in the background; Tab reaches the link to no. 6, named shortly, saying it opens in a new tab; Enter opens the exhibition in a new tab, at the work', prefetch === 5 && tabs > 0 && link.role === 'link' && link.name === linkName(id) && target === 'ap-exhibition' && ctx.pages().length === 2 && /text/.test(tp.url()), `${prefetch} files prefetched; ${tabs} Tabs to ${link.role} "${link.name}", target ${target}; ${ctx.pages().length} tab(s), now at ${p.url().replace(BASE, '/')}`);
   await until(p, questionWithFocus);
   const q = await ax(p, '#sound-ask');
   const f = await ax(p);
@@ -179,7 +188,7 @@ async function openTextTab(ctx, p, key) {
   const d0 = await pose(p, id);
   const same = await p.evaluate((m) => window.__seen.mark === m, mark);
   if (shots) await p.screenshot({ path: `${shots}/goto-B-2-question-over-work-ARTWORK.png` });
-  step('B.2 The link to no. 6 (its name says it goes to the open tab) sends the exhibition\'s tab to the work, with no reload: the sound question over the 3D view at no. 6, focus on "Without sound"; the accessible version stays where it was', tabs > 0 && link.name === linkName(id, true) && f.name === EN.soundAsk.off && d0 < 0.05 && same && /\/text\//.test(t.url()) && ctx.pages().length === 2, `link: ${link.role} "${link.name}"; exhibition: focus ${f.role} "${f.name}", ${d0.toFixed(3)} m from the work, same page (not reloaded): ${same}; accessible version at ${t.url().replace(BASE, '/')}; ${ctx.pages().length} tabs`);
+  step('B.2 The link to no. 6 (named as opening in a new tab: the exhibition is not entered yet) sends the exhibition\'s tab to the work, loaded again there: the sound question over the 3D view at no. 6, focus on "Without sound"; the accessible version stays where it was', tabs > 0 && link.name === linkName(id) && f.name === EN.soundAsk.off && d0 < 0.05 && !same && /\/text\//.test(t.url()) && ctx.pages().length === 2, `link: ${link.role} "${link.name}"; exhibition: focus ${f.role} "${f.name}", ${d0.toFixed(3)} m from the work, same page (expected: loaded again): ${same}; accessible version at ${t.url().replace(BASE, '/')}; ${ctx.pages().length} tabs`);
   await p.keyboard.press('Enter');
   await until(p, viewerWithFocus, null, 30000);
   const d = await ax(p, '#viewer');
@@ -234,10 +243,10 @@ async function openTextTab(ctx, p, key) {
   // the exhibition's tab closed: the accessible version's links point back to a new load
   await p.close();
   await t.bringToFront();
-  await until(t, () => [...document.querySelectorAll('a[data-work]')].every((a) => !a.target && /[?&]work=/.test(a.getAttribute('href')) && !a.querySelector('.tab-hint').textContent), null, 15000);
+  await until(t, () => [...document.querySelectorAll('a[data-work]')].every((a) => a.target === 'ap-exhibition' && /[?&]work=/.test(a.getAttribute('href')) && !!a.querySelector('.tab-hint').textContent.trim()), null, 15000);
   const back = await t.evaluate((x) => { const a = document.querySelector(`a[data-work="${x}"]`); return { href: a.getAttribute('href'), target: a.target, hint: a.querySelector('.tab-hint').textContent }; }, id);
   const name = await t.evaluate((x) => document.querySelector(`a[data-work="${x}"]`).textContent, id);
-  step('D.2 The exhibition\'s tab closed: the accessible version\'s links are plain links again (no target, ?work= in the address, no word of another tab)', back.target === '' && /\?lang=en&work=w03-paradise-factory$/.test(back.href) && back.hint === '' && name === linkName(id), JSON.stringify(back));
+  step('D.2 The exhibition\'s tab closed: the accessible version\'s links open the exhibition at the work in a new tab again (?work= in the address, named as opening in a new tab)', back.target === 'ap-exhibition' && /lang=en&work=w03-paradise-factory$/.test(back.href) && back.hint.trim() === EN.textEdition.newTab && name === linkName(id), JSON.stringify(back));
   await ctx.close();
 }
 

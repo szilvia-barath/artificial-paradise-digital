@@ -91,7 +91,7 @@ const back = await focusName(text);
 await text.keyboard.press('Enter');
 await until(() => location.hash === '' && document.activeElement !== document.querySelector('.skip-link'));
 const kept = await page.evaluate((m) => window.__mark === m, mark);
-step('1.3 Tab, Enter on its first link goes back to the digital exhibition\'s tab', `first link "${EN.textEdition.toWalk} ${EN.textEdition.otherTab}"; the exhibition's tab not reloaded; the accessible version's tab stays`, `${back}; same page: ${kept}; tabs: ${ctx.pages().length}, ${text.url().replace(BASE, '/')}`, back.includes(`${EN.textEdition.toWalk} ${EN.textEdition.otherTab}`) && kept && /\/text\//.test(text.url()));
+step('1.3 Tab, Enter on its first link goes back to the digital exhibition\'s tab', `first link "${EN.textEdition.toWalk}"; the exhibition's tab not reloaded; the accessible version's tab stays`, `${back}; same page: ${kept}; tabs: ${ctx.pages().length}, ${text.url().replace(BASE, '/')}`, back.includes(`${EN.textEdition.toWalk}`) && kept && /\/text\//.test(text.url()));
 await text.close();
 await ready();
 await said();

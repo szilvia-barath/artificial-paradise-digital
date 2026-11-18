@@ -38,7 +38,7 @@
       "progress": "A kiállítás betöltése"
     },
     "footer": {
-      "rights": "A műalkotások © Szabó Kristóf / KristofLab",
+      "rights": "Műalkotások: Szabó Kristóf (Kristoflab)",
       "digital": "Digitális kiállítás: Baráth Szilvia",
       "venue": "MAMŰ Galéria, Budapest, 2025"
     },
@@ -184,7 +184,7 @@
         "year": "Év",
         "where": "Hol"
       },
-      "openInWalk": "{no}. mű, {title}: megnyitás a digitális kiállításban",
+      "openInWalk": "Megnyitás a digitális kiállításban",
       "textAbove": "A művész ehhez a műhöz írt szövege feljebb olvasható, itt: {ref}.",
       "part": "A műhöz tartozó kis képernyő külön helyen van. {where}",
       "rights": "Jogok",
@@ -210,7 +210,6 @@
       "skip": "A kiállítás digitális változatának akadálymentes változata (szöveges formátum)",
       "href": "./text/hu/?lang=hu",
       "newTab": "(új lapon nyílik meg)",
-      "otherTab": "(abban a lapban, ahol már meg van nyitva)",
       "nameFull": "Akadálymentes változat (szöveges formátum)"
     },
     "announce": {

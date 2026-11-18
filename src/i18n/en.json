@@ -38,7 +38,7 @@
       "progress": "Loading the exhibition"
     },
     "footer": {
-      "rights": "Artworks © Kristóf Szabó / KristofLab",
+      "rights": "Artworks by Kristóf Szabó (Kristoflab)",
       "digital": "Digital exhibition by Szilvia Baráth",
       "venue": "MAMŰ Gallery, Budapest, 2025"
     },
@@ -184,7 +184,7 @@
         "year": "Year",
         "where": "Where"
       },
-      "openInWalk": "Open No. {no}, {title}, in the digital exhibition",
+      "openInWalk": "Open in the digital exhibition",
       "textAbove": "The artist's text that goes with this work is printed above, under {ref}.",
       "part": "A small screen that belongs to the work hangs apart from it. {where}",
       "rights": "Rights",
@@ -210,7 +210,6 @@
       "skip": "Accessible version of the digital exhibition (text format)",
       "href": "./text/?lang=en",
       "newTab": "(opens in a new tab)",
-      "otherTab": "(in the tab where it is open)",
       "nameFull": "Accessible version (text format)"
     },
     "announce": {
