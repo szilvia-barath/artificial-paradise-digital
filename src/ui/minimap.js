@@ -9,14 +9,16 @@ import { reducedMotion } from '../motion.js';
 const NORTH = [-0.829, -0.56];
 
 // The works on the map, in four groups by their `type` in exhibition.json. Each group has its
-// own shape, so none is told by colour alone (A4); the colours are the map's magenta and cyan
-// and the light of the text on glass. A type not listed goes to "Other works" (the prints, now).
-// The key under the map (#map-key) is drawn from this table with the same outlines.
+// own shape and colour, so none is told by colour alone (A4): the map's magenta and cyan, the
+// light of text on glass, and an orange of its own for the other works (not the accent blue,
+// which is the visitor's dot). The prints count as paintings (the reconstructor, 18 November);
+// a type not listed goes to "Other works" (none at present). The key under the map (#map-key)
+// is drawn from this table with the same outlines.
 export const MAP_GROUPS = [
-  { id: 'paintings', types: ['painting'], shape: 'circle', colour: '#ff4fa3' },
+  { id: 'paintings', types: ['painting', 'print'], shape: 'circle', colour: '#ff4fa3' },
   { id: 'videos', types: ['video', 'projection'], shape: 'square', colour: '#5fe7ff' },
   { id: 'installations', types: ['installation'], shape: 'triangle', colour: '#f2f1ed' },
-  { id: 'other', types: [], shape: 'diamond', colour: '#ff4fa3' },
+  { id: 'other', types: [], shape: 'diamond', colour: '#ff9f40' },
 ];
 export const groupOf = (type) => MAP_GROUPS.find((g) => g.types.includes(type)) || MAP_GROUPS[MAP_GROUPS.length - 1];
 // the 1 px dark edge round every mark
@@ -112,8 +114,8 @@ export function setupMinimap(canvas, segments, works, onJump) {
     }
     ctx.stroke();
     // works: about 5 px marks with a 1 px dark edge, in four groups told apart by shape as
-    // well as colour (MAP_GROUPS): paintings round, videos square, installations a triangle,
-    // the other works (the prints) a diamond
+    // well as colour (MAP_GROUPS): paintings and prints round, videos square, installations a
+    // triangle, other works a diamond
     ctx.lineWidth = 2;
     ctx.lineJoin = 'round';
     ctx.strokeStyle = MARK_EDGE;

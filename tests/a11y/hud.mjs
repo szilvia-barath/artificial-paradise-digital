@@ -108,17 +108,18 @@ const mapGroups = (p) => p.evaluate(() => {
   });
   step("A4.2 The key's marks are the map's own, group by group: the same shape and colour as minimap.js draws, and the same dark edge", same, `minimap.js: ${groups.map((g) => `${g.id} ${g.shape} ${g.colour}`).join('; ')}; the key: ${k.marks.map((m) => `${m.group} ${m.shape} ${m.fill} edge ${m.edge}`).join('; ')}`);
   // every work is in its group by its type in exhibition.json
-  const want = { painting: 'paintings', video: 'videos', projection: 'videos', installation: 'installations' };
+  const want = { painting: 'paintings', print: 'paintings', video: 'videos', projection: 'videos', installation: 'installations' };
   const placed = works.every((x) => x.pin && x.group === (want[x.type] || 'other'));
   const byGroup = Object.fromEntries(GROUPS.map((g) => [g, works.filter((x) => x.group === g).map((x) => x.id)]));
-  step('A4.6 Each work has a mark on the map in its group by its type in exhibition.json (painting: Paintings; video: Videos; installation: Installations; any other type, the prints: Other works)', placed, `${JSON.stringify(byGroup)}; works without a mark: ${works.filter((x) => !x.pin).map((x) => x.id).join(', ') || 'none'}`);
+  step('A4.6 Each work has a mark on the map in its group by its type in exhibition.json (painting and print: Paintings; video: Videos; installation: Installations; any other type: Other works)', placed, `${JSON.stringify(byGroup)}; works without a mark: ${works.filter((x) => !x.pin).map((x) => x.id).join(', ') || 'none'}`);
   // each mark's colour against the map's glass over pure white (the worst case) and over black
   const markC = groups.map((g) => {
     const hex = [1, 3, 5].map((i) => parseInt(g.colour.slice(i, i + 2), 16));
     const [white, black] = [[255, 255, 255], [0, 0, 0]].map((under) => ratio(hex, over(rgba(k.glass), under)));
     return { id: g.id, colour: g.colour, white: +white.toFixed(2), black: +black.toFixed(2) };
   });
-  step('A4.7 Every mark is 3:1 or more against the map\'s glass, over pure white and over black', markC.every((x) => x.white >= 3 && x.black >= 3), JSON.stringify(markC));
+  const colours = new Set(groups.map((g) => g.colour.toLowerCase()));
+  step("A4.7 Every mark is 3:1 or more against the map's glass, over pure white and over black; the four groups have four colours, none the accent blue of the visitor's dot", markC.every((x) => x.white >= 3 && x.black >= 3) && colours.size === 4 && !colours.has('#8fa8ff'), JSON.stringify(markC));
   await switchTo(p, 'hu');
   const kh = await keyInfo(p);
   step(`A4.3 Switched to Hungarian: "${keyWords('hu').replaceAll('|', '", "')}", still two rows`, kh.text.join('|') === keyWords('hu') && kh.rows === 2 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
