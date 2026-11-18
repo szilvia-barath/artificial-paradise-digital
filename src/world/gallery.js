@@ -3,7 +3,7 @@ import { wallFrame } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
-import { createVideo, scheduleVideos } from './video.js';
+import { createVideo, scheduleVideos, BY_ROOM } from './video.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
 // screens playing the artist's videos (short loops, with the videos' sound where they
@@ -415,15 +415,17 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     if (upgradeTimer <= 0) {
       upgradeTimer = 0.4;
       upgrade(camera, zoom);
-      scheduleVideos(videos, camera.position, videoBudget, 16);
+      // phones and low-power devices play the videos by room instead (main.js, video.js)
+      if (!BY_ROOM) scheduleVideos(videos, camera.position, videoBudget, 16);
     }
     for (const s of screens) {
       const u = s.mat.uniforms;
-      if (s.video && s.video.ready && s.uvRect) u.uvRect.value.copy(s.uvRect);
+      const playing = s.video && s.video.shown();
+      if (playing && s.uvRect) u.uvRect.value.copy(s.uvRect);
       else u.uvRect.value.set(1, 1, 0, 0);
-      if (s.video && s.video.ready) {
-        u.map.value = s.video.tex;
-        u.mapB.value = s.video.tex;
+      if (playing) {
+        u.map.value = playing;
+        u.mapB.value = playing;
         u.mixB.value = 0;
       } else if (s.frames.length > 1) {
         s.t += dt;
