@@ -238,6 +238,7 @@ export function setupConcept(data, body, { onGotoWork }) {
       kids.push(el('line', { class: `edge ${e.kind}`, 'data-a': e.a, 'data-b': e.b, x1: a.x.toFixed(1), y1: a.y.toFixed(1), x2: b.x.toFixed(1), y2: b.y.toFixed(1) }));
     }
     const labels = el('g', { class: 'labels', 'aria-hidden': 'true' });
+    const radius = new Map();
     for (const n of ordered()) {
       const p = at.get(n.id);
       const info = nodeInfo(n);
@@ -250,17 +251,66 @@ export function setupConcept(data, body, { onGotoWork }) {
       if (n.kind === 'work') g.append(el('rect', { class: 'shape work', x: (p.x - r).toFixed(1), y: (p.y - r).toFixed(1), width: r * 2, height: r * 2 }));
       else g.append(el('circle', { class: `shape ${n.kind}`, cx: p.x.toFixed(1), cy: p.y.toFixed(1), r }));
       kids.push(g);
-      // the label: under the node, kept inside the picture
-      const lines = wrap(info.label, n.kind === 'theme' ? (narrow ? 14 : 20) : 26);
+      // the label: under the node, kept inside the picture (placed again below if it is
+      // one that only shows on highlight and would sit on a theme label)
+      const lines = wrap(info.label, n.kind === 'theme' ? (narrow ? 14 : 20) : narrow ? 18 : 26);
       const half = (Math.max(...lines.map((l) => l.length)) * font * 0.56) / 2;
       const x = Math.min(Math.max(p.x, half + 4), width - half - 4);
       const text = el('text', { class: `lbl ${n.kind}`, 'data-for': n.id, x: x.toFixed(1), y: (p.y + r + font + 3).toFixed(1), 'text-anchor': 'middle', 'font-size': font, ...(info.lang ? { lang: info.lang } : {}) });
       lines.forEach((l, i) => text.append(el('tspan', { x: x.toFixed(1), dy: i ? font * 1.2 : 0 }, l)));
       labels.append(text);
+      radius.set(n.id, r);
     }
     svg.replaceChildren(...kids, labels);
+    clearThemeLabels(svg, at, radius, width, height, font);
     paint();
     if (focused) svg.querySelector(`[data-node="${focused}"]`)?.focus({ preventScroll: true });
+  }
+  // A label shown on highlight (a reference, a work) must not cover a theme label or theme
+  // dot, which are always shown. Measured from the drawn text, so it holds in either language
+  // and at any width; each label tries under, above, beside and farther out, in a fixed order,
+  // and keeps the first spot that clears them (else the one that overlaps least).
+  function clearThemeLabels(svg, at, radius, width, height, font) {
+    const rect = (b, pad = 2) => ({ x0: b.x - pad, x1: b.x + b.width + pad, y0: b.y - pad, y1: b.y + b.height + pad });
+    const fixed = [];
+    for (const l of svg.querySelectorAll('.lbl.theme')) fixed.push(rect(l.getBBox()));
+    for (const n of refs.network.nodes) if (n.kind === 'theme') { const p = at.get(n.id); const r = radius.get(n.id) + 1; fixed.push({ x0: p.x - r, x1: p.x + r, y0: p.y - r, y1: p.y + r }); }
+    const lap = (a, b) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+    for (const text of svg.querySelectorAll('.lbl:not(.theme)')) {
+      text.classList.add('on'); // bold, as shown on highlight
+      const b0 = text.getBBox();
+      text.classList.remove('on');
+      const id = text.dataset.for;
+      const p = at.get(id);
+      const r = radius.get(id);
+      const w = b0.width;
+      const h = b0.height;
+      const base0 = parseFloat(text.getAttribute('y'));
+      const top = b0.y - base0; // the box's top, relative to the first baseline
+      const spots = [];
+      // a grid of offsets around the node, nearest first
+      for (let k = 0; k < 9; k++) {
+        const d = k * font * 1.3;
+        for (const dx of [0, -w / 2, w / 2, -w, w]) {
+          spots.push([dx, r + font + 3 + d], [dx, -r - 5 - (h - font) - d]);
+          if (Math.abs(dx) >= w / 2) spots.push([dx + Math.sign(dx) * (r + 6), font * 0.35 + (k % 2 ? d : -d) / 2]);
+        }
+      }
+      spots.sort((u, v) => Math.hypot(u[0], u[1] - (r + font + 3)) - Math.hypot(v[0], v[1] - (r + font + 3)));
+      let best = null;
+      let bestC = Infinity;
+      for (const [dx, dy] of spots) {
+        const cx = Math.min(Math.max(p.x + dx, w / 2 + 4), width - w / 2 - 4);
+        const by = p.y + dy;
+        const box = { x0: cx - w / 2 - 2, x1: cx + w / 2 + 2, y0: by + top - 2, y1: by + top + h + 2 };
+        const c = fixed.reduce((m, f) => m + lap(box, f), 0) + 60 * (Math.max(0, -box.y0) + Math.max(0, box.y1 - height));
+        if (c < bestC) { bestC = c; best = { cx, by }; }
+        if (c === 0) break;
+      }
+      text.setAttribute('x', best.cx.toFixed(1));
+      text.setAttribute('y', best.by.toFixed(1));
+      for (const ts of text.querySelectorAll('tspan')) ts.setAttribute('x', best.cx.toFixed(1));
+    }
   }
   // The highlight: the node, its neighbours and the lines between them stay; the rest dims.
   function paint() {

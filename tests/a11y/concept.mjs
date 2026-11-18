@@ -224,6 +224,34 @@ for (const lang of ['en', 'hu']) {
   const wantHl = 1 + new Set(refs.network.edges.filter((e) => e.a === 'T1' || e.b === 'T1').map((e) => (e.a === 'T1' ? e.b : e.a))).size;
   step('2.11 Hovering a node highlights it and its neighbours and dims the rest', `${wantHl} nodes highlighted, the rest dimmed`, `${hov.hl} highlighted, dimmed: ${hov.dim}`, hov.dim && hov.hl === wantHl);
   await page.mouse.move(5, 300);
+  // no highlighted label overlaps an always-shown theme label (EN and HU, desktop and phone width)
+  const overlaps = () => page.evaluate(() => {
+    const svg = document.querySelector('.concept-net');
+    const box = (t) => { const b = t.getBBox(); return { x0: b.x, x1: b.x + b.width, y0: b.y, y1: b.y + b.height }; };
+    const themes = [...svg.querySelectorAll('.lbl.theme')].map((t) => ({ id: t.dataset.for, b: box(t) }));
+    const bad = [];
+    for (const t of svg.querySelectorAll('.lbl:not(.theme)')) {
+      t.classList.add('on');
+      const b = box(t);
+      for (const th of themes) if (b.x0 < th.b.x1 && b.x1 > th.b.x0 && b.y0 < th.b.y1 && b.y1 > th.b.y0) bad.push(`${t.dataset.for}/${th.id}`);
+      t.classList.remove('on');
+    }
+    return bad;
+  });
+  const ovl = [];
+  for (const [w, h] of [[1366, 768], [375, 812]]) {
+    await page.setViewportSize({ width: w, height: h });
+    await until(page, () => document.querySelectorAll('.concept-net .lbl').length > 0);
+    for (const lg of ['en', 'hu']) {
+      await page.evaluate((l) => document.querySelector(`#site-nav [data-lang="${l}"]`).click(), lg);
+      await page.waitForTimeout(400);
+      await choose(page, 'network');
+      ovl.push(`${w} ${lg}: ${(await overlaps()).join(', ') || 'none'}`);
+    }
+  }
+  await page.setViewportSize({ width: 1366, height: 768 });
+  step('2.12a Highlighted labels do not overlap theme labels', 'none, EN and HU, 1366 and 375 wide', ovl.join('; '), ovl.every((x) => x.endsWith('none')));
+  await page.evaluate(() => document.querySelector('#site-nav [data-lang="en"]').click());
   // a language switch keeps the view
   // (the language buttons are pressed from the page, as in hud.mjs: with the 3D view drawing in
   // software a pointer click can wait a long time for the navbar to hold still)
