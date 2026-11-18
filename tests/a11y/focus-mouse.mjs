@@ -138,7 +138,7 @@ await page.waitForFunction(() => document.getElementById('viewer').hidden, null,
 step('9d The viewer closed with the mouse afterwards: focus on the view', await onView(), await focusName(page));
 
 // focus on a full-video button, which the language switch rebuilds (it is only focused, never
-// pressed: pressing it would load the Drive player)
+// pressed: pressing it would load the YouTube or Drive player)
 await page.evaluate(() => window.__ap.viewer.open(window.__ap.data.works.find((w) => w.video && w.video.full && w.video.full.length)));
 await page.waitForFunction(() => !document.getElementById('viewer').hidden && document.getElementById('viewer').contains(document.activeElement), null, { timeout: 30000 });
 const onFull = await page.evaluate(() => { const b = document.querySelector('#viewer [data-full]'); b?.focus(); return !!b && document.activeElement === b; });

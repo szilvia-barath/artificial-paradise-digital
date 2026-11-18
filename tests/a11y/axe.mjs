@@ -1,7 +1,7 @@
 // axe-core on the text edition (both languages, light and dark) and on the walk in each of
 // its states: title screen, every panel, the sound question, the HUD (with the first-use card), the rooms menu, the
-// artwork viewer, and the viewer with the full video's frame (Google Drive blocked, so
-// nothing from Google loads). Fails on any serious or critical violation; lists every other one.
+// artwork viewer, and the viewer with the full video's frame (YouTube and Google blocked, so
+// nothing from them loads). Fails on any serious or critical violation; lists every other one.
 // Writes its results to the system's temporary folder. With --write it writes them to
 // docs/accessibility/axe-results.md instead, the log the statement quotes: the counts of
 // "incomplete" items vary a little from run to run, so a plain run leaves the tracked log alone.
@@ -47,9 +47,9 @@ for (const [path, name] of [['text/', 'Text edition, English'], ['text/hu/', 'Te
 const PANELS = ['about', 'works', 'concept', 'bts', 'help', 'contact', 'accessibility', 'legal', 'privacy'];
 for (const lang of ['en', 'hu']) {
   const { page, ctx, errors } = await openWalk(browser, { lang });
-  // Nothing from Google loads in this run: the full-video state below opens the Google Drive
-  // player's frame with its requests blocked, so only the page's own frame is checked.
-  const google = /^https?:\/\/([^/]+\.)?(google|gstatic|googleapis|googleusercontent|ggpht)\.[a-z.]+(\/|$)/;
+  // Nothing from Google or YouTube loads in this run: the full-video state below opens the
+  // YouTube player's frame with its requests blocked, so only the page's own frame is checked.
+  const google = /^https?:\/\/([^/]+\.)?(google|gstatic|googleapis|googleusercontent|ggpht|youtube|youtube-nocookie|ytimg)\.[a-z.]+(\/|$)/;
   const blocked = [];
   await page.route(google, (r) => { blocked.push(r.request().url()); return r.abort(); });
   const L = lang.toUpperCase();
@@ -92,15 +92,15 @@ for (const lang of ['en', 'hu']) {
     await page.keyboard.press('Escape');
     await page.waitForTimeout(200);
   }
-  // the full video: "Full video with sound" pressed on no. 6, the Drive player's frame shown
+  // the full video: "Full video with sound" pressed on no. 6, the YouTube player's frame shown
   await page.evaluate(() => window.__ap.viewer.open(window.__ap.data.works.find((w) => w.id === 'w06-artificial-paradise-singapore')));
   const asked = page.waitForRequest(google, { timeout: 30000 }).catch(() => null);
   await page.click('#viewer-videos [data-full="0"]');
   await page.waitForFunction(() => !document.getElementById('viewer-frame').hidden, null, { timeout: 30000 });
   await asked;
-  await scan(page, `Walk ${L}: viewer open (full video, the Google Drive player blocked: ${blocked.length} request${blocked.length === 1 ? '' : 's'} stopped)`);
+  await scan(page, `Walk ${L}: viewer open (full video, the YouTube player blocked: ${blocked.length} request${blocked.length === 1 ? '' : 's'} stopped)`);
   await page.keyboard.press('Escape');
-  // the frame's request to Google, blocked, is the only console error expected here
+  // the frame's request to YouTube, blocked, is the only console error expected here
   const own = errors.filter((e) => !/ERR_FAILED|ERR_BLOCKED/.test(e));
   if (own.length) console.log('console errors:', own);
   await ctx.close();

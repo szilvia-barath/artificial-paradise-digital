@@ -105,7 +105,9 @@
       "work": "View the work",
       "no": "No. {no}",
       "full": "Full video with sound",
+      "fullOf": "{title}: full video with sound",
       "loop": "Back to the loop",
+      "backDoc": "Back to the video documentation",
       "documentation": "Video documentation",
       "photo": "Back to the photo",
       "situNext": "Next installation photo",
@@ -115,6 +117,7 @@
       "situAlt": "Installation photo {n} of {total}: {title} in the gallery",
       "situAltOne": "Installation photo: {title} in the gallery",
       "frameTitle": "Full video: {title}, Google Drive player",
+      "frameTitleYoutube": "Full video: {title}, YouTube player",
       "videoLoopName": "Video loop: {title}",
       "videoDocName": "Video documentation: {title}"
     },
@@ -520,6 +523,12 @@
         ]
       },
       {
+        "h": "Video players",
+        "p": [
+          "The full videos of some works play from YouTube, those of others from Google Drive. Both services are provided by Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland."
+        ]
+      },
+      {
         "h": "Copyright",
         "p": [
           "The artworks, their reproductions and videos, and the artist’s texts: © Kristóf Szabó / KristofLab. The installation photographs and the documentation videos were taken by Kristóf Szabó as well. The MAMŰ logo belongs to MAMŰ Society. The 3D reconstruction and the website: © Szilvia Baráth.",
@@ -534,7 +543,7 @@
         ]
       }
     ],
-    "updated": "Last updated: 15 November 2026"
+    "updated": "Last updated: 17 November 2026"
   },
   "privacy": {
     "title": "Privacy",
@@ -564,9 +573,9 @@
         ]
       },
       {
-        "h": "Videos played from Google Drive",
+        "h": "Videos played from YouTube and Google Drive",
         "p": [
-          "For some works the full video plays in Google Drive’s player. It is loaded only when you click its button; from then on Google receives your IP address and may set its own cookies."
+          "For some works the full video plays in YouTube’s player (embedded from youtube-nocookie.com), for others in Google Drive’s player; both are Google services. A player is loaded only when you click its button; from then on Google receives your IP address and may set its own cookies or keep other data in your browser."
         ],
         "links": [
           {
@@ -599,7 +608,7 @@
         ]
       }
     ],
-    "updated": "Last updated: 16 November 2026"
+    "updated": "Last updated: 17 November 2026"
   },
   "accessibility": {
     "title": "Accessibility",
@@ -619,7 +628,7 @@
           "Reduced motion: 18 automated checks in Chromium, with the system setting emulated and without it. With it there is no grain, no colour fringes, no pulsing and no animation in the interface, the tour jumps from stop to stop, the mouse under the walking keys does not roll its wheel and the dot that marks you on the floor plan does not swell after a jump.",
           "Phone width: the accessible version at 375 pixels, with and without JavaScript, and the digital exhibition in Chromium's phone emulation, upright (375 × 667) and on its side (667 × 375), with touch.",
           "Flashing: frames drawn at a fixed 60 a second and compared cell by cell. The glitch effect that marked a room change could flash up to 10 times a second when jumps followed each other quickly, so it is removed for everyone. Without it, the most measured was 2 flashes in a second, with Page Down pressed six times a second.",
-          "Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, real browser zoom at 200% or more (windows of the same size in CSS pixels were checked: a laptop at 200% and a page at 400%), the Google Drive video player, and visits by people with disabilities."
+          "Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, real browser zoom at 200% or more (windows of the same size in CSS pixels were checked: a laptop at 200% and a page at 400%), the YouTube and Google Drive video players, and visits by people with disabilities."
         ]
       },
       {
@@ -627,7 +636,7 @@
         "p": [
           "The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.",
           "Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. While one of them is open, the browser hides the page behind it from screen readers. Behind a panel or the viewer the bar at the top stays usable, so the language can still be switched; behind the sound question it is hidden too. Closing a work opened from the list of works brings the list back, with focus on the work last shown. In a narrow window, closing a panel opened from the menu puts focus on the Menu button. While the sound question is open, a click anywhere else on the screen answers it with “Without sound” and opens nothing. Switching the language while a panel or the viewer is open leaves focus in it. Page Down and Page Up go to the next and the previous work; the Next work button on the toolbar goes to the next one, one work for each press. Enter opens the work in front of you. Help, on the toolbar (in a narrow window, in the menu), shows all the controls in a panel.",
-          "When a screen reader reaches the 3D view, it says that this is the 3D view, which keys go from work to work, open a work and walk, and that all the keys are in the accessible version. While walking, it announces the room and the exhibited work currently in focus, and the floor plan's name says which room you are in. In the artwork viewer, Previous and Next go through the 17 works and say the new one with its number (“No. 3 of 17”); an installation photo is named as a photo of the work in the gallery, and the video and the Google Drive player have names. On the Hungarian page the artist's English titles are marked as English, so a screen reader that switches language reads them in an English voice. Opening a panel stops the tour, so its captions are not read over the panel.",
+          "When a screen reader reaches the 3D view, it says that this is the 3D view, which keys go from work to work, open a work and walk, and that all the keys are in the accessible version. While walking, it announces the room and the exhibited work currently in focus, and the floor plan's name says which room you are in. In the artwork viewer, Previous and Next go through the 17 works and say the new one with its number (“No. 3 of 17”); an installation photo is named as a photo of the work in the gallery, and the video and the YouTube or Google Drive player have names. On the Hungarian page the artist's English titles are marked as English, so a screen reader that switches language reads them in an English voice. Opening a panel stops the tour, so its captions are not read over the panel.",
           "Inside, a short card by the keys shows how to move. It goes at the first key, click or turn of the wheel, and Help can show it again; nothing is stored, so it shows on each visit. On a touch screen a hint says how to move by touch instead, and the sound question names the Sound button. A key under the floor plan says which marks are the videos and which are the other works. The tour caption says how far along the tour is (“3 / 17”).",
           "With reduced motion switched on in your system, the digital exhibition has no grain, no colour fringes and no pulsing, the tour jumps from stop to stop, and the mouse under the walking keys and the dot that marks you on the floor plan stay still. Without the setting they move only for a moment: the wheel rolls three times, and the dot swells for 3 seconds after a jump. The loading screen is a still image for everyone.",
           "Over the 3D view the bar at the top and the footer sit on a dark band, and the room name, the floor plan, the toolbar, the rooms menu, the keys and the captions on dark glass. In screenshots facing the brightest wall, the white brick of Room 1, I measured the bar at the top, the footer, the room name, the toolbar, the keys and the numbers on the floor plan at 5.1:1 or more. The titles in the rooms menu, worked out from their colours, are 7.43:1 even over pure white, and 5.43:1 on the row under the mouse. The key under the floor plan, worked out from its colours, is 7.16:1 even over pure white. The accent colour of the interface is a light blue: worked out from its colours, it is at least 5.76:1 on the dark glass, even over pure white. No state is shown by colour alone: a pressed button on the toolbar also has an edge round it and a bar under it, and the room you are in is in bold in the rooms menu and on the floor plan.",
@@ -648,7 +657,7 @@
           "The contrast over the 3D view was measured in Chromium screenshots facing the brightest wall, not in front of every wall. The tour caption, the line that names the work in front of you, the drag hint and the touch hint, the first-use card and the zoom readout sit on the same dark glass but were not measured. The exhibition text sheets drawn on the walls of Room 1 and Room 2 were not measured.",
           "On a laptop with a touch screen and a mouse or trackpad, the digital exhibition shows the computer's controls (the on-screen keys and the footer), the mouse looks around and opens works, and touch works as well. I checked this in Chromium set up to answer like such a laptop, not on a real one.",
           "On a touch screen some links are still small. In a window wider than 760 pixels (a tablet, say) the footer's links are 13 pixels tall, and the links in the text of the panels are 17 to 20 pixels tall per line, at any width.",
-          "Esc does not close the viewer while focus is inside the Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab, pressed until focus leaves the player, gets out of it, and then Esc works, or the Close button closes the viewer."
+          "Esc does not close the viewer while focus is inside the YouTube or Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab, pressed until focus leaves the player, gets out of it, and then Esc works, or the Close button closes the viewer."
         ]
       },
       {
