@@ -12,10 +12,11 @@ import { createVideo } from './video.js';
 // from the photo (scripts/make_river.py). The video Let it Flow (a night sky with the river
 // glowing in it) is thrown onto the floor by the projector on the north wall above Natural
 // Life (DSC_0108 to DSC_0112), its river on the plastic; its specks are the dots on the floor
-// in the photos. Pose, aim and lit area: scripts/fit_projector.mjs (river.json "projector").
-// The floor and the plastic take the picture by projective texture mapping from that
-// projector, so the picture is keystoned as the projector threw it, and the same mapping
-// lights the plastic, whose folds are shaded here against the projector's lens.
+// in the photos. The artist fitted the picture to the river with Resolume's keystone; where
+// it landed is fitted in scripts/fit_projector.mjs (river.json "projector": the lens's
+// place, and the projective map from the floor to the frame). The floor and the plastic take
+// the picture by that projective texture mapping, the plastic's relief along the rays from
+// the lens, so the same mapping lights the plastic, whose folds are shaded against the lens.
 
 const BASE = import.meta.env.BASE_URL;
 const WALL_X = 25.4;
@@ -44,16 +45,18 @@ function coverWall(tex, aspect) {
   tex.offset.x = (1 - shown) / 2;
 }
 
-// The projector's view and projection: a world point's place in the video frame. s runs from
-// the east end of the picture (0) to the west (1), t from the north side (0) to the south (1),
-// the orientation the video had on the floor before (river.json "projector", _note).
-const v3 = (a) => `vec3(${a.map((x) => x.toFixed(5)).join(', ')})`;
+// A world point's place in the video frame: along the ray from the lens down to the floor,
+// then the floor-to-frame homography. s runs from the east end of the picture (0) to the west
+// (1), t from the north side (0) to the south (1), the orientation the video had on the floor
+// before (river.json "projector", _note).
+const f7 = (v) => v.toFixed(7);
+const M = PJ.floorToFrame;
 const projUV = /* glsl */ `
   vec2 letItFlowUV(vec3 w) {
-    vec3 d = w - ${v3(PJ.position)};
-    float z = max(dot(d, ${v3(PJ.forward)}), 1e-4);
-    return vec2((dot(d, ${v3(PJ.right)}) / z / ${PJ.tanHalfWidth.toFixed(5)} - ${PJ.shift[0].toFixed(5)} + 1.0) * 0.5,
-                (dot(d, ${v3(PJ.up)}) / z / ${(PJ.tanHalfWidth / PJ.aspect).toFixed(5)} - ${PJ.shift[1].toFixed(5)} + 1.0) * 0.5);
+    vec3 L = vec3(${PJ.position.map(f7).join(', ')});
+    vec2 f = L.xz + (w.xz - L.xz) * (L.y / max(L.y - w.y, 1e-3));
+    vec3 q = mat3(${[0, 1, 2].map((c) => [0, 1, 2].map((r) => f7(M[r][c])).join(', ')).join(', ')}) * vec3(f, 1.0);
+    return q.xy / q.z;
   }
   // 1 inside the picture, 0 outside; the edge softened over half a percent of the frame
   float letItFlowIn(vec2 uv) {
@@ -127,7 +130,11 @@ export function buildLetItFlow(manager) {
         '#include <map_fragment>',
         `#ifdef USE_MAP
           vec2 lifUV = letItFlowUV(vLifPos);
-          diffuseColor *= texture2D(map, clamp(lifUV, 0.0, 1.0)) * letItFlowIn(lifUV);
+          vec4 lifTex = texture2D(map, clamp(lifUV, 0.0, 1.0));
+          #ifdef DECODE_VIDEO_TEXTURE
+            lifTex = sRGBTransferEOTF(lifTex); // as three's own map_fragment does for video
+          #endif
+          diffuseColor *= lifTex * letItFlowIn(lifUV);
         #endif
         diffuseColor.rgb = ${FLOOR_PEAK.toFixed(2)} * (1.0 - exp(-diffuseColor.rgb / ${FLOOR_PEAK.toFixed(2)}));`,
       );

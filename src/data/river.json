@@ -103,78 +103,83 @@
     "widthM": 3.361
   },
   "projector": {
-    "_note": "Written by scripts/fit_projector.mjs. Position measured (DSC_0108 to DSC_0112); aim, picture width and lens shift inferred by the fit; quad = floor corners at texture (s,t) = (0,0), (1,0), (1,1), (0,1): s from the east end, t from the north side.",
+    "_note": "Written by scripts/fit_projector.mjs. position: the lens (measured, DSC_0108 to DSC_0112). floorToFrame: the 3 x 3 homography from a floor point (x, z, 1) to the frame (s, t, 1) (inferred: projector and Resolume keystone together); quad: the floor corners of the frame at (s,t) = (0,0), (1,0), (1,1), (0,1), s from the east end, t from the north side. A point above the floor takes the picture along the ray from the lens. aim: from the lens to the frame centre (inferred, for the record).",
     "position": [
       21.82,
       2.36,
       1.87
     ],
-    "forward": [
-      0.0742,
-      -0.98848,
-      -0.13188
-    ],
-    "right": [
-      -0.98934,
-      -0.08959,
-      0.11484
-    ],
-    "up": [
-      0.12533,
-      -0.12196,
-      0.98459
-    ],
-    "tanHalfWidth": 1.25306,
-    "aspect": 1.77778,
-    "shift": [
-      -0.15177,
-      1.51398
+    "floorToFrame": [
+      [
+        -0.1483397,
+        0.030748,
+        3.6972862
+      ],
+      [
+        0.0034364,
+        0.3911767,
+        -1.0837155
+      ],
+      [
+        -0.0117598,
+        0.0407054,
+        1
+      ]
     ],
     "quad": [
       [
-        25.863,
-        2.024
+        25.452,
+        2.547
       ],
       [
-        19.87,
-        2.596
+        19.559,
+        2.599
       ],
       [
-        20.449,
-        5.02
+        19.377,
+        5.105
       ],
       [
-        25.604,
-        5.046
+        25.924,
+        4.821
       ]
     ],
+    "aim": [
+      0.2866,
+      -0.7571,
+      0.5871
+    ],
     "fit": {
-      "cost": 41.482,
+      "cost": 15.886,
       "riverCentreLineErrorM": {
-        "mean": 0.107,
-        "max": 0.162
+        "mean": 0.065,
+        "max": 0.198
       },
       "sides": [
-        "north limit at x 22.75: wanted z 2.55, fitted 2.32",
-        "north limit at x 20.5: wanted z 2.78, fitted 2.54",
-        "south limit at x 23: wanted z 5.03, fitted 5.03",
-        "south limit at x 20.5: wanted z 4.88, fitted 5.02"
+        "north limit at x 22.75: wanted z 2.55, fitted 2.57",
+        "north limit at x 20.5: wanted z 2.78, fitted 2.59",
+        "south limit at x 23: wanted z 5.03, fitted 4.95",
+        "south limit at x 20.5: wanted z 4.88, fitted 5.06"
       ],
       "widthM": {
-        "x20_5": 2.48,
-        "x23": 2.74
+        "x20_5": 2.47,
+        "x23": 2.38
+      },
+      "lengthM": {
+        "north": 5.96,
+        "middle": 6.24,
+        "south": 6.52
       },
       "eastEndX": [
-        25.72,
-        25.64
+        25.69,
+        25.88
       ],
-      "westEndX": 20.16,
-      "throwRatio": 0.399,
+      "westEndX": 19.47,
       "rms": {
-        "river": 0.53,
-        "side": 1.64,
+        "river": 0.56,
+        "side": 1.16,
         "east": 0,
-        "west": 4.79
+        "west": 1.36
       }
     }
   }
