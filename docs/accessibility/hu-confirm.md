@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 125. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 118. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -115,9 +115,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.announce.viewerWork`
   - HU: {title}. {no}. mű a {total} közül.
   - EN: {title}. No. {no} of {total}.
-- `ui.concept.title`
-  - HU: A mesterséges mennyország fogalma
-  - EN: The concept of Artificial Paradise
 - `ui.concept.eyebrow`
   - HU: Hivatkozások, témák és művek
   - EN: References, themes and works
@@ -184,12 +181,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.subtype.country`
   - HU: ország
   - EN: country
-- `ui.concept.subtype.municipality of Hungary`
-  - HU: magyarországi község
-  - EN: municipality of Hungary
-- `ui.concept.subtype.historic county of England`
-  - HU: Anglia történelmi megyéje
-  - EN: historic county of England
 - `ui.concept.dates.R01`
   - HU: 1859 (a kísérletek kezdete)
   - EN: 1859 (experiments begin)
@@ -208,9 +199,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.linksLabel`
   - HU: Linkek
   - EN: Links
-- `ui.concept.mentionedIn`
-  - HU: Említés helye
-  - EN: Mentioned in
 - `ui.concept.source`
   - HU: Forrás
   - EN: Source
@@ -229,9 +217,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.allWorks`
   - HU: A kiállítás összes műve
   - EN: All works in the exhibition
-- `ui.concept.goto`
-  - HU: ugrás a műhöz a digitális kiállításban
-  - EN: go to the work in the digital exhibition
 - `ui.concept.openTheme`
   - HU: a téma megnyitása
   - EN: open the theme
@@ -253,9 +238,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.netLabel`
   - HU: A témák, hivatkozások, fogalmak és művek hálózata
   - EN: Network of the themes, references, concepts and works
-- `ui.concept.netNote`
-  - HU: A kapcsolatok a rekonstruktőr szövegolvasatán alapulnak. A pontok helyének nincs jelentése.
-  - EN: The links come from the reconstructor's reading of the exhibition's texts. The position of a node has no meaning.
 - `ui.concept.netHelp`
   - HU: Egy pont kapcsolatai akkor látszanak, amikor a mutató vagy a billentyűzetfókusz rajta áll. Az Enter vagy egy kattintás megnyitja a hivatkozás kártyáját vagy a témát, illetve a műhöz visz. Az Esc megszünteti a kiemelést.
   - EN: A node shows its links when the pointer or keyboard focus is on it. Enter or a click opens a reference's card or a theme, or goes to a work. Esc clears the highlight.
@@ -313,9 +295,6 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.updated` (the date only)
   - HU: Utolsó frissítés: 2026. november 15.
   - EN: Last updated: 15 November 2026
-- `privacy.sections[4].p[1]`
-  - HU: A kiállítás szövegei és a Koncepció oldal a Wikipédiára és más külső oldalakra is mutatnak: a szövegekben említett forrásokra, kiadókra és szervezetekre. Ezek a linkek új lapon nyílnak meg, és mindegyik oldal a saját adatkezelési szabályait alkalmazza.
-  - EN: The exhibition's texts and the Concept page also link to Wikipedia and to other outside sites: the sources, publishers and organisations the texts mention. These links open in a new tab, and each site applies its own privacy policy.
 - `privacy.updated`
   - HU: Utolsó frissítés: 2026. november 16.
   - EN: Last updated: 16 November 2026
