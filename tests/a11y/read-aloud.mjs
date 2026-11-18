@@ -196,7 +196,9 @@ const lastSpeakVoice = (log) => [...log].reverse().find((e) => e.type === 'speak
   const p = w.page;
   await openPanel(p, 'about');
   const b = await btn(p, '#panel');
-  await p.click('#panel .read-aloud');
+  // aria-disabled: Playwright's click() waits for an enabled control, so it is pressed by keyboard
+  await p.focus('#panel .read-aloud');
+  await p.keyboard.press('Enter');
   await p.waitForTimeout(300);
   const s = await speech(p);
   const want = fill(UI.hu.readAloud.noVoiceSaid, { language: UI.hu.readAloud.lang.hu });
