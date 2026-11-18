@@ -117,7 +117,7 @@ export function createParadataView(scene, works) {
     if (classOf) return;
     const { default: pd } = await import('../data/paradata.json');
     const status = new Map(pd.rows.map((r) => [r.decision_id, r.status]));
-    classOf = new Map(PD_ELEMENTS.map((e) => [e.id, (e.decision && CLASS_OF_STATUS[status.get(e.decision)]) || 'not-recorded']));
+    classOf = new Map(PD_ELEMENTS.map((e) => [e.id, (e.decision ? CLASS_OF_STATUS[status.get(e.decision)] : CLASS_OF_STATUS[e.status]) || 'not-recorded']));
     PD_ELEMENTS.forEach((e, i) => { classUniform[i] = PD_CLASSES.indexOf(classOf.get(e.id)); });
     view.source = pd.source;
   }

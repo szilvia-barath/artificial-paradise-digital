@@ -174,7 +174,7 @@ ${artistText(w)}
   // hung works by their numbers.
   const PD = ['measured', 'inferred', 'invented', 'omitted', 'not-recorded'];
   const pdStatus = new Map(raw.pd.rows.map((r) => [r.decision_id, r.status]));
-  const pdClass = (e) => (PD.slice(0, 4).includes(pdStatus.get(e.decision)) ? pdStatus.get(e.decision) : 'not-recorded');
+  const pdClass = (e) => { const s = e.decision ? pdStatus.get(e.decision) : e.status; return PD.slice(0, 4).includes(s) ? s : 'not-recorded'; };
   const andList = (items) => (items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')}${t('paradata.textAnd')}${items[items.length - 1]}`);
   const byId = new Map(data.works.map((w) => [w.id, w]));
   const paradataHTML = (room) => {

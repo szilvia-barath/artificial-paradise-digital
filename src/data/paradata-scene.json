@@ -1,5 +1,5 @@
 {
-  "_readme": "Which row of the paradata (src/data/paradata.json) each part of the 3D scene shows in the 'measured or guessed' view. A part's id is set as userData.paradata on its object, or per vertex in the merged meshes (src/world/paradataTags.js). 'decision' is the row whose element describes the part most closely; its status is the one shown. null: no row in paradata_3 covers the part, and the view shows it as 'not recorded'. 'why' says which row was chosen and why. The choice of row is the assistant's (17 November 2026) and waits for the reconstructor's check.",
+  "_readme": "Which row of the paradata (src/data/paradata.json) each part of the 3D scene shows in the 'measured or guessed' view. A part's id is set as userData.paradata on its object, or per vertex in the merged meshes (src/world/paradataTags.js). 'decision' is the row whose element describes the part most closely; its status is the one shown. null: no row in paradata_3 covers the part; then 'status' (measured, inferred, invented or omitted), where given, is the reconstructor's record of the part in PROGRESS.md, named in 'why', until a row is added to the Sheet (asked for on 18 November 2026: the stairs, the Room 4 changes, the screen sizes and the works); with no 'status' the view shows it as 'not recorded'. 'size' records a work's or screen's size where it is known. 'why' says which row was chosen and why. The choice of row is the assistant's (17 November 2026) and waits for the reconstructor's check.",
   "elements": [
     {
       "id": "r1-walls",
@@ -48,15 +48,8 @@
         "r1"
       ],
       "decision": null,
-      "why": "No row covers the flight of stairs; PROGRESS.md, 15 November 2026, describes how it was built."
-    },
-    {
-      "id": "stair-shaft",
-      "rooms": [
-        "r1"
-      ],
-      "decision": "ap-d12",
-      "why": "The dark shaft above the stairs (Stair shaft)."
+      "why": "PROGRESS.md, Decision 1 and 1b (17 and 18 November 2026): 8 risers, the bottom one 0.12 m, the landing at 1.24 m running through the west wall to the closed street door, two-tone treads, the chairs on the stairs left out; from DSC_0014 to DSC_0016 and S34 (room_1_stairs_important.webp, main_entrance.webp). The door opening's sides and head are invented. No row in paradata_3 yet (the shaft row ap-d12 no longer applies: the shaft was taken out).",
+      "status": "inferred"
     },
     {
       "id": "r1-bench",
@@ -105,7 +98,8 @@
         "r1"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w02-human-as-error-vi",
@@ -113,7 +107,8 @@
         "r1"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w04-human-as-error-iii",
@@ -121,7 +116,8 @@
         "r1"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w05-human-as-error-i",
@@ -129,7 +125,8 @@
         "r1"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w03-screen",
@@ -137,7 +134,8 @@
         "r1"
       ],
       "decision": "ap-d35",
-      "why": "The Paradise Factory monitor: frame and screen opening (Paradise Factory: monitor). The image is not changed; a band round it shows the status."
+      "why": "The Paradise Factory monitor: frame and screen opening (Paradise Factory: monitor). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "pf-plant",
@@ -228,7 +226,14 @@
       "decision": "ap-d72",
       "why": "The exhibition text sheet in Room 2 (Exhibition text sheets in Rooms 1 and 2)."
     },
-    { "id": "roomsheet", "rooms": ["r2"], "decision": null, "why": "The A4 room sheet (plan and list of works) on the wall west of the toilet corridor (DSC_0048): no row covers it; PROGRESS.md, 17 November 2026." },
+    {
+      "id": "roomsheet",
+      "rooms": [
+        "r2"
+      ],
+      "decision": null,
+      "why": "The A4 room sheet (plan and list of works) on the wall west of the toilet corridor (DSC_0048): no row covers it; PROGRESS.md, 17 November 2026."
+    },
     {
       "id": "r2-light-pools",
       "rooms": [
@@ -243,7 +248,8 @@
         "r2"
       ],
       "decision": "ap-d26",
-      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "w07-artificial-paradise-eden-project",
@@ -251,7 +257,8 @@
         "r2"
       ],
       "decision": "ap-d26",
-      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "r3-walls",
@@ -316,7 +323,8 @@
         "r3"
       ],
       "decision": "ap-d26",
-      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "w09-warsaw-g24-i",
@@ -324,7 +332,8 @@
         "r3"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w10-warsaw-ii",
@@ -332,7 +341,8 @@
         "r3"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w14-warsaw-g24-ii",
@@ -340,7 +350,8 @@
         "r3"
       ],
       "decision": "ap-d25",
-      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w11-artificial-paradise-i-print",
@@ -348,7 +359,8 @@
         "r3"
       ],
       "decision": "ap-d26",
-      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w12-artificial-paradise-ii-print",
@@ -356,7 +368,8 @@
         "r3"
       ],
       "decision": "ap-d26",
-      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "w13-artificial-paradise-iii-print",
@@ -364,7 +377,8 @@
         "r3"
       ],
       "decision": "ap-d26",
-      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "The work's size: the official size from the Google Sheet 'works' (exhibition.json, size); its place on the wall by the row named in 'decision'."
     },
     {
       "id": "r4-walls",
@@ -380,7 +394,8 @@
         "r4"
       ],
       "decision": null,
-      "why": "Room 4's north wall with its two bricked-up openings and the ledge: no row."
+      "why": "PROGRESS.md, 'Room 4, the left (north) wall' and Decision 2 (17 November 2026): the two recesses A and B, the pier and the ledge, built from the photographs DSC_0099 to DSC_0112; the walls run up to the vaults. No row in paradata_3 yet.",
+      "status": "inferred"
     },
     {
       "id": "r4-end-wall",
@@ -396,7 +411,8 @@
         "r4"
       ],
       "decision": null,
-      "why": "The brick vaults and steel beams of the ceiling: no row."
+      "why": "PROGRESS.md, Decision 2 (17 November 2026): the vaults spring at 2.92 m (they sprang at 2.75), rise 0.14 m, eight bays between steel beams, from DSC_0110 to DSC_0116 and the room's proportions. No row in paradata_3 yet.",
+      "status": "inferred"
     },
     {
       "id": "r4-floor",
@@ -412,7 +428,8 @@
         "r4"
       ],
       "decision": null,
-      "why": "The projector on the ceiling conduit: no row (ap-d45's note places the projector above the screen of Natural Life)."
+      "why": "PROGRESS.md, Decision 4 (17 and 18 November 2026): the ceiling projector of the wall projection and the floor projector on the north wall, its pose fitted to the photographs and the documentation video (scripts/fit_projector.mjs). No row in paradata_3 yet.",
+      "status": "inferred"
     },
     {
       "id": "r4-fittings",
@@ -420,7 +437,8 @@
         "r4"
       ],
       "decision": null,
-      "why": "Pipes, the conduit and its floodlights, the black box, the gas meter and the radiator: no row."
+      "why": "PROGRESS.md, Decision 3 (18 November 2026) and the Room 4 entries: the pipes carry the paint of the wall they run on; pipes, conduit and floodlights placed from DSC_0099 to DSC_0116 and the reconstructor's descriptions. No row in paradata_3 yet.",
+      "status": "inferred"
     },
     {
       "id": "r4-light-pools",
@@ -436,7 +454,8 @@
         "r4"
       ],
       "decision": "ap-d26",
-      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "w17-natural-life",
@@ -444,7 +463,8 @@
         "r4"
       ],
       "decision": "ap-d26",
-      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status.",
+      "size": "Screen size, inferred and confirmed by the artist as about right (16 November 2026, reported by the reconstructor): nos 6, 7 and 17 the same size, Full HD, 0.94 × 0.53 m; nos 8 and 15 4K and larger, 1.21 × 0.68 m (hang in exhibition.json); the brand taped over and not modelled. PROGRESS.md, 'Screens, sizes'. No row in paradata_3 yet."
     },
     {
       "id": "lif-river",

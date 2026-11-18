@@ -18,7 +18,7 @@ const CLASSES = ['measured', 'inferred', 'invented', 'omitted', 'not-recorded'];
 const status = new Map(pd.rows.map((r) => [r.decision_id, r.status]));
 const want = Object.fromEntries(CLASSES.map((k) => [k, 0]));
 for (const e of sceneMap.elements) {
-  const s = status.get(e.decision);
+  const s = e.decision ? status.get(e.decision) : e.status;
   want[CLASSES.slice(0, 4).includes(s) ? s : 'not-recorded']++;
 }
 

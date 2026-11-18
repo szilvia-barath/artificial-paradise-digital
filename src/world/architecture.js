@@ -158,7 +158,7 @@ export function buildArchitecture(materials) {
   // PROGRESS.md, decision log, 17 November 2026 (Decision 1b). Until then a 2 m deep shaft,
   // 5.6 m tall, ran west of the wall (invented).
   {
-    pd = 'stair-shaft';
+    pd = 'r1-stairs'; // the landing's way through to the street door: part of the stairs (Decision 1b)
     const s = STAIRWELL;
     const top = 3.45;
     const landing = 1.24;
