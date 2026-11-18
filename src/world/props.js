@@ -4,7 +4,7 @@ import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres, R4_NORTH_PIPE, R4_END_PIPE } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
-import { tagGeometry, pdOf } from './paradataTags.js';
+import { mergeStatic } from './merge.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -510,13 +510,11 @@ export function buildProps(materials) {
   const radiator = (x, z, ry, w = 0.8, h = 0.85, y = 0.1, mat = materials.white) => {
     const r = new THREE.Group();
     const fins = Math.round(w / 0.08);
-    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, h, 0.09), mat, fins);
-    const m = new THREE.Matrix4();
-    for (let i = 0; i < fins; i++) {
-      m.makeTranslation(-w / 2 + (i + 0.5) * (w / fins), h / 2, 0);
-      inst.setMatrixAt(i, m);
-    }
-    r.add(inst);
+    // one plain mesh of all the fins (it was one instanced mesh per radiator), so mergeStatic
+    // folds it into its material's merged mesh: the same boxes, four draw calls fewer
+    const fin = new THREE.BoxGeometry(0.07, h, 0.09);
+    const geo = mergeGeometries(Array.from({ length: fins }, (_, i) => fin.clone().translate(-w / 2 + (i + 0.5) * (w / fins), h / 2, 0)));
+    r.add(new THREE.Mesh(geo, mat));
     place(r, x, y, z, ry);
     g.add(r);
   };
@@ -946,35 +944,4 @@ export function buildProps(materials) {
   mark(null);
   mergeStatic(g);
   return { group: g, anim };
-}
-
-// Bake every plain (non-instanced) mesh into one merged mesh per material: a few
-// hundred small meshes of furniture become a couple of dozen draw calls.
-function mergeStatic(group) {
-  group.updateMatrixWorld(true);
-  const byMat = new Map();
-  group.traverse((o) => {
-    if (o.isMesh && !o.isInstancedMesh) {
-      if (!byMat.has(o.material)) byMat.set(o.material, []);
-      byMat.get(o.material).push(o);
-    }
-  });
-  for (const [mat, meshes] of byMat) {
-    if (meshes.length < 2) continue;
-    const geos = meshes.map((m) => {
-      const geo = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone());
-      geo.applyMatrix4(m.matrixWorld);
-      for (const k of Object.keys(geo.attributes)) if (!['position', 'normal', 'uv'].includes(k)) geo.deleteAttribute(k);
-      tagGeometry(geo, pdOf(m));
-      geo.morphAttributes = {};
-      geo.clearGroups();
-      return geo;
-    });
-    const merged = mergeGeometries(geos, false);
-    if (!merged) continue;
-    for (const m of meshes) m.parent.remove(m);
-    const mesh = new THREE.Mesh(merged, mat);
-    mesh.matrixAutoUpdate = false;
-    group.add(mesh);
-  }
 }

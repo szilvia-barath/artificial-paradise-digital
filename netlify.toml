@@ -5,3 +5,22 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# The models are also built gzipped (vite.config.js) and unzipped by the page itself, so the
+# .gz must arrive as it is, never with Content-Encoding. The plain .glb keeps its own type.
+[[headers]]
+  for = "/models/*.glb.gz"
+  [headers.values]
+    Content-Type = "application/gzip"
+
+[[headers]]
+  for = "/models/*.glb"
+  [headers.values]
+    Content-Type = "model/gltf-binary"
+
+# The video loops are large and change rarely: a browser may keep them for a day before it
+# asks again (Netlify's default is to ask on every visit).
+[[headers]]
+  for = "/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

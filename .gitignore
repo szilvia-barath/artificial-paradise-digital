@@ -160,3 +160,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# switch "ktx2art": lossy re-encodes of the artworks, kept out of git until the reconstructor says yes
+/public/img/ktx2/

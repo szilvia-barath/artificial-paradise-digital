@@ -89,6 +89,20 @@ const FRAG = /* glsl */ `
   diffuseColor.rgb *= aoK;
 `;
 
+// World position for the plan AO. An instanced or batched mesh's own matrix must be applied
+// too (as project_vertex does), or every instance would read the AO at its mesh's origin.
+// No patched material is on an instanced mesh yet; this keeps it right if one ever is.
+const AO_POS = /* glsl */ `
+  vec4 aoLocal = vec4(transformed, 1.0);
+  #ifdef USE_BATCHING
+    aoLocal = batchingMatrix * aoLocal;
+  #endif
+  #ifdef USE_INSTANCING
+    aoLocal = instanceMatrix * aoLocal;
+  #endif
+  vAoPos = (modelMatrix * aoLocal).xyz;
+`;
+
 function patch(material, kind, uniforms, { tileBump }) {
   const surf = material.userData.surface || { offset: [0, 0] };
   material.defines = { ...material.defines, AO_KIND: KIND[kind] };
@@ -98,7 +112,7 @@ function patch(material, kind, uniforms, { tileBump }) {
     Object.assign(shader.uniforms, uniforms, own);
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vAoPos;')
-      .replace('#include <project_vertex>', '#include <project_vertex>\nvAoPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      .replace('#include <project_vertex>', `#include <project_vertex>\n${AO_POS}`);
     let frag = shader.fragmentShader
       .replace('#include <common>', `#include <common>\nvarying vec3 vAoPos;\nuniform sampler2D aoPlan;\nuniform vec4 aoBounds;\n${SURFACE_PARS}`)
       .replace('#include <map_fragment>', `${SURFACE_FRAG}\n${FRAG}`);

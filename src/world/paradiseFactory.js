@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { OBSTACLES, R1 } from './layout.js';
+import { mergeStatic } from './merge.js';
 
 // #3 Paradise Factory (2024), modelled from the Room 1 panorama and DSC_0011–0015:
 //  - a white hydroponic (NFT) channel of lettuce seedlings hanging on chains under an
@@ -99,6 +100,41 @@ function bladeGeometry(w, h, cup, arch) {
   }
   geo.computeVertexNormals();
   return geo;
+}
+
+// In the build the model also travels gzipped (`<url>.gz`, written by vite.config.js): Netlify
+// does not compress a .glb, and this one shrinks from 1,005 KB to 436 KB. The
+// browser unzips it with DecompressionStream. In dev, without DecompressionStream, or if
+// anything goes wrong, the plain .glb is loaded instead. If a server has already unzipped it
+// (Content-Encoding: gzip), the bytes are a glb and are parsed as they are.
+function loadGzipped(loader, manager, url, onLoad) {
+  const plain = () => loader.load(url, onLoad);
+  if (!import.meta.env.PROD || typeof DecompressionStream === 'undefined') return plain();
+  const gz = `${url}.gz`;
+  manager.itemStart(gz);
+  (async () => {
+    const res = await fetch(gz);
+    if (!res.ok) throw new Error(`${gz}: ${res.status}`);
+    let buf = new Uint8Array(await res.arrayBuffer());
+    if (buf[0] === 0x1f && buf[1] === 0x8b) {
+      const stream = new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'));
+      buf = new Uint8Array(await new Response(stream).arrayBuffer());
+    }
+    return new Promise((resolve, reject) => loader.parse(buf.buffer, url.slice(0, url.lastIndexOf('/') + 1), resolve, reject));
+  })().then(
+    (gltf) => {
+      try {
+        onLoad(gltf);
+      } finally {
+        manager.itemEnd(gz);
+      }
+    },
+    (err) => {
+      console.warn('Gzipped model not loaded, loading the plain one:', err);
+      plain();
+      manager.itemEnd(gz);
+    },
+  );
 }
 
 function chain(mat, a, b) {
@@ -262,7 +298,7 @@ export function buildParadiseFactory(materials, manager) {
     rig.userData.paradata = 'pf-plant';
     g.add(rig);
     const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
-    loader.load(`${import.meta.env.BASE_URL}models/paradise-factory-plant.glb`, (gltf) => {
+    loadGzipped(loader, manager, `${import.meta.env.BASE_URL}models/paradise-factory-plant.glb`, (gltf) => {
       gltf.scene.traverse((o) => {
         if (!o.isMesh) return;
         // the model's part colours are sRGB values: convert them so they show as authored
@@ -297,15 +333,18 @@ export function buildParadiseFactory(materials, manager) {
       rig.add(gltf.scene);
       // the white plastic corner joints of the aluminium frame (photo of the box)
       const joint = new THREE.MeshStandardMaterial({ color: 0xf0f0ec, roughness: 0.45 });
+      const joints = new THREE.Group();
       for (const y of [0.19, 0.49, 0.6]) {
         for (const jx of [-0.177, 0.177]) {
           for (const jz of [-0.132, 0.132]) {
             const j = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.035, 0.04), joint);
             j.position.set(jx, y, jz);
-            rig.add(j);
+            joints.add(j);
           }
         }
       }
+      rig.add(joints);
+      mergeStatic(joints, { strict: true }); // the 12 joints in one draw call
     });
 
     // drip feed: an upturned plastic bottle on chains, a clear line down into the box
@@ -396,5 +435,9 @@ export function buildParadiseFactory(materials, manager) {
     for (const bar of BARS) OBSTACLES.push({ x0: bar.x - 0.06, x1: bar.x + 0.06, z0: bar.z - 0.06, z1: bar.z + 0.06 });
   }
 
+  // The small opaque parts (channel and caps, LED housings and diffusers, chains, bars) in one
+  // mesh per material: the same geometry in fewer draw calls. The clear plastic, the fluid,
+  // the card, the leaves and the pebbles stay as they are.
+  mergeStatic(g, { strict: true });
   return g;
 }

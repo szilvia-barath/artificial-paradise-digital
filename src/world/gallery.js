@@ -4,6 +4,10 @@ import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
 import { createVideo, scheduleVideos, BY_ROOM } from './video.js';
+import { isTouch } from '../device.js';
+import { MAX_DPR, pixelCapFor, baseFovFor } from '../fx/resolution.js';
+import { isOn } from '../fx/switches.js';
+import { lazyKTX2 } from './textures.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
 // screens playing the artist's videos (short loops, with the videos' sound where they
@@ -72,8 +76,36 @@ const screenFrag = /* glsl */ `
     // faint LCD falloff at the panel edges
     vec2 d = abs(vUv - 0.5) * 2.0;
     col *= 1.0 - 0.1 * pow(max(d.x, d.y), 8.0);
-    gl_FragColor = vec4(col * brightness, 1.0);
+    #ifdef SCREEN_UNTONED
+      // Switch "tone" (src/fx/switches.js, off): the screen shows the video's own values. The
+      // composer's tone mapping (PBR Neutral at the renderer's exposure) is undone here in
+      // advance, so after it each pixel is the file's value (brightness is not applied).
+      // The curve's last few per cent cannot be reached, so the target stops at 0.97.
+      gl_FragColor = vec4(untone(min(col, vec3(0.97))), 1.0);
+    #else
+      gl_FragColor = vec4(col * brightness, 1.0);
+    #endif
     #include <colorspace_fragment>
+  }
+`;
+
+// The inverse of three.js's PBR Neutral tone mapping (r186, tonemapping_pars_fragment), for
+// the screens under the "tone" switch. It ignores the curve's small desaturation of very
+// bright colours, so near-white saturated colours come out a little paler than in the file.
+const UNTONE = /* glsl */ `
+  uniform float toneExposure;
+  vec3 untone(vec3 t) {
+    const float start = 0.8 - 0.04;
+    const float d = 1.0 - start;
+    float peakT = max(t.r, max(t.g, t.b));
+    vec3 c = t;
+    if (peakT >= start) {
+      float peak = d * d / (1.0 - peakT) + start - d;
+      c *= peak / peakT;
+    }
+    float m = min(c.r, min(c.g, c.b));
+    float x = m >= 0.04 ? m + 0.04 : sqrt(max(m, 0.0) / 6.25);
+    return (c + (x - m)) / toneExposure;
   }
 `;
 
@@ -101,6 +133,30 @@ function wrapText(g, text, x, y, maxW, lh) {
   }
   if (line) { g.fillText(line, x, y); y += lh; }
   return y;
+}
+
+// How sharp to draw the text sheets (rendering proposal, option 5): no sharper than this
+// screen can show them from the nearest point a visitor can stand (0.27 m in front of the
+// sheet: the walking radius, 0.28 m from the wall), with the field of view and the capped pixel ratio main.js uses.
+// A phone or tablet is measured both upright and on its side. The result is a scale of the
+// sheet's 512 x 724 layout, never above the tier's old fixed scale (4 on a computer, 2.5 on
+// low power), so no screen gets a softer sheet than it can show at that distance. Zoomed in
+// further than that, the letters soften a little. SHEET_HEIGHT is the sheets' height in
+// metres: keep it equal to the PlaneGeometry in buildGallery.
+const SHEET_HEIGHT = 0.707;
+const NEAREST = 0.27;
+function sheetScale(tierMax) {
+  const ratio = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  const a = window.screen.width || window.innerWidth;
+  const b = window.screen.height || window.innerHeight;
+  const views = isTouch ? [[Math.min(a, b), Math.max(a, b)], [Math.max(a, b), Math.min(a, b)]] : [[a, b]];
+  let need = 0;
+  for (const [w, h] of views) {
+    const px = h * Math.min(ratio, pixelCapFor(w, h)); // drawing-buffer height
+    const seen = 2 * NEAREST * Math.tan(THREE.MathUtils.degToRad(baseFovFor(w, h) / 2)); // metres of wall in view
+    need = Math.max(need, (SHEET_HEIGHT / seen) * px);
+  }
+  return Math.max(1, Math.min(tierMax, need / 724));
 }
 
 // The exhibition text sheet. The type shrinks until the text fits the page, since the
@@ -217,21 +273,33 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
   const wallTexts = [];
-  // the sheets are drawn at 4x (2.5x on phones) so the letters stay sharp up close
-  const SHEET_SCALE = hdBudget > 3 ? 4 : 2.5;
+  // the sheets are drawn at up to 4x (2.5x on low power), as sharp as the screen can show
+  // them up close (sheetScale)
+  const SHEET_SCALE = sheetScale(hdBudget > 3 ? 4 : 2.5);
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
     wallTexts.push(tex);
     return tex;
   };
   const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.35, metalness: 0.4 });
+  const untoned = isOn('tone'); // screens out of the tone mapping (switch, off)
 
   const prepTex = (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = aniso;
+    if (t.isCompressedTexture) return t; // KTX2 brings its own mipmaps
     t.generateMipmaps = true;
     t.minFilter = THREE.LinearMipmapLinearFilter;
     return t;
+  };
+  // Switch "ktx2art" (src/fx/switches.js, off): the 1024 px and 1600 px images of the
+  // paintings and prints as KTX2 UASTC (scripts/make_art_ktx2.mjs, img/ktx2/), which the GPU
+  // keeps compressed; the WebP if a KTX2 is missing or cannot be transcoded.
+  const artKTX2 = isOn('ktx2art');
+  const loadArt = (name, onLoad, onError) => {
+    const webp = () => lazyLoader.load(url(`${name}.webp`), onLoad, undefined, onError);
+    if (!artKTX2) return webp();
+    lazyKTX2().load(url(`img/ktx2/${name.replace(/^img\//, '')}.ktx2`), onLoad, undefined, webp);
   };
 
   for (const work of data.works) {
@@ -290,9 +358,12 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
             mixB: { value: 0 },
             brightness: { value: 1.1 },
             uvRect: { value: new THREE.Vector4(1, 1, 0, 0) },
+            // read at each upload: post.js sets the exposure after the gallery is built
+            toneExposure: { get value() { return renderer.toneMappingExposure; } },
           },
+          defines: untoned ? { SCREEN_UNTONED: '' } : {},
           vertexShader: screenVert,
-          fragmentShader: screenFrag,
+          fragmentShader: untoned ? UNTONE + screenFrag : screenFrag,
         });
         const screenGeo = new THREE.PlaneGeometry(w, h);
         // footage of another shape is cropped to the screen, not stretched
@@ -438,7 +509,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       if (l.loaded || l.dist > 7.5 * zoom) continue;
       l.loaded = true;
       if (l.front) {
-        lazyLoader.load(url(`${l.work.image}-tex.webp`), (t) => {
+        loadArt(`${l.work.image}-tex`, (t) => {
           prepTex(t);
           const old = l.front.map;
           l.texMap = t;
@@ -447,7 +518,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
         });
       } else if (l.entry) {
         l.entry.frames.forEach((fr, i) => {
-          lazyLoader.load(url(`${fr}-tex.webp`), (t) => {
+          loadArt(`${fr}-tex`, (t) => {
             prepTex(t);
             const old = l.entry.textures[i];
             l.entry.textures[i] = t;
@@ -462,7 +533,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       const want = hd.includes(l);
       if (want && !l.hd && !l.hdLoading) {
         l.hdLoading = true;
-        lazyLoader.load(url(`${l.work.image}.webp`), (t) => {
+        loadArt(l.work.image, (t) => {
           l.hdLoading = false;
           prepTex(t);
           if (!l.wantHD) { t.dispose(); return; }
