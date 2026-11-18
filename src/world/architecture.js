@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS } from './layout.js';
+import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, ROOMS } from './layout.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
-// plus Room 4's brick vaults and the stair shaft. UVs are world metres (u along the
+// plus Room 4's brick vaults and the opening to the street door. UVs are world metres (u along the
 // wall, v = height), so brick courses line up across every wall and doorway.
 // Geometry is merged per material to keep draw calls low.
 // Returns { group, segments } where segments are 2D collision lines [[x,z],[x,z]].
@@ -144,21 +144,23 @@ export function buildArchitecture(materials) {
     }
   }
 
-  // ---------------------------------------------------------------- stair shaft
-  // The flight climbs west through Room 1's wall into a dark shaft lit from the street.
+  // ---------------------------------------------------------------- street door
+  // The flight's landing (1.24 m, props.js) runs through Room 1's west wall to the street
+  // door in the wall's outer face, closed and dark (S34 room_1_stairs_important.webp,
+  // DSC_0014, DSC_0015). The opening in the wall's thickness rises above Room 1's ceiling
+  // to the door's head at 3.45 m (a door about 2.2 m tall: inferred from DSC_0015 and the
+  // door's proportions in S34 main_entrance.webp); its sides and head are invented.
+  // PROGRESS.md, decision log, 17 November 2026 (Decision 1b). Until then a 2 m deep shaft,
+  // 5.6 m tall, ran west of the wall (invented).
   {
     const s = STAIRWELL;
-    const top = 5.6;
-    const out = R1_WEST_OUTER;
-    const west = out - 2.0;
-    wallQuad('shaft', '+z', s.z0, west, s.x1, 3.0, top);
-    wallQuad('shaft', '+z', s.z0, west, out, 0, 3.0);
-    wallQuad('shaft', '-z', s.z1, west, s.x1, 3.0, top);
-    wallQuad('shaft', '-z', s.z1, west, out, 0, 3.0);
+    const top = 3.45;
+    const landing = 1.24;
+    wallQuad('shaft', '+z', s.z0, s.x0, s.x1, 3.0, top);
+    wallQuad('shaft', '-z', s.z1, s.x0, s.x1, 3.0, top);
     wallQuad('shaft', '-x', s.x1, s.z0, s.z1, 3.0, top);
-    wallQuad('shaft', '+x', west, s.z0, s.z1, 0, top);
-    flat('darkCeiling', { x0: west, x1: s.x1, z0: s.z0, z1: s.z1 }, top, false);
-    flat('darkFloor', { x0: west, x1: out, z0: s.z0, z1: s.z1 }, 0, true);
+    wallQuad('streetDoor', '+x', s.x0, s.z0, s.z1, landing, top);
+    flat('darkCeiling', { x0: s.x0, x1: s.x1, z0: s.z0, z1: s.z1 }, top, false);
   }
 
   for (const [key, geos] of buckets) {
