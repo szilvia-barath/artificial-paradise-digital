@@ -15,7 +15,7 @@ import { localizeData, translator } from '../src/localize.js';
 import { refHTML } from '../src/refhtml.js';
 
 const SITE = 'https://artificial-paradise.netlify.app/';
-const SOURCES = ['../src/data/exhibition.json', '../src/i18n/en.json', '../src/i18n/hu.json', '../src/data/references.json'].map((p) => fileURLToPath(new URL(p, import.meta.url)));
+const SOURCES = ['../src/data/exhibition.json', '../src/i18n/en.json', '../src/i18n/hu.json', '../src/data/paradata-scene.json', '../src/data/paradata.json', '../src/data/references.json'].map((p) => fileURLToPath(new URL(p, import.meta.url)));
 const readJSON = (file) => JSON.parse(readFileSync(file, 'utf8'));
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -143,6 +143,27 @@ ${artistText(w)}
 </article>`;
   };
 
+  // Measured or guessed, as the 3D view's paradata view shows it: each part of the room under
+  // the status of its paradata row (src/data/paradata-scene.json, src/data/paradata.json); the
+  // hung works by their numbers.
+  const PD = ['measured', 'inferred', 'invented', 'omitted', 'not-recorded'];
+  const pdStatus = new Map(raw.pd.rows.map((r) => [r.decision_id, r.status]));
+  const pdClass = (e) => (PD.slice(0, 4).includes(pdStatus.get(e.decision)) ? pdStatus.get(e.decision) : 'not-recorded');
+  const andList = (items) => (items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')}${t('paradata.textAnd')}${items[items.length - 1]}`);
+  const byId = new Map(data.works.map((w) => [w.id, w]));
+  const paradataHTML = (room) => {
+    const els = raw.pdScene.elements.filter((e) => e.rooms.includes(room));
+    const items = PD.map((k) => {
+      const mine = els.filter((e) => pdClass(e) === k);
+      if (!mine.length) return '';
+      const hung = mine.filter((e) => byId.has(e.id) && e.id !== 'w03-screen').sort((a, b) => byId.get(a.id).no - byId.get(b.id).no);
+      const parts = mine.filter((e) => !hung.includes(e)).map((e) => titled(t(`paradata.el.${e.id}`)));
+      if (hung.length) parts.push(esc(t(hung.length > 1 ? 'paradata.textWorks' : 'paradata.textWork', { nos: andList(hung.map((e) => t('paradata.textNo', { n: byId.get(e.id).no }))) })));
+      return `<li>${esc(t('paradata.textItem', { status: t(`paradata.status.${k}`), parts: '{parts}' })).replace('{parts}', parts.join('; '))}</li>`;
+    }).filter(Boolean);
+    return `<p>${esc(t('paradata.textIntro'))}</p>\n<ul class="pd">\n${items.join('\n')}\n</ul>`;
+  };
+
   const roomHTML = (r, i) => {
     const inRoom = works.filter((w) => w.room === r.id);
     const lead = [
@@ -157,6 +178,7 @@ ${artistText(w)}
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
 <p class="sub">${titled(data.rooms[r.id].subtitle)}</p>
 <p>${esc(lead.join(' '))}</p>
+${paradataHTML(r.id)}
 ${inRoom.map(workHTML).join('\n')}
 </section>`;
   };
@@ -275,10 +297,10 @@ ${statementHTML}
 
 // The two pages: [{ file: 'text/index.html', html }, { file: 'text/hu/index.html', html }]
 export function buildTextEdition() {
-  const [data, en, hu, refs] = SOURCES.map(readJSON);
+  const [data, en, hu, pdScene, pd, refs] = SOURCES.map(readJSON);
   // the curator's line is found by position, so make sure it is still there
   if (en.credits[1][0] !== 'Curator') throw new Error('text edition: the second line of "credits" in en.json is no longer the curator');
-  const raw = { data, en, hu, refs };
+  const raw = { data, en, hu, pdScene, pd, refs };
   return [
     { file: 'text/index.html', html: page('en', raw) },
     { file: 'text/hu/index.html', html: page('hu', raw) },

@@ -23,7 +23,7 @@ toggle.addEventListener('click', () => {
   toggle.setAttribute('aria-expanded', String(open));
 });
 nav.addEventListener('click', (e) => {
-  if (e.target.closest('[data-nav], [data-lang], a[href]')) closeMenu();
+  if (e.target.closest('[data-nav], [data-lang], a[href], [data-paradata]')) closeMenu();
 });
 document.addEventListener('pointerdown', (e) => {
   if (!nav.contains(e.target)) closeMenu();

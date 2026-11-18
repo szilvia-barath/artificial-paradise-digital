@@ -1,0 +1,474 @@
+{
+  "_readme": "Which row of the paradata (src/data/paradata.json) each part of the 3D scene shows in the 'measured or guessed' view. A part's id is set as userData.paradata on its object, or per vertex in the merged meshes (src/world/paradataTags.js). 'decision' is the row whose element describes the part most closely; its status is the one shown. null: no row in paradata_3 covers the part, and the view shows it as 'not recorded'. 'why' says which row was chosen and why. The choice of row is the assistant's (17 November 2026) and waits for the reconstructor's check.",
+  "elements": [
+    {
+      "id": "r1-walls",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d01",
+      "why": "Room 1's north and south walls: the room's size (Room sizes)."
+    },
+    {
+      "id": "r1-street-wall",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d07",
+      "why": "The street wall with its niches, windows, the two radiators under them, the vent and the heating pipe (Room 1 street wall)."
+    },
+    {
+      "id": "r1-doorway",
+      "rooms": [
+        "r1",
+        "r2"
+      ],
+      "decision": "ap-d09",
+      "why": "The wall between Rooms 1 and 2: piers, recess, doorway and the two plinths (Room 1 to Room 2 doorway)."
+    },
+    {
+      "id": "r1-floor",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d03",
+      "why": "Floor: the traced plan (Floor plan)."
+    },
+    {
+      "id": "r1-ceiling",
+      "rooms": [
+        "r1"
+      ],
+      "decision": null,
+      "why": "No row gives the ceiling's height."
+    },
+    {
+      "id": "r1-stairs",
+      "rooms": [
+        "r1"
+      ],
+      "decision": null,
+      "why": "No row covers the flight of stairs; PROGRESS.md, 15 November 2026, describes how it was built."
+    },
+    {
+      "id": "stair-shaft",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d12",
+      "why": "The dark shaft above the stairs (Stair shaft)."
+    },
+    {
+      "id": "r1-bench",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d20",
+      "why": "The bench (Furniture)."
+    },
+    {
+      "id": "r1-fittings",
+      "rooms": [
+        "r1"
+      ],
+      "decision": null,
+      "why": "The electric box, the third radiator, the white pipes, the cables on the floor and the sensor: no row."
+    },
+    {
+      "id": "track-lights",
+      "rooms": [
+        "r1",
+        "r3"
+      ],
+      "decision": null,
+      "why": "The track rails and spots in Rooms 1 and 3: no row (ap-d21 gives the light's colour, not the fittings)."
+    },
+    {
+      "id": "text-r1",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d72",
+      "why": "The exhibition text sheet in Room 1 (Exhibition text sheets in Rooms 1 and 2)."
+    },
+    {
+      "id": "r1-light-pools",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d22",
+      "why": "The pools of light behind the works (Lighting on the works)."
+    },
+    {
+      "id": "w01-dresden",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w02-human-as-error-vi",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w04-human-as-error-iii",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w05-human-as-error-i",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w03-screen",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d35",
+      "why": "The Paradise Factory monitor: frame and screen opening (Paradise Factory: monitor). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "pf-plant",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d37",
+      "why": "Paradise Factory, the plant and its rack: the artist's 3D model (Paradise Factory: plant and rack). Shown as an overlay."
+    },
+    {
+      "id": "pf-channel",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d38",
+      "why": "Paradise Factory, the hydroponic channel (Paradise Factory: channel). Shown as an overlay."
+    },
+    {
+      "id": "pf-details",
+      "rooms": [
+        "r1"
+      ],
+      "decision": "ap-d39",
+      "why": "Paradise Factory, LED bars and tubes, seedlings, chains, drip bottle, hoses, card (Paradise Factory: details). Shown as an overlay."
+    },
+    {
+      "id": "r2-walls",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d01",
+      "why": "Room 2's walls: the room's size (Room sizes)."
+    },
+    {
+      "id": "r2-doorway",
+      "rooms": [
+        "r2",
+        "r3"
+      ],
+      "decision": "ap-d10",
+      "why": "The wall between Rooms 2 and 3: pillar, doorway and the bar's pass-through (Room 2 to Room 3 doorway)."
+    },
+    {
+      "id": "r2-floor",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d03",
+      "why": "Floor: the traced plan (Floor plan)."
+    },
+    {
+      "id": "r2-ceiling",
+      "rooms": [
+        "r2"
+      ],
+      "decision": null,
+      "why": "No row gives the ceiling's height."
+    },
+    {
+      "id": "r2-bar",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d20",
+      "why": "The bar: counter, pillar, cabinets, shelves, glasses and bottles (Furniture)."
+    },
+    {
+      "id": "r2-furniture",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d20",
+      "why": "Table, chairs and pendant lamps (Furniture)."
+    },
+    {
+      "id": "r2-storage",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d13",
+      "why": "The storage alcove behind its grille and the closed toilet door (Storage alcove and toilets, Room 2)."
+    },
+    {
+      "id": "text-r2",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d72",
+      "why": "The exhibition text sheet in Room 2 (Exhibition text sheets in Rooms 1 and 2)."
+    },
+    { "id": "roomsheet", "rooms": ["r2"], "decision": null, "why": "The A4 room sheet (plan and list of works) on the wall west of the toilet corridor (DSC_0048): no row covers it; PROGRESS.md, 17 November 2026." },
+    {
+      "id": "r2-light-pools",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d22",
+      "why": "The glow behind the screens (Lighting on the works)."
+    },
+    {
+      "id": "w06-artificial-paradise-singapore",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d26",
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w07-artificial-paradise-eden-project",
+      "rooms": [
+        "r2"
+      ],
+      "decision": "ap-d26",
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "r3-walls",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d01",
+      "why": "Room 3's south wall: the room's size (Room sizes)."
+    },
+    {
+      "id": "r3-north-wall",
+      "rooms": [
+        "r3"
+      ],
+      "decision": null,
+      "why": "Room 3's north wall with its two bricked-up openings: no row."
+    },
+    {
+      "id": "r3-closet",
+      "rooms": [
+        "r3"
+      ],
+      "decision": null,
+      "why": "The closet block beside the south stub: no row."
+    },
+    {
+      "id": "r3-floor",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d03",
+      "why": "Floor: the traced plan (Floor plan)."
+    },
+    {
+      "id": "r3-ceiling",
+      "rooms": [
+        "r3"
+      ],
+      "decision": null,
+      "why": "No row gives the ceiling's height."
+    },
+    {
+      "id": "r3-r4-opening",
+      "rooms": [
+        "r3",
+        "r4"
+      ],
+      "decision": "ap-d14",
+      "why": "The two wall stubs, the header and the curtain between Rooms 3 and 4 (Rooms 3 and 4)."
+    },
+    {
+      "id": "r3-light-pools",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d22",
+      "why": "The pools of light behind the works (Lighting on the works)."
+    },
+    {
+      "id": "w08-wiena-wrong-landscape-i",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d26",
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w09-warsaw-g24-i",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w10-warsaw-ii",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w14-warsaw-g24-ii",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d25",
+      "why": "A painting: its place on the wall (Paintings: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w11-artificial-paradise-i-print",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d26",
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w12-artificial-paradise-ii-print",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d26",
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w13-artificial-paradise-iii-print",
+      "rooms": [
+        "r3"
+      ],
+      "decision": "ap-d26",
+      "why": "A print: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "r4-walls",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d01",
+      "why": "Room 4's south wall: the room's size (Room sizes)."
+    },
+    {
+      "id": "r4-north-wall",
+      "rooms": [
+        "r4"
+      ],
+      "decision": null,
+      "why": "Room 4's north wall with its two bricked-up openings and the ledge: no row."
+    },
+    {
+      "id": "r4-end-wall",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d15",
+      "why": "The end wall, with no beam against it (Room 4 end wall)."
+    },
+    {
+      "id": "r4-vaults",
+      "rooms": [
+        "r4"
+      ],
+      "decision": null,
+      "why": "The brick vaults and steel beams of the ceiling: no row."
+    },
+    {
+      "id": "r4-floor",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d03",
+      "why": "Floor: the traced plan (Floor plan)."
+    },
+    {
+      "id": "r4-projector",
+      "rooms": [
+        "r4"
+      ],
+      "decision": null,
+      "why": "The projector on the ceiling conduit: no row (ap-d45's note places the projector above the screen of Natural Life)."
+    },
+    {
+      "id": "r4-fittings",
+      "rooms": [
+        "r4"
+      ],
+      "decision": null,
+      "why": "Pipes, the conduit and its floodlights, the black box, the gas meter and the radiator: no row."
+    },
+    {
+      "id": "r4-light-pools",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d22",
+      "why": "The glow behind the screens (Lighting on the works)."
+    },
+    {
+      "id": "w15-wiena-wrong-landscape-ii",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d26",
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "w17-natural-life",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d26",
+      "why": "A screen: its place on the wall (Prints and screens: hanging height). The image is not changed; a band round it shows the status."
+    },
+    {
+      "id": "lif-river",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d43",
+      "why": "Let it Flow, the plastic river (Let it Flow: river outline). Shown as an overlay."
+    },
+    {
+      "id": "lif-wall-projection",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d41",
+      "why": "Let it Flow, the wall projection Siluett (Let it Flow: wall projection size). Shown as an overlay."
+    },
+    {
+      "id": "lif-floor-projection",
+      "rooms": [
+        "r4"
+      ],
+      "decision": "ap-d45",
+      "why": "Let it Flow, the floor projection, with the strips beside it (Let it Flow: floor projection; the strips are ap-d47, invented, and cannot be shown apart). Shown as an overlay."
+    }
+  ]
+}
