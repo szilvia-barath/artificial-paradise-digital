@@ -154,7 +154,7 @@ export function buildProps(materials) {
     const sunk = 0.04;
     const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
     // across the flight, z from the north wall face (measured at the foot in DSC_0016)
-    const backOut = 0.37; // wall-side parapet, back face (0.13 thick: inferred)
+    const backOut = 0.25; // wall-side parapet, back face (0.25 thick, as wide as the coping brick; was 0.37 with the brick overhanging the gap, 18 November 2026)
     const backIn = 0.5; // wall-side parapet, face towards the treads
     const openIn = 1.69; // open-side parapet, face towards the treads (0.23 thick: inferred)
     const openOut = 1.92; // open-side parapet, face towards the room
@@ -164,7 +164,7 @@ export function buildProps(materials) {
     const pierTop = 0.19;
     const capTop = pierTop + 0.012;
     const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
-    const baseTop = 0.25;
+    const baseTop = 0.17; // level with the start of the sloping coping (was 0.25, a block standing proud of it)
     // the parapets rise with the steps up to the landing's nosing, then run level to the wall
     const inRoom = steps;
     const xTop = foot - run * (steps - 1); // the landing's nosing (top riser)
@@ -280,7 +280,7 @@ export function buildProps(materials) {
       const nrm = new THREE.Vector2(rise / L, run / L); // square to it, upwards
       const angle = -Math.atan2(rise, run);
       const zOpen = (openIn + openOut) / 2;
-      const zBack = backIn - 0.125;
+      const zBack = backIn - 0.125; // the 0.25 m brick covers the parapet exactly (z 0.25 to 0.5)
       const base = (s) => new THREE.Vector2(foot, tread(0) + 0.06).addScaledVector(d, s);
       const mortarMat = new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 });
       // on the wall side the mortar's inner face stands 3 mm back from the parapet's face and
@@ -426,11 +426,16 @@ export function buildProps(materials) {
     // the coping's top line: up the slope to the landing's nosing, then level
     const top = (x) => (Math.min(foot - x, foot - xTop) / run) * rise + tread(0) + 0.06;
     const firstPost = foot - 0.36;
-    for (let x = firstPost; x > WX; x -= 0.75) {
+    // the handrail runs the whole flight, from the foot to the street door at the top: down
+    // the slope past the first post to the end of the flight (DSC_0015, DSC_0016: the rail
+    // runs on a little below the lowest post), level over the landing and through the wall
+    const railFoot = foot + 0.02;
+    const railEnd = WO + 0.05;
+    for (let x = firstPost; x > railEnd; x -= 0.75) {
       g.add(rod(materials.black, new THREE.Vector3(x, top(x), zRail), new THREE.Vector3(x, top(x) + railH, zRail), 0.014));
     }
-    g.add(rod(materials.black, new THREE.Vector3(firstPost, top(firstPost) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
-    g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(railFoot, top(railFoot) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
+    g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(railEnd, top(railEnd) + railH, zRail), 0.02));
     obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
   }
 
