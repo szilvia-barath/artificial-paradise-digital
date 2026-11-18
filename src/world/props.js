@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1, R1_NICHES, NICHE, TOILET } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
@@ -677,33 +677,9 @@ export function buildProps(materials) {
       g.add(place(lamp, x, 0, z));
     }
 
-    // The dark corridor to the toilets (walls in layout.js, TOILET), as DSC_0047 shows it
-    // from its mouth: the end wall tiled to about 1.37 m, a small basin and a round mirror
-    // in a square black frame above it, and on the right (west) the toilet's door, dark,
-    // towards the end. Sizes and places measured on DSC_0047 against the corridor's width
-    // (±20 %); the door is built shut (whether it stood open is not clear).
-    {
-      const T = TOILET;
-      const y0 = T.step;
-      const zEnd = T.z1;
-      g.add(slab(materials.toiletTile, T.x0, T.x1, y0, y0 + 1.37, zEnd - 0.012, zEnd));
-      const basin = cyl(0.23, 0.17, 0.15, materials.toiletWhite, 20);
-      basin.scale.z = 0.62;
-      g.add(place(basin, T.x1 - 0.25, y0 + 0.725, zEnd - 0.155));
-      g.add(place(cyl(0.025, 0.025, 0.3, materials.steel, 8), T.x1 - 0.25, y0 + 0.5, zEnd - 0.06));
-      const mx = T.x1 - 0.33;
-      const my = y0 + 1.61;
-      const frame = 0.012;
-      for (const [a, b, c, d] of [[-0.21, 0.21, 0.2, 0.21], [-0.21, 0.21, -0.21, -0.2], [-0.21, -0.2, -0.21, 0.21], [0.2, 0.21, -0.21, 0.21]]) {
-        g.add(slab(materials.black, mx + a, mx + b, my + c, my + d, zEnd - 0.03, zEnd - 0.03 + frame));
-      }
-      const mirror = new THREE.Mesh(new THREE.CircleGeometry(0.195, 32), materials.toiletMirror);
-      g.add(place(mirror, mx, my, zEnd - 0.014, Math.PI));
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.195, 0.006, 6, 40), materials.black);
-      g.add(place(ring, mx, my, zEnd - 0.016));
-      // the toilet's door in the west wall, near the end
-      g.add(slab(materials.black, T.x0, T.x0 + 0.03, y0, y0 + 2.0, 6.72, 7.58));
-    }
+    // The mouth of the toilet corridor (layout.js, TOILET) shows only darkness: its walls,
+    // floor and ceiling are the black 'void' material and nothing is built inside (the
+    // fittings drawn here on 17 November 2026 were invented and are gone, 18 November 2026).
 
     // grille in front of the storage alcove (DSC_0058–0060): dark galvanised steel, round
     // rods ending in points above the top bar, three flat bars; lumber stored behind
