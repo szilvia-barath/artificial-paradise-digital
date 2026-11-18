@@ -231,14 +231,9 @@ export function buildProps(materials) {
     base.position.set((foot + baseX1) / 2, baseTop / 2, (backOut + backIn) / 2);
     g.add(base);
     // the pier: one bare brick per course, laid flat, the lowest course partly under the
-    // tiles (joints at 0.045 and 0.12 m), with a thin grey cement cap
+    // tiles (joints at 0.045 and 0.12 m), with a thin grey cement cap. The three bricks are
+    // built with the copings below, in their material (18 November 2026, second batch)
     {
-      const geo = uvMetres(new THREE.BoxGeometry(pierX1 - pierX0, pierTop, openOut - pierZ0), pierX1 - pierX0, pierTop);
-      const uv = geo.attributes.uv;
-      for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) + 0.032);
-      const pier = new THREE.Mesh(geo, materials.stairBrick);
-      pier.position.set((pierX0 + pierX1) / 2, pierTop / 2, (pierZ0 + openOut) / 2);
-      g.add(pier);
       const cap = box(pierX1 - pierX0 + 0.006, capTop - pierTop, openOut - pierZ0 + 0.006, materials.stair);
       cap.position.set((pierX0 + pierX1) / 2, (pierTop + capTop) / 2, (pierZ0 + openOut) / 2);
       g.add(cap);
@@ -378,7 +373,7 @@ export function buildProps(materials) {
       for (let x = xTop - 0.07; x > WX + 0.01; x -= 0.077) {
         extra.push([x, landing + 0.06 + 0.02, zOpen, 0], [x, landing + 0.06 + 0.02, zBack, 0]);
       }
-      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1);
+      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1 + 3);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
       const c = new THREE.Color();
@@ -415,6 +410,24 @@ export function buildProps(materials) {
       m.compose(new THREE.Vector3(baseX1 - 0.07, baseTop + 0.035, backIn - 0.06), q0, new THREE.Vector3(0.14 / 0.065, 0.07 / 0.12, 0.12 / 0.25));
       bricks.setMatrixAt(k, m);
       bricks.setColorAt(k++, tint(207));
+      // the pier's three bricks, laid flat, one per course (joints at 0.045 and 0.12 m, the
+      // lowest partly under the tiles): the copings' brick, scaled, in their tints and their
+      // pale mortar. Until 18 November 2026 (second batch) the pier was one block in the
+      // stairBrick texture, darker and cleaner than the bricks above it (reconstructor; DSC_0016).
+      {
+        const cx = (pierX0 + pierX1) / 2;
+        const cz = (pierZ0 + openOut) / 2;
+        const core = box(pierX1 - pierX0 - 0.006, pierTop, openOut - pierZ0 - 0.006, mortarMat);
+        core.position.set(cx, pierTop / 2, cz);
+        g.add(core);
+        const courses = [[-0.03, 0.045], [0.045, 0.12], [0.12, pierTop]];
+        courses.forEach(([y0, y1], i) => {
+          const h = y1 - y0 - 0.004;
+          m.compose(new THREE.Vector3(cx, (y0 + y1) / 2, cz), q0, new THREE.Vector3((pierX1 - pierX0) / 0.065, h / 0.12, (openOut - pierZ0) / 0.25));
+          bricks.setMatrixAt(k, m);
+          bricks.setColorAt(k++, tint(211 + i * 7));
+        });
+      }
       g.add(bricks);
       obstacle(pierX0 - 0.02, pierX1 + 0.02, pierZ0 - 0.02, openOut + 0.02);
       // the wall-side end and the narrow strip of floor behind it

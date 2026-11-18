@@ -121,6 +121,10 @@ export class FirstPersonControls {
       // (:focus-visible) does not show; if the keyboard had put focus here, let go first so
       // the click takes it again as a mouse focus.
       if (document.activeElement === this.dom) this.dom.blur();
+      // A press on the view clears any text left highlighted on the page: the selectstart
+      // below is cancelled while dragging, and that also kept the browser from clearing it.
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed) sel.removeAllRanges();
       dragging = true;
       moved = 0;
       lastX = e.clientX;
