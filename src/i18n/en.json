@@ -233,7 +233,7 @@
       "visual": "Description",
       "video": "Video description",
       "videoDoc": "Description of the video documentation",
-      "space": "Audio description of the room"
+      "space": "Listen to the description of the room"
     }
   },
   "meta": {
@@ -416,7 +416,7 @@
     }
   },
   "accessDescriptions": {
-    "_readme": "Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, [\"…\", \"…\"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Audio description of the room) and in the accessible version, and Read aloud reads it.",
+    "_readme": "Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, [\"…\", \"…\"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Listen to the description of the room) and in the accessible version, and Read aloud reads it.",
     "visual": {
       "w01-dresden": "",
       "w02-human-as-error-vi": "",

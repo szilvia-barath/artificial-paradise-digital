@@ -233,7 +233,7 @@
       "visual": "Leírás",
       "video": "A videó leírása",
       "videoDoc": "A videódokumentáció leírása",
-      "space": "A terem audionarrációja"
+      "space": "A terem leírásának meghallgatása"
     }
   },
   "meta": {
@@ -414,7 +414,7 @@
     }
   },
   "accessDescriptions": {
-    "_readme": "Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: [\"…\", \"…\"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem audionarrációja) és az akadálymentes változatban, és a Felolvasás felolvassa.",
+    "_readme": "Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: [\"…\", \"…\"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem leírásának meghallgatása) és az akadálymentes változatban, és a Felolvasás felolvassa.",
     "visual": {
       "w01-dresden": "",
       "w02-human-as-error-vi": "",

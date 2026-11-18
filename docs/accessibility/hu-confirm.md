@@ -149,8 +149,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: A videódokumentáció leírása
   - EN: Description of the video documentation
 - `ui.describe.space`
-  - HU: A terem audionarrációja
-  - EN: Audio description of the room
+  - HU: A terem leírásának meghallgatása
+  - EN: Listen to the description of the room
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
@@ -158,8 +158,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Let it Flow · installáció
   - EN: Let it Flow · installation
 - `accessDescriptions._readme`
-  - HU: Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: ["…", "…"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem audionarrációja) és az akadálymentes változatban, és a Felolvasás felolvassa.
-  - EN: Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, ["…", "…"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Audio description of the room) and in the accessible version, and Read aloud reads it.
+  - HU: Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: ["…", "…"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem leírásának meghallgatása) és az akadálymentes változatban, és a Felolvasás felolvassa.
+  - EN: Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, ["…", "…"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Listen to the description of the room) and in the accessible version, and Read aloud reads it.
 - `legal.sections[0].p[0]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás).
   - EN: Szilvia Baráth, who made this digital exhibition (3D reconstruction, design and programming).

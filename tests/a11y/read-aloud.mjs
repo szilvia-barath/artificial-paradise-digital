@@ -242,7 +242,7 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   // test words, in the page's memory only
   const T = {
     en: { visual: 'TEST visual description of Dresden.', room: ['TEST audio description of Room 1, first paragraph.', 'TEST second paragraph.'], video: 'TEST video description of Singapore.', doc: 'TEST description of the Let it Flow documentation.' },
-    hu: { visual: 'TESZT: Drezda leírása.', room: ['TESZT: az 1. terem audionarrációja.'] },
+    hu: { visual: 'TESZT: Drezda leírása.', room: ['TESZT: az 1. terem leírása.'] },
   };
   const put = (t) => p.evaluate((x) => {
     const a = window.__ap.data.accessDescriptions;
@@ -285,7 +285,7 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   await p.click('#viewer .read-aloud');
   await p.waitForFunction(() => document.querySelector('#viewer .read-aloud').getAttribute('aria-pressed') === 'true', null, { timeout: 5000 }).catch(() => {});
   const sph = (await speech(p)).filter((e) => e.type === 'speak');
-  step('DS4 Hungarian page: an empty Hungarian field shows nothing (the English words are not taken); filled, it shows under "Leírás" and "A terem audionarrációja" and is read with the Hungarian voice',
+  step('DS4 Hungarian page: an empty Hungarian field shows nothing (the English words are not taken); filled, it shows under "Leírás" and "A terem leírásának meghallgatása" and is read with the Hungarian voice',
     h0.describe.length === 0 && h0.space.length === 0 && JSON.stringify(h1.describe) === JSON.stringify([`H3:${UI.hu.describe.visual}`, `P:${T.hu.visual}`]) && JSON.stringify(h1.space) === JSON.stringify([`H3:${UI.hu.describe.space}`, `P:${T.hu.room[0]}`]) && sph.some((e) => e.text === T.hu.visual && e.voice === LOCAL_HU.name),
     JSON.stringify({ h0, h1 }));
   errors.push(...w.errors);
