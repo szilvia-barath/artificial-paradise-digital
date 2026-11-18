@@ -536,6 +536,7 @@
     {
       "id": "roomsheet",
       "kind": "text",
+      "draw": "plan",
       "face": "-z",
       "at": 5.73,
       "along": 6.445,
