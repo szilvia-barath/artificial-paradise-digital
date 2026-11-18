@@ -48,7 +48,7 @@ sup a{padding:0 .15em}
 .footnotes{padding-left:1.4rem;font-size:.95rem}
 .footnotes li{margin:.4rem 0}
 .footnotes li:target,.footnotes li:focus{outline:2px solid var(--link);outline-offset:3px}
-.fn-back{text-decoration:none;padding:0 .2em}
+.fn-back{text-decoration-thickness:1px;padding:0 .2em}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:30rem){dl{grid-template-columns:1fr;gap:0}dd{margin-bottom:.5rem}}
 `.trim();
