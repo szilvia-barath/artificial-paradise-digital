@@ -96,8 +96,8 @@ const mapGroups = (p) => p.evaluate(() => {
   const k = await keyInfo(p);
   const c = worst(k.color, k.glass);
   const { groups, works } = await mapGroups(p);
-  // four marks, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), 6 to 9 px across
-  const marks = k.marks.length === 4 && new Set(k.marks.map((x) => x.shape)).size === 4 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 6 && x.w <= 9 && x.h >= 6 && x.h <= 9);
+  // four marks, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), the colour 4.5 to 7 px across
+  const marks = k.marks.length === 4 && new Set(k.marks.map((x) => x.shape)).size === 4 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 4.5 && x.w <= 7 && x.h >= 4.5 && x.h <= 7);
   step(`A4.1 Desktop: the key is just under the map, right-aligned with it, in two rows: "${keyWords('en').replaceAll('|', '", "')}", at least 11 px, 4.5:1 at worst; four marks of four shapes, each with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en') && k.rows === 2 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shape, w: mw, h }) => ({ group, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
   // the key's marks are the map's own: the same shape, colour and edge as minimap.js draws each
   // group with (read from the page; fails if the key is missing or drifts from the map)
@@ -129,7 +129,7 @@ const mapGroups = (p) => p.evaluate(() => {
   await w.ctx.close();
 }
 // The map is not hidden on a phone (150 × 102 px), so neither is its key.
-for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['laptop at 200% (683 × 384 at 2×), Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu'], ['small phone on its side 568 × 320, Hungarian (the key at the left of the map, level with its top)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu', true], ['small phone on its side 568 × 320, English (the key at the left of the map)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'en', true]]) {
+for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, 'en'], ['phone 375 × 667, Hungarian', PHONE, 'hu'], ['phone 320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['phone on its side 667 × 375, Hungarian (the key at the left of the map)', PHONE_SIDE, 'hu', true], ['laptop at 200% (683 × 384 at 2×), Hungarian', { viewport: { width: 683, height: 384 }, deviceScaleFactor: 2 }, 'hu'], ['small phone on its side 568 × 320, Hungarian (the key at the left of the map, level with its top)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu', true], ['small phone on its side 568 × 320, English (the key at the left of the map)', { ...PHONE, viewport: { width: 568, height: 320 } }, 'en', true]]) {
   const w = await inside(lang, opts);
   const p = w.page;
   await p.waitForFunction(() => document.getElementById('map-key')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});

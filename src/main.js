@@ -843,11 +843,13 @@ setTimeout(markReady, 12000);
 // the work as before.
 window.name = 'ap-exhibition';
 const channel = 'BroadcastChannel' in window ? new BroadcastChannel('ap-exhibition') : null;
-const sayHere = () => channel?.postMessage({ type: 'here', href: location.href.split('#')[0], entered });
+// (after pagehide this tab is going: it no longer answers, not even a question asked meanwhile)
+let leaving = false;
+const sayHere = () => { if (!leaving) channel?.postMessage({ type: 'here', href: location.href.split('#')[0], entered }); };
 if (channel) {
   channel.onmessage = (e) => { if (e.data?.type === 'who') sayHere(); };
-  addEventListener('pagehide', () => channel.postMessage({ type: 'gone' }));
-  addEventListener('pageshow', (e) => { if (e.persisted) sayHere(); });
+  addEventListener('pagehide', () => { leaving = true; channel.postMessage({ type: 'gone' }); });
+  addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; sayHere(); } });
   sayHere();
 }
 // #work=<id>: go to that work here. Inside, whatever is open closes and the work opens in the

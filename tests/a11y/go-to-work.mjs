@@ -110,6 +110,8 @@ async function enterByKeys(p, sound) {
   if (sound) await p.keyboard.press('Tab'); // to "With sound"
   await p.keyboard.press('Enter');
   await until(p, sceneWithFocus, null, 30000);
+  // the title card's fade after Enter (1.1 s) is over before the accessible version is opened
+  await until(p, () => getComputedStyle(document.getElementById('loader')).visibility === 'hidden', null, 10000);
 }
 // From the exhibition's tab: its skip link by keys, Enter; the accessible version in a new tab.
 async function openTextTab(ctx, p, key) {
@@ -231,6 +233,7 @@ async function openTextTab(ctx, p, key) {
   step('D.1 Inside with sound: the link to no. 3 in the second tab opens it in the exhibition\'s viewer, not reloaded, no question, the sound still on and running', link.name === linkName(id, true) && d.name === title(id) && st.same && !st.seen.soundAsk && !st.seen.loader && st.pressed === 'true' && st.audio === 'running', `link "${link.name}"; viewer "${d.name}"; same page: ${st.same}; question / title card on screen: ${st.seen.soundAsk} / ${st.seen.loader}; Sound pressed: ${st.pressed}, audio ${st.audio}`);
   // the exhibition's tab closed: the accessible version's links point back to a new load
   await p.close();
+  await t.bringToFront();
   await until(t, () => [...document.querySelectorAll('a[data-work]')].every((a) => !a.target && /[?&]work=/.test(a.getAttribute('href')) && !a.querySelector('.tab-hint').textContent), null, 15000);
   const back = await t.evaluate((x) => { const a = document.querySelector(`a[data-work="${x}"]`); return { href: a.getAttribute('href'), target: a.target, hint: a.querySelector('.tab-hint').textContent }; }, id);
   const name = await t.evaluate((x) => document.querySelector(`a[data-work="${x}"]`).textContent, id);
