@@ -20,6 +20,7 @@
   --accent-rgb: 143, 168, 255;
   --accent-2: #ff4fa3; /* tower-block magenta */
   --cyan: #5fe7ff;
+  --orange: #ff9f40; /* the floor plan's mark for other works (minimap.js), over the 3D view only */
   --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -130,9 +131,10 @@ body.page-zoomed #scene, body.page-zoomed #hud { touch-action: auto; }
 }
 #loader.gone { opacity: 0; visibility: hidden; pointer-events: none; }
 /* From a link to a work (?work=, html.direct set in index.html before the first paint): the
-   title card is never shown; the 3D view stands at the work. If the exhibition cannot start,
-   the card comes back with its failure line and the link to the accessible version. */
-html.direct body:not([data-state="failed"]) #loader:not(.gone) { visibility: hidden; transition: none; }
+   title card is never shown, and from the accessible version's tab (#work=, main.js) it goes at
+   once, with no fade; the 3D view stands at the work. If the exhibition cannot start, the card
+   comes back with its failure line and the link to the accessible version. */
+html.direct body:not([data-state="failed"]) #loader { visibility: hidden; opacity: 0; transition: none; }
 /* The loading screen is a still image: nothing on it moves, for anyone (design rule in
    CLAUDE.md). The key visual and its grain sit in a fixed, clipped backdrop; the picture is
    held at the middle of the slow drift it used to have, the grain is one fixed layer. */

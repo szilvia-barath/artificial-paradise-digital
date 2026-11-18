@@ -76,15 +76,23 @@ await page.keyboard.press('Tab');
 const skip = await page.evaluate(() => {
   const a = document.activeElement;
   const r = a.getBoundingClientRect();
-  return { cls: a.className, text: a.textContent.trim(), href: a.getAttribute('href'), onScreen: r.top >= 0 && r.left >= 0 && r.width > 0, firstFocusable: a === document.querySelector('a[href], button, [tabindex]') };
+  return { cls: a.className, text: a.querySelector('[data-i18n]')?.textContent.trim(), name: a.textContent.replace(/\s*↗\s*$/, '').replace(/\s+/g, ' ').trim(), target: a.getAttribute('target'), href: a.getAttribute('href'), onScreen: r.top >= 0 && r.left >= 0 && r.width > 0, firstFocusable: a === document.querySelector('a[href], button, [tabindex]') };
 });
-step('1.1 From page load, the first Tab reaches the skip link', `focus on a.skip-link "${EN.textEdition.skip}", visible on screen, first focusable element`, `${skip.cls} "${skip.text}", on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.text === EN.textEdition.skip && skip.onScreen && skip.firstFocusable);
-await Promise.all([page.waitForURL(/\/text\//), page.keyboard.press('Enter')]);
-step('1.2 Enter follows it to the accessible version', `address ends in /text/?lang=en, one h1 naming it in full ("${EN.textEdition.nameFull}")`, `${page.url().replace(BASE, '/')} · h1 "${await page.textContent('h1')}"`, /\/text\/\?lang=en$/.test(page.url()) && (await page.locator('h1').count()) === 1 && (await page.textContent('h1')).toLowerCase().includes(EN.textEdition.nameFull.toLowerCase()));
-await page.keyboard.press('Tab');
-const back = await focusName(page);
-await Promise.all([page.waitForURL((u) => !u.pathname.includes('/text/')), page.keyboard.press('Enter')]);
-step('1.3 Tab, Enter on its first link comes back to the digital exhibition', `first link "${EN.textEdition.toWalk}"; back on the digital exhibition's address`, `${back} → ${page.url().replace(BASE, '/')}`, back.includes(EN.textEdition.toWalk) && !page.url().includes('/text/'));
+step('1.1 From page load, the first Tab reaches the skip link', `focus on a.skip-link "${EN.textEdition.skip}", saying it opens in a new tab ("${EN.textEdition.newTab}"), visible on screen, first focusable element`, `${skip.cls} "${skip.name}" (target ${skip.target}), on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.text === EN.textEdition.skip && skip.name === `${EN.textEdition.skip} ${EN.textEdition.newTab}` && skip.target === 'ap-text' && skip.onScreen && skip.firstFocusable);
+// the accessible version opens in a tab of its own; the exhibition's tab stays as it was
+const mark = await page.evaluate(() => { window.__mark = Math.random(); return window.__mark; });
+const [text] = await Promise.all([ctx.waitForEvent('page'), page.keyboard.press('Enter')]);
+await text.waitForLoadState('load');
+step('1.2 Enter opens the accessible version in a new tab', `a second tab at /text/?lang=en, one h1 naming it in full ("${EN.textEdition.nameFull}"); the exhibition's tab still open`, `${ctx.pages().length} tabs; ${text.url().replace(BASE, '/')} · h1 "${await text.textContent('h1')}"`, ctx.pages().length === 2 && /\/text\/\?lang=en$/.test(text.url()) && (await text.locator('h1').count()) === 1 && (await text.textContent('h1')).toLowerCase().includes(EN.textEdition.nameFull.toLowerCase()));
+// its first link goes back to the exhibition's tab (found through BroadcastChannel), with no reload
+await text.waitForFunction(() => document.querySelector('a[data-walk]')?.target === 'ap-exhibition', null, { timeout: 15000 }).catch(() => {});
+await text.keyboard.press('Tab');
+const back = await focusName(text);
+await text.keyboard.press('Enter');
+await until(() => location.hash === '' && document.activeElement !== document.querySelector('.skip-link'));
+const kept = await page.evaluate((m) => window.__mark === m, mark);
+step('1.3 Tab, Enter on its first link goes back to the digital exhibition\'s tab', `first link "${EN.textEdition.toWalk} ${EN.textEdition.otherTab}"; the exhibition's tab not reloaded; the accessible version's tab stays`, `${back}; same page: ${kept}; tabs: ${ctx.pages().length}, ${text.url().replace(BASE, '/')}`, back.includes(`${EN.textEdition.toWalk} ${EN.textEdition.otherTab}`) && kept && /\/text\//.test(text.url()));
+await text.close();
 await ready();
 await said();
 step('1.4 When loading is done, focus is on Enter', 'button#enter', await focusName(page), await isOn('#enter'));

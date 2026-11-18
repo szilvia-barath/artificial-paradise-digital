@@ -207,6 +207,8 @@
       },
       "skip": "Accessible version of the digital exhibition (text format)",
       "href": "./text/?lang=en",
+      "newTab": "(opens in a new tab)",
+      "otherTab": "(in the tab where it is open)",
       "nameFull": "Accessible version (text format)"
     },
     "announce": {
@@ -551,7 +553,7 @@
       {
         "h": "What works",
         "p": [
-          "The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page.",
+          "The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page. It opens in a new tab. Its links to a work go to that work in the digital exhibition’s tab, without loading it again, when that tab is open; otherwise they open the digital exhibition at that work.",
           "Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. While one of them is open, the browser hides the page behind it from screen readers. Behind a panel or the viewer the bar at the top stays usable, so the language can still be switched; behind the sound question it is hidden too. Closing a work opened from the list of works brings the list back, with focus on the work last shown. In a narrow window, closing a panel opened from the menu puts focus on the Menu button. While the sound question is open, a click anywhere else on the screen answers it with “Without sound” and opens nothing. Switching the language while a panel or the viewer is open leaves focus in it. Page Down and Page Up go to the next and the previous work; the Next work button on the toolbar goes to the next one, one work for each press. Enter opens the work in front of you. Help, on the toolbar (in a narrow window, in the menu), shows all the controls in a panel.",
           "When a screen reader reaches the 3D view, it says that this is the 3D view, which keys go from work to work, open a work and walk, and that all the keys are in the accessible version. While walking, it announces the room and the exhibited work currently in focus, and the floor plan's name says which room you are in. In the artwork viewer, Previous and Next go through the 17 works and say the new one with its number (“No. 3 of 17”); an installation photo is named as a photo of the work in the gallery, and the video and the Google Drive player have names. On the Hungarian page the artist's English titles are marked as English, so a screen reader that switches language reads them in an English voice. Opening a panel stops the tour, so its captions are not read over the panel.",
           "Inside, a short card by the keys shows how to move. It goes at the first key, click or turn of the wheel, and Help can show it again; nothing is stored, so it shows on each visit. On a touch screen a hint says how to move by touch instead, and the sound question names the Sound button. A key under the floor plan says which marks are the videos and which are the other works. The tour caption says how far along the tour is (“3 / 17”).",

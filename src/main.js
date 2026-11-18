@@ -20,7 +20,7 @@ import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
 import { setupKeypad } from './ui/keypad.js';
 import { focusDialog, BEHIND } from './ui/dialog.js';
-import { localize, onLangChange, setText, t, titleLang } from './i18n.js';
+import { localize, onLangChange, setLang, setText, t, titleLang } from './i18n.js';
 import { announce, unannounce, setForeign } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
 import { isTouch } from './device.js';
@@ -119,8 +119,12 @@ function poseAtWork(w) {
 // version hands on when the visitor had come from inside without sound, there is no question.
 // The title card is hidden before the first paint by index.html (html.direct); an unknown id
 // brings it back and the walk opens at the foot of the stairs as before.
+// (#work=<id> as well: the accessible version's link when it found this tab open but the tab
+// has since gone, so the browser opened a new one with that address.)
 const linkParams = new URLSearchParams(location.search);
-const linkedId = linkParams.get('work');
+const hashParams = new URLSearchParams(location.hash.slice(1));
+const linkedId = linkParams.get('work') || hashParams.get('work');
+if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
 let linkedWork = (linkedId && data.works.find((w) => w.id === linkedId && w._focus)) || null;
 const linkedSoundOff = linkParams.get('sound') === 'off';
 if (linkedWork) poseAtWork(linkedWork);
@@ -617,6 +621,7 @@ soundAsk.addEventListener('mousedown', (e) => {
 });
 function enter(ask = true) {
   entered = true;
+  sayHere();
   setSound(false);
   document.body.classList.add('entered');
   const loader = document.getElementById('loader');
@@ -827,12 +832,76 @@ function showEnter() {
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.
 setTimeout(markReady, 12000);
+// ---------------------------------------------------------------- the accessible version's tab
+// The exhibition's links to the accessible version open it in a tab of its own (target
+// "ap-text"). This tab is named "ap-exhibition" and says on a BroadcastChannel that it is open
+// (its address, whether the visitor is inside); the accessible version then points its links
+// to a work at this tab, with the work in the address's fragment (#work=<id>&lang=…), so that
+// following one is a same-document navigation here: no reload, the place, the sound and the
+// language kept, the browser brings this tab to the front. Same-origin messages only; nothing
+// is stored. Without this tab, or without BroadcastChannel, those links load the exhibition at
+// the work as before.
+window.name = 'ap-exhibition';
+const channel = 'BroadcastChannel' in window ? new BroadcastChannel('ap-exhibition') : null;
+const sayHere = () => channel?.postMessage({ type: 'here', href: location.href.split('#')[0], entered });
+if (channel) {
+  channel.onmessage = (e) => { if (e.data?.type === 'who') sayHere(); };
+  addEventListener('pagehide', () => channel.postMessage({ type: 'gone' }));
+  addEventListener('pageshow', (e) => { if (e.persisted) sayHere(); });
+  sayHere();
+}
+// #work=<id>: go to that work here. Inside, whatever is open closes and the work opens in the
+// viewer, focus on its Close button (the sound stays as the visitor set it). Not inside yet:
+// straight in at the work, as from a link to a work (the sound question over it, then the
+// viewer). #exhibition (the accessible version's "Go to the digital exhibition"): this tab only
+// comes to the front; on the title card focus goes to Enter once it is ready. The fragment is
+// taken off again, so the same link works a second time.
+function fromHash() {
+  if (!location.hash) return;
+  const h = new URLSearchParams(location.hash.slice(1));
+  history.replaceState(history.state, '', location.pathname + location.search);
+  const l = h.get('lang');
+  if (l === 'en' || l === 'hu') setLang(l);
+  const w = data.works.find((x) => x.id === h.get('work') && x._focus);
+  if (!w) {
+    if (!entered) {
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      if (worldReady) enterBtn.focus({ preventScroll: true });
+    }
+    sayHere();
+    return;
+  }
+  if (!entered) {
+    document.documentElement.classList.add('direct');
+    linkedWork = w;
+    poseAtWork(w);
+    enter();
+  } else if (soundAsking()) {
+    // the sound question is still open: answering it opens this work
+    linkedWork = w;
+    poseAtWork(w);
+  } else {
+    if (tour.active) tour.stop();
+    ui.close({ refocus: false });
+    viewer.close();
+    gotoWork(w);
+    roomSaid = w.room;
+    front = w;
+    keyNav = true;
+    visitAt = visit.indexOf(w);
+    viewer.open(w, { opener: canvas });
+  }
+  sayHere();
+}
+addEventListener('hashchange', fromHash);
+
 // From a link to a work: straight in, at the work (see linkedWork above).
 if (linkedWork) enter(!linkedSoundOff);
 
 // ---------------------------------------------------------------- language
 // Static markup is re-translated by i18n.js; here everything built from the data.
 onLangChange(() => {
+  sayHere();
   localize(data);
   markTitles();
   nameMap();

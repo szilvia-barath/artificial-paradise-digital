@@ -48,16 +48,25 @@ nav ul{margin:.4rem 0;padding-left:1.2rem}
 // a choice, so only an explicit ?lang=en leaves it. Nothing is written to storage.
 const langScript = (here) => `(function(){var here='${here}',q=new URLSearchParams(location.search).get('lang'),s=null;try{s=localStorage.getItem('ap-lang')}catch(e){}var ok=function(v){return v==='hu'||v==='en'};var want=ok(q)?q:here==='hu'?'hu':ok(s)?s:/^hu\\b/i.test(navigator.language||'')?'hu':'en';if(want!==here)location.replace((want==='hu'?'hu/':'../')+location.search+location.hash)})();`;
 
-// Going to a work from here (D: the links "Open No. …, in the digital exhibition"), where
-// JavaScript is on. 1. While this page is open, the digital exhibition's engine is fetched in
-// the background (rel=prefetch, once the page has loaded, not with the browser's data saver),
-// so following a link to a work starts it from the browser's cache: the exhibition's script and
-// style and the texture decoder (`engine`, the files of this build; none on the dev server).
-// The rooms' own files (textures, models, pictures, videos) are not fetched here. 2. A visitor
-// who came here from inside the exhibition without sound arrives with ?sound=off; the links to a
-// work and to the other language hand it on, so going back to a work does not ask again.
-// Nothing is stored.
-const goScript = (engine) => `(function(){var q=new URLSearchParams(location.search);if(q.get('sound')==='off')document.addEventListener('DOMContentLoaded',function(){var as=document.querySelectorAll('a[href*="work="],a[hreflang]');for(var i=0;i<as.length;i++)as[i].href+='&sound=off'});var f=${JSON.stringify(engine)};if(!f.length)return;addEventListener('load',function(){var c=navigator.connection;if(c&&c.saveData)return;f.forEach(function(h){var l=document.createElement('link');l.rel='prefetch';l.href=h;l.crossOrigin='anonymous';document.head.appendChild(l)})})})();`;
+// Going to a work from here (the links "Open No. …, in the digital exhibition", marked
+// data-work, and "Go to the digital exhibition", data-walk), where JavaScript is on; without it
+// they are plain links that load the exhibition (at the work), as they always were.
+// 1. The exhibition's links to this page open it in a tab of its own. If the exhibition's tab
+//    is still open, it says so on a BroadcastChannel ("here", with its address; src/main.js),
+//    and these links are pointed at it: target "ap-exhibition" (the name main.js gives its tab)
+//    and the work in the address's fragment, so following one brings that tab to the front and
+//    takes it to the work with no reload, keeping the visitor's place and sound. Their text then
+//    says so (`hint`, in the .tab-hint span). When that tab closes ("gone") they point back.
+// 2. A visitor who came here from inside the exhibition without sound arrives with ?sound=off;
+//    the links to a work and to the other language hand it on, so going back to a work in a new
+//    load does not ask again.
+// 3. While this page is open, the exhibition's engine is fetched in the background
+//    (rel=prefetch, once the page has loaded, not with the browser's data saver), so a new
+//    load starts from the browser's cache: the exhibition's script and style and the texture
+//    decoder (`engine`, the files of this build; none on the dev server). The rooms' own files
+//    (textures, models, pictures, videos) are not fetched here.
+// Same-origin messages and the address only: nothing is stored.
+const goScript = (engine, hint) => `(function(){var q=new URLSearchParams(location.search),off=q.get('sound')==='off',ex=null;var HINT=${JSON.stringify(hint)},F=${JSON.stringify(engine)};function wire(){var as=document.querySelectorAll('a[data-work],a[data-walk],a[hreflang]');for(var i=0;i<as.length;i++){var a=as[i],base=a.getAttribute('data-href')||a.getAttribute('href');if(!a.hasAttribute('data-href'))a.setAttribute('data-href',base);var hint=a.querySelector('.tab-hint');if(ex&&!a.hasAttribute('hreflang')){a.href=ex.href+'#'+(a.hasAttribute('data-work')?'work='+encodeURIComponent(a.getAttribute('data-work'))+'&lang='+document.documentElement.lang:'exhibition');a.target='ap-exhibition';if(hint)hint.textContent=' '+HINT;}else{a.href=base+(off&&!a.hasAttribute('data-walk')?'&sound=off':'');a.removeAttribute('target');if(hint)hint.textContent='';}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();if('BroadcastChannel' in window){var bc=new BroadcastChannel('ap-exhibition');bc.onmessage=function(e){var d=e.data||{};if(d.type==='here'&&d.href){ex=d;wire()}else if(d.type==='gone'){ex=null;wire();bc.postMessage({type:'who'})}};bc.postMessage({type:'who'});}if(!F.length)return;addEventListener('load',function(){var c=navigator.connection;if(c&&c.saveData)return;F.forEach(function(h){var l=document.createElement('link');l.rel='prefetch';l.href=h;l.crossOrigin='anonymous';document.head.appendChild(l)})});})();`;
 
 function page(lang, raw, engine = []) {
   const en = raw.en;
@@ -138,7 +147,7 @@ ${d.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${d.note ? `\n<p class="note"
 ${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${esc(t(`textEdition.label.${k}`))}</dt><dd>${v}</dd>`).join('\n')}
 </dl>${w.caption ? `\n<p>${esc(w.caption)}</p>` : ''}
 ${artistText(w)}
-<p><a href="${toWalk}?lang=${lang}&amp;work=${encodeURIComponent(w.id)}">${withTitle('textEdition.openInWalk', { no: w.no }, w.title)}</a></p>
+<p><a href="${toWalk}?lang=${lang}&amp;work=${encodeURIComponent(w.id)}" data-work="${esc(w.id)}">${withTitle('textEdition.openInWalk', { no: w.no }, w.title)}<span class="tab-hint"></span></a></p>
 </article>`;
   };
 
@@ -204,7 +213,7 @@ ${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : 
 <meta name="description" content="${esc(t('textEdition.docDescription'))}">
 <meta name="color-scheme" content="light dark">
 <script>${langScript(lang)}</script>
-<script>${goScript(engine.map((f) => (lang === 'hu' ? '../../' : '../') + f))}</script>
+<script>${goScript(engine.map((f) => toWalk + f), t('textEdition.otherTab'))}</script>
 <link rel="canonical" href="${SITE}text/${lang === 'hu' ? 'hu/' : ''}">
 <link rel="alternate" hreflang="en" href="${SITE}text/">
 <link rel="alternate" hreflang="hu" href="${SITE}text/hu/">
@@ -214,7 +223,7 @@ ${sec.p.map((p) => `<p>${esc(p).replace('{link}', sec.link ? inline(sec.link) : 
 <body>
 <div class="page">
 <header>
-<p class="top"><a href="${toWalk}?lang=${lang}">${esc(t('textEdition.toWalk'))}</a> ${other}</p>
+<p class="top"><a href="${toWalk}?lang=${lang}" data-walk>${esc(t('textEdition.toWalk'))}<span class="tab-hint"></span></a> ${other}</p>
 </header>
 <main>
 <h1>${title(m.title)}: ${esc(nameFull.charAt(0).toLowerCase() + nameFull.slice(1))}</h1>
@@ -247,7 +256,7 @@ ${speech.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${speech.note ? `\n<p cl
 <h2 id="controls-h">${esc(t('panels.controls'))}</h2>
 <p>${esc(t('panels.controlsDesk'))}</p>
 <p>${esc(t('panels.controlsTouch'))}</p>
-<p><a href="${toWalk}?lang=${lang}">${esc(t('textEdition.toWalk'))}</a></p>
+<p><a href="${toWalk}?lang=${lang}" data-walk>${esc(t('textEdition.toWalk'))}<span class="tab-hint"></span></a></p>
 </section>
 <section id="credits" aria-labelledby="credits-h">
 <h2 id="credits-h">${esc(t('panels.credits'))}</h2>
