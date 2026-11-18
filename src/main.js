@@ -184,7 +184,6 @@ const ui = setupPanels(data, {
   // a work's link on the Concept page: the panel has closed; go to the work, focus on the 3D view
   onGotoWork: (w) => { gotoWork(w); focusScene(); },
   onJumpRoom: (id) => jumpToRoom(id),
-  onGuide: () => showGuide(true),
   inside: () => entered,
   isTouch,
   focusFallback,
@@ -282,10 +281,8 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-action]');
   if (!b) return;
   const a = b.dataset.action;
-  if (a === 'rooms') ui.toggleRooms();
-  else if (a === 'tour') toggleTour();
+  if (a === 'tour') toggleTour();
   else if (a === 'sound') toggleSound();
-  else if (a === 'help') ui.show('help');
   // Next work: the same jump as Page Down. Focus stays on the button (a mouse click or a tap
   // then hands it to the view, below), so pressed again it goes on to the next work. Only
   // after a mouse click does Enter open the work: from the keyboard Enter presses the button
@@ -341,7 +338,7 @@ window.addEventListener('keydown', (e) => {
 // mouse click on the toolbar, sends focus back to the view. (The listener that toggles the
 // menu runs first, so aria-expanded already shows the new state.)
 document.getElementById('toolbar').addEventListener('click', (e) => {
-  if (e.detail > 0 && !e.target.closest('[data-action="rooms"][aria-expanded="true"]')) focusScene();
+  if (e.detail > 0) focusScene();
 });
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => { tour.stop(); retireHintInRoom(); }, { passive: true });
@@ -373,7 +370,6 @@ zoomLevel.addEventListener('click', () => {
   controls.resetZoom();
   focusScene(); // the readout hides itself on the next frame, so focus goes back to the view
 });
-document.getElementById('rooms-menu').addEventListener('click', (e) => { if (e.detail > 0) focusScene(); });
 let shownZoom = 1;
 function updateZoom() {
   const fov = baseFov / controls.zoom;
@@ -696,28 +692,23 @@ const startHintTimer = () => {
 };
 controls.onLook = retireHint;
 
-// The first-use card (a computer): by the keys once the visitor is in the room, gone at the
-// first key, mouse press or turn of the wheel anywhere. Help brings it back (again: true);
-// on a touch screen Help brings the touch hint back instead, which goes as before. It takes
-// the place of the hint in the middle, which says the same, so that one does not show with it
-// and goes with it. Nothing is stored: it shows again on the next visit.
+// The short help (a computer): on the left, by the keys, once the visitor is in the room; it
+// hides itself after 10 seconds. It takes the place of the hint in the middle, which says the
+// same, so that one does not show with it and goes with it. Not on a touch screen (CSS).
+// Nothing is stored: it shows again on the next visit.
 const guide = document.getElementById('guide');
-let guideAt = Infinity;
-function showGuide(again = false) {
-  const hintAgain = () => {
-    if (!again) return;
-    document.body.classList.remove('looked');
-    clearTimeout(hintTimer);
-    hintTimer = setTimeout(retireHint, HINT_SECONDS * 1000);
-  };
-  if (isTouch) { hintAgain(); return; }
+const GUIDE_SECONDS = 10;
+let guideTimer = 0;
+function showGuide() {
+  if (isTouch) return;
   guide.hidden = false;
   // In a narrow or short window (a computer's window at phone size, or a laptop at 400%) the
   // card can lie over the map, its key or the room label, or above the top of the window: then
-  // it is not shown, and the hint in the middle stays as it was (Help brings that back instead).
-  if (!guideFits()) { guide.hidden = true; hintAgain(); return; }
+  // it is not shown, and the hint in the middle stays as it was.
+  if (!guideFits()) { guide.hidden = true; return; }
   document.body.classList.add('guiding');
-  guideAt = performance.now();
+  clearTimeout(guideTimer);
+  guideTimer = setTimeout(hideGuide, GUIDE_SECONDS * 1000);
 }
 function guideFits() {
   // not laid out at all (the compact control layer of a very small window hides it, E2): it
@@ -732,14 +723,12 @@ function guideFits() {
     return g.bottom <= r.top || r.bottom <= g.top || g.right <= r.left || r.right <= g.left;
   });
 }
-// Not the event that showed it (Esc answering the sound question shows it on the way).
-function hideGuide(e) {
-  if (guide.hidden || e.timeStamp <= guideAt) return;
+function hideGuide() {
+  if (guide.hidden) return;
   guide.hidden = true;
   document.body.classList.remove('guiding');
   retireHint();
 }
-for (const type of ['keydown', 'pointerdown', 'wheel']) window.addEventListener(type, hideGuide, { capture: true, passive: true });
 
 // ---------------------------------------------------------------- resize
 // Field of view before zoom (updateZoom divides it by the magnification).

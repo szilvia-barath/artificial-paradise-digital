@@ -45,8 +45,6 @@
     "hud": {
       "tour": "Tour",
       "tourTitle": "Guided tour (T)",
-      "rooms": "Rooms",
-      "roomsTitle": "Jump to room",
       "sound": "Sound",
       "soundTitle": "Sound on/off (M)",
       "toolbar": "Exhibition controls",
@@ -79,16 +77,13 @@
       },
       "touchHint": "Drag to look around · hold the stick to walk · tap a work to open it · Next work: on to the next one",
       "tourAt": "{at} / {total} · No. {no} · {title}",
-      "help": "Help",
-      "helpTitle": "How to move, and all the keys",
       "guide": {
         "title": "Moving around",
         "walk": "↑ ↓: walk · ← →: turn",
         "look": "Drag with the mouse: look around",
         "next": "Page Down or Next work: the next work",
         "open": "Enter: open the work in front",
-        "help": "Help: all the keys",
-        "close": "Goes at the first key or click"
+        "help": "Help: all the keys"
       },
       "next": "Next work",
       "nextTitle": "Next work (Page Down)"
@@ -157,7 +152,7 @@
         "facebook": "Facebook",
         "linkedin": "LinkedIn"
       },
-      "helpGuide": "Show the short guide again"
+      "helpMore": "In detail"
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025"

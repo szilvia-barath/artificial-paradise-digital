@@ -12,14 +12,12 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const langAttr = (w) => (titleLang(w) ? ` lang="${titleLang(w)}"` : '');
 
 // isTouch: the controls for a touch screen come first in Help. inside(): the visitor is in the
-// exhibition, so Help can bring the first-use card back (onGuide).
+// exhibition.
 // onGotoWork(work): the Concept page's links to a work (the panel is closed first).
-export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, onGotoWork, onGuide, inside, isTouch, focusFallback }) {
+export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, onGotoWork, inside, isTouch, focusFallback }) {
   const panel = document.getElementById('panel');
   const body = document.getElementById('panel-body');
-  const roomsMenu = document.getElementById('rooms-menu');
   const navButtons = document.querySelectorAll('#site-nav [data-nav]');
-  const roomsBtn = document.querySelector('[data-action="rooms"]');
   const closeBtn = panel.querySelector('[data-close]');
   // Focus goes to the Close button on opening and back to the opener on closing.
   const dialog = focusDialog(panel, { initial: () => closeBtn, fallback: focusFallback });
@@ -103,17 +101,20 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="note">${esc(t('panels.controlsDesk'))}<br />${esc(t('panels.controlsTouch'))}</p>
   `;
 
-  // Help: the controls (the same text as under "Behind the scenes", which keeps it), the
-  // ones for this device first, and inside the exhibition a button that shows the first-use
-  // card again.
+  // Help: the short help (the same lines as the card shown on entering; on a touch screen the
+  // loading screen's line for touch), then "In detail": the controls (the same text as under
+  // "Behind the scenes"), the ones for this device first.
   const helpHTML = () => {
     const both = [t('panels.controlsDesk'), t('panels.controlsTouch')];
     if (isTouch) both.reverse();
+    const short = isTouch
+      ? `<p>${esc(t('loader.howtoTouch'))}</p>`
+      : `<ul>${['walk', 'look', 'next', 'open'].map((k) => `<li>${esc(t(`hud.guide.${k}`))}</li>`).join('')}</ul>`;
     return `
     <p class="eyebrow">${esc(data.meta.title)}</p>
     <h2 id="panel-title">${esc(t('nav.help'))}</h2>
-    ${both.map((p) => `<p>${esc(p)}</p>`).join('')}
-    ${inside && inside() ? `<p><button class="link mono" data-guide>${esc(t('panels.helpGuide'))}</button></p>` : ''}
+    ${short}
+    <details class="help-more"><summary>${esc(t('panels.helpMore'))}</summary>${both.map((p) => `<p>${esc(p)}</p>`).join('')}</details>
   `;
   };
 
@@ -190,7 +191,6 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     body.innerHTML = PAGES[name]();
     if (name === 'concept') concept.mount();
     panel.hidden = false;
-    setRooms(false);
     markNav();
     panel.scrollTop = 0;
     if (!wasOpen) {
@@ -230,13 +230,6 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       to?.focus({ preventScroll: true });
       return;
     }
-    // Help's "show the short guide again": the panel closes (focus goes back as on any close)
-    // and the first-use card shows
-    if (e.target.closest('[data-guide]')) {
-      close();
-      onGuide?.();
-      return;
-    }
     const b = e.target.closest('[data-work]');
     if (!b || !onOpenWork) return;
     onOpenWork(data.works.find((w) => w.id === b.dataset.work));
@@ -249,65 +242,20 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     close();
   });
 
-  // Each room with the works in it. The button's name is the room alone; the titles stand
-  // beside it as its description (aria-describedby), and the row as a whole is the button's
-  // target (CSS). The room the visitor is in carries aria-current="location".
   let hereRoom = null;
-  const markRoom = () => {
-    for (const b of roomsMenu.querySelectorAll('[data-room]')) {
-      const here = b.dataset.room === hereRoom;
-      if (here) b.setAttribute('aria-current', 'location');
-      else b.removeAttribute('aria-current');
-      b.parentElement.classList.toggle('here', here);
-    }
-  };
-  const buildRoomsMenu = () => {
-    roomsMenu.innerHTML = Object.entries(data.rooms)
-      .map(([id, r]) => {
-        const titles = data.works.filter((w) => w.room === id && !w.id.endsWith('-screen')).map((w) => `<span${langAttr(w)}>${esc(w.title)}</span>`);
-        return `<div class="room-row"><button data-room="${id}" aria-describedby="rooms-menu-${id}">${esc(r.name)}</button><small id="rooms-menu-${id}">${titles.join(', ')}</small></div>`;
-      })
-      .join('');
-    markRoom();
-  };
-  buildRoomsMenu();
-  // The rooms menu: the button says whether it is open; Esc or a choice closes it and
-  // hands focus back to the button if it was inside the menu.
-  const setRooms = (open) => {
-    const inside = roomsMenu.contains(document.activeElement);
-    roomsMenu.hidden = !open;
-    roomsBtn.setAttribute('aria-expanded', String(open));
-    if (!open && inside && shown(roomsBtn)) roomsBtn.focus({ preventScroll: true });
-  };
-  setRooms(false);
-  roomsMenu.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-room]');
-    if (!b) return;
-    setRooms(false);
-    onJumpRoom(b.dataset.room);
-  });
-  window.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape' || roomsMenu.hidden) return;
-    const within = roomsMenu.contains(document.activeElement) || document.activeElement === roomsBtn;
-    setRooms(false);
-    if (within) roomsBtn.focus({ preventScroll: true });
-  });
 
   return {
     show,
     about: () => show('about'),
     works: (opts) => show('works', opts),
     bts: () => show('bts'),
-    toggleRooms: () => setRooms(roomsMenu.hidden),
     // Called as the visitor walks or jumps: which room the menu marks as the current one.
     setRoom: (id) => {
       if (id === hereRoom) return;
       hereRoom = id;
-      markRoom();
     },
     // After a language switch: rebuild what is on screen.
     refresh: () => {
-      buildRoomsMenu();
       if (!current) return;
       body.innerHTML = PAGES[current]();
       if (current === 'concept') concept.mount();

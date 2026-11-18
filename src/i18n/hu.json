@@ -45,8 +45,6 @@
     "hud": {
       "tour": "Tárlatvezetés",
       "tourTitle": "Tárlatvezetés (T)",
-      "rooms": "Termek",
-      "roomsTitle": "Ugrás egy terembe",
       "sound": "Hang",
       "soundTitle": "Hang be/ki (M)",
       "toolbar": "Kiállítás vezérlői",
@@ -79,16 +77,13 @@
       },
       "touchHint": "Húzás: körülnézés · a kar nyomva tartása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés",
       "tourAt": "{at} / {total} · {no}. mű · {title}",
-      "help": "Súgó",
-      "helpTitle": "Mozgás és az összes billentyű",
       "guide": {
         "title": "Mozgás a kiállításban",
         "walk": "↑ ↓: séta · ← →: fordulás",
         "look": "Húzás egérrel: körülnézés",
         "next": "Page Down vagy a Következő mű gomb: továbblépés a következő műre",
         "open": "Enter: a nézet közepén lévő mű megnyitása",
-        "help": "Súgó: minden billentyű",
-        "close": "Az első billentyűleütésre vagy kattintásra eltűnik"
+        "help": "Súgó: minden billentyű"
       },
       "next": "Következő mű",
       "nextTitle": "Következő mű (Page Down)"
@@ -157,7 +152,7 @@
         "facebook": "Facebook",
         "linkedin": "LinkedIn"
       },
-      "helpGuide": "A rövid útmutató újbóli megjelenítése"
+      "helpMore": "Részletesen"
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31."
