@@ -959,7 +959,10 @@ await guard(['H1.1'], async () => {
 const PAPER = [251, 251, 249];
 const paperInfo = async (p, name) => {
   await p.evaluate((n) => window.__ap.ui.show(n), name);
-  await p.waitForTimeout(700); // the navbar's colours change over 0.4 s
+  // the navbar's colours change over 0.4 s: read them when its transitions have ended (a fast
+  // run read them half way, light blue on grey, 1.68:1)
+  await p.waitForTimeout(700);
+  await p.waitForFunction(() => document.getElementById('site-nav').getAnimations({ subtree: true }).length === 0, null, { timeout: 10000 }).catch(() => {});
   return p.evaluate((n) => {
   const panel = document.getElementById('panel');
   const card = panel.querySelector('.panel-card');

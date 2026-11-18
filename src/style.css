@@ -1161,7 +1161,9 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
 /* A phone: four buttons with words do not fit in one row beside their signs, so the words go
    under the signs (as in the mockup) and "Next work" may take two lines. */
 @media (max-width: 480px) {
-  #toolbar > button, #toolbar .rooms-wrap > button { flex-direction: column; justify-content: center; gap: 3px; padding: 6px 7px; font-size: 12px; }
+  /* 4 px above and below (6 px before H1): with the edge and the 12 px words of H1 and A7 the
+     bar grew to 70 px and its top met the stick by 2 px at 375 × 667; at 66 px it stays clear */
+  #toolbar > button, #toolbar .rooms-wrap > button { flex-direction: column; justify-content: center; gap: 3px; padding: 4px 7px; font-size: 12px; }
   #toolbar .rooms-wrap { display: flex; }
   #toolbar [data-action="next"] .lbl { white-space: normal; text-align: center; max-width: 10ch; line-height: 1.15; }
 }
