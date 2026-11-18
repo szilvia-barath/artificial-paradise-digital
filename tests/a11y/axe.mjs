@@ -76,6 +76,12 @@ for (const lang of ['en', 'hu']) {
   await page.click('[data-action="rooms"]');
   await scan(page, `Walk ${L}: rooms menu open`);
   await page.keyboard.press('Escape');
+  // the measured or guessed view: the switch pressed and its legend shown
+  await page.click('[data-action="paradata"]');
+  await page.waitForFunction(() => window.__ap.paradata.state().replaced > 0 && !document.getElementById('pd-legend').hidden, null, { timeout: 60000 });
+  await scan(page, `Walk ${L}: measured or guessed view on, with its legend`);
+  await page.click('[data-action="paradata"]');
+  await page.waitForFunction(() => !window.__ap.paradata.state().on, null, { timeout: 60000 });
   for (const [i, kind] of [[0, 'painting'], [6, 'video, with Pause button'], [3, 'video on a small screen']]) {
     await page.evaluate((k) => window.__ap.viewer.open(window.__ap.data.works[k]), i);
     await page.evaluate(() => { for (const d of document.querySelectorAll('#viewer details')) d.open = true; });
