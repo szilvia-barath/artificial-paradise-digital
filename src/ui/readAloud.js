@@ -44,6 +44,13 @@ function parts(text) {
   return out;
 }
 
+// The body text of an element as it shows, without its headings (the reconstructor's answer,
+// 18 November 2026: read aloud reads the text, not the headings).
+export function bodyText(el) {
+  const heads = new Set([...el.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]')].map((h) => h.innerText.trim()).filter(Boolean));
+  return el.innerText.split('\n').filter((line) => !heads.has(line.trim())).join('\n');
+}
+
 const readers = new Set();
 let current = null; // the reader that is speaking
 let run = 0; // counts readings, so the events of a cancelled one are let pass

@@ -1,8 +1,8 @@
 import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
-import { readAloudButton } from './readAloud.js';
-import { workDescriptions, roomDescription } from '../localize.js';
+import { readAloudButton, bodyText } from './readAloud.js';
+import { workDescriptions } from '../localize.js';
 import { isPart } from '../world/route.js';
 import refs from '../data/references.json';
 import { refHTML } from '../refhtml.js';
@@ -47,7 +47,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const caption = document.getElementById('viewer-caption');
   const desc = document.getElementById('viewer-desc');
   const describe = document.getElementById('viewer-describe');
-  const space = document.getElementById('viewer-space');
   const room = document.getElementById('viewer-room');
   const text = document.getElementById('viewer-text');
   const count = document.getElementById('viewer-count');
@@ -63,11 +62,12 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let full = -1; // index of the full video shown (YouTube or Drive player), -1 = none
 
   // Read aloud (readAloud.js): the text column's words about the work, from the room line to
-  // the artist's text, with the descriptions and the room's audio description where they are
-  // filled ([data-read]; not the buttons, the link or the folded exhibition text). It stands
-  // under the title; none where the browser cannot speak.
-  const readParts = () => [room, title, meta, caption, ...el.querySelectorAll('[data-read]')];
-  const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => n.innerText).join('\n'));
+  // the artist's text, with the descriptions where they are filled ([data-read]; not the
+  // buttons, the link or the folded exhibition text), without the title and the headings
+  // (the reconstructor's answer, 18 November 2026). It stands under the title; none where the
+  // browser cannot speak. The room's audio description is in the accessible version only.
+  const readParts = () => [room, meta, caption, ...el.querySelectorAll('[data-read]')];
+  const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => bodyText(n)).join('\n'));
   if (reader) title.after(reader.button);
 
   const renderText = () => {
@@ -150,9 +150,6 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     const own = workDescriptions(data, w);
     describe.innerHTML = own.map(([k, p]) => section(k, p)).join('');
     describe.hidden = !own.length;
-    const roomText = roomDescription(data, w.room);
-    space.innerHTML = roomText.length ? section('space', roomText) : '';
-    space.hidden = !roomText.length;
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
     // the button that goes back names what the viewer shows without the full video

@@ -3,7 +3,7 @@ import { focusDialog, shown } from './dialog.js';
 import refs from '../data/references.json';
 import { refHTML } from '../refhtml.js';
 import { setupConcept } from './concept.js';
-import { readAloudButton } from './readAloud.js';
+import { readAloudButton, bodyText } from './readAloud.js';
 
 // About / Works / Concept / Behind-the-scenes panels and the "jump to room" menu.
 
@@ -29,9 +29,9 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // The Concept page (concept.js): a work's link closes the panel without handing focus
   // back, and the 3D view takes it (main.js).
   const concept = setupConcept(data, body, { onGotoWork: (w) => { close({ refocus: false }); onGotoWork?.(w); } });
-  // Read aloud (readAloud.js): reads the panel's text as it shows, a closed fold left out.
+  // Read aloud (readAloud.js): reads the panel's text as it shows, a closed fold and the headings left out.
   // It sits after Close, so Tab reaches it next; none where the browser cannot speak.
-  const reader = readAloudButton(() => body.innerText);
+  const reader = readAloudButton(() => bodyText(body));
   if (reader) closeBtn.after(reader.button);
 
   const aboutHTML = () => {

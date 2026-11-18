@@ -109,7 +109,7 @@ const lastSpeakVoice = (log) => [...log].reverse().find((e) => e.type === 'speak
   const title = await p.textContent('#panel-title');
   const said1 = await heard(p, UI.en.readAloud.started);
   step('RA2 Enter starts it: aria-pressed="true", the label says "Stop reading", the panel text is spoken with the English voice on the device, focus stays on the button, the live region says so',
-    b1.pressed === 'true' && b1.text === UI.en.readAloud.stop && b1.focused && spoken.length > 1 && spoken.some((e) => e.text.includes(title)) && spoken.every((e) => e.voice === LOCAL_EN.name && e.lang === 'en-GB') && said1.includes(UI.en.readAloud.started),
+    b1.pressed === 'true' && b1.text === UI.en.readAloud.stop && b1.focused && spoken.length > 0 && !spoken.some((e) => e.text.trim() === title.trim()) && spoken.every((e) => e.voice === LOCAL_EN.name && e.lang === 'en-GB') && said1.includes(UI.en.readAloud.started),
     `${spoken.length} parts, first "${spoken[0]?.text.slice(0, 60)}"; ${JSON.stringify(b1)}; said "${said1}"`);
 
   await p.keyboard.press('Space');
@@ -158,8 +158,8 @@ const lastSpeakVoice = (log) => [...log].reverse().find((e) => e.type === 'speak
   await p.waitForFunction(() => document.querySelector('#viewer .read-aloud').getAttribute('aria-pressed') === 'true', null, { timeout: 5000 }).catch(() => {});
   const sv = (await speech(p)).filter((e) => e.type === 'speak').map((e) => e.text).join(' ');
   const wk = await p.evaluate(() => { const w = window.__ap.data.works.find((k) => k.id === 'w01-dresden'); return { title: w.title, medium: w.medium, desc: document.querySelector('#viewer-desc p')?.textContent || '' }; });
-  step('RA7 The viewer has the button under the title; it reads the title, the details and the artist\'s text, not the buttons',
-    v0 && v0.text === UI.en.readAloud.start && order === 'viewer-title' && sv.includes(wk.title) && sv.includes(wk.medium) && sv.includes(wk.desc.slice(0, 40)) && !sv.includes(UI.en.viewer.goto) && !sv.includes(UI.en.readAloud.start),
+  step('RA7 The viewer has the button under the title; it reads the details and the artist\'s text, not the title, the headings or the buttons',
+    v0 && v0.text === UI.en.readAloud.start && order === 'viewer-title' &&sv.includes(wk.medium) && sv.includes(wk.desc.slice(0, 40)) && !sv.includes(UI.en.viewer.goto) && !sv.includes(UI.en.readAloud.start),
     `"${sv.slice(0, 120)}…" (${sv.length} characters)`);
   await p.click('#viewer-next');
   await p.waitForFunction(() => document.querySelector('#viewer .read-aloud').getAttribute('aria-pressed') === 'false', null, { timeout: 5000 }).catch(() => {});
@@ -233,7 +233,7 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   const shownAny = [];
   for (const id of ids) {
     await openWork(p, id);
-    const r = await p.evaluate(() => ['viewer-describe', 'viewer-space'].map((x) => { const e = document.getElementById(x); return { hidden: e.hidden, html: e.innerHTML, h: e.offsetHeight }; }));
+    const r = await p.evaluate(() => ['viewer-describe'].map((x) => { const e = document.getElementById(x); return { hidden: e.hidden, html: e.innerHTML, h: e.offsetHeight }; }));
     if (r.some((x) => !x.hidden || x.html || x.h)) shownAny.push(id);
   }
   const heads = await p.evaluate((h) => [...document.querySelectorAll('#viewer h3')].map((e) => e.textContent).filter((t) => h.includes(t)), HEAD('en'));
@@ -254,8 +254,8 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   await put(T.en);
   const view = () => p.evaluate(() => ({
     describe: [...document.querySelectorAll('#viewer-describe h3, #viewer-describe p')].map((e) => `${e.tagName}:${e.textContent}`),
-    space: [...document.querySelectorAll('#viewer-space h3, #viewer-space p')].map((e) => `${e.tagName}:${e.textContent}`),
-    shown: ['viewer-describe', 'viewer-space'].map((x) => !document.getElementById(x).hidden),
+    space: [],
+    shown: ['viewer-describe'].map((x) => !document.getElementById(x).hidden),
   }));
   await openWork(p, 'w01-dresden');
   const v1 = await view();
@@ -266,12 +266,11 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   const v6 = await view();
   await openWork(p, 'w16-let-it-flow');
   const v16 = await view();
-  const ok1 = JSON.stringify(v1.describe) === JSON.stringify([`H3:${UI.en.describe.visual}`, `P:${T.en.visual}`])
-    && JSON.stringify(v1.space) === JSON.stringify([`H3:${UI.en.describe.space}`, `P:${T.en.room[0]}`, `P:${T.en.room[1]}`]) && v1.shown.every(Boolean);
-  const ok6 = JSON.stringify(v6.describe) === JSON.stringify([`H3:${UI.en.describe.video}`, `P:${T.en.video}`]) && v6.space.length === 0 && v6.shown[1] === false;
+  const ok1 = JSON.stringify(v1.describe) === JSON.stringify([`H3:${UI.en.describe.visual}`, `P:${T.en.visual}`]) && v1.shown.every(Boolean) && !v1.describe.some((x) => x.includes(T.en.room[0]));
+  const ok6 = JSON.stringify(v6.describe) === JSON.stringify([`H3:${UI.en.describe.video}`, `P:${T.en.video}`]);
   const ok16 = JSON.stringify(v16.describe) === JSON.stringify([`H3:${UI.en.describe.videoDoc}`, `P:${T.en.doc}`]);
-  step('DS2 Filled (test words in memory): the viewer shows each under its heading, the room\'s in Room 1 only, the video\'s at no. 6, the documentation\'s at no. 16', ok1 && ok6 && ok16, JSON.stringify({ v1, v6, v16 }));
-  step('DS3 Read aloud reads the filled description and the room\'s audio description, in the order they show', sp.includes(T.en.visual) && sp.includes(T.en.room[0]) && sp.includes(T.en.room[1]) && sp.indexOf(T.en.visual) < sp.indexOf(T.en.room[0]), sp.map((s) => s.slice(0, 40)).join(' / '));
+  step('DS2 Filled (test words in memory): the viewer shows each under its heading (the room\'s audio description is in the accessible version only), the video\'s at no. 6, the documentation\'s at no. 16', ok1 && ok6 && ok16, JSON.stringify({ v1, v6, v16 }));
+  step('DS3 Read aloud reads the filled description, not the headings and not the room\'s audio description', sp.includes(T.en.visual) && !sp.includes(T.en.room[0]) && !sp.includes(UI.en.describe.visual), sp.map((s) => s.slice(0, 40)).join(' / '));
 
   // Hungarian: its own fields (the English test words do not show there)
   await p.evaluate(() => window.__ap.viewer.close());
@@ -285,8 +284,8 @@ const HEAD = (l) => [UI[l].describe.visual, UI[l].describe.video, UI[l].describe
   await p.click('#viewer .read-aloud');
   await p.waitForFunction(() => document.querySelector('#viewer .read-aloud').getAttribute('aria-pressed') === 'true', null, { timeout: 5000 }).catch(() => {});
   const sph = (await speech(p)).filter((e) => e.type === 'speak');
-  step('DS4 Hungarian page: an empty Hungarian field shows nothing (the English words are not taken); filled, it shows under "Leírás" and "A terem leírásának meghallgatása" and is read with the Hungarian voice',
-    h0.describe.length === 0 && h0.space.length === 0 && JSON.stringify(h1.describe) === JSON.stringify([`H3:${UI.hu.describe.visual}`, `P:${T.hu.visual}`]) && JSON.stringify(h1.space) === JSON.stringify([`H3:${UI.hu.describe.space}`, `P:${T.hu.room[0]}`]) && sph.some((e) => e.text === T.hu.visual && e.voice === LOCAL_HU.name),
+  step('DS4 Hungarian page: an empty Hungarian field shows nothing (the English words are not taken); filled, it shows under "Leírás" and is read with the Hungarian voice',
+    h0.describe.length === 0 && h0.space.length === 0 && JSON.stringify(h1.describe) === JSON.stringify([`H3:${UI.hu.describe.visual}`, `P:${T.hu.visual}`]) && sph.some((e) => e.text === T.hu.visual && e.voice === LOCAL_HU.name),
     JSON.stringify({ h0, h1 }));
   errors.push(...w.errors);
   await w.ctx.close();
