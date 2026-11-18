@@ -8,8 +8,51 @@ import { reducedMotion } from '../motion.js';
 // Unit vector pointing to true north in plan coordinates (x right, z down).
 const NORTH = [-0.829, -0.56];
 
+// The works on the map, in four groups by their `type` in exhibition.json. Each group has its
+// own shape and colour, so none is told by colour alone (A4): the map's magenta and cyan, the
+// light of text on glass, and an orange of its own for the other works (not the accent blue,
+// which is the visitor's dot). The prints count as paintings (the reconstructor, 18 November);
+// a type not listed goes to "Other works" (none at present). The key under the map (#map-key)
+// is drawn from this table with the same outlines.
+export const MAP_GROUPS = [
+  { id: 'paintings', types: ['painting', 'print'], shape: 'circle', colour: '#ff4fa3' },
+  { id: 'videos', types: ['video', 'projection'], shape: 'square', colour: '#5fe7ff' },
+  { id: 'installations', types: ['installation'], shape: 'triangle', colour: '#f2f1ed' },
+  { id: 'other', types: [], shape: 'diamond', colour: '#ff9f40' },
+];
+export const groupOf = (type) => MAP_GROUPS.find((g) => g.types.includes(type)) || MAP_GROUPS[MAP_GROUPS.length - 1];
+// the 1 px dark edge round every mark
+export const MARK_EDGE = 'rgba(11,12,14,0.9)';
+// A mark's outline round 0,0 in px, as an SVG path (the canvas draws it through Path2D): about
+// 5 px of colour, of about the same area for every shape, inside the 1 px edge.
+export function markPath(shape) {
+  if (shape === 'square') return 'M-2.5 -2.5H2.5V2.5H-2.5Z';
+  if (shape === 'triangle') return 'M0 -3.6L3.3 2.2H-3.3Z';
+  if (shape === 'diamond') return 'M0 -3.2L3.2 0L0 3.2L-3.2 0Z';
+  return 'M2.5 0A2.5 2.5 0 1 1 -2.5 0A2.5 2.5 0 1 1 2.5 0Z';
+}
+// The edge is a 2 px stroke under the fill: 1 px of it shows outside the colour all round.
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function drawKey() {
+  for (const svg of document.querySelectorAll('#map-key svg[data-group]')) {
+    const g = MAP_GROUPS.find((x) => x.id === svg.dataset.group);
+    if (!g) continue;
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', markPath(g.shape));
+    path.setAttribute('fill', g.colour);
+    path.setAttribute('stroke', MARK_EDGE);
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-linejoin', 'round');
+    path.setAttribute('paint-order', 'stroke');
+    svg.dataset.shape = g.shape;
+    svg.replaceChildren(path);
+  }
+}
+
 export function setupMinimap(canvas, segments, works, onJump) {
   const ctx = canvas.getContext('2d');
+  drawKey();
+  const paths = Object.fromEntries(MAP_GROUPS.map((g) => [g.shape, new Path2D(markPath(g.shape))]));
   const bounds = { x0: -1.0, x1: 26.2, z0: -0.6, z1: 7.6 };
   let W = 0;
   let H = 0;
@@ -70,23 +113,22 @@ export function setupMinimap(canvas, segments, works, onJump) {
       ctx.lineTo(X(bx), Y(bz));
     }
     ctx.stroke();
-    // works: 5 px marks with a 1 px dark edge, told apart by shape as well as colour:
-    // paintings and prints round, videos square
+    // works: about 5 px marks with a 1 px dark edge, in four groups told apart by shape as
+    // well as colour (MAP_GROUPS): paintings and prints round, videos square, installations a
+    // triangle, other works a diamond
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = MARK_EDGE;
     for (const w of works) {
       const f = w._pin;
       if (!f) continue;
-      const video = w.type === 'video' || w.type === 'projection';
-      const cx = Math.round(X(f.x));
-      const cy = Math.round(Y(f.z));
-      for (const [half, colour] of [[3.5, 'rgba(11,12,14,0.9)'], [2.5, video ? '#5fe7ff' : '#ff4fa3']]) {
-        ctx.fillStyle = colour;
-        if (video) ctx.fillRect(cx - half, cy - half, half * 2, half * 2);
-        else {
-          ctx.beginPath();
-          ctx.arc(cx, cy, half, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
+      const g = groupOf(w.type);
+      ctx.save();
+      ctx.translate(Math.round(X(f.x)), Math.round(Y(f.z)));
+      ctx.stroke(paths[g.shape]);
+      ctx.fillStyle = g.colour;
+      ctx.fill(paths[g.shape]);
+      ctx.restore();
     }
     // room numbers, over the marks so a work hung in a corner never covers one
     for (const r of ROOMS) {
@@ -101,6 +143,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     {
       const cx = W - 16;
       const cy = H - 16;
+      ctx.lineWidth = 1;
       ctx.strokeStyle = 'rgba(255,255,255,0.55)';
       ctx.fillStyle = 'rgba(255,255,255,0.7)';
       ctx.beginPath();
@@ -135,5 +178,8 @@ export function setupMinimap(canvas, segments, works, onJump) {
     ctx.fill();
   };
   draw.pulse = () => { pulseFrom = performance.now(); };
+  // for the checks: the groups, and which group a work's type falls in
+  draw.groups = MAP_GROUPS;
+  draw.groupOf = groupOf;
   return draw;
 }

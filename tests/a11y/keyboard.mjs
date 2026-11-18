@@ -76,15 +76,23 @@ await page.keyboard.press('Tab');
 const skip = await page.evaluate(() => {
   const a = document.activeElement;
   const r = a.getBoundingClientRect();
-  return { cls: a.className, text: a.textContent.trim(), href: a.getAttribute('href'), onScreen: r.top >= 0 && r.left >= 0 && r.width > 0, firstFocusable: a === document.querySelector('a[href], button, [tabindex]') };
+  return { cls: a.className, text: a.querySelector('[data-i18n]')?.textContent.trim(), name: a.textContent.replace(/\s*↗\s*$/, '').replace(/\s+/g, ' ').trim(), target: a.getAttribute('target'), href: a.getAttribute('href'), onScreen: r.top >= 0 && r.left >= 0 && r.width > 0, firstFocusable: a === document.querySelector('a[href], button, [tabindex]') };
 });
-step('1.1 From page load, the first Tab reaches the skip link', `focus on a.skip-link "${EN.textEdition.skip}", visible on screen, first focusable element`, `${skip.cls} "${skip.text}", on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.text === EN.textEdition.skip && skip.onScreen && skip.firstFocusable);
-await Promise.all([page.waitForURL(/\/text\//), page.keyboard.press('Enter')]);
-step('1.2 Enter follows it to the accessible version', `address ends in /text/?lang=en, one h1 naming it in full ("${EN.textEdition.nameFull}")`, `${page.url().replace(BASE, '/')} · h1 "${await page.textContent('h1')}"`, /\/text\/\?lang=en$/.test(page.url()) && (await page.locator('h1').count()) === 1 && (await page.textContent('h1')).toLowerCase().includes(EN.textEdition.nameFull.toLowerCase()));
-await page.keyboard.press('Tab');
-const back = await focusName(page);
-await Promise.all([page.waitForURL((u) => !u.pathname.includes('/text/')), page.keyboard.press('Enter')]);
-step('1.3 Tab, Enter on its first link comes back to the digital exhibition', `first link "${EN.textEdition.toWalk}"; back on the digital exhibition's address`, `${back} → ${page.url().replace(BASE, '/')}`, back.includes(EN.textEdition.toWalk) && !page.url().includes('/text/'));
+step('1.1 From page load, the first Tab reaches the skip link', `focus on a.skip-link "${EN.textEdition.skip}", saying it opens in a new tab ("${EN.textEdition.newTab}"), visible on screen, first focusable element`, `${skip.cls} "${skip.name}" (target ${skip.target}), on screen: ${skip.onScreen}, first focusable: ${skip.firstFocusable}`, skip.cls === 'skip-link' && skip.text === EN.textEdition.skip && skip.name === `${EN.textEdition.skip} ${EN.textEdition.newTab}` && skip.target === 'ap-text' && skip.onScreen && skip.firstFocusable);
+// the accessible version opens in a tab of its own; the exhibition's tab stays as it was
+const mark = await page.evaluate(() => { window.__mark = Math.random(); return window.__mark; });
+const [text] = await Promise.all([ctx.waitForEvent('page'), page.keyboard.press('Enter')]);
+await text.waitForLoadState('load');
+step('1.2 Enter opens the accessible version in a new tab', `a second tab at /text/?lang=en, one h1 naming it in full ("${EN.textEdition.nameFull}"); the exhibition's tab still open`, `${ctx.pages().length} tabs; ${text.url().replace(BASE, '/')} · h1 "${await text.textContent('h1')}"`, ctx.pages().length === 2 && /\/text\/\?lang=en$/.test(text.url()) && (await text.locator('h1').count()) === 1 && (await text.textContent('h1')).toLowerCase().includes(EN.textEdition.nameFull.toLowerCase()));
+// its first link goes back to the exhibition's tab (found through BroadcastChannel), with no reload
+await text.waitForFunction(() => document.querySelector('a[data-walk]')?.target === 'ap-exhibition', null, { timeout: 15000 }).catch(() => {});
+await text.keyboard.press('Tab');
+const back = await focusName(text);
+await text.keyboard.press('Enter');
+await until(() => location.hash === '' && document.activeElement !== document.querySelector('.skip-link'));
+const kept = await page.evaluate((m) => window.__mark === m, mark);
+step('1.3 Tab, Enter on its first link goes back to the digital exhibition\'s tab', `first link "${EN.textEdition.toWalk} ${EN.textEdition.otherTab}"; the exhibition's tab not reloaded; the accessible version's tab stays`, `${back}; same page: ${kept}; tabs: ${ctx.pages().length}, ${text.url().replace(BASE, '/')}`, back.includes(`${EN.textEdition.toWalk} ${EN.textEdition.otherTab}`) && kept && /\/text\//.test(text.url()));
+await text.close();
 await ready();
 await said();
 step('1.4 When loading is done, focus is on Enter', 'button#enter', await focusName(page), await isOn('#enter'));
@@ -304,21 +312,20 @@ await wait(400);
 step('8.2 Shift+Tab to EN, Enter', 'page language en', await page.getAttribute('html', 'lang'), (await page.getAttribute('html', 'lang')) === 'en');
 
 // ---------------------------------------------------------------- 9. a link to a work
+// The accessible version's links to a work go straight to it: no title card, the sound
+// question over the work at once, and once it is answered the work open in the viewer.
 await page.goto(`${BASE}?lang=en&work=w11-artificial-paradise-i-print`, { waitUntil: 'domcontentloaded' });
-await ready();
-await said();
+// the sound question is open and has focus, with no Enter pressed
+await until(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); }, null, 90000);
+const card = await page.evaluate(() => getComputedStyle(document.getElementById('loader')).visibility);
 await page.keyboard.press('Enter');
-// the sound question is open and has focus before Enter answers it
-await until(() => { const d = document.getElementById('sound-ask'); return !d.hidden && d.contains(document.activeElement); });
-await page.keyboard.press('Enter');
-heard = await hear(['Room 3.', 'No. 11, Artificial Paradise I. Press Enter to open.']);
-await page.keyboard.press('Enter');
-await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer-title').textContent.trim() !== '');
-step('9.1 Open the walk from a link to a work (?work=w11-artificial-paradise-i-print)', 'after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11', `announced: "${heard}"; Enter opened: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(nothing)'}"`, heard.includes('Room 3.') && heard.includes('No. 11, Artificial Paradise I. Press Enter to open.') && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')));
+await until(() => !document.getElementById('viewer').hidden && document.getElementById('viewer').contains(document.activeElement) && document.getElementById('viewer-title').textContent.trim() !== '');
+at = await focusName(page);
+step('9.1 Open the digital exhibition from a link to a work (?work=w11-artificial-paradise-i-print)', 'no title card; the sound question has focus at once; Enter answers it and No. 11 opens in the viewer, focus in it', `title card ${card}; viewer: "${(await open('#viewer')) ? await page.textContent('#viewer-title') : '(not open)'}", focus ${at}`, card === 'hidden' && (await page.textContent('#viewer-title')) === 'Artificial Paradise I' && (await open('#viewer')) && (await inside('#viewer')));
 
 // ---------------------------------------------------------------- 10. Help
 // Help on the toolbar opens the controls as a panel, through the same dialog path as the
-// others. (The first-use card has gone at the Enter that opened the work in 9.1.)
+// others. (The first-use card has gone at the Esc that closes the viewer of 9.1.)
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'));
 tabs = await tabTo('[data-action="help"]');

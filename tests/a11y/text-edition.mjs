@@ -30,7 +30,15 @@ for (const [path, lang] of [['text/', 'en'], ['text/hu/', 'hu']]) {
     check(`[${tag}] every work's title, year and size from exhibition.json is on the page`, missing.length === 0, missing.join(', '));
     const links = await page.locator('a[href*="work="]').evaluateAll((as) => as.map((a) => new URL(a.href).searchParams.get('work')));
     check(`[${tag}] one link into the walk per work, in visiting order`, JSON.stringify(links) === JSON.stringify(works.map((w) => w.id)), `${links.length} links`);
-    check(`[${tag}] nothing else is downloaded (no script, style, font or image files)`, requests.filter((r) => !r.endsWith('/') && !r.endsWith('favicon.svg')).length === 0, requests.join(' '));
+    // With JavaScript off nothing else is downloaded. With it on, once the page has loaded, the
+    // exhibition's engine is fetched in the background for the links to a work (rel=prefetch):
+    // its script and style and the texture decoder, nothing of the rooms, and nothing else.
+    if (js) await page.waitForFunction(() => document.querySelectorAll('link[rel="prefetch"]').length > 0, null, { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(js ? 1500 : 0);
+    const pre = js ? await page.evaluate(() => [...document.querySelectorAll('link[rel="prefetch"]')].map((l) => new URL(l.href).pathname)) : [];
+    const other = requests.filter((r) => !r.endsWith('/') && !r.endsWith('favicon.svg') && !pre.includes(r));
+    const engine = pre.length === 5 && pre.every((r) => /\/assets\/(index|main)-[\w-]+\.(js|css)$|\/basis\/basis_transcoder\.(js|wasm)$/.test(r));
+    check(`[${tag}] ${js ? "nothing is downloaded but the exhibition's engine, fetched in the background after load (its script, style and texture decoder: 5 files)" : 'nothing else is downloaded (no script, style, font or image files)'}`, other.length === 0 && (js ? engine : pre.length === 0), `prefetched: ${pre.join(' ') || 'none'}; other: ${other.join(' ') || 'none'}`);
     if (js) {
       const w = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth, widest: Math.max(...[...document.querySelectorAll('body *')].map((e) => e.getBoundingClientRect().right)) }));
       check(`[${tag}] 375 px wide: no sideways scroll`, w.scroll <= w.client && w.widest <= 375, JSON.stringify(w));
@@ -45,6 +53,19 @@ for (const [path, lang] of [['text/', 'en'], ['text/hu/', 'hu']]) {
     }
     await ctx.close();
   }
+}
+// with the browser's data saver on, the engine is not fetched
+{
+  const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, locale: 'en-GB' });
+  await ctx.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true } }));
+  const page = await ctx.newPage();
+  const requests = [];
+  page.on('request', (r) => requests.push(new URL(r.url()).pathname));
+  await page.goto(BASE + 'text/');
+  await page.waitForTimeout(1500);
+  const n = await page.locator('link[rel="prefetch"]').count();
+  check('[en, data saver on] the engine is not fetched', n === 0 && requests.every((r) => r.endsWith('/') || r.endsWith('favicon.svg')), `${n} prefetch links; requests ${requests.join(' ')}`);
+  await ctx.close();
 }
 // the language rule
 for (const [label, opts, path, want] of [

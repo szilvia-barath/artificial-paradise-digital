@@ -1,21 +1,21 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-16: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 35 of 35 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-18: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 35 of 35 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
-- Expected: focus on a.skip-link "Accessible version of the digital exhibition (text format)", visible on screen, first focusable element
-- What happened: skip-link "Accessible version of the digital exhibition (text format)", on screen: true, first focusable: true
+- Expected: focus on a.skip-link "Accessible version of the digital exhibition (text format)", saying it opens in a new tab ("(opens in a new tab)"), visible on screen, first focusable element
+- What happened: skip-link "Accessible version of the digital exhibition (text format) (opens in a new tab)" (target ap-text), on screen: true, first focusable: true
 
-## PASS: 1.2 Enter follows it to the accessible version
+## PASS: 1.2 Enter opens the accessible version in a new tab
 
-- Expected: address ends in /text/?lang=en, one h1 naming it in full ("Accessible version (text format)")
-- What happened: /text/?lang=en · h1 "Artificial Paradise: accessible version (text format)"
+- Expected: a second tab at /text/?lang=en, one h1 naming it in full ("Accessible version (text format)"); the exhibition's tab still open
+- What happened: 2 tabs; /text/?lang=en · h1 "Artificial Paradise: accessible version (text format)"
 
-## PASS: 1.3 Tab, Enter on its first link comes back to the digital exhibition
+## PASS: 1.3 Tab, Enter on its first link goes back to the digital exhibition's tab
 
-- Expected: first link "Go to the digital exhibition"; back on the digital exhibition's address
-- What happened: a "Go to the digital exhibition" → /?lang=en
+- Expected: first link "Go to the digital exhibition (in the tab where it is open)"; the exhibition's tab not reloaded; the accessible version's tab stays
+- What happened: a "Go to the digital exhibition (in the tab where it is open)"; same page: true; tabs: 2, /text/?lang=en
 
 ## PASS: 1.4 When loading is done, focus is on Enter
 
@@ -97,7 +97,7 @@ ok  11  announced: "No. 11, Artificial Paradise I. Press Enter to open." · Ente
 ok  12  announced: "No. 12, Artificial Paradise II. Press Enter to open." · Enter opened: "Artificial Paradise II" (focus on Close: true) · Esc: focus on the 3D view: true
 ok  13  announced: "No. 13, Artificial Paradise III. Press Enter to open." · Enter opened: "Artificial Paradise III" (focus on Close: true) · Esc: focus on the 3D view: true
 ok  14  announced: "No. 14, Wrong Data Landscape Warsaw G24 II. Press Enter to open." · Enter opened: "Wrong Data Landscape Warsaw G24 II" (focus on Close: true) · Esc: focus on the 3D view: true
-ok  15  announced: "Room 4. Let it Flow, video. No. 15, Wiena Wrong Landscape II. Press Enter to open." · Enter opened: "Wiena Wrong Landscape II" (focus on Close: true) · Esc: focus on the 3D view: true
+ok  15  announced: "Room 4. Let it Flow, installation. No. 15, Wiena Wrong Landscape II. Press Enter to open." · Enter opened: "Wiena Wrong Landscape II" (focus on Close: true) · Esc: focus on the 3D view: true
 ok  16  announced: "No. 16, Let it Flow. Press Enter to open." · Enter opened: "Let it Flow" (focus on Close: true) · Esc: focus on the 3D view: true
 ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened: "Natural Life" (focus on Close: true) · Esc: focus on the 3D view: true
 ```
@@ -110,7 +110,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 4.3 Page Up from No. 1
 
 - Expected: goes back to the last work
-- What happened: Room 4. Let it Flow, video. No. 17, Natural Life. Press Enter to open.
+- What happened: Room 4. Let it Flow, installation. No. 17, Natural Life. Press Enter to open.
 
 ## PASS: 5.1 Works panel (14 Tabs), Tab to no. 6 (6 Tabs), Enter: the viewer opens on a video work
 
@@ -160,7 +160,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.2 Esc stops the tour
 
 - Expected: Tour button not pressed; "Tour stopped." announced
-- What happened: aria-pressed: false; announced: "Tour stopped."
+- What happened: aria-pressed: false; announced: "Tour stopped. No. 2, Human as Error VI. Press Enter to open."
 
 ## PASS: 7.3 The Tour button by keyboard: Enter starts, Enter stops
 
@@ -177,10 +177,10 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: page language en
 - What happened: en
 
-## PASS: 9.1 Open the walk from a link to a work (?work=w11-artificial-paradise-i-print)
+## PASS: 9.1 Open the digital exhibition from a link to a work (?work=w11-artificial-paradise-i-print)
 
-- Expected: after Enter and the sound question: Room 3 and No. 11 announced; Enter opens No. 11
-- What happened: announced: "Room 3. Paintings, prints, video. No. 11, Artificial Paradise I. Press Enter to open."; Enter opened: "Artificial Paradise I"
+- Expected: no title card; the sound question has focus at once; Enter answers it and No. 11 opens in the viewer, focus in it
+- What happened: title card hidden; viewer: "Artificial Paradise I", focus button "Close"
 
 ## PASS: 10.1 Tab from the 3D view to Help (5 presses), Enter, Tab round, Esc
 

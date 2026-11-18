@@ -19,6 +19,9 @@
         var l = q === 'hu' || q === 'en' ? q : s === 'hu' || s === 'en' ? s : /^hu\b/i.test(navigator.language || '') ? 'hu' : 'en';
         document.documentElement.lang = l;
         if (l !== 'en') document.documentElement.classList.add('i18n-wait');
+        // A link to a work (?work=, from the accessible version) goes straight to the work:
+        // the title card is never shown (main.js; it comes back if the id is unknown).
+        if (/[?&]work=[^&]/.test(location.search) || /[#&]work=[^&]/.test(location.hash)) document.documentElement.classList.add('direct');
       })();
     </script>
     <link rel="preload" as="image" href="./brand/key-visual.avif" type="image/avif" media="(min-aspect-ratio: 4/5)" />
@@ -49,9 +52,10 @@
     <meta name="twitter:image" content="https://artificial-paradise.netlify.app/og.jpg" />
   </head>
   <body>
-    <!-- First thing Tab reaches: the exhibition as text (text/, built from the same data) -->
+    <!-- First thing Tab reaches: the exhibition as text (text/, built from the same data), in a tab
+         of its own ("ap-text"; main.js names this tab "ap-exhibition" for its links back) -->
     <nav class="skip-nav" aria-label="Accessible version" data-i18n-attr="aria-label:textEdition.name">
-      <a class="skip-link" href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Accessible version of the digital exhibition (text format)</a>
+      <a class="skip-link" href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span data-i18n="textEdition.skip">Accessible version of the digital exhibition (text format)</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>
     </nav>
     <!-- The exhibition itself: the 3D view and, once inside, its controls. They come first
          in the page, so Tab goes from the view straight to the toolbar and the keys. -->
@@ -71,9 +75,10 @@
         <!-- Its name says which room you are in (main.js keeps it up to date); the jump by a
              click is said in its title only, since a screen reader cannot click a room on it. -->
         <canvas id="minimap" width="220" height="150" role="img" aria-label="Floor plan: you are in Room 1" title="Floor plan: click a room to go there" data-i18n-attr="title:hud.minimap"></canvas>
-        <!-- The map's key: its two marks drawn as on the map (minimap.js). Hidden from screen
-             readers, which get the map as a name only, not its marks. -->
-        <p id="map-key" class="mono" aria-hidden="true"><span class="mk mk-video"></span><span data-i18n="hud.mapKey.videos">Videos</span><span class="mk mk-other"></span><span data-i18n="hud.mapKey.other">Other works</span></p>
+        <!-- The map's key: its four groups of works, each mark drawn as on the map (minimap.js
+             draws them into the svgs from its table). Hidden from screen readers, which get the
+             map as a name only, not its marks. -->
+        <p id="map-key" class="mono" aria-hidden="true"><span class="mk-item"><svg class="mk" data-group="paintings" viewBox="-5 -5 10 10" width="10" height="10" focusable="false"></svg><span data-i18n="hud.mapKey.paintings">Paintings</span></span><span class="mk-item"><svg class="mk" data-group="videos" viewBox="-5 -5 10 10" width="10" height="10" focusable="false"></svg><span data-i18n="hud.mapKey.videos">Videos</span></span><span class="mk-item"><svg class="mk" data-group="installations" viewBox="-5 -5 10 10" width="10" height="10" focusable="false"></svg><span data-i18n="hud.mapKey.installations">Installations</span></span><span class="mk-item"><svg class="mk" data-group="other" viewBox="-5 -5 10 10" width="10" height="10" focusable="false"></svg><span data-i18n="hud.mapKey.other">Other works</span></span></p>
         <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
           <button data-action="tour" title="Guided tour (T)" aria-pressed="false" data-i18n-attr="title:hud.tourTitle"><span class="ico" aria-hidden="true">▶</span><span class="lbl" data-i18n="hud.tour">Tour</span></button>
           <div class="rooms-wrap">
@@ -157,7 +162,7 @@
         <!-- The folded menu only (narrow windows): what the footer holds, below a line, since
              the footer is put away inside the exhibition on a phone. Hidden in a wide window. -->
         <div class="nav-more">
-          <a href="./text/" data-i18n="textEdition.nameFull" data-i18n-attr="href:textEdition.href">Accessible version (text format)</a>
+          <a href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span data-i18n="textEdition.nameFull">Accessible version (text format)</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>
           <button data-nav="accessibility" data-i18n="nav.accessibility">Accessibility</button>
           <button data-nav="legal" data-i18n="nav.legal">Legal notice</button>
           <button data-nav="privacy" data-i18n="nav.privacy">Privacy</button>
@@ -197,7 +202,7 @@
           <span class="desk" data-i18n="loader.howtoDesk">↑↓ walk · ←→ turn · Page Down: next work · Enter: open · drag to look</span>
           <span class="touch" data-i18n="loader.howtoTouch">Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.</span>
         </div>
-        <p class="text-link"><a href="./text/" data-i18n="textEdition.skip" data-i18n-attr="href:textEdition.href">Accessible version of the digital exhibition (text format)</a></p>
+        <p class="text-link"><a href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span data-i18n="textEdition.skip">Accessible version of the digital exhibition (text format)</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a></p>
       </div>
     </section>
 
@@ -213,7 +218,7 @@
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="contact" data-i18n="nav.contact">Contact</button>
       <span class="sep" aria-hidden="true">·</span>
-      <a href="./text/" data-i18n="textEdition.nameFull" data-i18n-attr="href:textEdition.href">Accessible version (text format)</a>
+      <a href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span data-i18n="textEdition.nameFull">Accessible version (text format)</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>
       <span class="sep" aria-hidden="true">·</span>
       <button data-nav="accessibility" data-i18n="nav.accessibility">Accessibility</button>
       <span class="sep" aria-hidden="true">·</span>

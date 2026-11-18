@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 192. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 197. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -31,11 +31,17 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.hud.minimapHere`
   - HU: Alaprajz. Jelenlegi hely: {room}
   - EN: Floor plan: you are in {room}
+- `ui.hud.mapKey.paintings`
+  - HU: Festmények
+  - EN: Paintings
 - `ui.hud.mapKey.videos`
   - HU: Videók
   - EN: Videos
+- `ui.hud.mapKey.installations`
+  - HU: Installációk
+  - EN: Installations
 - `ui.hud.mapKey.other`
-  - HU: A többi mű
+  - HU: Egyéb művek
   - EN: Other works
 - `ui.hud.touchHint`
   - HU: Húzás: körülnézés · a kar nyomva tartása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés
@@ -118,6 +124,12 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.wall.sheetMeta`
   - HU: KristofLab · MAMŰ Galéria · 2025. január 10–31.
   - EN: KristofLab · MAMŰ Gallery · 10–31 January 2025
+- `ui.textEdition.newTab`
+  - HU: (új lapon nyílik meg)
+  - EN: (opens in a new tab)
+- `ui.textEdition.otherTab`
+  - HU: (abban a lapban, ahol már meg van nyitva)
+  - EN: (in the tab where it is open)
 - `ui.announce.workNext`
   - HU: {no}. mű, {title}.
   - EN: No. {no}, {title}.
@@ -538,6 +550,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `accessibility.sections[1].p[6]`
   - HU: Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, valódi, 200%-os vagy nagyobb böngészőnagyítással (az ugyanekkora, CSS-képpontban mért ablakokat ellenőriztem: egy laptopot 200%-on és egy oldalt 400%-on), a YouTube és a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal.
   - EN: Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, real browser zoom at 200% or more (windows of the same size in CSS pixels were checked: a laptop at 200% and a page at 400%), the YouTube and Google Drive video players, and visits by people with disabilities.
+- `accessibility.sections[2].p[0]`
+  - HU: Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a látogatás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása. Új lapon nyílik meg. A művekre mutató hivatkozásai a digitális kiállítás lapján, újratöltés nélkül viszik a műhöz, ha az a lap meg van nyitva; különben a digitális kiállítást annál a műnél nyitják meg.
+  - EN: The accessible version gives the whole exhibition without 3D graphics and without JavaScript: the four rooms in visiting order, the 17 works with their data and where each one hung, the texts and the credits. It is the first link on the page. It opens in a new tab. Its links to a work go to that work in the digital exhibition’s tab, without loading it again, when that tab is open; otherwise they open the digital exhibition at that work.
 - `accessibility.sections[2].p[1]`
   - HU: Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. Amíg valamelyik nyitva van, a böngésző elrejti a mögötte lévő oldalt a képernyőolvasók elől. Egy panel vagy a műnéző mögött a felső sáv használható marad, így a nyelv ilyenkor is váltható; a hangra vonatkozó kérdés mögött a felső sáv is rejtve van. A műlistából megnyitott mű bezárásakor a lista újra megnyílik, és a fókusz az utoljára mutatott művön áll. Keskeny ablakban a menüből megnyitott panel bezárása után a fókusz a Menü gombra kerül. Amíg a hangra vonatkozó kérdés nyitva van, a képernyő bármely más pontjára kattintva a kérdés „Hang nélkül” válasszal zárul, és más nem nyílik meg. Ha egy panel vagy a műnéző nyitva van, nyelvváltás után is benne marad a fókusz. A Page Down és a Page Up a következő és az előző műhöz visz; az eszköztár Következő mű gombja a következőhöz, minden lenyomásra egy művel tovább. Az Enter megnyitja a nézet közepén lévő művet. Az eszköztár Súgó gombja (keskeny ablakban a menüben) egy panelen mutatja meg az összes vezérlőt.
   - EN: Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. While one of them is open, the browser hides the page behind it from screen readers. Behind a panel or the viewer the bar at the top stays usable, so the language can still be switched; behind the sound question it is hidden too. Closing a work opened from the list of works brings the list back, with focus on the work last shown. In a narrow window, closing a panel opened from the menu puts focus on the Menu button. While the sound question is open, a click anywhere else on the screen answers it with “Without sound” and opens nothing. Switching the language while a panel or the viewer is open leaves focus in it. Page Down and Page Up go to the next and the previous work; the Next work button on the toolbar goes to the next one, one work for each press. Enter opens the work in front of you. Help, on the toolbar (in a narrow window, in the menu), shows all the controls in a panel.

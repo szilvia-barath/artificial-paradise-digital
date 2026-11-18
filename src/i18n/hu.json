@@ -72,8 +72,10 @@
       "promptTextKey": "Enter: a kiállítási szöveg elolvasása",
       "minimapHere": "Alaprajz. Jelenlegi hely: {room}",
       "mapKey": {
+        "paintings": "Festmények",
         "videos": "Videók",
-        "other": "A többi mű"
+        "installations": "Installációk",
+        "other": "Egyéb művek"
       },
       "touchHint": "Húzás: körülnézés · a kar nyomva tartása: séta · koppintás egy műre: megnyitás · a Következő mű gomb: továbblépés",
       "tourAt": "{at} / {total} · {no}. mű · {title}",
@@ -209,6 +211,8 @@
       },
       "skip": "A kiállítás digitális változatának akadálymentes változata (szöveges formátum)",
       "href": "./text/hu/?lang=hu",
+      "newTab": "(új lapon nyílik meg)",
+      "otherTab": "(abban a lapban, ahol már meg van nyitva)",
       "nameFull": "Akadálymentes változat (szöveges formátum)"
     },
     "announce": {
@@ -708,7 +712,7 @@
       {
         "h": "Mi működik",
         "p": [
-          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a látogatás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása.",
+          "Az akadálymentes változat 3D grafika és JavaScript nélkül adja a teljes kiállítást: a négy termet a látogatás sorrendjében, a 17 művet az adataival és azzal, hogy melyik hol volt, a szövegeket és a közreműködőket. Ez az oldal első hivatkozása. Új lapon nyílik meg. A művekre mutató hivatkozásai a digitális kiállítás lapján, újratöltés nélkül viszik a műhöz, ha az a lap meg van nyitva; különben a digitális kiállítást annál a műnél nyitják meg.",
           "Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. Amíg valamelyik nyitva van, a böngésző elrejti a mögötte lévő oldalt a képernyőolvasók elől. Egy panel vagy a műnéző mögött a felső sáv használható marad, így a nyelv ilyenkor is váltható; a hangra vonatkozó kérdés mögött a felső sáv is rejtve van. A műlistából megnyitott mű bezárásakor a lista újra megnyílik, és a fókusz az utoljára mutatott művön áll. Keskeny ablakban a menüből megnyitott panel bezárása után a fókusz a Menü gombra kerül. Amíg a hangra vonatkozó kérdés nyitva van, a képernyő bármely más pontjára kattintva a kérdés „Hang nélkül” válasszal zárul, és más nem nyílik meg. Ha egy panel vagy a műnéző nyitva van, nyelvváltás után is benne marad a fókusz. A Page Down és a Page Up a következő és az előző műhöz visz; az eszköztár Következő mű gombja a következőhöz, minden lenyomásra egy művel tovább. Az Enter megnyitja a nézet közepén lévő művet. Az eszköztár Súgó gombja (keskeny ablakban a menüben) egy panelen mutatja meg az összes vezérlőt.",
           "A 3D nézetre lépve a képernyőolvasó felolvassa, hogy ez a 3D nézet, mely billentyűk visznek műről műre, nyitnak meg egy művet és szolgálnak a sétához, és hogy minden billentyű leírása az akadálymentes változatban található. Séta közben bemondja, melyik teremben van a látogató, és melyik kiállított mű van épp fókuszban, az alaprajz neve pedig megmondja, melyik teremben van. A műnézőben az Előző és a Következő gomb a 17 művön lép végig, és bemondja az új művet a sorszámával („3. mű a 17 közül”); az installációs fotó nevéből kiderül, hogy a művet a galériában mutatja, a videónak és a YouTube- vagy Google Drive-lejátszónak pedig van neve. A magyar oldalon a művész angol címei angolként vannak jelölve, így a nyelvet váltani tudó képernyőolvasó angol hangon olvassa fel őket. Egy panel megnyitása leállítja a tárlatvezetést, így a feliratait nem olvassa fel a képernyőolvasó, amíg a panel nyitva van.",
           "Belépés után egy rövid kártya a billentyűk mellett megmutatja, hogyan lehet mozogni. Az első billentyűleütésre, kattintásra vagy görgetésre eltűnik, és a Súgóból újra elő lehet hozni; az oldal semmit sem tárol, így minden látogatáskor újra megjelenik. Érintőképernyőn helyette egy tipp mondja el, hogyan lehet érintéssel mozogni, a hangra vonatkozó kérdés pedig a Hang gombot nevezi meg. Az alaprajz alatti jelmagyarázat megmutatja, mely jelek a videók és melyek a többi mű. A tárlatvezetés felirata jelzi, hol tart a tárlatvezetés („3 / 17”).",
