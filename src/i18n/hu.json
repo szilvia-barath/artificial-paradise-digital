@@ -373,6 +373,25 @@
       "nodeName": "{label}, {type}, {n} kapcsolat",
       "nodeNameOne": "{label}, {type}, 1 kapcsolat",
       "backToDiagram": "Vissza az ábrához"
+    },
+    "readAloud": {
+      "start": "Felolvasás",
+      "stop": "Felolvasás leállítása",
+      "noVoice": "Felolvasás: ezen az eszközön nincs {language} hang",
+      "noVoiceSaid": "A felolvasás nem lehetséges: ezen az eszközön nincs {language} hang.",
+      "started": "A felolvasás elindult.",
+      "stopped": "A felolvasás leállt.",
+      "done": "A felolvasás véget ért.",
+      "lang": {
+        "en": "angol",
+        "hu": "magyar"
+      }
+    },
+    "describe": {
+      "visual": "Leírás",
+      "video": "A videó leírása",
+      "videoDoc": "A videódokumentáció leírása",
+      "space": "A terem leírásának meghallgatása"
     }
   },
   "meta": {
@@ -552,6 +571,47 @@
       ]
     }
   },
+  "accessDescriptions": {
+    "_readme": "Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: [\"…\", \"…\"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem leírásának meghallgatása) és az akadálymentes változatban, és a Felolvasás felolvassa.",
+    "visual": {
+      "w01-dresden": "",
+      "w02-human-as-error-vi": "",
+      "w03-paradise-factory": "",
+      "w04-human-as-error-iii": "",
+      "w05-human-as-error-i": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w09-warsaw-g24-i": "",
+      "w10-warsaw-ii": "",
+      "w11-artificial-paradise-i-print": "",
+      "w12-artificial-paradise-ii-print": "",
+      "w13-artificial-paradise-iii-print": "",
+      "w14-warsaw-g24-ii": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoText": {
+      "w03-screen": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoDocText": {
+      "w03-paradise-factory": "",
+      "w16-let-it-flow": ""
+    },
+    "space": {
+      "r1": "",
+      "r2": "",
+      "r3": "",
+      "r4": ""
+    }
+  },
   "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról és a galéria alaprajzáról származnak, a művész javításaival. A termek alaprajza erről az alaprajzról készült, az épület OpenStreetMap-körvonalával összevetve.",
   "openingSpeech": {
     "author": "Zemlényi-Kovács Barnabás",
@@ -719,7 +779,8 @@
           "Ha a rendszerben be van kapcsolva a csökkentett mozgás, a digitális kiállításban nincs szemcse, nincs színszegély és nincs lüktetés, a tárlatvezetés megállóról megállóra ugrik, a mozgásbillentyűk alatti kis egér és az alaprajzon a látogatót jelző pont pedig nem mozdul. A beállítás nélkül is csak egy pillanatra mozognak: az egér háromszor görget, a pont pedig egy ugrás után 3 másodpercig nő és zsugorodik. A betöltőképernyő mindenkinek állókép.",
           "A 3D nézet fölött a felső sáv és a lábléc sötét sávon, a terem neve, az alaprajz, az eszköztár, a teremmenü, a billentyűk és a feliratok sötét, áttetsző alapon állnak. A legvilágosabb fal, az 1. terem fehér téglafala előtt készült képernyőképeken a felső sáv, a lábléc, a terem neve, az eszköztár, a billentyűk és az alaprajz számainak kontrasztját legalább 5,1:1-nek mértem. A teremmenü címlistájának kontrasztját a színeiből számoltam ki: tiszta fehér fölött is 7,43:1, az egérmutató alatti sorban 5,43:1. Az alaprajz alatti jelmagyarázat kontrasztját a színeiből számoltam ki: tiszta fehér fölött is 7,16:1. A kezelőfelület kiemelőszíne világoskék: a színeiből számolva a sötét, áttetsző alapon tiszta fehér fölött is legalább 5,76:1. Egyetlen állapotot sem jelez csak a szín: az eszköztár lenyomott gombja körül szegély, alatta pedig egy sáv is megjelenik, a teremmenüben és az alaprajzon pedig félkövér az a terem, ahol a látogató éppen van.",
           "Érintőképernyőn a kart nyomva tartva azonnal el lehet indulni, húzni nem kell, mellette pedig két gomb, a ← és a →, fordít. Fektetett telefonon a műnéző egymás mellett mutatja a művet és a szövegét. Érintőképernyőn a felső sáv és menüje, az eszköztár, a teremmenü, a panelek, a hangra vonatkozó kérdés és a műnéző gombjai legalább 44 × 44 képpontosak. A lábléc hivatkozásai legfeljebb 760 képpont széles ablakban 24 képpont magasak. A nyitóképernyő, a panelek és a műnéző csippentéssel nagyíthatók, a 3D nézet pedig megtartja a saját mozdulatait: húzással körül lehet nézni, csippentéssel a nézetet lehet nagyítani. Mindkettőt Chromium telefonemulációjában ellenőriztem, valódi telefonon nem.",
-          "Nagyon kicsi ablakban, például 400%-ra nagyított oldalon (1280 × 1024-es képernyőn 320 × 256 képpont), a 3D nézet fölötti vezérlők kevesebb helyet foglalnak: az eszköztár alul, a terem neve és a nagyítás kijelzője felül áll, a képernyőn megjelenő billentyűk, az alaprajz és a lábléc pedig elmaradnak; a lábléc hivatkozásai és a Súgó a menüben vannak. Semmi sem takar mást, és a Tab minden vezérlőt az ablakon belül ér el."
+          "Nagyon kicsi ablakban, például 400%-ra nagyított oldalon (1280 × 1024-es képernyőn 320 × 256 képpont), a 3D nézet fölötti vezérlők kevesebb helyet foglalnak: az eszköztár alul, a terem neve és a nagyítás kijelzője felül áll, a képernyőn megjelenő billentyűk, az alaprajz és a lábléc pedig elmaradnak; a lábléc hivatkozásai és a Súgó a menüben vannak. Semmi sem takar mást, és a Tab minden vezérlőt az ablakon belül ér el.",
+          "A digitális kiállításban a panelekben és a műnézőben Felolvasás gomb van. A böngésző beszédszintézisével, az eszközre telepített hanggal olvassa fel a szövegüket az oldal nyelvén: semmi nem kerül el sehova, és semmi nem tárolódik. Ha az eszközön nincs hang az adott nyelvhez, a gomb ezt kiírja."
         ]
       },
       {

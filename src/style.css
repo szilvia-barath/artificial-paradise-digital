@@ -1082,8 +1082,8 @@ body.in-room .wheel b::after { animation: wheel-roll 1.8s ease-in-out 3; }
 .viewer-info details { margin: 8px 0 22px; border-top: 1px solid var(--line); padding-top: 12px; }
 .viewer-info summary { font: 600 13px var(--sans); letter-spacing: 0.02em; color: var(--muted); cursor: pointer; }
 #viewer-text p { font-size: 13px; color: #cfcfcb; }
-#viewer-desc h3 { font: 600 15px var(--sans); color: var(--fg); margin: 22px 0 0; }
-#viewer-desc p { font-size: 14px; color: #dedcd6; }
+#viewer-desc h3, #viewer-describe h3, #viewer-space h3 { font: 600 15px var(--sans); color: var(--fg); margin: 22px 0 0; }
+#viewer-desc p, #viewer-describe p, #viewer-space p { font-size: 14px; color: #dedcd6; }
 #viewer-desc .note, #viewer-text .note { font: 13px/1.5 var(--sans); color: var(--muted); }
 .viewer-nav {
   margin-top: auto;
@@ -1198,6 +1198,13 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
   sup.fn a, #panel-body .footnotes .fn-back { position: relative; }
   sup.fn a::after, #panel-body .footnotes .fn-back::after { content: ""; position: absolute; left: -12px; right: -12px; top: -14px; bottom: -14px; }
 }
+/* Read aloud (src/ui/readAloud.js): a button like the others in its place, under the title in
+   the viewer and after Close in a panel. Its word says the state (Read aloud / Stop reading);
+   while it reads it also looks pressed, in the pairs the hover already uses (no new colour). */
+#viewer .read-aloud { margin: 4px 0 14px; }
+#viewer .read-aloud[aria-pressed="true"] { border-color: var(--fg); background: rgba(255, 255, 255, 0.1); }
+#panel .read-aloud { margin: 0 0 12px; }
+#panel .read-aloud[aria-pressed="true"] { background: var(--blue); color: var(--paper); }
 
 @media (max-width: 820px) {
   #viewer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 55vh) minmax(0, 1fr); }

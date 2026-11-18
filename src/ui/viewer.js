@@ -1,6 +1,8 @@
 import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog } from './dialog.js';
 import { announce, unannounce } from './announce.js';
+import { readAloudButton } from './readAloud.js';
+import { workDescriptions, roomDescription } from '../localize.js';
 import { isPart } from '../world/route.js';
 import refs from '../data/references.json';
 import { refHTML } from '../refhtml.js';
@@ -44,6 +46,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   const conn = document.getElementById('viewer-connections');
   const caption = document.getElementById('viewer-caption');
   const desc = document.getElementById('viewer-desc');
+  const describe = document.getElementById('viewer-describe');
+  const space = document.getElementById('viewer-space');
   const room = document.getElementById('viewer-room');
   const text = document.getElementById('viewer-text');
   const count = document.getElementById('viewer-count');
@@ -57,6 +61,14 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   let index = -1;
   let situ = 0; // 0 = the work, n = its nth installation photo
   let full = -1; // index of the full video shown (YouTube or Drive player), -1 = none
+
+  // Read aloud (readAloud.js): the text column's words about the work, from the room line to
+  // the artist's text, with the descriptions and the room's audio description where they are
+  // filled ([data-read]; not the buttons, the link or the folded exhibition text). It stands
+  // under the title; none where the browser cannot speak.
+  const readParts = () => [room, title, meta, caption, ...el.querySelectorAll('[data-read]')];
+  const reader = readAloudButton(() => readParts().filter((n) => !n.hidden).map((n) => n.innerText).join('\n'));
+  if (reader) title.after(reader.button);
 
   const renderText = () => {
     text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="note">${esc(data.textCredit)}</p>`;
@@ -132,6 +144,15 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     desc.innerHTML = d
       ? `<h3>${esc(d.heading)}</h3>${refHTML(refs, { t, lang: lang() }).paragraphs(`descriptions.${w.desc}`, d.text).map((p) => `<p>${p}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`
       : '';
+    // The descriptions still to come (accessDescriptions in src/i18n): each under its heading
+    // once filled; while every field is empty there is nothing here, not even a heading.
+    const section = (key, paras) => `<h3>${esc(t(`describe.${key}`))}</h3>${paras.map((p) => `<p>${esc(p)}</p>`).join('')}`;
+    const own = workDescriptions(data, w);
+    describe.innerHTML = own.map(([k, p]) => section(k, p)).join('');
+    describe.hidden = !own.length;
+    const roomText = roomDescription(data, w.room);
+    space.innerHTML = roomText.length ? section('space', roomText) : '';
+    space.hidden = !roomText.length;
     situBtn.textContent = t(situ === 0 ? 'viewer.situ' : situ < photos ? 'viewer.situNext' : 'viewer.work');
     const vids = (!situ && w.video && w.video.full) || [];
     // the button that goes back names what the viewer shows without the full video
@@ -228,6 +249,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
     if (el.hidden) return;
     // a work stepped to just before closing and not yet said is no longer on screen
     unannounce('viewer');
+    reader?.stop();
     const ret = toList ? back : null;
     back = null;
     el.hidden = true;
@@ -241,6 +263,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted, f
   // The new work is said on its own topic of the live region, so a room or a work in the
   // 3D view said at the same moment does not take its place.
   const step = (d) => {
+    reader?.stop(); // the next work's text replaces the one being read
     index = works.indexOf(seq[(seqAt(works[index]) + d + seq.length) % seq.length]);
     situ = 0;
     full = -1;

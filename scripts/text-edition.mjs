@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { ROOMS } from '../src/world/layout.js';
 import { visitOrder, isPart, placeOf } from '../src/world/route.js';
-import { localizeData, translator } from '../src/localize.js';
+import { localizeData, translator, workDescriptions, roomDescription } from '../src/localize.js';
 import { refHTML } from '../src/refhtml.js';
 
 const SITE = 'https://artificial-paradise.netlify.app/';
@@ -145,6 +145,11 @@ function page(lang, raw, engine = []) {
 ${R.paragraphs(`descriptions.${w.desc}`, d.text).map((p) => `<p>${p}</p>`).join('\n')}${d.note ? `\n<p class="note">${esc(d.note)}</p>` : ''}`;
   };
 
+  // The descriptions still to come (accessDescriptions in src/i18n/*.json): each under its
+  // heading once filled. While a field is empty nothing of it is written, not even the heading.
+  const described = (level, key, paras) => `<${level}>${esc(t(`describe.${key}`))}</${level}>
+${paras.map((p) => `<p>${esc(p)}</p>`).join('\n')}`;
+
   const workHTML = (w) => {
     const rows = [
       ['medium', esc(w.medium)],
@@ -158,7 +163,7 @@ ${R.paragraphs(`descriptions.${w.desc}`, d.text).map((p) => `<p>${p}</p>`).join(
 <h3>${heading(w)}</h3>
 <dl>
 ${rows.filter(([, v]) => v).map(([k, v]) => `<dt>${esc(t(`textEdition.label.${k}`))}</dt><dd>${v}</dd>`).join('\n')}
-</dl>${w.caption ? `\n<p>${esc(w.caption)}</p>` : ''}
+</dl>${w.caption ? `\n<p>${esc(w.caption)}</p>` : ''}${workDescriptions(data, w, parts).map(([k, p]) => `\n${described('h4', k, p)}`).join('')}
 ${artistText(w)}
 <p><a href="${toWalk}?lang=${lang}&amp;work=${encodeURIComponent(w.id)}" data-work="${esc(w.id)}">${withTitle('textEdition.openInWalk', { no: w.no }, w.title)}<span class="tab-hint"></span></a></p>
 </article>`;
@@ -187,6 +192,7 @@ ${artistText(w)}
 
   const roomHTML = (r, i) => {
     const inRoom = works.filter((w) => w.room === r.id);
+    const roomText = roomDescription(data, r.id);
     const lead = [
       i === 0 ? t('textEdition.enterStairs') : t('textEdition.enterFrom', { room: roomName(ROOMS[i - 1].id) }),
       t('textEdition.roomCount', { n: inRoom.length }),
@@ -199,7 +205,8 @@ ${artistText(w)}
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
 <p class="sub">${titled(data.rooms[r.id].subtitle)}</p>
 <p>${esc(lead.join(' '))}</p>
-${paradataHTML(r.id)}
+${paradataHTML(r.id)}${roomText.length ? `
+${described('h3', 'space', roomText)}` : ''}
 ${inRoom.map(workHTML).join('\n')}
 </section>`;
   };
@@ -319,8 +326,9 @@ ${statementHTML}
 
 // The two pages: [{ file: 'text/index.html', html }, { file: 'text/hu/index.html', html }].
 // engine: the build's files the exhibition needs before it can show a room (see goScript).
-export function buildTextEdition(engine = []) {
-  const [data, en, hu, pdScene, pd, refs] = SOURCES.map(readJSON);
+// sources: { data, en, hu } in place of the files (a test fills a description this way).
+export function buildTextEdition(engine = [], sources) {
+  const [data, en, hu, pdScene, pd, refs] = sources ? [sources.data, sources.en, sources.hu, ...SOURCES.slice(3).map(readJSON)] : SOURCES.map(readJSON);
   // the curator's line is found by position, so make sure it is still there
   if (en.credits[1][0] !== 'Curator') throw new Error('text edition: the second line of "credits" in en.json is no longer the curator');
   const raw = { data, en, hu, pdScene, pd, refs };

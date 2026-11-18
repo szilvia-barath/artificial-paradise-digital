@@ -373,6 +373,25 @@
       "nodeName": "{label}, {type}, {n} links",
       "nodeNameOne": "{label}, {type}, 1 link",
       "backToDiagram": "Back to the diagram"
+    },
+    "readAloud": {
+      "start": "Read aloud",
+      "stop": "Stop reading",
+      "noVoice": "Read aloud: no {language} voice on this device",
+      "noVoiceSaid": "Reading aloud is not possible: this device has no {language} voice.",
+      "started": "Reading aloud.",
+      "stopped": "Reading aloud stopped.",
+      "done": "Reading aloud finished.",
+      "lang": {
+        "en": "English",
+        "hu": "Hungarian"
+      }
+    },
+    "describe": {
+      "visual": "Description",
+      "video": "Video description",
+      "videoDoc": "Description of the video documentation",
+      "space": "Listen to the description of the room"
     }
   },
   "meta": {
@@ -554,6 +573,47 @@
       ]
     }
   },
+  "accessDescriptions": {
+    "_readme": "Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, [\"…\", \"…\"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Listen to the description of the room) and in the accessible version, and Read aloud reads it.",
+    "visual": {
+      "w01-dresden": "",
+      "w02-human-as-error-vi": "",
+      "w03-paradise-factory": "",
+      "w04-human-as-error-iii": "",
+      "w05-human-as-error-i": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w09-warsaw-g24-i": "",
+      "w10-warsaw-ii": "",
+      "w11-artificial-paradise-i-print": "",
+      "w12-artificial-paradise-ii-print": "",
+      "w13-artificial-paradise-iii-print": "",
+      "w14-warsaw-g24-ii": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoText": {
+      "w03-screen": "",
+      "w06-artificial-paradise-singapore": "",
+      "w07-artificial-paradise-eden-project": "",
+      "w08-wiena-wrong-landscape-i": "",
+      "w15-wiena-wrong-landscape-ii": "",
+      "w16-let-it-flow": "",
+      "w17-natural-life": ""
+    },
+    "videoDocText": {
+      "w03-paradise-factory": "",
+      "w16-let-it-flow": ""
+    },
+    "space": {
+      "r1": "",
+      "r2": "",
+      "r3": "",
+      "r4": ""
+    }
+  },
   "source": "Titles, sizes, media and years come from the room sheet displayed in the gallery and the gallery's floor plan, with the artist's corrections. The plan of the rooms is traced from that floor plan and checked against the building's outline on OpenStreetMap.",
   "openingSpeech": {
     "author": "Barnabás Zemlényi-Kovács",
@@ -721,7 +781,8 @@
           "With reduced motion switched on in your system, the digital exhibition has no grain, no colour fringes and no pulsing, the tour jumps from stop to stop, and the mouse under the walking keys and the dot that marks you on the floor plan stay still. Without the setting they move only for a moment: the wheel rolls three times, and the dot swells for 3 seconds after a jump. The loading screen is a still image for everyone.",
           "Over the 3D view the bar at the top and the footer sit on a dark band, and the room name, the floor plan, the toolbar, the rooms menu, the keys and the captions on dark glass. In screenshots facing the brightest wall, the white brick of Room 1, I measured the bar at the top, the footer, the room name, the toolbar, the keys and the numbers on the floor plan at 5.1:1 or more. The titles in the rooms menu, worked out from their colours, are 7.43:1 even over pure white, and 5.43:1 on the row under the mouse. The key under the floor plan, worked out from its colours, is 7.16:1 even over pure white. The accent colour of the interface is a light blue: worked out from its colours, it is at least 5.76:1 on the dark glass, even over pure white. No state is shown by colour alone: a pressed button on the toolbar also has an edge round it and a bar under it, and the room you are in is in bold in the rooms menu and on the floor plan.",
           "On a touch screen, pressing and holding the stick walks at once, with no need to drag, and two buttons by it, ← and →, turn. On a phone on its side the artwork viewer shows the work and its text side by side. On a touch screen the buttons of the bar at the top and its menu, the toolbar, the rooms menu, the panels, the sound question and the viewer are at least 44 by 44 pixels. The footer's links are 24 pixels tall in a window up to 760 pixels wide. The title screen, the panels and the viewer can be pinch-zoomed, while the 3D view keeps its own gestures: drag to look around, pinch to zoom the view. I checked both in Chromium's phone emulation, not on a real phone.",
-          "In a very small window, such as a page zoomed to 400% (320 × 256 pixels on a 1280 × 1024 screen), the controls over the 3D view take less room: the toolbar is at the bottom, the room name and the zoom readout at the top, and the on-screen keys, the floor plan and the footer are left out; the footer's links and Help are in the menu. Nothing lies over anything else, and Tab reaches every control inside the window."
+          "In a very small window, such as a page zoomed to 400% (320 × 256 pixels on a 1280 × 1024 screen), the controls over the 3D view take less room: the toolbar is at the bottom, the room name and the zoom readout at the top, and the on-screen keys, the floor plan and the footer are left out; the footer's links and Help are in the menu. Nothing lies over anything else, and Tab reaches every control inside the window.",
+          "In the digital exhibition, the panels and the artwork viewer have a Read aloud button. It reads their text in the page's language through the browser's speech synthesis, with a voice installed on the device: nothing is sent anywhere and nothing is stored. Where the device has no voice for the language, the button says so."
         ]
       },
       {

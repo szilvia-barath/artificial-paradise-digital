@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 197. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 212. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -493,12 +493,54 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.concept.backToDiagram`
   - HU: Vissza az ábrához
   - EN: Back to the diagram
+- `ui.readAloud.start`
+  - HU: Felolvasás
+  - EN: Read aloud
+- `ui.readAloud.stop`
+  - HU: Felolvasás leállítása
+  - EN: Stop reading
+- `ui.readAloud.noVoice`
+  - HU: Felolvasás: ezen az eszközön nincs {language} hang
+  - EN: Read aloud: no {language} voice on this device
+- `ui.readAloud.noVoiceSaid`
+  - HU: A felolvasás nem lehetséges: ezen az eszközön nincs {language} hang.
+  - EN: Reading aloud is not possible: this device has no {language} voice.
+- `ui.readAloud.started`
+  - HU: A felolvasás elindult.
+  - EN: Reading aloud.
+- `ui.readAloud.stopped`
+  - HU: A felolvasás leállt.
+  - EN: Reading aloud stopped.
+- `ui.readAloud.done`
+  - HU: A felolvasás véget ért.
+  - EN: Reading aloud finished.
+- `ui.readAloud.lang.en`
+  - HU: angol
+  - EN: English
+- `ui.readAloud.lang.hu`
+  - HU: magyar
+  - EN: Hungarian
+- `ui.describe.visual`
+  - HU: Leírás
+  - EN: Description
+- `ui.describe.video`
+  - HU: A videó leírása
+  - EN: Video description
+- `ui.describe.videoDoc`
+  - HU: A videódokumentáció leírása
+  - EN: Description of the video documentation
+- `ui.describe.space`
+  - HU: A terem leírásának meghallgatása
+  - EN: Listen to the description of the room
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
 - `rooms.r4.subtitle`
   - HU: Let it Flow · installáció
   - EN: Let it Flow · installation
+- `accessDescriptions._readme`
+  - HU: Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: ["…", "…"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem leírásának meghallgatása) és az akadálymentes változatban, és a Felolvasás felolvassa.
+  - EN: Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, ["…", "…"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Listen to the description of the room) and in the accessible version, and Read aloud reads it.
 - `legal.sections[0].p[0]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás).
   - EN: Szilvia Baráth, who made this digital exhibition (3D reconstruction, design and programming).
@@ -574,6 +616,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `accessibility.sections[2].p[7]`
   - HU: Nagyon kicsi ablakban, például 400%-ra nagyított oldalon (1280 × 1024-es képernyőn 320 × 256 képpont), a 3D nézet fölötti vezérlők kevesebb helyet foglalnak: az eszköztár alul, a terem neve és a nagyítás kijelzője felül áll, a képernyőn megjelenő billentyűk, az alaprajz és a lábléc pedig elmaradnak; a lábléc hivatkozásai és a Súgó a menüben vannak. Semmi sem takar mást, és a Tab minden vezérlőt az ablakon belül ér el.
   - EN: In a very small window, such as a page zoomed to 400% (320 × 256 pixels on a 1280 × 1024 screen), the controls over the 3D view take less room: the toolbar is at the bottom, the room name and the zoom readout at the top, and the on-screen keys, the floor plan and the footer are left out; the footer's links and Help are in the menu. Nothing lies over anything else, and Tab reaches every control inside the window.
+- `accessibility.sections[2].p[8]`
+  - HU: A digitális kiállításban a panelekben és a műnézőben Felolvasás gomb van. A böngésző beszédszintézisével, az eszközre telepített hanggal olvassa fel a szövegüket az oldal nyelvén: semmi nem kerül el sehova, és semmi nem tárolódik. Ha az eszközön nincs hang az adott nyelvhez, a gomb ezt kiírja.
+  - EN: In the digital exhibition, the panels and the artwork viewer have a Read aloud button. It reads their text in the page's language through the browser's speech synthesis, with a voice installed on the device: nothing is sent anywhere and nothing is stored. Where the device has no voice for the language, the button says so.
 - `accessibility.sections[3].p[0]`
   - HU: Az élő bemondásokat csak szövegként ellenőriztem. Még nem tudni, hogyan olvassa fel őket egy képernyőolvasó a digitális kiállításban, és azt sem, hogy a magyar oldalon angolként jelölt címekhez angol hangra vált-e.
   - EN: The live announcements were checked as text only. How a screen reader reads them in the digital exhibition is not known yet, nor whether it switches to an English voice for the titles marked as English on the Hungarian page.
