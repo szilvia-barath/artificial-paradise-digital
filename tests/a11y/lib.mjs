@@ -4,7 +4,14 @@ import { chromium } from 'playwright';
 
 export const BASE = process.env.AP_URL || 'http://localhost:4173/';
 
-export const launch = () => chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+// The 3D view is drawn on the real GPU: full Chromium in its new headless mode with ANGLE on
+// Direct3D 11 (on this laptop the Intel UHD 630), many times faster than the headless shell's
+// software renderer. AP_SOFTWARE=1 brings back the software renderer (SwiftShader), as before
+// 18 November 2026, for a machine without a usable GPU or to compare results.
+export const launchOptions = () => (process.env.AP_SOFTWARE
+  ? { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] }
+  : { channel: 'chromium', args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist', '--enable-gpu-rasterization'] });
+export const launch = () => chromium.launch(launchOptions());
 
 // A laptop with a touch screen and a mouse or trackpad (D10). Headless Chromium cannot be one
 // by itself: with touch on it reports one coarse pointer and nothing else, like a phone. So

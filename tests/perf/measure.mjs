@@ -25,6 +25,7 @@ import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
+import { launchOptions } from '../a11y/lib.mjs';
 
 const BASE = process.env.AP_URL || 'http://localhost:4173/';
 const DIST = process.env.AP_DIST || 'dist';
@@ -47,7 +48,7 @@ const folderSize = (dir) => readdirSync(dir).reduce((s, f) => s + statSync(join(
 const folders = Object.fromEntries(['img', 'tex', 'video', 'models', 'basis', 'brand'].map((d) => [d, folderSize(join(DIST, d))]));
 
 // ---------------------------------------------------------------- browser
-const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await chromium.launch(launchOptions()); // the real GPU unless AP_SOFTWARE=1 (lib.mjs)
 const DESKTOP = process.argv.includes('--desktop');
 const PHONE = process.argv.includes('--phone');
 const VIEWPORT = PHONE ? { width: 390, height: 844 } : { width: 1366, height: 768 };
@@ -106,7 +107,8 @@ timing.wallClockToReady = Date.now() - t0;
 // ---------------------------------------------------------------- memory and videos
 // The browser's processes as the operating system counts them: working set (the memory in
 // RAM now) and private bytes, for the page's own process (renderer) and the GPU process,
-// where SwiftShader draws and keeps the textures here. Chromium's own figure for a page,
+// where the textures are kept (with SwiftShader, in its ordinary memory; on a real GPU partly
+// in the graphics driver's own). Chromium's own figure for a page,
 // performance.measureUserAgentSpecificMemory(), needs a cross-origin isolated page, which
 // the preview server does not serve: it is tried and its absence recorded.
 const browserCdp = await browser.newBrowserCDPSession();
@@ -302,7 +304,7 @@ for (const x of bytes) { files[x.path] ??= { bytes: 0, phases: new Set() }; file
 const requests = {};
 for (const p of urls.values()) requests[p] = (requests[p] || 0) + 1;
 const perFile = Object.entries(files).map(([path, v]) => ({ path, bytes: v.bytes, requests: requests[path] || 0, phases: [...v.phases].join(', '), fileSize: (() => { try { return statSync(join(DIST, path)).size; } catch { return null; } })() })).sort((a, b) => b.bytes - a.bytes);
-const result = { date: new Date().toISOString(), url: BASE, path: DESKTOP ? 'desktop (8 threads reported)' : PHONE ? 'phone (touch, coarse pointer, 4 threads reported)' : 'as detected', sitePath, renderer: 'headless Chromium, SwiftShader (software WebGL): frame rates are CPU-bound and not representative', viewport: `${VIEWPORT.width} x ${VIEWPORT.height}`, bundle, folders, timing, download, perFile, scene, atTitle, rooms, textures };
+const result = { date: new Date().toISOString(), url: BASE, path: DESKTOP ? 'desktop (8 threads reported)' : PHONE ? 'phone (touch, coarse pointer, 4 threads reported)' : 'as detected', sitePath, renderer: process.env.AP_SOFTWARE ? 'headless Chromium, SwiftShader (software WebGL): frame rates are CPU-bound and not representative' : 'full Chromium, new headless mode, ANGLE on Direct3D 11 (this laptop GPU): frame rates are the laptop GPU, not a phone', viewport: `${VIEWPORT.width} x ${VIEWPORT.height}`, bundle, folders, timing, download, perFile, scene, atTitle, rooms, textures };
 if (OUT) writeFileSync(OUT, JSON.stringify(result, null, 2));
 
 console.log('\nBundle (dist/assets)');
@@ -319,7 +321,7 @@ console.log('\nPer room (one frame, incl. post-processing passes; then frame rat
 for (const [r, { memory: _m, videos: _v, ...v }] of Object.entries(rooms)) console.log(`  ${r}`, v);
 const MB = (n) => +(n / 1048576).toFixed(1);
 console.log('\nThe site took:', sitePath);
-console.log("\nMemory and videos (MB). JS heap: the page's JavaScript objects only. Renderer and GPU: working set of those browser processes, as the operating system counts it, here with software drawing; a phone's GPU and video-decoder memory is in none of these.");
+console.log("\nMemory and videos (MB). JS heap: the page's JavaScript objects only. Renderer and GPU: working set of those browser processes, as the operating system counts it (with the GPU path some of the textures sit in the driver, not in these); a phone's GPU and video-decoder memory is in none of these.");
 for (const [r, v] of [['title', atTitle], ...Object.entries(rooms)]) {
   const p = v.memory.processes;
   console.log(`  ${r.padEnd(6)} JS heap ${MB(v.memory.jsHeapUsed)}  renderer ${p.renderer ? MB(p.renderer.workingSet) : '-'}  GPU ${p.GPU ? MB(p.GPU.workingSet) : '-'}  | playing ${v.videos.playing} (${MB(v.videos.playingFileBytes)} MB of files, ${MB(v.videos.playingFrameBytes)} MB a frame), loaded ${v.videos.loaded} (${MB(v.videos.loadedFileBytes)} MB of files, ${MB(v.videos.loadedFrameBytes)} MB a frame)`);
