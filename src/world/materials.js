@@ -344,6 +344,9 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // (lit only by bounce: the pendants shine down)
     planks: surface(new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }), [0, 1 / 8]),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
+    // the street door at the top of the stairs, seen from inside: dark blue-black paint
+    // (S34 room_1_stairs_important.webp; black in DSC_0014 and DSC_0015)
+    streetDoor: new THREE.MeshStandardMaterial({ color: 0x1b2030, roughness: 0.6, metalness: 0.2 }),
     beam: new THREE.MeshStandardMaterial({ color: 0x797672, emissive: 0x1a1918, roughness: 0.8 }), // painted like the vaults (DSC_0110, DSC_0113)
     // furniture & fixtures
     bench: new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.7, metalness: 0.2 }),
@@ -360,6 +363,10 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // brightness in DSC_0016 (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
     // about 0.45 (15 November 2026).
     stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // worn; renders at about 0.45 of the whitewash
+    // the risers, the front faces of the steps: the same worn concrete, darker. In DSC_0014 to
+    // DSC_0016 they are 0.15 to 0.25 of the whitewash, the lit lower tread tops 0.33 to 0.47
+    // (Decision 1a, 17 November 2026; PROGRESS.md)
+    stairRiser: new THREE.MeshStandardMaterial({ color: 0xb0aca5, map: worn, roughness: 0.9 }),
     stairStain: new THREE.MeshStandardMaterial({ map: stainMap, transparent: true, depthWrite: false, roughness: 1, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }),
     stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
@@ -370,8 +377,16 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // frosted, grey-blue basement glass (the window by the stairs, close up)
     windowGlass: new THREE.MeshStandardMaterial({ color: 0x9aa1b3, emissive: 0x4a5064, roughness: 0.65 }),
     reededGlass: new THREE.MeshStandardMaterial({ color: 0xb4bac8, emissive: 0x5a6074, roughness: 0.5 }),
-    curtain: new THREE.MeshStandardMaterial({ color: 0xcdc7bb, roughness: 1, side: THREE.DoubleSide }),
+    // cream cloth, a little darker and warmer than the white plaster beside it (DSC_0127, 0128)
+    curtain: new THREE.MeshStandardMaterial({ color: 0xe2dac4, roughness: 1, side: THREE.DoubleSide }),
+    // the unlit space behind the curtain, where the eye gets past the cloth
+    curtainShade: new THREE.MeshStandardMaterial({ color: 0x0c0c0d, roughness: 1 }),
     paper: new THREE.MeshStandardMaterial({ color: 0xf6f5f1, roughness: 0.9 }),
+    // the toilet corridor's end wall, basin and mirror, in the dark (DSC_0047): dim, so the
+    // Room 2 lights (no shadows here) do not light them up
+    toiletTile: new THREE.MeshStandardMaterial({ color: 0x5a5042, roughness: 0.45 }),
+    toiletWhite: new THREE.MeshStandardMaterial({ color: 0x77756f, roughness: 0.35 }),
+    toiletMirror: new THREE.MeshStandardMaterial({ color: 0x24262a, roughness: 0.12, metalness: 0.9 }),
   };
 }
 

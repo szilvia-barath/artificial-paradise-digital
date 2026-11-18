@@ -1,0 +1,2429 @@
+{
+ "_readme": "Written by scripts/make_references.mjs from references/*.csv. Do not edit by hand: change the table and run the script. Ids are the table's own (R = reference, X = concept, T = theme). Empty cells stay empty strings. network: positions are shares of the picture (0 to 1), computed with d3-force at build time; a node's position carries no meaning.",
+ "texts": {
+  "openingSpeech": {
+   "title": "",
+   "kind": "",
+   "author": "Barnabás Zemlényi-Kovács",
+   "source": "S12"
+  },
+  "descriptions.human-as-error": {
+   "title": "Human as Error",
+   "kind": "",
+   "author": "Kristóf Szabó",
+   "source": "S13"
+  },
+  "descriptions.artificial-paradise-videos": {
+   "title": "Artificial Paradise",
+   "kind": "videos",
+   "author": "Kristóf Szabó",
+   "source": "S13"
+  },
+  "descriptions.artificial-paradise-prints": {
+   "title": "Artificial Paradise",
+   "kind": "prints",
+   "author": "",
+   "source": ""
+  },
+  "descriptions.paradise-factory": {
+   "title": "Paradise Factory",
+   "kind": "",
+   "author": "",
+   "source": ""
+  },
+  "descriptions.let-it-flow": {
+   "title": "Let it Flow",
+   "kind": "",
+   "author": "Kristóf Szabó",
+   "source": "S13"
+  },
+  "descriptions.natural-life": {
+   "title": "Natural Life",
+   "kind": "",
+   "author": "Kristóf Szabó",
+   "source": "S13"
+  },
+  "credits.supporters": {
+   "title": "",
+   "kind": "",
+   "author": "",
+   "source": "S11"
+  }
+ },
+ "supporters": {
+  "row": 4,
+  "sep": " · ",
+  "ids": [
+   "R19",
+   "R20",
+   "R21"
+  ]
+ },
+ "items": [
+  {
+   "id": "R01",
+   "kind": "reference",
+   "label": {
+    "en": "John Tyndall",
+    "hu": "John Tyndall"
+   },
+   "type": "person",
+   "subtype": "",
+   "date": "1859 (experiments begin)",
+   "year": 1859,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "John Tyndall",
+    "hu": "John Tyndallnak"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/John_Tyndall",
+    "hu": "https://hu.wikipedia.org/wiki/John_Tyndall",
+    "primary": ""
+   },
+   "wikidata": "Q360808",
+   "citation": "",
+   "themes": [
+    "T1"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R02",
+   "kind": "reference",
+   "label": {
+    "en": "Tyndall: The Bakerian Lecture (1861)",
+    "hu": "Tyndall: The Bakerian Lecture (1861)"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "1861",
+   "year": 1861,
+   "mentionedIn": "Opening speech (S12), footnote 1",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "",
+    "hu": ""
+   },
+   "inline": false,
+   "url": {
+    "en": "",
+    "hu": "",
+    "primary": "https://royalsocietypublishing.org/rstl/article/doi/10.1098/rstl.1861.0001/118656/I-The-Bakerian-Lecture-On-the-absorption-and"
+   },
+   "wikidata": "",
+   "citation": "John Tyndall: The Bakerian Lecture: On the Absorption and Radiation of Heat by Gases and Vapours, and on the Physical Connexion of Radiation, Absorption, and Conduction. Philosophical Transactions of the Royal Society of London, Vol. 151 (1861), 1–36.",
+   "themes": [
+    "T1"
+   ],
+   "note": "The original speech (S12) cites it in footnote 1, after '...ezáltal pedig melegítik a légkört.' (EN: '...and so warm the atmosphere.'). The walk's speech has no footnotes; the reconstructor wants them restored (13 Nov 2026). The link goes on the footnote, to url_primary."
+  },
+  {
+   "id": "R03",
+   "kind": "reference",
+   "label": {
+    "en": "Charles Baudelaire",
+    "hu": "Charles Baudelaire"
+   },
+   "type": "person",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "Charles Baudelaire",
+    "hu": "Charles Baudelaire"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Charles_Baudelaire",
+    "hu": "https://hu.wikipedia.org/wiki/Charles_Baudelaire",
+    "primary": ""
+   },
+   "wikidata": "Q501",
+   "citation": "",
+   "themes": [
+    "T2",
+    "T3"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R04",
+   "kind": "reference",
+   "label": {
+    "en": "Artificial Paradises (Les Paradis artificiels)",
+    "hu": "Mesterséges mennyországok"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "1860",
+   "year": 1860,
+   "mentionedIn": "Opening speech (S12), footnote 2",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "Artificial Paradises",
+    "hu": "Mesterséges mennyországok"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Les_Paradis_artificiels",
+    "hu": "",
+    "primary": "https://www.jstor.org/stable/41210172"
+   },
+   "wikidata": "Q2249082",
+   "citation": "Charles Baudelaire: A mesterséges mennyországok. Ford. Hárs Ernő, Takács M. József. Budapest, Cartaphilus, 2010 [1860].",
+   "themes": [
+    "T2"
+   ],
+   "note": "No Hungarian Wikipedia article. The JSTOR record was given as the full work; I could not check what it holds. Footnote 2 of the original speech, after 'Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól.', is restored with this citation and links to url_primary; the inline anchor links to Wikipedia."
+  },
+  {
+   "id": "R05",
+   "kind": "reference",
+   "label": {
+    "en": "The Painter of Modern Life",
+    "hu": "A modern élet festője"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "1863",
+   "year": 1863,
+   "mentionedIn": "Opening speech (S12), footnote 3",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "The Painter of Modern Life",
+    "hu": "A modern élet festője"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/The_Painter_of_Modern_Life",
+    "hu": "",
+    "primary": "https://archive.org/details/painterofmodernl0000char"
+   },
+   "wikidata": "Q3225375",
+   "citation": "Charles Baudelaire: A modern élet festője. In: Művészeti kuriózumok. Ford. Csorba Géza. Budapest, Corvina, 1988, 84–85.",
+   "themes": [
+    "T3"
+   ],
+   "note": "No Hungarian Wikipedia article. The archive.org copy is a borrowable book scan. Footnote 3 of the original speech, after the Baudelaire quotation ending 'az átmenetiből kiszűrje a maradandót', is restored with this citation and links to url_primary; the inline anchor links to Wikipedia."
+  },
+  {
+   "id": "R06",
+   "kind": "reference",
+   "label": {
+    "en": "Nils Ekholm",
+    "hu": "Nils Ekholm"
+   },
+   "type": "person",
+   "subtype": "",
+   "date": "1901 (greenhouse metaphor)",
+   "year": 1901,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "Nils Ekholm",
+    "hu": "Nils Ekholm"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Nils_Gustaf_Ekholm",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q1234697",
+   "citation": "",
+   "themes": [
+    "T1"
+   ],
+   "note": "No Hungarian Wikipedia article."
+  },
+  {
+   "id": "R07",
+   "kind": "reference",
+   "label": {
+    "en": "Charles Darwin",
+    "hu": "Charles Darwin"
+   },
+   "type": "person",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "Charles Darwin",
+    "hu": "Charles Darwintól"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Charles_Darwin",
+    "hu": "https://hu.wikipedia.org/wiki/Charles_Darwin",
+    "primary": ""
+   },
+   "wikidata": "Q1035",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R08",
+   "kind": "reference",
+   "label": {
+    "en": "On the Origin of Species",
+    "hu": "A fajok eredete"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "1859",
+   "year": 1859,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "On the Origin of Species",
+    "hu": "A fajok eredete"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/On_the_Origin_of_Species",
+    "hu": "https://hu.wikipedia.org/wiki/A_fajok_eredete",
+    "primary": "https://darwin-online.org.uk/content/frameset?itemID=F373&viewtype=text&pageseq=1"
+   },
+   "wikidata": "Q20124",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "The Hungarian anchor occurs twice in the speech ('A fajok eredete', 'A fajok eredetét'); link the first."
+  },
+  {
+   "id": "R09",
+   "kind": "reference",
+   "label": {
+    "en": "IUCN (International Union for Conservation of Nature)",
+    "hu": "Természetvédelmi Világszövetség (IUCN)"
+   },
+   "type": "organisation",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i"
+   ],
+   "anchor": {
+    "en": "IUCN (International Union for Conservation of Nature)",
+    "hu": "IUCN (Nemzetközi Természetvédelmi Unió)"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/International_Union_for_Conservation_of_Nature",
+    "hu": "https://hu.wikipedia.org/wiki/Természetvédelmi_Világszövetség",
+    "primary": "https://iucn.org/"
+   },
+   "wikidata": "Q48268",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "The artist's text calls it 'Nemzetközi Természetvédelmi Unió'; Hungarian Wikipedia uses 'Természetvédelmi Világszövetség'."
+  },
+  {
+   "id": "R10",
+   "kind": "reference",
+   "label": {
+    "en": "Szentkirályszabadja",
+    "hu": "Szentkirályszabadja"
+   },
+   "type": "place",
+   "subtype": "municipality of Hungary",
+   "date": "after the change of regime (1989–90)",
+   "year": 1989,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i"
+   ],
+   "anchor": {
+    "en": "Szentkirályszabadja",
+    "hu": "Szentkirályszabadja"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Szentkirályszabadja",
+    "hu": "https://hu.wikipedia.org/wiki/Szentkirályszabadja",
+    "primary": ""
+   },
+   "wikidata": "Q1089978",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R11",
+   "kind": "reference",
+   "label": {
+    "en": "The former Soviet barracks at Szentkirályszabadja (Index, 2019)",
+    "hu": "A szentkirályszabadjai egykori szovjet laktanya (Index, 2019)"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "2019-07-22",
+   "year": 2019,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i"
+   ],
+   "anchor": {
+    "en": "a Russian military base and barracks",
+    "hu": "orosz katonai bázis, laktanya"
+   },
+   "inline": true,
+   "url": {
+    "en": "",
+    "hu": "https://index.hu/techtud/tortenelem/2019/07/22/szentkiralyszabadja_veszprem_megye_elhagyott_szovjet_laktanya_szellemvaros/",
+    "primary": ""
+   },
+   "wikidata": "",
+   "citation": "Index.hu, 22 July 2019.",
+   "themes": [
+    "T4"
+   ],
+   "note": "In Hungarian only. The artist's text says 'Russian', the article 'Soviet'."
+  },
+  {
+   "id": "R12",
+   "kind": "reference",
+   "label": {
+    "en": "Caspar David Friedrich",
+    "hu": "Caspar David Friedrich"
+   },
+   "type": "person",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i"
+   ],
+   "anchor": {
+    "en": "Caspar David Friedrich",
+    "hu": "Caspar David Friedrich"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Caspar_David_Friedrich",
+    "hu": "https://hu.wikipedia.org/wiki/Caspar_David_Friedrich",
+    "primary": ""
+   },
+   "wikidata": "Q104884",
+   "citation": "",
+   "themes": [
+    "T3"
+   ],
+   "note": "The artist's file spells 'Fridrich'; the walk corrected the spelling."
+  },
+  {
+   "id": "R13",
+   "kind": "reference",
+   "label": {
+    "en": "Cornwall",
+    "hu": "Cornwall"
+   },
+   "type": "place",
+   "subtype": "historic county of England",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise videos (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-videos"
+   ],
+   "works": [
+    "w07-artificial-paradise-eden-project"
+   ],
+   "anchor": {
+    "en": "Cornwall",
+    "hu": "cornwalli"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Cornwall",
+    "hu": "https://hu.wikipedia.org/wiki/Cornwall",
+    "primary": ""
+   },
+   "wikidata": "Q23148",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R14",
+   "kind": "reference",
+   "label": {
+    "en": "Eden Project",
+    "hu": "Eden Project"
+   },
+   "type": "place",
+   "subtype": "visitor attraction",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise videos (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-videos"
+   ],
+   "works": [
+    "w07-artificial-paradise-eden-project"
+   ],
+   "anchor": {
+    "en": "Eden Project",
+    "hu": "Eden Project"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Eden_Project",
+    "hu": "",
+    "primary": "https://www.edenproject.com/"
+   },
+   "wikidata": "Q596642",
+   "citation": "",
+   "themes": [
+    "T5",
+    "T1"
+   ],
+   "note": "No Hungarian Wikipedia article."
+  },
+  {
+   "id": "R15",
+   "kind": "reference",
+   "label": {
+    "en": "Singapore",
+    "hu": "Szingapúr"
+   },
+   "type": "place",
+   "subtype": "country",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise videos (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-videos"
+   ],
+   "works": [
+    "w06-artificial-paradise-singapore"
+   ],
+   "anchor": {
+    "en": "Singapore",
+    "hu": "Szingapúr"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Singapore",
+    "hu": "https://hu.wikipedia.org/wiki/Szingapúr",
+    "primary": ""
+   },
+   "wikidata": "Q334",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": ""
+  },
+  {
+   "id": "R16",
+   "kind": "reference",
+   "label": {
+    "en": "Gardens by the Bay",
+    "hu": "Gardens by the Bay"
+   },
+   "type": "place",
+   "subtype": "visitor attraction",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise videos (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-videos"
+   ],
+   "works": [
+    "w06-artificial-paradise-singapore"
+   ],
+   "anchor": {
+    "en": "futuristic parks and vertical gardens",
+    "hu": "futurisztikus parkjaira és vertikális kertjeire"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Gardens_by_the_Bay",
+    "hu": "https://hu.wikipedia.org/wiki/Gardens_by_the_Bay",
+    "primary": "https://www.gardensbythebay.com.sg/"
+   },
+   "wikidata": "Q630135",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": "The text does not name the gardens. The artist sent this link, so linking them is his reading. The exhibition's key visual shows its Supertrees."
+  },
+  {
+   "id": "R17",
+   "kind": "reference",
+   "label": {
+    "en": "Tisza",
+    "hu": "Tisza"
+   },
+   "type": "place",
+   "subtype": "river",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Let it Flow; Natural Life (S13)",
+   "texts": [
+    "descriptions.let-it-flow",
+    "descriptions.natural-life"
+   ],
+   "works": [
+    "w16-let-it-flow",
+    "w17-natural-life"
+   ],
+   "anchor": {
+    "en": "River Tisza",
+    "hu": "Tisza folyóból"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Tisza",
+    "hu": "https://hu.wikipedia.org/wiki/Tisza",
+    "primary": ""
+   },
+   "wikidata": "Q134350",
+   "citation": "",
+   "themes": [
+    "T6"
+   ],
+   "note": "The English texts say 'River Tisza' (Let it Flow) and 'Tisza River' (Natural Life)."
+  },
+  {
+   "id": "R18",
+   "kind": "reference",
+   "label": {
+    "en": "PET Kupa",
+    "hu": "PET Kupa"
+   },
+   "type": "organisation",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Let it Flow (S13)",
+   "texts": [
+    "descriptions.let-it-flow"
+   ],
+   "works": [
+    "w16-let-it-flow"
+   ],
+   "anchor": {
+    "en": "PET Kupa",
+    "hu": "PET Kupa"
+   },
+   "inline": true,
+   "url": {
+    "en": "",
+    "hu": "https://hu.wikipedia.org/wiki/PET_Kupa",
+    "primary": "https://www.petkupa.hu/hu_HU/"
+   },
+   "wikidata": "Q16522365",
+   "citation": "",
+   "themes": [
+    "T6"
+   ],
+   "note": "No English Wikipedia article. Whether petkupa.hu has an English version is not checked."
+  },
+  {
+   "id": "R19",
+   "kind": "reference",
+   "label": {
+    "en": "National Cultural Fund of Hungary",
+    "hu": "Nemzeti Kulturális Alap"
+   },
+   "type": "organisation",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Supporters (S11, credits)",
+   "texts": [
+    "credits.supporters"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "",
+    "hu": ""
+   },
+   "inline": false,
+   "url": {
+    "en": "",
+    "hu": "https://hu.wikipedia.org/wiki/Nemzeti_Kulturális_Alap",
+    "primary": "https://nka.hu/"
+   },
+   "wikidata": "Q16522107",
+   "citation": "",
+   "themes": [],
+   "note": "Not in the texts: shown in the credits and the About panel."
+  },
+  {
+   "id": "R20",
+   "kind": "reference",
+   "label": {
+    "en": "Hungarian Academy of Arts",
+    "hu": "Magyar Művészeti Akadémia"
+   },
+   "type": "organisation",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Supporters (S11, credits)",
+   "texts": [
+    "credits.supporters"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "",
+    "hu": ""
+   },
+   "inline": false,
+   "url": {
+    "en": "",
+    "hu": "https://hu.wikipedia.org/wiki/Magyar_Művészeti_Akadémia",
+    "primary": "https://www.mma.hu/hu/muveszeti-hirek"
+   },
+   "fixed": {
+    "en": "https://www.mma.hu/en/web/en",
+    "hu": "https://www.mma.hu/hu/muveszeti-hirek"
+   },
+   "wikidata": "Q1162109",
+   "citation": "",
+   "themes": [],
+   "note": "English pages: https://www.mma.hu/en/web/en (use on the English page). www.mma.hu, the address on Wikidata, redirects to the Hungarian news page but answers with HTTP 404, so the link points to the page itself. No English Wikipedia article. Checked 13 Nov 2026."
+  },
+  {
+   "id": "R21",
+   "kind": "reference",
+   "label": {
+    "en": "Municipality of Erzsébetváros (Budapest District VII)",
+    "hu": "Budapest VII. kerület Erzsébetváros Önkormányzata"
+   },
+   "type": "organisation",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Supporters (S11, credits)",
+   "texts": [
+    "credits.supporters"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "",
+    "hu": ""
+   },
+   "inline": false,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Erzsébetváros",
+    "hu": "https://hu.wikipedia.org/wiki/Budapest_VII._kerülete",
+    "primary": "https://www.erzsebetvaros.hu/"
+   },
+   "wikidata": "Q284541",
+   "citation": "",
+   "themes": [],
+   "note": "The Wikipedia articles and the Wikidata item are about the district, not the municipality."
+  },
+  {
+   "id": "X01",
+   "kind": "concept",
+   "label": {
+    "en": "Greenhouse effect",
+    "hu": "Üvegházhatás"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "greenhouse effect",
+    "hu": "üvegházhatásnak"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Greenhouse_effect",
+    "hu": "https://hu.wikipedia.org/wiki/Üvegházhatás",
+    "primary": ""
+   },
+   "wikidata": "Q41560",
+   "citation": "",
+   "themes": [
+    "T1"
+   ],
+   "note": "Anchors checked in the walk's en.json and hu.json (opening speech, first occurrence), 13 Nov 2026."
+  },
+  {
+   "id": "X02",
+   "kind": "concept",
+   "label": {
+    "en": "Greenhouse",
+    "hu": "Üvegház"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "greenhouse",
+    "hu": "üvegház"
+   },
+   "inline": true,
+   "passage": {
+    "en": "The greenhouse, the archetype of the artificial, humanly controlled environment",
+    "hu": "Az üvegház mint a mesterséges, emberileg kontrollált környezet"
+   },
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Greenhouse",
+    "hu": "https://hu.wikipedia.org/wiki/Üvegház",
+    "primary": ""
+   },
+   "wikidata": "Q165044",
+   "citation": "",
+   "themes": [
+    "T1",
+    "T5"
+   ],
+   "note": "The speech calls the greenhouse 'the archetype of the artificial, humanly controlled environment' (walk's English). Link the word in that sentence: 'The greenhouse, the archetype of the artificial, humanly controlled environment' / 'Az üvegház mint a mesterséges, emberileg kontrollált környezet'. The earlier occurrences sit inside 'greenhouse effect' (X01), 'greenhouses' and 'greenhouse metaphor'. Hungarian label set to 'Üvegház' by the reconstructor, 13 Nov 2026; the Hungarian link uses 'Üvegház', which redirects to the article 'Melegház' (checked 13 Nov 2026)."
+  },
+  {
+   "id": "X03",
+   "kind": "concept",
+   "label": {
+    "en": "Climate change",
+    "hu": "Éghajlatváltozás"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "climate crisis",
+    "hu": "klímaválságához"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Climate_change",
+    "hu": "https://hu.wikipedia.org/wiki/Éghajlatváltozás",
+    "primary": ""
+   },
+   "wikidata": "Q125928",
+   "citation": "",
+   "themes": [
+    "T1"
+   ],
+   "note": "Anchors checked 13 Nov 2026 (opening speech, first occurrence)."
+  },
+  {
+   "id": "X04",
+   "kind": "concept",
+   "label": {
+    "en": "Second Industrial Revolution",
+    "hu": "Második ipari forradalom"
+   },
+   "type": "event",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "second industrial revolution",
+    "hu": "második ipari forradalom"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Second_Industrial_Revolution",
+    "hu": "https://hu.wikipedia.org/wiki/Második_ipari_forradalom",
+    "primary": ""
+   },
+   "wikidata": "Q217200",
+   "citation": "",
+   "themes": [
+    "T1"
+   ],
+   "note": "Anchors checked 13 Nov 2026 (opening speech)."
+  },
+  {
+   "id": "X05",
+   "kind": "concept",
+   "label": {
+    "en": "IUCN Red List",
+    "hu": "Vörös lista"
+   },
+   "type": "text",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "Red List",
+    "hu": "Vörös Listája"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/IUCN_Red_List",
+    "hu": "https://hu.wikipedia.org/wiki/Vörös_lista",
+    "primary": ""
+   },
+   "wikidata": "Q32059",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": ""
+  },
+  {
+   "id": "X06",
+   "kind": "concept",
+   "label": {
+    "en": "Extinction event",
+    "hu": "Kihalás"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "mass extinctions",
+    "hu": "tömeges kihalás"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Extinction_event",
+    "hu": "https://hu.wikipedia.org/wiki/Kihalási_esemény",
+    "primary": ""
+   },
+   "wikidata": "Q55814",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "Anchors checked 13 Nov 2026 (Human as Error)."
+  },
+  {
+   "id": "X07",
+   "kind": "concept",
+   "label": {
+    "en": "Natural selection",
+    "hu": "Természetes szelekció"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "natural selection",
+    "hu": "természetes szelekciót"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Natural_selection",
+    "hu": "https://hu.wikipedia.org/wiki/Természetes_szelekció",
+    "primary": ""
+   },
+   "wikidata": "Q43478",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": ""
+  },
+  {
+   "id": "X08",
+   "kind": "concept",
+   "label": {
+    "en": "Selective breeding (artificial selection)",
+    "hu": "Mesterséges szelekció"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "artificial selection",
+    "hu": "mesterséges szelekció"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Selective_breeding",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q995745",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026). The Hungarian page links to the English article, marked EN."
+  },
+  {
+   "id": "X09",
+   "kind": "concept",
+   "label": {
+    "en": "Posthumanism",
+    "hu": "Poszthumanizmus"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "posthuman",
+    "hu": "poszthumán"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Posthumanism",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q2119946",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026). The Hungarian page links to the English article, marked EN. Anchors checked 13 Nov 2026 (opening speech)."
+  },
+  {
+   "id": "X10",
+   "kind": "concept",
+   "label": {
+    "en": "Anthropocentrism",
+    "hu": "Antropocentrizmus"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "human-centredness",
+    "hu": "emberközpontúságunkat"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Anthropocentrism",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q191624",
+   "citation": "",
+   "themes": [
+    "T4"
+   ],
+   "note": "No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026). The Hungarian page links to the English article, marked EN. Anchors checked 13 Nov 2026 (opening speech)."
+  },
+  {
+   "id": "X11",
+   "kind": "concept",
+   "label": {
+    "en": "Landscape painting",
+    "hu": "Tájkép"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12); Human as Error (S13)",
+   "texts": [
+    "openingSpeech"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "the traditional genre of the landscape",
+    "hu": "tájkép tradicionális zsánerével"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Landscape_painting",
+    "hu": "https://hu.wikipedia.org/wiki/Tájkép",
+    "primary": ""
+   },
+   "wikidata": "Q191163",
+   "citation": "",
+   "themes": [
+    "T3"
+   ],
+   "note": "Anchors checked 13 Nov 2026 (opening speech). Human as Error also has 'rethink landscape painting' / 'tájképfestészet újragondolása'; link only the speech."
+  },
+  {
+   "id": "X12",
+   "kind": "concept",
+   "label": {
+    "en": "Sublime",
+    "hu": "Fenséges"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Human as Error (S13)",
+   "texts": [
+    "descriptions.human-as-error"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "sublimity",
+    "hu": "fenségességét"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Sublime_(philosophy)",
+    "hu": "https://hu.wikipedia.org/wiki/Fenséges",
+    "primary": ""
+   },
+   "wikidata": "Q999803",
+   "citation": "",
+   "themes": [
+    "T3"
+   ],
+   "note": "Anchors checked 13 Nov 2026 (Human as Error, first occurrence)."
+  },
+  {
+   "id": "X13",
+   "kind": "concept",
+   "label": {
+    "en": "Glitch art",
+    "hu": "Glitch-művészet"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Opening speech (S12); Human as Error (S13)",
+   "texts": [
+    "openingSpeech",
+    "descriptions.human-as-error"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "glitches",
+    "hu": "glitcheiben"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Glitch_art",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q5569949",
+   "citation": "",
+   "themes": [
+    "T3",
+    "T4"
+   ],
+   "note": "No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026). The Hungarian page links to the English article, marked EN. Anchors are in the opening speech in both languages, checked 13 Nov 2026."
+  },
+  {
+   "id": "X14",
+   "kind": "concept",
+   "label": {
+    "en": "Biome",
+    "hu": "Bióma"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise videos (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-videos"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "artificial biomes",
+    "hu": "biomjainak"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Biome",
+    "hu": "https://hu.wikipedia.org/wiki/Biom",
+    "primary": ""
+   },
+   "wikidata": "Q101998",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": "Label 'Bióma' set by the reconstructor, 13 Nov 2026. The Hungarian Wikipedia article is titled 'Biom'; there is no page or redirect under 'Bióma' (checked 13 Nov 2026)."
+  },
+  {
+   "id": "X15",
+   "kind": "concept",
+   "label": {
+    "en": "Green wall (vertical garden)",
+    "hu": "Függőkert"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Artificial Paradise prints (S13)",
+   "texts": [
+    "descriptions.artificial-paradise-prints"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "vertical gardens",
+    "hu": "vertikális kertek"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Green_wall",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q2562744",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": "Label 'Függőkert' set by the reconstructor, 13 Nov 2026. No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026; no page under 'Függőkert' either). The first 'vertical gardens' (Artificial Paradise videos) belongs to R16, the link the artist sent, so X15 goes on the prints text (descriptions.artificial-paradise-prints). Anchors checked 13 Nov 2026."
+  },
+  {
+   "id": "X16",
+   "kind": "concept",
+   "label": {
+    "en": "Hydroponics",
+    "hu": "Hidroponika"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Paradise Factory (S13)",
+   "texts": [
+    "descriptions.paradise-factory"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "hydroponic",
+    "hu": "hidropóniás"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Hydroponics",
+    "hu": "https://hu.wikipedia.org/wiki/Hidroponika",
+    "primary": ""
+   },
+   "wikidata": "Q191667",
+   "citation": "",
+   "themes": [
+    "T5"
+   ],
+   "note": "From the artist's Paradise Factory text, which your list does not cover."
+  },
+  {
+   "id": "X17",
+   "kind": "concept",
+   "label": {
+    "en": "Plastic pollution",
+    "hu": "Műanyagszennyezés"
+   },
+   "type": "concept",
+   "subtype": "",
+   "date": "",
+   "year": null,
+   "mentionedIn": "Let it Flow; Natural Life (S13)",
+   "texts": [
+    "descriptions.let-it-flow",
+    "descriptions.natural-life"
+   ],
+   "works": [],
+   "anchor": {
+    "en": "pollution",
+    "hu": "szennyezésből"
+   },
+   "inline": true,
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Plastic_pollution",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q7202090",
+   "citation": "",
+   "themes": [
+    "T6"
+   ],
+   "note": "No Hungarian Wikipedia article (Wikidata sitelinks checked 13 Nov 2026). The Hungarian page links to the English article, marked EN."
+  }
+ ],
+ "themes": [
+  {
+   "id": "T1",
+   "label": {
+    "en": "Greenhouse effect",
+    "hu": "Üvegházhatás"
+   },
+   "refs": [
+    "R01",
+    "R02",
+    "R06",
+    "R14",
+    "X01",
+    "X02",
+    "X03",
+    "X04"
+   ],
+   "works": [
+    "w06-artificial-paradise-singapore",
+    "w07-artificial-paradise-eden-project",
+    "w03-paradise-factory"
+   ],
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Greenhouse_effect",
+    "hu": "https://hu.wikipedia.org/wiki/Üvegházhatás",
+    "primary": ""
+   },
+   "wikidata": "Q41560",
+   "status": "confirmed (reconstructor, 13 Nov 2026)",
+   "confirmed": true,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  },
+  {
+   "id": "T2",
+   "label": {
+    "en": "Artificial paradise: utopia and its cost",
+    "hu": "Mesterséges mennyország: az utópia ára"
+   },
+   "refs": [
+    "R03",
+    "R04"
+   ],
+   "works": "all",
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Utopia",
+    "hu": "https://hu.wikipedia.org/wiki/Utópia",
+    "primary": ""
+   },
+   "wikidata": "Q131156",
+   "status": "proposed; reconstructor to read the texts and confirm",
+   "confirmed": false,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  },
+  {
+   "id": "T3",
+   "label": {
+    "en": "Landscape, modernity and the error",
+    "hu": "Tájkép, modernitás, hiba"
+   },
+   "refs": [
+    "R05",
+    "R12",
+    "R03",
+    "X11",
+    "X12",
+    "X13"
+   ],
+   "works": [
+    "w01-dresden",
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i",
+    "w08-wiena-wrong-landscape-i",
+    "w09-warsaw-g24-i",
+    "w10-warsaw-ii",
+    "w14-warsaw-g24-ii",
+    "w15-wiena-wrong-landscape-ii"
+   ],
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Modernity",
+    "hu": "",
+    "primary": ""
+   },
+   "wikidata": "Q11084414",
+   "status": "proposed; reconstructor to read the texts and confirm",
+   "confirmed": false,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  },
+  {
+   "id": "T4",
+   "label": {
+    "en": "Human as error: evolution and extinction",
+    "hu": "Az ember mint hiba: evolúció és kihalás"
+   },
+   "refs": [
+    "R07",
+    "R08",
+    "R09",
+    "R10",
+    "R11",
+    "X05",
+    "X06",
+    "X07",
+    "X08",
+    "X09",
+    "X10"
+   ],
+   "works": [
+    "w02-human-as-error-vi",
+    "w04-human-as-error-iii",
+    "w05-human-as-error-i"
+   ],
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Anthropocene",
+    "hu": "https://hu.wikipedia.org/wiki/Antropocén",
+    "primary": ""
+   },
+   "wikidata": "Q26841",
+   "status": "proposed; reconstructor to read the texts and confirm",
+   "confirmed": false,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  },
+  {
+   "id": "T5",
+   "label": {
+    "en": "Designed nature",
+    "hu": "Tervezett természet"
+   },
+   "refs": [
+    "R13",
+    "R14",
+    "R15",
+    "R16",
+    "X14",
+    "X15",
+    "X16"
+   ],
+   "works": [
+    "w03-paradise-factory",
+    "w06-artificial-paradise-singapore",
+    "w07-artificial-paradise-eden-project",
+    "w11-artificial-paradise-i-print",
+    "w12-artificial-paradise-ii-print",
+    "w13-artificial-paradise-iii-print"
+   ],
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Landscape_architecture",
+    "hu": "https://hu.wikipedia.org/wiki/Tájépítészet",
+    "primary": ""
+   },
+   "wikidata": "Q47844",
+   "status": "proposed; reconstructor to read the texts and confirm",
+   "confirmed": false,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  },
+  {
+   "id": "T6",
+   "label": {
+    "en": "Flows of waste",
+    "hu": "A hulladék áramlása"
+   },
+   "refs": [
+    "R17",
+    "R18",
+    "X17"
+   ],
+   "works": [
+    "w16-let-it-flow",
+    "w17-natural-life"
+   ],
+   "url": {
+    "en": "https://en.wikipedia.org/wiki/Waste",
+    "hu": "https://hu.wikipedia.org/wiki/Hulladék",
+    "primary": ""
+   },
+   "wikidata": "Q45701",
+   "status": "proposed; reconstructor to read the texts and confirm",
+   "confirmed": false,
+   "intro": {
+    "en": "",
+    "hu": ""
+   }
+  }
+ ],
+ "footnotes": [
+  {
+   "n": 1,
+   "ref": "R02",
+   "after": {
+    "en": "and so warm the atmosphere.",
+    "hu": "és visszasugározzák, ezáltal pedig melegítik a légkört."
+   },
+   "citation": "John Tyndall: The Bakerian Lecture: On the Absorption and Radiation of Heat by Gases and Vapours, and on the Physical Connexion of Radiation, Absorption, and Conduction. Philosophical Transactions of the Royal Society of London, Vol. 151 (1861), 1–36.",
+   "lang": "en",
+   "url": "https://royalsocietypublishing.org/rstl/article/doi/10.1098/rstl.1861.0001/118656/I-The-Bakerian-Lecture-On-the-absorption-and"
+  },
+  {
+   "n": 2,
+   "ref": "R04",
+   "after": {
+    "en": "In other words, only one step separates the artificial paradise from a real hell.",
+    "hu": "Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól."
+   },
+   "citation": "Charles Baudelaire: A mesterséges mennyországok. Ford. Hárs Ernő, Takács M. József. Budapest, Cartaphilus, 2010 [1860].",
+   "lang": "hu",
+   "url": "https://www.jstor.org/stable/41210172"
+  },
+  {
+   "n": 3,
+   "ref": "R05",
+   "after": {
+    "en": "to distil the eternal from the transitory.”",
+    "hu": "az átmenetiből kiszűrje a maradandót”."
+   },
+   "citation": "Charles Baudelaire: A modern élet festője. In: Művészeti kuriózumok. Ford. Csorba Géza. Budapest, Corvina, 1988, 84–85.",
+   "lang": "hu",
+   "url": "https://archive.org/details/painterofmodernl0000char"
+  }
+ ],
+ "network": {
+  "aspect": 0.76,
+  "nodes": [
+   {
+    "id": "T1",
+    "kind": "theme",
+    "x": 0.4936,
+    "y": 0.2451,
+    "links": 11
+   },
+   {
+    "id": "T2",
+    "kind": "theme",
+    "x": 0.8629,
+    "y": 0.287,
+    "links": 2
+   },
+   {
+    "id": "T3",
+    "kind": "theme",
+    "x": 0.8006,
+    "y": 0.6013,
+    "links": 15
+   },
+   {
+    "id": "T4",
+    "kind": "theme",
+    "x": 0.653,
+    "y": 0.774,
+    "links": 15
+   },
+   {
+    "id": "T5",
+    "kind": "theme",
+    "x": 0.3443,
+    "y": 0.4202,
+    "links": 14
+   },
+   {
+    "id": "T6",
+    "kind": "theme",
+    "x": 0.1406,
+    "y": 0.2703,
+    "links": 5
+   },
+   {
+    "id": "R01",
+    "kind": "item",
+    "x": 0.6026,
+    "y": 0.2045,
+    "links": 1
+   },
+   {
+    "id": "R02",
+    "kind": "item",
+    "x": 0.506,
+    "y": 0.0842,
+    "links": 1
+   },
+   {
+    "id": "R03",
+    "kind": "item",
+    "x": 0.8525,
+    "y": 0.4468,
+    "links": 2
+   },
+   {
+    "id": "R04",
+    "kind": "item",
+    "x": 0.8173,
+    "y": 0.1539,
+    "links": 1
+   },
+   {
+    "id": "R05",
+    "kind": "item",
+    "x": 0.8068,
+    "y": 0.4452,
+    "links": 1
+   },
+   {
+    "id": "R06",
+    "kind": "item",
+    "x": 0.5854,
+    "y": 0.1434,
+    "links": 1
+   },
+   {
+    "id": "R07",
+    "kind": "item",
+    "x": 0.5098,
+    "y": 0.8304,
+    "links": 1
+   },
+   {
+    "id": "R08",
+    "kind": "item",
+    "x": 0.5521,
+    "y": 0.6626,
+    "links": 1
+   },
+   {
+    "id": "R09",
+    "kind": "item",
+    "x": 0.7104,
+    "y": 0.8871,
+    "links": 4
+   },
+   {
+    "id": "R10",
+    "kind": "item",
+    "x": 0.823,
+    "y": 0.776,
+    "links": 4
+   },
+   {
+    "id": "R11",
+    "kind": "item",
+    "x": 0.7472,
+    "y": 0.848,
+    "links": 4
+   },
+   {
+    "id": "R12",
+    "kind": "item",
+    "x": 0.7141,
+    "y": 0.6649,
+    "links": 4
+   },
+   {
+    "id": "R13",
+    "kind": "item",
+    "x": 0.3686,
+    "y": 0.5559,
+    "links": 2
+   },
+   {
+    "id": "R14",
+    "kind": "item",
+    "x": 0.4672,
+    "y": 0.38,
+    "links": 3
+   },
+   {
+    "id": "R15",
+    "kind": "item",
+    "x": 0.3052,
+    "y": 0.2919,
+    "links": 2
+   },
+   {
+    "id": "R16",
+    "kind": "item",
+    "x": 0.3379,
+    "y": 0.2458,
+    "links": 2
+   },
+   {
+    "id": "R17",
+    "kind": "item",
+    "x": 0.237,
+    "y": 0.2868,
+    "links": 3
+   },
+   {
+    "id": "R18",
+    "kind": "item",
+    "x": 0.09,
+    "y": 0.3959,
+    "links": 2
+   },
+   {
+    "id": "R19",
+    "kind": "item",
+    "x": 0.8329,
+    "y": 0.93,
+    "links": 0
+   },
+   {
+    "id": "R20",
+    "kind": "item",
+    "x": 0.1397,
+    "y": 0.6894,
+    "links": 0
+   },
+   {
+    "id": "R21",
+    "kind": "item",
+    "x": 0.7344,
+    "y": 0.07,
+    "links": 0
+   },
+   {
+    "id": "X01",
+    "kind": "item",
+    "x": 0.5988,
+    "y": 0.2702,
+    "links": 1
+   },
+   {
+    "id": "X02",
+    "kind": "item",
+    "x": 0.4274,
+    "y": 0.3476,
+    "links": 2
+   },
+   {
+    "id": "X03",
+    "kind": "item",
+    "x": 0.5502,
+    "y": 0.1013,
+    "links": 1
+   },
+   {
+    "id": "X04",
+    "kind": "item",
+    "x": 0.4597,
+    "y": 0.0921,
+    "links": 1
+   },
+   {
+    "id": "X05",
+    "kind": "item",
+    "x": 0.5066,
+    "y": 0.7646,
+    "links": 1
+   },
+   {
+    "id": "X06",
+    "kind": "item",
+    "x": 0.5824,
+    "y": 0.9086,
+    "links": 1
+   },
+   {
+    "id": "X07",
+    "kind": "item",
+    "x": 0.5477,
+    "y": 0.7934,
+    "links": 1
+   },
+   {
+    "id": "X08",
+    "kind": "item",
+    "x": 0.5916,
+    "y": 0.6296,
+    "links": 1
+   },
+   {
+    "id": "X09",
+    "kind": "item",
+    "x": 0.5498,
+    "y": 0.8624,
+    "links": 1
+   },
+   {
+    "id": "X10",
+    "kind": "item",
+    "x": 0.5444,
+    "y": 0.7276,
+    "links": 1
+   },
+   {
+    "id": "X11",
+    "kind": "item",
+    "x": 0.9088,
+    "y": 0.5539,
+    "links": 1
+   },
+   {
+    "id": "X12",
+    "kind": "item",
+    "x": 0.6744,
+    "y": 0.6322,
+    "links": 1
+   },
+   {
+    "id": "X13",
+    "kind": "item",
+    "x": 0.6872,
+    "y": 0.569,
+    "links": 2
+   },
+   {
+    "id": "X14",
+    "kind": "item",
+    "x": 0.3203,
+    "y": 0.5886,
+    "links": 1
+   },
+   {
+    "id": "X15",
+    "kind": "item",
+    "x": 0.2383,
+    "y": 0.454,
+    "links": 1
+   },
+   {
+    "id": "X16",
+    "kind": "item",
+    "x": 0.3864,
+    "y": 0.6167,
+    "links": 1
+   },
+   {
+    "id": "X17",
+    "kind": "item",
+    "x": 0.1276,
+    "y": 0.4334,
+    "links": 1
+   },
+   {
+    "id": "w01-dresden",
+    "kind": "work",
+    "x": 0.7613,
+    "y": 0.439,
+    "links": 1
+   },
+   {
+    "id": "w02-human-as-error-vi",
+    "kind": "work",
+    "x": 0.7419,
+    "y": 0.7173,
+    "links": 6
+   },
+   {
+    "id": "w03-paradise-factory",
+    "kind": "work",
+    "x": 0.3831,
+    "y": 0.2364,
+    "links": 2
+   },
+   {
+    "id": "w04-human-as-error-iii",
+    "kind": "work",
+    "x": 0.7849,
+    "y": 0.7396,
+    "links": 6
+   },
+   {
+    "id": "w05-human-as-error-i",
+    "kind": "work",
+    "x": 0.7881,
+    "y": 0.8186,
+    "links": 6
+   },
+   {
+    "id": "w06-artificial-paradise-singapore",
+    "kind": "work",
+    "x": 0.3955,
+    "y": 0.2999,
+    "links": 4
+   },
+   {
+    "id": "w07-artificial-paradise-eden-project",
+    "kind": "work",
+    "x": 0.4431,
+    "y": 0.436,
+    "links": 4
+   },
+   {
+    "id": "w08-wiena-wrong-landscape-i",
+    "kind": "work",
+    "x": 0.75,
+    "y": 0.7822,
+    "links": 1
+   },
+   {
+    "id": "w09-warsaw-g24-i",
+    "kind": "work",
+    "x": 0.7217,
+    "y": 0.472,
+    "links": 1
+   },
+   {
+    "id": "w10-warsaw-ii",
+    "kind": "work",
+    "x": 0.892,
+    "y": 0.6834,
+    "links": 1
+   },
+   {
+    "id": "w11-artificial-paradise-i-print",
+    "kind": "work",
+    "x": 0.2468,
+    "y": 0.5188,
+    "links": 1
+   },
+   {
+    "id": "w12-artificial-paradise-ii-print",
+    "kind": "work",
+    "x": 0.413,
+    "y": 0.5404,
+    "links": 1
+   },
+   {
+    "id": "w13-artificial-paradise-iii-print",
+    "kind": "work",
+    "x": 0.2768,
+    "y": 0.5686,
+    "links": 1
+   },
+   {
+    "id": "w14-warsaw-g24-ii",
+    "kind": "work",
+    "x": 0.8841,
+    "y": 0.4984,
+    "links": 1
+   },
+   {
+    "id": "w15-wiena-wrong-landscape-ii",
+    "kind": "work",
+    "x": 0.91,
+    "y": 0.6199,
+    "links": 1
+   },
+   {
+    "id": "w16-let-it-flow",
+    "kind": "work",
+    "x": 0.1766,
+    "y": 0.4005,
+    "links": 3
+   },
+   {
+    "id": "w17-natural-life",
+    "kind": "work",
+    "x": 0.2219,
+    "y": 0.1685,
+    "links": 2
+   }
+  ],
+  "edges": [
+   {
+    "a": "R01",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R02",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R03",
+    "b": "T2",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R03",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R04",
+    "b": "T2",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R05",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R06",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R07",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R08",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R09",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R09",
+    "b": "w02-human-as-error-vi",
+    "kind": "item-work"
+   },
+   {
+    "a": "R09",
+    "b": "w04-human-as-error-iii",
+    "kind": "item-work"
+   },
+   {
+    "a": "R09",
+    "b": "w05-human-as-error-i",
+    "kind": "item-work"
+   },
+   {
+    "a": "R10",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R10",
+    "b": "w02-human-as-error-vi",
+    "kind": "item-work"
+   },
+   {
+    "a": "R10",
+    "b": "w04-human-as-error-iii",
+    "kind": "item-work"
+   },
+   {
+    "a": "R10",
+    "b": "w05-human-as-error-i",
+    "kind": "item-work"
+   },
+   {
+    "a": "R11",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R11",
+    "b": "w02-human-as-error-vi",
+    "kind": "item-work"
+   },
+   {
+    "a": "R11",
+    "b": "w04-human-as-error-iii",
+    "kind": "item-work"
+   },
+   {
+    "a": "R11",
+    "b": "w05-human-as-error-i",
+    "kind": "item-work"
+   },
+   {
+    "a": "R12",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R12",
+    "b": "w02-human-as-error-vi",
+    "kind": "item-work"
+   },
+   {
+    "a": "R12",
+    "b": "w04-human-as-error-iii",
+    "kind": "item-work"
+   },
+   {
+    "a": "R12",
+    "b": "w05-human-as-error-i",
+    "kind": "item-work"
+   },
+   {
+    "a": "R13",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R13",
+    "b": "w07-artificial-paradise-eden-project",
+    "kind": "item-work"
+   },
+   {
+    "a": "R14",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R14",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R14",
+    "b": "w07-artificial-paradise-eden-project",
+    "kind": "item-work"
+   },
+   {
+    "a": "R15",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R15",
+    "b": "w06-artificial-paradise-singapore",
+    "kind": "item-work"
+   },
+   {
+    "a": "R16",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R16",
+    "b": "w06-artificial-paradise-singapore",
+    "kind": "item-work"
+   },
+   {
+    "a": "R17",
+    "b": "T6",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R17",
+    "b": "w16-let-it-flow",
+    "kind": "item-work"
+   },
+   {
+    "a": "R17",
+    "b": "w17-natural-life",
+    "kind": "item-work"
+   },
+   {
+    "a": "R18",
+    "b": "T6",
+    "kind": "item-theme"
+   },
+   {
+    "a": "R18",
+    "b": "w16-let-it-flow",
+    "kind": "item-work"
+   },
+   {
+    "a": "X01",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X02",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X02",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X03",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X04",
+    "b": "T1",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X05",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X06",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X07",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X08",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X09",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X10",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X11",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X12",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X13",
+    "b": "T3",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X13",
+    "b": "T4",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X14",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X15",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X16",
+    "b": "T5",
+    "kind": "item-theme"
+   },
+   {
+    "a": "X17",
+    "b": "T6",
+    "kind": "item-theme"
+   },
+   {
+    "a": "T1",
+    "b": "w06-artificial-paradise-singapore",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T1",
+    "b": "w07-artificial-paradise-eden-project",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T1",
+    "b": "w03-paradise-factory",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w01-dresden",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w02-human-as-error-vi",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w04-human-as-error-iii",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w05-human-as-error-i",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w08-wiena-wrong-landscape-i",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w09-warsaw-g24-i",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w10-warsaw-ii",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w14-warsaw-g24-ii",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T3",
+    "b": "w15-wiena-wrong-landscape-ii",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T4",
+    "b": "w02-human-as-error-vi",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T4",
+    "b": "w04-human-as-error-iii",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T4",
+    "b": "w05-human-as-error-i",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w03-paradise-factory",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w06-artificial-paradise-singapore",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w07-artificial-paradise-eden-project",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w11-artificial-paradise-i-print",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w12-artificial-paradise-ii-print",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T5",
+    "b": "w13-artificial-paradise-iii-print",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T6",
+    "b": "w16-let-it-flow",
+    "kind": "theme-work"
+   },
+   {
+    "a": "T6",
+    "b": "w17-natural-life",
+    "kind": "theme-work"
+   }
+  ]
+ }
+}

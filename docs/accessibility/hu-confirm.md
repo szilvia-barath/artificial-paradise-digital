@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 64. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 125. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -10,6 +10,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.nav.help`
   - HU: Súgó
   - EN: Help
+- `ui.nav.concept`
+  - HU: Koncepció
+  - EN: Concept
 - `ui.soundAsk.hintTouch`
   - HU: Fejhallgatóval izgalmasabb · a hang az alsó Hang gombbal bármikor be- és kikapcsolható
   - EN: Better with headphones · the Sound button at the bottom switches the sound on or off any time
@@ -70,6 +73,12 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.hud.nextTitle`
   - HU: Következő mű (Page Down)
   - EN: Next work (Page Down)
+- `ui.viewer.fullOf`
+  - HU: {title}: a teljes videó hanggal
+  - EN: {title}: full video with sound
+- `ui.viewer.backDoc`
+  - HU: Vissza a videódokumentációhoz
+  - EN: Back to the video documentation
 - `ui.viewer.count`
   - HU: {no}. mű a {total} közül
   - EN: No. {no} of {total}
@@ -82,6 +91,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.viewer.frameTitle`
   - HU: Teljes videó: {title}, Google Drive-lejátszó
   - EN: Full video: {title}, Google Drive player
+- `ui.viewer.frameTitleYoutube`
+  - HU: Teljes videó: {title}, YouTube-lejátszó
+  - EN: Full video: {title}, YouTube player
 - `ui.viewer.videoLoopName`
   - HU: Videóloop: {title}
   - EN: Video loop: {title}
@@ -112,6 +124,162 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.announce.viewerWork`
   - HU: {title}. {no}. mű a {total} közül.
   - EN: {title}. No. {no} of {total}.
+- `ui.concept.eyebrow`
+  - HU: Hivatkozások, témák és művek
+  - EN: References, themes and works
+- `ui.concept.tablist`
+  - HU: A Koncepció oldal nézetei
+  - EN: Views of the Concept page
+- `ui.concept.tabs.themes`
+  - HU: Témák
+  - EN: Themes
+- `ui.concept.tabs.timeline`
+  - HU: Idővonal
+  - EN: Timeline
+- `ui.concept.tabs.network`
+  - HU: Hálózat
+  - EN: Network
+- `ui.concept.newTab`
+  - HU: új lapon nyílik meg
+  - EN: opens in a new tab
+- `ui.concept.in.en`
+  - HU: angol nyelven
+  - EN: in English
+- `ui.concept.in.hu`
+  - HU: magyar nyelven
+  - EN: in Hungarian
+- `ui.concept.footnote`
+  - HU: {n}. lábjegyzet
+  - EN: Footnote {n}
+- `ui.concept.notes`
+  - HU: Jegyzetek
+  - EN: Notes
+- `ui.concept.backToText`
+  - HU: Vissza a szöveghez, {n}. lábjegyzet
+  - EN: Back to the text, footnote {n}
+- `ui.concept.type.person`
+  - HU: személy
+  - EN: person
+- `ui.concept.type.place`
+  - HU: hely
+  - EN: place
+- `ui.concept.type.organisation`
+  - HU: szervezet
+  - EN: organisation
+- `ui.concept.type.text`
+  - HU: szöveg
+  - EN: text
+- `ui.concept.type.concept`
+  - HU: fogalom
+  - EN: concept
+- `ui.concept.type.event`
+  - HU: esemény
+  - EN: event
+- `ui.concept.type.theme`
+  - HU: téma
+  - EN: theme
+- `ui.concept.type.work`
+  - HU: mű
+  - EN: work
+- `ui.concept.subtype.river`
+  - HU: folyó
+  - EN: river
+- `ui.concept.subtype.visitor attraction`
+  - HU: turisztikai látványosság
+  - EN: visitor attraction
+- `ui.concept.subtype.country`
+  - HU: ország
+  - EN: country
+- `ui.concept.dates.R01`
+  - HU: 1859 (a kísérletek kezdete)
+  - EN: 1859 (experiments begin)
+- `ui.concept.dates.R06`
+  - HU: 1901 (az üvegház-metafora)
+  - EN: 1901 (greenhouse metaphor)
+- `ui.concept.dates.R10`
+  - HU: a rendszerváltás után (1989–90)
+  - EN: after the change of regime (1989–90)
+- `ui.concept.dates.R11`
+  - HU: 2019. július 22.
+  - EN: 2019-07-22
+- `ui.concept.dateLabel`
+  - HU: Dátum a szövegekben
+  - EN: Date in the texts
+- `ui.concept.linksLabel`
+  - HU: Linkek
+  - EN: Links
+- `ui.concept.source`
+  - HU: Forrás
+  - EN: Source
+- `ui.concept.wikipedia`
+  - HU: Wikipédia
+  - EN: Wikipedia
+- `ui.concept.passages`
+  - HU: A szövegekben
+  - EN: In the texts
+- `ui.concept.references`
+  - HU: Hivatkozások és fogalmak
+  - EN: References and concepts
+- `ui.concept.themes`
+  - HU: Témák
+  - EN: Themes
+- `ui.concept.allWorks`
+  - HU: A kiállítás összes műve
+  - EN: All works in the exhibition
+- `ui.concept.openTheme`
+  - HU: a téma megnyitása
+  - EN: open the theme
+- `ui.concept.textKind.videos`
+  - HU: videók
+  - EN: videos
+- `ui.concept.textKind.prints`
+  - HU: nyomatok
+  - EN: prints
+- `ui.concept.supporters`
+  - HU: Támogatók, a közreműködők között
+  - EN: Supporters, in the credits
+- `ui.concept.connections`
+  - HU: Kapcsolatok
+  - EN: Connections
+- `ui.concept.exhibition`
+  - HU: a kiállítás a MAMŰ Galériában
+  - EN: the exhibition at MAMŰ Gallery
+- `ui.concept.netLabel`
+  - HU: A témák, hivatkozások, fogalmak és művek hálózata
+  - EN: Network of the themes, references, concepts and works
+- `ui.concept.netHelp`
+  - HU: Egy pont kapcsolatai akkor látszanak, amikor a mutató vagy a billentyűzetfókusz rajta áll. Az Enter vagy egy kattintás megnyitja a hivatkozás kártyáját vagy a témát, illetve a műhöz visz. Az Esc megszünteti a kiemelést.
+  - EN: A node shows its links when the pointer or keyboard focus is on it. Enter or a click opens a reference's card or a theme, or goes to a work. Esc clears the highlight.
+- `ui.concept.legend`
+  - HU: Jelmagyarázat
+  - EN: Key
+- `ui.concept.legendTheme`
+  - HU: Téma: nagy kör
+  - EN: Theme: large circle
+- `ui.concept.legendItem`
+  - HU: Hivatkozás vagy fogalom: kis kör
+  - EN: Reference or concept: small circle
+- `ui.concept.legendWork`
+  - HU: Mű: négyzet
+  - EN: Work: square
+- `ui.concept.legendItemTheme`
+  - HU: Hivatkozás és téma: folytonos vonal
+  - EN: Reference and theme: solid line
+- `ui.concept.legendItemWork`
+  - HU: Hivatkozás és mű: szaggatott vonal
+  - EN: Reference and work: dashed line
+- `ui.concept.legendThemeWork`
+  - HU: Téma és mű: pontozott vonal
+  - EN: Theme and work: dotted line
+- `ui.concept.nodeName`
+  - HU: {label}, {type}, {n} kapcsolat
+  - EN: {label}, {type}, {n} links
+- `ui.concept.nodeNameOne`
+  - HU: {label}, {type}, 1 kapcsolat
+  - EN: {label}, {type}, 1 link
+- `ui.concept.backToDiagram`
+  - HU: Vissza az ábrához
+  - EN: Back to the diagram
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
@@ -124,27 +292,42 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `legal.sections[1].p[0]` (legal notice; the reconstructor asked for "digitális kiállítás" in place of "bejárható 3D-rekonstrukcióként")
   - HU: Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be.
   - EN: A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025).
-- `legal.sections[3].p[0]` (only the accent in the name changed, asked by the reconstructor)
+- `legal.sections[3].h`
+  - HU: Videólejátszók
+  - EN: Video players
+- `legal.sections[3].p[0]`
+  - HU: Egyes művek teljes videója a YouTube-ról, másoké a Google Drive-ról játszható le. Mindkét szolgáltatást a Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Írország) nyújtja.
+  - EN: The full videos of some works play from YouTube, those of others from Google Drive. Both services are provided by Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland.
+- `legal.sections[4].p[0]` (only the accent in the name changed, asked by the reconstructor)
   - HU: A műalkotások, reprodukcióik és videóik, valamint a művész szövegei: © Szabó Kristóf / KristofLab. Az installációs fotókat és a dokumentációs videókat is Szabó Kristóf készítette. A MAMŰ logó a MAMŰ Társaság tulajdona. A 3D-rekonstrukció és a weboldal: © Baráth Szilvia.
   - EN: The artworks, their reproductions and videos, and the artist’s texts: © Kristóf Szabó / KristofLab. The installation photographs and the documentation videos were taken by Kristóf Szabó as well. The MAMŰ logo belongs to MAMŰ Society. The 3D reconstruction and the website: © Szilvia Baráth.
-- `legal.sections[3].p[1]` (legal notice; a new line the reconstructor asked for)
+- `legal.sections[4].p[1]` (legal notice; a new line the reconstructor asked for)
   - HU: A műalkotások, a fotók, a videók és a szövegek szerzői jogi védelem alatt állnak (In Copyright), és nincs rájuk felhasználási engedély.
   - EN: The artworks, photographs, videos and texts are In Copyright: they are protected by copyright and are not licensed for reuse.
-- `legal.sections[3].p[2]` (legal notice; the reconstructor's own wording, in place of the te form "kérj engedélyt")
+- `legal.sections[4].p[2]` (legal notice; the reconstructor's own wording, in place of the te form "kérj engedélyt")
   - HU: Bármely részének felhasználásához engedély szükséges.
   - EN: Permission is required to reuse any part of it.
-- `legal.updated` (the date only)
-  - HU: Utolsó frissítés: 2026. november 15.
-  - EN: Last updated: 15 November 2026
+- `legal.updated`
+  - HU: Utolsó frissítés: 2026. november 17.
+  - EN: Last updated: 17 November 2026
+- `privacy.sections[3].h`
+  - HU: YouTube-ról és Google Drive-ról lejátszott videók
+  - EN: Videos played from YouTube and Google Drive
+- `privacy.sections[3].p[0]`
+  - HU: Néhány műnél a teljes videó a YouTube lejátszójában (beágyazva a youtube-nocookie.com címről), másoknál a Google Drive lejátszójában fut; mindkettő a Google szolgáltatása. A lejátszó csak akkor töltődik be, ha a látogató a gombjára kattint; onnantól a Google megkapja a látogató IP-címét, és saját sütiket helyezhet el, vagy más adatot tárolhat a böngészőben.
+  - EN: For some works the full video plays in YouTube’s player (embedded from youtube-nocookie.com), for others in Google Drive’s player; both are Google services. A player is loaded only when you click its button; from then on Google receives your IP address and may set its own cookies or keep other data in your browser.
+- `privacy.updated`
+  - HU: Utolsó frissítés: 2026. november 17.
+  - EN: Last updated: 17 November 2026
 - `accessibility.sections[1].p[0]`
   - HU: Automatikusan: axe-core 4.14, Playwrighton keresztül, Chromiumban, az akadálymentes változaton (szöveges formátum) mindkét nyelven (világos és sötét módban), valamint a digitális kiállítás minden állapotában: a nyitóképernyőn, minden panelen, a hangra vonatkozó kérdésnél, a belső vezérlőknél, a teremmenünél, a Súgóban és a műnézőben, a teljes videó keretével is (a Google lejátszóját letiltva). Eredmény 2026. november 16-án: a 38 állapot egyikében sem volt hiba. Az axe nem tudta megítélni a 3D nézet vagy egy kép fölött álló szöveg kontrasztját; a 3D nézet fölötti kontrasztot ezért képernyőképeken mértem meg (lásd: Mi működik).
   - EN: Automated: axe-core 4.14 through Playwright in Chromium, on the accessible version (text format) in both languages (light and dark) and on the digital exhibition in each of its states: the title screen, every panel, the sound question, the controls inside, the rooms menu, Help and the artwork viewer, also with the frame of the full video (with Google's player blocked). Result on 16 November 2026: no violations in any of the 38 states. axe could not judge the contrast of text that lies over the 3D view or a picture; I measured the contrast over the 3D view in screenshots instead (see What works).
 - `accessibility.sections[1].p[1]`
-  - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, a Súgó, a Következő mű gomb, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 35 lépés sikeres volt. Egy másik futás az egeret és a fókuszt ellenőrizte: az alaprajzra, az eszköztárra, a teremmenüre, a nyelvváltóra, a lábléc egy hivatkozására vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk; amíg a hangra vonatkozó kérdés nyitva van, a felső sáv sem egérrel, sem a Tab billentyűvel nem használható; ha egy panel vagy a műnéző nyitva van, nyelvváltás után is benne marad a fókusz; amíg egy panel, a műnéző vagy a hangra vonatkozó kérdés nyitva van, a böngésző elrejti a mögötte lévő oldalt a képernyőolvasók elől; a műlistából megnyitott mű bezárásakor a lista újra megnyílik, a fókusz pedig azon a művön áll; keskeny ablakban a menüből megnyitott panel bezárása után a Menü gombra kerül a fókusz; a kérdésre egérrel adott válasz után pedig a 3D nézet a billentyűzetes fókuszkeret nélkül kapja meg a fókuszt (58 lépésből 58 sikeres).
-  - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, Help, the Next work button, and the letter keys with and without focus on the 3D view. All 35 steps passed. Another run checked the mouse and focus: after a click on the floor plan, the toolbar, the rooms menu, the language switch, a footer link or a Close button, the letter keys still work; while the sound question is open, the bar at the top cannot be used with the mouse or with Tab; with a panel or the viewer open, focus stays in it when the language is switched; while a panel, the viewer or the sound question is open, the browser hides the page behind it from screen readers; closing a work opened from the list of works brings the list back on that work; in a narrow window, closing a panel opened from the menu puts focus on the Menu button; and after the sound question is answered with the mouse, the 3D view has focus without the keyboard frame (58 of 58 steps).
+  - HU: Csak billentyűzettel: gépi tesztfutás Chromiumban az oldal betöltésétől, a Tab, Shift+Tab, Enter, Esc, Page Down, Page Up és T billentyűkkel: az ugróhivatkozás oda-vissza, minden panel, a hangra vonatkozó kérdés, a műnéző, mind a 17 mű, a tárlatvezetés, a teremmenü, a nyelvváltó, a Súgó, a Következő mű gomb, valamint a betűbillentyűk úgy is, hogy a fókusz a 3D nézeten van, és úgy is, hogy nem. Mind a 35 lépés sikeres volt. Egy másik futás az egeret és a fókuszt ellenőrizte: az alaprajzra, az eszköztárra, a teremmenüre, a nyelvváltóra, a lábléc egy hivatkozására vagy egy Bezárás gombra kattintás után is működnek a betűbillentyűk; amíg a hangra vonatkozó kérdés nyitva van, a felső sáv sem egérrel, sem a Tab billentyűvel nem használható; ha egy panel vagy a műnéző nyitva van, nyelvváltás után is benne marad a fókusz; amíg egy panel, a műnéző vagy a hangra vonatkozó kérdés nyitva van, a böngésző elrejti a mögötte lévő oldalt a képernyőolvasók elől; a műlistából megnyitott mű bezárásakor a lista újra megnyílik, a fókusz pedig azon a művön áll; keskeny ablakban a menüből megnyitott panel bezárása után a Menü gombra kerül a fókusz; a kérdésre egérrel adott válasz után pedig a 3D nézet a billentyűzetes fókuszkeret nélkül kapja meg a fókuszt (59 lépésből 59 sikeres).
+  - EN: Keyboard only: a scripted run in Chromium from page load, with Tab, Shift+Tab, Enter, Esc, Page Down, Page Up and T: the skip link and back, every panel, the sound question, the viewer, all 17 works, the tour, the rooms menu, the language switch, Help, the Next work button, and the letter keys with and without focus on the 3D view. All 35 steps passed. Another run checked the mouse and focus: after a click on the floor plan, the toolbar, the rooms menu, the language switch, a footer link or a Close button, the letter keys still work; while the sound question is open, the bar at the top cannot be used with the mouse or with Tab; with a panel or the viewer open, focus stays in it when the language is switched; while a panel, the viewer or the sound question is open, the browser hides the page behind it from screen readers; closing a work opened from the list of works brings the list back on that work; in a narrow window, closing a panel opened from the menu puts focus on the Menu button; and after the sound question is answered with the mouse, the 3D view has focus without the keyboard frame (59 of 59 steps).
 - `accessibility.sections[1].p[2]`
-  - HU: Amit a képernyőolvasó megkap, Chromiumban kiolvasva abból, amit a böngésző átad neki: a 3D nézet, az alaprajz, az installációs fotók és a videólejátszók neve, a műnéző számlálója és az, amit az Előző és a Következő gomb bemond, valamint az, hogy a magyar oldalon az angol címek angolként vannak jelölve (24 lépésből 24 sikeres). Egy másik futás azt ellenőrzi, mi látszik a 3D nézet körül, egy 320 × 256 képpontos ablaktól (400%-ra nagyított oldal) laptopméretig, egérrel és érintéssel: az alaprajz alatti jelmagyarázat, az első használatkor megjelenő kártya, a Súgó, a Következő mű gomb, az érintéses tipp, a kar melletti fordítógombok, a műnéző fektetett telefonon, a nagy nagyításhoz való kis elrendezés, a tárlatvezetés feliratának első sora és a kezelőfelület színei (74 lépésből 74 sikeres).
-  - EN: What a screen reader is given, read in Chromium from what the browser passes to it: the names of the 3D view, the floor plan, the installation photos and the video players, the viewer's count and what its Previous and Next say, and the English titles marked as English on the Hungarian page (24 of 24 steps). Another run checks what is on screen around the 3D view, from a window of 320 × 256 pixels (a page at 400% zoom) to laptop size, with a mouse and with touch: the key under the floor plan, the first-use card, Help, the Next work button, the touch hint, the turning buttons by the stick, the artwork viewer on a phone on its side, the small layout for high zoom, the first line of the tour caption and the colours of the interface (74 of 74 steps).
+  - HU: Amit a képernyőolvasó megkap, Chromiumban kiolvasva abból, amit a böngésző átad neki: a 3D nézet, az alaprajz, az installációs fotók és a videólejátszók neve, a műnéző számlálója és az, amit az Előző és a Következő gomb bemond, valamint az, hogy a magyar oldalon az angol címek angolként vannak jelölve (24 lépésből 24 sikeres). Egy másik futás azt ellenőrzi, mi látszik a 3D nézet körül, egy 320 × 256 képpontos ablaktól (400%-ra nagyított oldal) laptopméretig, egérrel és érintéssel: az alaprajz alatti jelmagyarázat, az első használatkor megjelenő kártya, a Súgó, a Következő mű gomb, az érintéses tipp, a kar melletti fordítógombok, a műnéző fektetett telefonon, a nagy nagyításhoz való kis elrendezés, a tárlatvezetés feliratának első sora és a kezelőfelület színei (84 lépésből 84 sikeres).
+  - EN: What a screen reader is given, read in Chromium from what the browser passes to it: the names of the 3D view, the floor plan, the installation photos and the video players, the viewer's count and what its Previous and Next say, and the English titles marked as English on the Hungarian page (24 of 24 steps). Another run checks what is on screen around the 3D view, from a window of 320 × 256 pixels (a page at 400% zoom) to laptop size, with a mouse and with touch: the key under the floor plan, the first-use card, Help, the Next work button, the touch hint, the turning buttons by the stick, the artwork viewer on a phone on its side, the small layout for high zoom, the first line of the tour caption and the colours of the interface (84 of 84 steps).
 - `accessibility.sections[1].p[3]` (statement; rewritten: what the 18 checks found)
   - HU: Csökkentett mozgás: 18 gépi ellenőrzés Chromiumban, a rendszerbeállítás emulálásával és anélkül. Bekapcsolt beállítással nincs szemcse, színszegély és lüktetés, a kezelőfelületen nincs animáció, a tárlatvezetés megállóról megállóra ugrik, a mozgásbillentyűk alatti kis egér nem görget, és az alaprajzon a látogatót jelző pont egy ugrás után sem nő meg.
   - EN: Reduced motion: 18 automated checks in Chromium, with the system setting emulated and without it. With it there is no grain, no colour fringes, no pulsing and no animation in the interface, the tour jumps from stop to stop, the mouse under the walking keys does not roll its wheel and the dot that marks you on the floor plan does not swell after a jump.
@@ -152,14 +335,14 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Telefonszélesség: az akadálymentes változat 375 képpont szélesen, JavaScripttel és anélkül, valamint a digitális kiállítás Chromium telefonemulációjában, állítva (375 × 667) és fektetve (667 × 375), érintéses bevitellel.
   - EN: Phone width: the accessible version at 375 pixels, with and without JavaScript, and the digital exhibition in Chromium's phone emulation, upright (375 × 667) and on its side (667 × 375), with touch.
 - `accessibility.sections[1].p[6]`
-  - HU: Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, valódi, 200%-os vagy nagyobb böngészőnagyítással (az ugyanekkora, CSS-képpontban mért ablakokat ellenőriztem: egy laptopot 200%-on és egy oldalt 400%-on), a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal.
-  - EN: Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, real browser zoom at 200% or more (windows of the same size in CSS pixels were checked: a laptop at 200% and a page at 400%), the Google Drive video player, and visits by people with disabilities.
+  - HU: Még nem teszteltem: képernyőolvasóval, Firefoxban és Safariban, valódi telefonon és táblagépen, valódi, 200%-os vagy nagyobb böngészőnagyítással (az ugyanekkora, CSS-képpontban mért ablakokat ellenőriztem: egy laptopot 200%-on és egy oldalt 400%-on), a YouTube és a Google Drive videólejátszójával, és fogyatékossággal élő látogatókkal.
+  - EN: Not tested yet: any screen reader, Firefox and Safari, real phones and tablets, real browser zoom at 200% or more (windows of the same size in CSS pixels were checked: a laptop at 200% and a page at 400%), the YouTube and Google Drive video players, and visits by people with disabilities.
 - `accessibility.sections[2].p[1]`
   - HU: Billentyűzet: a Tab minden gombot és hivatkozást elér, és mindegyiken látszik a fókuszkeret. A panelek, a műnéző és a hangra vonatkozó kérdés megnyitáskor átveszik a fókuszt, a Tab bennük marad, Esc-re bezárulnak, és a fókusz visszakerül a korábbi helyére. Amíg valamelyik nyitva van, a böngésző elrejti a mögötte lévő oldalt a képernyőolvasók elől. Egy panel vagy a műnéző mögött a felső sáv használható marad, így a nyelv ilyenkor is váltható; a hangra vonatkozó kérdés mögött a felső sáv is rejtve van. A műlistából megnyitott mű bezárásakor a lista újra megnyílik, és a fókusz az utoljára mutatott művön áll. Keskeny ablakban a menüből megnyitott panel bezárása után a fókusz a Menü gombra kerül. Amíg a hangra vonatkozó kérdés nyitva van, a képernyő bármely más pontjára kattintva a kérdés „Hang nélkül” válasszal zárul, és más nem nyílik meg. Ha egy panel vagy a műnéző nyitva van, nyelvváltás után is benne marad a fókusz. A Page Down és a Page Up a következő és az előző műhöz visz; az eszköztár Következő mű gombja a következőhöz, minden lenyomásra egy művel tovább. Az Enter megnyitja a nézet közepén lévő művet. Az eszköztár Súgó gombja (keskeny ablakban a menüben) egy panelen mutatja meg az összes vezérlőt.
   - EN: Keyboard: Tab reaches every button and link, and each shows a focus ring. Panels, the artwork viewer and the sound question take focus when they open, keep Tab inside, close with Esc and hand focus back to where you were. While one of them is open, the browser hides the page behind it from screen readers. Behind a panel or the viewer the bar at the top stays usable, so the language can still be switched; behind the sound question it is hidden too. Closing a work opened from the list of works brings the list back, with focus on the work last shown. In a narrow window, closing a panel opened from the menu puts focus on the Menu button. While the sound question is open, a click anywhere else on the screen answers it with “Without sound” and opens nothing. Switching the language while a panel or the viewer is open leaves focus in it. Page Down and Page Up go to the next and the previous work; the Next work button on the toolbar goes to the next one, one work for each press. Enter opens the work in front of you. Help, on the toolbar (in a narrow window, in the menu), shows all the controls in a panel.
 - `accessibility.sections[2].p[2]`
-  - HU: A 3D nézetre lépve a képernyőolvasó felolvassa, hogy ez a 3D nézet, mely billentyűk visznek műről műre, nyitnak meg egy művet és szolgálnak a sétához, és hogy minden billentyű leírása az akadálymentes változatban található. Séta közben bemondja, melyik teremben van a látogató, és melyik kiállított mű van épp fókuszban, az alaprajz neve pedig megmondja, melyik teremben van. A műnézőben az Előző és a Következő gomb a 17 művön lép végig, és bemondja az új művet a sorszámával („3. mű a 17 közül”); az installációs fotó nevéből kiderül, hogy a művet a galériában mutatja, a videónak és a Google Drive-lejátszónak pedig van neve. A magyar oldalon a művész angol címei angolként vannak jelölve, így a nyelvet váltani tudó képernyőolvasó angol hangon olvassa fel őket. Egy panel megnyitása leállítja a tárlatvezetést, így a feliratait nem olvassa fel a képernyőolvasó, amíg a panel nyitva van.
-  - EN: When a screen reader reaches the 3D view, it says that this is the 3D view, which keys go from work to work, open a work and walk, and that all the keys are in the accessible version. While walking, it announces the room and the exhibited work currently in focus, and the floor plan's name says which room you are in. In the artwork viewer, Previous and Next go through the 17 works and say the new one with its number (“No. 3 of 17”); an installation photo is named as a photo of the work in the gallery, and the video and the Google Drive player have names. On the Hungarian page the artist's English titles are marked as English, so a screen reader that switches language reads them in an English voice. Opening a panel stops the tour, so its captions are not read over the panel.
+  - HU: A 3D nézetre lépve a képernyőolvasó felolvassa, hogy ez a 3D nézet, mely billentyűk visznek műről műre, nyitnak meg egy művet és szolgálnak a sétához, és hogy minden billentyű leírása az akadálymentes változatban található. Séta közben bemondja, melyik teremben van a látogató, és melyik kiállított mű van épp fókuszban, az alaprajz neve pedig megmondja, melyik teremben van. A műnézőben az Előző és a Következő gomb a 17 művön lép végig, és bemondja az új művet a sorszámával („3. mű a 17 közül”); az installációs fotó nevéből kiderül, hogy a művet a galériában mutatja, a videónak és a YouTube- vagy Google Drive-lejátszónak pedig van neve. A magyar oldalon a művész angol címei angolként vannak jelölve, így a nyelvet váltani tudó képernyőolvasó angol hangon olvassa fel őket. Egy panel megnyitása leállítja a tárlatvezetést, így a feliratait nem olvassa fel a képernyőolvasó, amíg a panel nyitva van.
+  - EN: When a screen reader reaches the 3D view, it says that this is the 3D view, which keys go from work to work, open a work and walk, and that all the keys are in the accessible version. While walking, it announces the room and the exhibited work currently in focus, and the floor plan's name says which room you are in. In the artwork viewer, Previous and Next go through the 17 works and say the new one with its number (“No. 3 of 17”); an installation photo is named as a photo of the work in the gallery, and the video and the YouTube or Google Drive player have names. On the Hungarian page the artist's English titles are marked as English, so a screen reader that switches language reads them in an English voice. Opening a panel stops the tour, so its captions are not read over the panel.
 - `accessibility.sections[2].p[3]`
   - HU: Belépés után egy rövid kártya a billentyűk mellett megmutatja, hogyan lehet mozogni. Az első billentyűleütésre, kattintásra vagy görgetésre eltűnik, és a Súgóból újra elő lehet hozni; az oldal semmit sem tárol, így minden látogatáskor újra megjelenik. Érintőképernyőn helyette egy tipp mondja el, hogyan lehet érintéssel mozogni, a hangra vonatkozó kérdés pedig a Hang gombot nevezi meg. Az alaprajz alatti jelmagyarázat megmutatja, mely jelek a videók és melyek a többi mű. A tárlatvezetés felirata jelzi, hol tart a tárlatvezetés („3 / 17”).
   - EN: Inside, a short card by the keys shows how to move. It goes at the first key, click or turn of the wheel, and Help can show it again; nothing is stored, so it shows on each visit. On a touch screen a hint says how to move by touch instead, and the sound question names the Sound button. A key under the floor plan says which marks are the videos and which are the other works. The tour caption says how far along the tour is (“3 / 17”).
@@ -188,11 +371,11 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: A 3D nézet fölötti kontrasztot Chromiumban készült képernyőképeken mértem, a legvilágosabb fal előtt, nem minden fal előtt. A tárlatvezetés felirata, a nézet közepén lévő művet megnevező sor, a körülnézésről szóló és az érintéses tipp, az első használatkor megjelenő kártya és a nagyítás kijelzője ugyanazon a sötét, áttetsző alapon áll, de ezeket nem mértem. Az 1. és a 2. terem falán lévő kiállítási szövegek lapjait nem mértem.
   - EN: The contrast over the 3D view was measured in Chromium screenshots facing the brightest wall, not in front of every wall. The tour caption, the line that names the work in front of you, the drag hint and the touch hint, the first-use card and the zoom readout sit on the same dark glass but were not measured. The exhibition text sheets drawn on the walls of Room 1 and Room 2 were not measured.
 - `accessibility.sections[3].p[8]`
-  - HU: Érintőképernyős laptopon, amelyhez egér vagy érintőpad is tartozik, a digitális kiállítás a számítógépes kezelőfelületet mutatja (a képernyőn megjelenő billentyűket és a láblécet), az egérrel körül lehet nézni és műveket lehet megnyitni, és az érintés is működik. Ezt olyan Chromiumban ellenőriztem, amelyet úgy állítottam be, hogy egy ilyen laptop válaszait adja, valódi gépen nem.
-  - EN: On a laptop with a touch screen and a mouse or trackpad, the digital exhibition shows the computer's controls (the on-screen keys and the footer), the mouse looks around and opens works, and touch works as well. I checked this in Chromium set up to answer like such a laptop, not on a real one.
+  - HU: Érintőképernyős laptopon, amelyhez egér vagy érintőpad is tartozik, a digitális kiállítás a számítógépes kezelőfelületet mutatja (a képernyőn megjelenő billentyűket és a láblécet), az egérrel körül lehet nézni és műveket lehet megnyitni, és az érintés is működik. Ezt olyan Chromiumban ellenőriztem, amelyet úgy állítottam be, hogy egy ilyen laptop válaszait adja, valódi gépen nem. Egy ilyen laptopon a gombok megtartják a számítógépes méretüket, mert a böngésző az egeret jelzi fő mutatóeszközként: az eszköztár gombjai 32 képpont magasak, nem 44 × 44 képpontosak, mint telefonon vagy táblagépen.
+  - EN: On a laptop with a touch screen and a mouse or trackpad, the digital exhibition shows the computer's controls (the on-screen keys and the footer), the mouse looks around and opens works, and touch works as well. I checked this in Chromium set up to answer like such a laptop, not on a real one. On such a laptop the buttons keep their computer size, since the browser reports the mouse as the main pointer: the toolbar's are 32 pixels high, not the 44 by 44 pixels they have on a phone or tablet.
 - `accessibility.sections[3].p[9]`
   - HU: Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak.
   - EN: On a touch screen some links are still small. In a window wider than 760 pixels (a tablet, say) the footer's links are 13 pixels tall, and the links in the text of the panels are 17 to 20 pixels tall per line, at any width.
 - `accessibility.sections[3].p[10]`
-  - HU: Amíg a fókusz a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab ismételt lenyomásával ki lehet lépni a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt.
-  - EN: Esc does not close the viewer while focus is inside the Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab, pressed until focus leaves the player, gets out of it, and then Esc works, or the Close button closes the viewer.
+  - HU: Amíg a fókusz a YouTube- vagy a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab ismételt lenyomásával ki lehet lépni a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt.
+  - EN: Esc does not close the viewer while focus is inside the YouTube or Google Drive player, because the browser keeps the keys inside the player's frame: Tab or Shift+Tab, pressed until focus leaves the player, gets out of it, and then Esc works, or the Close button closes the viewer.

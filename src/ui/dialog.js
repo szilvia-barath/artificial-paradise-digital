@@ -12,7 +12,17 @@ document.addEventListener('pointerdown', (e) => { byPointer = e.pointerType === 
 document.addEventListener('keydown', () => { byPointer = false; }, true);
 
 // Can this element take focus right now? (.gone is the title screen fading out.)
-export const shown = (n) => !!n && n.isConnected && !n.closest('[hidden], [inert], .gone') && n.getClientRects().length > 0;
+export const shown = (n) => !!n && n.isConnected && !n.closest('[hidden], [inert], .gone') && !folded(n) && n.getClientRects().length > 0;
+// Inside a <details> that is shut (its own summary aside)? Chromium still gives such content
+// a box, so without this the speech's links in the About panel were taken as its last
+// control and Tab left the panel after the summary.
+function folded(n) {
+  for (let d = n.closest('details:not([open])'); d; d = d.parentElement?.closest('details:not([open])')) {
+    const s = d.querySelector(':scope > summary');
+    if (!s || !s.contains(n)) return true;
+  }
+  return false;
+}
 
 // What lies behind an open dialog is made inert: out of the accessibility tree, so a screen
 // reader's virtual cursor or swipe cannot leave the dialog, and out of reach of Tab, clicks

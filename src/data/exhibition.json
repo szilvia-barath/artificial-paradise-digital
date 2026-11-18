@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'photo' names the installation photograph that shows the work in place (the photographer's file name; the photographs are not in this repository); for a work without a 'situ' list, its in-situ view (the image's '-situ' file) was cut from it. Where the images a work shows were cut from other photographs, 'imageSources' names the file each image comes from, as in scripts/crops.json (\"repro\"); there 'photo' is a reference only and no image on the site is cut from it. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos, played in the artwork viewer only after their button is pressed: 'youtube' is the YouTube video id (played from youtube-nocookie.com) and wins over 'drive', the Google Drive file id, so moving a video to YouTube is one line, \"youtube\": \"<id>\", in its entry. An entry's 'title' names a full video whose title is not the work's (Siluett, the projection of Let it Flow); 'label' is the button's text in 'ui.viewer' of the i18n files. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'photo' names the installation photograph that shows the work in place (the photographer's file name; the photographs are not in this repository); for a work without a 'situ' list, its in-situ view (the image's '-situ' file) was cut from it. Where the images a work shows were cut from other photographs, 'imageSources' names the file each image comes from, as in scripts/crops.json (\"repro\"); there 'photo' is a reference only and no image on the site is cut from it. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Baráth",
@@ -125,6 +125,7 @@
         "loop": "video/w03-screen.mp4",
         "full": [
           {
+            "youtube": "0bYQhJxJXGY",
             "drive": "1xNVqmP0bHdLemgj343JJgydy_IAo9--O",
             "label": "full"
           }
@@ -203,6 +204,7 @@
         "loop": "video/w06-artificial-paradise-singapore.mp4",
         "full": [
           {
+            "youtube": "NiU0N4QQOrQ",
             "drive": "1HnBVZR0aTIM-EsjxCZsk0q-MmbJH68Gd",
             "label": "full"
           }
@@ -236,6 +238,7 @@
         "loop": "video/w07-artificial-paradise-eden-project.mp4",
         "full": [
           {
+            "youtube": "MOC4FsdfIoY",
             "drive": "1ZtXyfb9kdgpmvFMggiM9p0MeKkwqzpdO",
             "label": "full"
           }
@@ -263,8 +266,6 @@
       },
       "video": {
         "loop": "video/w08-wiena-wrong-landscape-i.mp4",
-        "mediaAspect": 1.3333,
-        "cropTop": 0.085,
         "full": [
           {
             "drive": "1iwGauzuP_sOdcIbcs9J8F7Aa-qffDfqW",
@@ -429,8 +430,6 @@
       },
       "video": {
         "loop": "video/w15-wiena-wrong-landscape-ii.mp4",
-        "mediaAspect": 1.3333,
-        "cropTop": 0.148,
         "full": [
           {
             "drive": "1RCL-S3kwpjcpTsVgCWZxLheWWjFYPBOt",
@@ -465,7 +464,14 @@
       "video": {
         "loop": "video/w16-projection.mp4",
         "sound": true,
-        "viewer": "video/w16-documentation.mp4"
+        "viewer": "video/w16-documentation.mp4",
+        "full": [
+          {
+            "youtube": "XmZfvQJOORw",
+            "title": "Siluett",
+            "label": "fullOf"
+          }
+        ]
       },
       "desc": "let-it-flow",
       "situ": [
@@ -503,6 +509,7 @@
         "loop": "video/w17-natural-life.mp4",
         "full": [
           {
+            "youtube": "7dasVu6jdd8",
             "drive": "1YfdR_rzjFrcy0gD05rfuaarCUWwrYNU-",
             "label": "full"
           }
@@ -532,6 +539,14 @@
       "at": 1.73,
       "along": 8.395,
       "y": 1.5
+    },
+    {
+      "id": "roomsheet",
+      "kind": "text",
+      "face": "-z",
+      "at": 5.73,
+      "along": 6.445,
+      "y": 1.22
     }
   ],
   "contacts": [
