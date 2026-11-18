@@ -4,6 +4,7 @@ import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
+import { tagGeometry, pdOf } from './paradataTags.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -120,6 +121,15 @@ export function buildProps(materials) {
   const g = new THREE.Group();
   g.name = 'props';
   const anim = []; // per-frame callbacks (t, dt)
+  // The part of the scene each piece belongs to, for the paradata view (paradata-scene.json):
+  // mark(id) names the part of everything added to g from here until the next mark.
+  // mergeStatic keeps it per vertex.
+  let marked = 0;
+  let current = null;
+  const mark = (id) => {
+    for (; marked < g.children.length; marked++) g.children[marked].userData.paradata ??= current;
+    current = id;
+  };
   const gridMat = wireGridMaterial();
 
   // ================================================================ Room 1
@@ -130,6 +140,7 @@ export function buildProps(materials) {
   const RX = R1.recess;
   const SZ = R1.D;
 
+  mark('r1-stairs');
   // Stairs along the north wall, rising west through the wall into the stair shaft. This
   // comment named "DSC_0013–0016, panorama, close-ups of the flight" as the source; by the
   // reconstructor's account (PROGRESS.md, note of 15 November 2026) the flight was built from
@@ -402,6 +413,7 @@ export function buildProps(materials) {
     obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
   }
 
+  mark('r1-bench');
   // Grey bench along the south wall, turning up the west wall (the L on the plan): a dark
   // board on a box faced with perforated steel sheet in panels (_artificial paradise 01 - 02)
   {
@@ -437,6 +449,7 @@ export function buildProps(materials) {
     g.add(slab(materials.benchTop, WX, WX + 0.51, H - 0.03, H, SZ - 0.91, SZ - 0.43));
     obstacle(WX, EX, SZ - 0.49, SZ);
     obstacle(WX, WX + 0.52, SZ - 0.93, SZ - 0.43);
+    mark('r1-fittings');
     // two white heating pipes on the wall just above the bench
     dirtAlong(WX, 0.6, SZ - 0.03, EX, 0.6, SZ - 0.03);
     for (const y of [0.56, 0.63]) {
@@ -446,11 +459,13 @@ export function buildProps(materials) {
     }
   }
 
+  mark('r1-doorway');
   // Plinths either side of the doorway, standing in the recess
   for (const z of [3.42, 4.82]) {
     g.add(place(box(0.32, 1.15, 0.32, materials.white), RX - 0.18, 0.575, z));
     obstacle(RX - 0.36, RX, z - 0.17, z + 0.17);
   }
+  mark('r1-fittings');
   // electric box and cables left of the doorway (DSC_0020)
   g.add(place(box(0.03, 0.16, 0.13, materials.white), RX - 0.015, 1.62, 3.48));
 
@@ -468,11 +483,14 @@ export function buildProps(materials) {
     place(r, x, y, z, ry);
     g.add(r);
   };
+  mark('r1-street-wall');
   // the two on the street wall stand in the window niches
   const NX = WX - NICHE.depth; // back of the niches
   radiator(NX + 0.07, 3.53, Math.PI / 2, 0.94);
   radiator(NX + 0.07, SZ - 1.09, Math.PI / 2, 0.42);
+  mark('r1-fittings');
   radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
+  mark('r1-street-wall');
 
   // High basement windows at the back of the niches (_artificial paradise 01 - 02 and the
   // close-up of the window by the stairs): a thick white frame with an inner sash, frosted
@@ -535,6 +553,7 @@ export function buildProps(materials) {
     dirtAlong(WX + 0.03, 0.06, 3.5, WX + 0.03, 0.06, 6.1);
   }
 
+  mark('r1-fittings');
   // Cables on the floor (_artificial paradise 01 - 02): the screen's black lead down the wall
   // to its adapter, two white power strips, and leads on to the plant's pump and the LED
   // bars; a white lead comes down the wall from the little sensor beside the window
@@ -574,6 +593,7 @@ export function buildProps(materials) {
 
   // ================================================================ Room 2
   {
+    mark('r2-bar');
     // bar counter tops (dark laminate) over the brick half walls
     g.add(slab(materials.counterTop, 7.689, 9.87, 1.0, 1.05, 4.628, 5.179));
     g.add(slab(materials.counterTop, 9.788, 10.29, 1.0, 1.05, 4.058, 4.761));
@@ -611,6 +631,7 @@ export function buildProps(materials) {
     }
     obstacle(7.481, 9.87, 4.628, 5.73);
 
+    mark('r2-furniture');
     // round black café table and the folding wire chairs under Artificial Paradise – The Eden project (no. 7)
     const table = new THREE.Group();
     // (DSC_0059, DSC_0083: a glossy black round top on a single black column and round foot)
@@ -640,6 +661,7 @@ export function buildProps(materials) {
       g.add(place(lamp, x, 0, z));
     }
 
+    mark('r2-storage');
     // closed door to the toilets
     g.add(slab(materials.door, 6.089, 6.962, 0, 2.02, 5.692, 5.73));
     g.add(slab(materials.white, 6.027, 6.089, 0, 2.08, 5.682, 5.73));
@@ -668,6 +690,7 @@ export function buildProps(materials) {
 
   // ================================================================ Room 4
   {
+    mark('r4-projector');
     // ceiling-hung projector for Let it Flow
     const proj = new THREE.Group();
     proj.add(place(box(0.36, 0.13, 0.3, materials.black), 0, 2.38, 0));
@@ -677,6 +700,7 @@ export function buildProps(materials) {
     proj.add(place(lens, 0.19, 2.38, 0));
     g.add(place(proj, 17.48, 0, 3.725));
 
+    mark('r4-fittings');
     const pipeMat = new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.6 });
     // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
     const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
@@ -790,6 +814,7 @@ export function buildProps(materials) {
     g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
     dirtAlong(16.331, 0, 1.787, 16.331, 1.45, 1.787);
 
+    mark('r3-r4-opening');
     // curtain bunched at the south side of the opening between Room 3 and Room 4
     const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);
     const pos = cg.attributes.position;
@@ -801,6 +826,7 @@ export function buildProps(materials) {
   }
 
   // ================================================================ track lights
+  mark('track-lights');
   {
     const rails = [
       { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: 3.0 },
@@ -833,6 +859,7 @@ export function buildProps(materials) {
     g.add(spots, lenses);
   }
 
+  mark(null);
   mergeStatic(g);
   return { group: g, anim };
 }
@@ -854,6 +881,7 @@ function mergeStatic(group) {
       const geo = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone());
       geo.applyMatrix4(m.matrixWorld);
       for (const k of Object.keys(geo.attributes)) if (!['position', 'normal', 'uv'].includes(k)) geo.deleteAttribute(k);
+      tagGeometry(geo, pdOf(m));
       geo.morphAttributes = {};
       geo.clearGroups();
       return geo;

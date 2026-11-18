@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS } from './layout.js';
+import { tagGeometry } from './paradataTags.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
 // plus Room 4's brick vaults and the stair shaft. UVs are world metres (u along the
@@ -13,9 +14,12 @@ export function buildArchitecture(materials) {
   group.name = 'architecture';
   const buckets = new Map(); // material key -> geometries[]
   const segments = [];
+  // the part of the scene for the paradata view (paradata-scene.json), kept per vertex
+  let pd = null;
 
   const push = (key, geo) => {
     if (!materials[key]) throw new Error(`Unknown material ${key}`);
+    tagGeometry(geo, pd);
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key).push(geo);
   };
@@ -71,6 +75,7 @@ export function buildArchitecture(materials) {
 
   // ---------------------------------------------------------------- wall blocks
   for (const b of BLOCKS) {
+    pd = b.pd;
     const y0 = b.y0 ?? 0;
     const y1 = b.y1;
     const f = b.faces || {};
@@ -100,11 +105,12 @@ export function buildArchitecture(materials) {
   }
 
   // ---------------------------------------------------------------- floors, ceilings
-  for (const fl of FLOORS) flat(fl.mat, fl, fl.y ?? 0, true);
-  for (const c of CEILINGS) flat(c.mat, c, c.y, false, c.hole);
+  for (const fl of FLOORS) { pd = fl.pd; flat(fl.mat, fl, fl.y ?? 0, true); }
+  for (const c of CEILINGS) { pd = c.pd; flat(c.mat, c, c.y, false, c.hole); }
 
   // Room 4: shallow brick vaults between steel beams, as in DSC_0110–0116
   {
+    pd = 'r4-vaults';
     const r = ROOMS.find((rm) => rm.id === 'r4');
     const spring = 2.75;
     const rise = 0.14;
@@ -147,6 +153,7 @@ export function buildArchitecture(materials) {
   // ---------------------------------------------------------------- stair shaft
   // The flight climbs west through Room 1's wall into a dark shaft lit from the street.
   {
+    pd = 'stair-shaft';
     const s = STAIRWELL;
     const top = 5.6;
     const out = R1_WEST_OUTER;

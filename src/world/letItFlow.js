@@ -84,6 +84,7 @@ export function buildLetItFlow(manager) {
   const proj = new THREE.Mesh(new THREE.PlaneGeometry(Z1 - Z0, TOP), projMat);
   proj.rotation.y = -Math.PI / 2;
   proj.position.set(WALL_X - 0.005, TOP / 2, (Z0 + Z1) / 2);
+  proj.userData.paradata = 'lif-wall-projection'; // its part in the paradata view
   group.add(proj);
 
   // ---------------------------------------------------------------- floor projection
@@ -130,6 +131,7 @@ export function buildLetItFlow(manager) {
     const floorProj = new THREE.Mesh(geo, floorMat);
     floorProj.position.set(x0 + P.lengthM / 2, 0.004, zMid);
     floorProj.renderOrder = 2;
+    floorProj.userData.paradata = 'lif-floor-projection';
     group.add(floorProj);
   }
 
@@ -222,6 +224,7 @@ export function buildLetItFlow(manager) {
     geo.computeVertexNormals();
     const river = new THREE.Mesh(geo, riverMat);
     river.name = 'plastic-river';
+    river.userData.paradata = 'lif-river';
     group.add(river);
   });
   // keep visitors off the installation
