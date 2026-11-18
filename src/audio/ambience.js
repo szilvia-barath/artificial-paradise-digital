@@ -16,7 +16,7 @@ export class Ambience {
     this.bands = { bass: 0, mid: 0, high: 0, level: 0, glitch: 0 };
     this._glitch = 0;
     this.focus = 1; // the whole mix steps back while the artwork viewer is open
-    this.videos = []; // { v, gain, pan, room } per video with sound
+    this.videos = []; // { v, files, gain, pan, room } per video with sound
     this.spotlight = null; // id of the work the guided tour is showing
   }
 
@@ -50,18 +50,30 @@ export class Ambience {
   }
 
   // Routes the in-world videos with a sound track through the mix (once, after start()).
+  // On phones and low-power devices a video's sound can come from more than one file (its
+  // loop, the loop's light version, the sound alone: world/video.js). They are the same
+  // sound and share one level and one place; each has a switch of its own (`on`), open for
+  // the one file that is heard at the time, so a change of file is not a change of level.
   attachVideos(videos) {
     if (!this.ctx) return false;
     const ctx = this.ctx;
-    for (const v of videos) {
-      if (!v.sound || !v.pos || this.videos.some((e) => e.v === v)) continue;
-      const src = ctx.createMediaElementSource(v.el);
-      const gain = ctx.createGain();
-      gain.gain.value = 0;
-      const pan = ctx.createStereoPanner();
-      src.connect(gain).connect(pan).connect(this.master);
-      const room = roomAt(v.pos.x, v.pos.z);
-      this.videos.push({ v, gain, pan, room: room && room.id });
+    for (const f of videos) {
+      const v = f.main || f;
+      if (!f.sound || !v.pos || this.videos.some((e) => e.files.some((x) => x.f === f))) continue;
+      let entry = this.videos.find((e) => e.v === v);
+      if (!entry) {
+        const gain = ctx.createGain();
+        gain.gain.value = 0;
+        const pan = ctx.createStereoPanner();
+        gain.connect(pan).connect(this.master);
+        const room = roomAt(v.pos.x, v.pos.z);
+        entry = { v, files: [], gain, pan, room: room && room.id };
+        this.videos.push(entry);
+      }
+      const on = ctx.createGain();
+      on.gain.value = f.hush ? 0 : 1;
+      ctx.createMediaElementSource(f.el).connect(on).connect(entry.gain);
+      entry.files.push({ f, on });
     }
     return true;
   }
@@ -101,7 +113,7 @@ export class Ambience {
     const ct = this.ctx.currentTime;
 
     // The videos' sound: full within `near` (1.2 m for a screen), then falling with
-    // distance and gone 7.8 m further (by 9 m from a screen, where it stops playing);
+    // distance and gone 7.8 m further (by 9 m from a screen);
     // through a doorway it is quieter still. The one
     // you face leads (the Singapore and Eden project screens share a corner), and on the tour the
     // video of the current stop does.
@@ -110,7 +122,16 @@ export class Ambience {
     for (const s of this.videos) {
       const { v } = s;
       let level = 0;
-      if (v.wanted && !v.el.paused && !v.el.muted) {
+      let heard = false;
+      for (const { f, on } of s.files) {
+        const open = !f.hush;
+        if (open && f.wanted && !f.el.paused && !f.el.muted) heard = true;
+        if (on.target !== open) {
+          on.target = open;
+          on.gain.setTargetAtTime(open ? 1 : 0, ct, 0.02);
+        }
+      }
+      if (heard) {
         const d = Math.hypot(x - v.pos.x, z - v.pos.z);
         level = Math.min(1, (v.near / Math.max(d, 0.01)) ** 1.4) * Math.min(1, Math.max(0, (v.near + 7.8 - d) / 2.5));
         if (here && s.room && here.id !== s.room) level *= 0.3;

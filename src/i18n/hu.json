@@ -15,7 +15,8 @@
       "legal": "Impresszum",
       "privacy": "Adatkezelés",
       "accessibility": "Akadálymentesség",
-      "help": "Súgó"
+      "help": "Súgó",
+      "concept": "Koncepció"
     },
     "soundAsk": {
       "question": "Hanggal induljon a kiállítás?",
@@ -270,6 +271,7 @@
         "r2-furniture": "az asztal, a székek és a lámpák",
         "r2-storage": "a raktárfülke és a mosdó ajtaja",
         "text-r2": "a kiállítás szövegének lapja",
+        "roomsheet": "a terem lapja, az alaprajzzal és a művek jegyzékével",
         "r2-light-pools": "a képernyők mögötti derengés",
         "r3-walls": "a belépéskor jobb oldali fal",
         "r3-north-wall": "a belépéskor bal oldali fal a két befalazott nyílással",
@@ -290,6 +292,80 @@
         "lif-wall-projection": "Let it Flow: a falra vetített kép",
         "lif-floor-projection": "Let it Flow: a padlóra vetített kép"
       }
+    },
+    "concept": {
+      "title": "A mesterséges mennyország fogalma",
+      "eyebrow": "Hivatkozások, témák és művek",
+      "tablist": "A Koncepció oldal nézetei",
+      "tabs": {
+        "themes": "Témák",
+        "works": "Művek",
+        "timeline": "Idővonal",
+        "network": "Hálózat"
+      },
+      "newTab": "új lapon nyílik meg",
+      "in": {
+        "en": "angol nyelven",
+        "hu": "magyar nyelven"
+      },
+      "footnote": "{n}. lábjegyzet",
+      "notes": "Jegyzetek",
+      "backToText": "Vissza a szöveghez, {n}. lábjegyzet",
+      "type": {
+        "person": "személy",
+        "place": "hely",
+        "organisation": "szervezet",
+        "text": "szöveg",
+        "concept": "fogalom",
+        "event": "esemény",
+        "theme": "téma",
+        "work": "mű"
+      },
+      "subtype": {
+        "river": "folyó",
+        "visitor attraction": "turisztikai látványosság",
+        "country": "ország",
+        "municipality of Hungary": "magyarországi község",
+        "historic county of England": "Anglia történelmi megyéje"
+      },
+      "dates": {
+        "R01": "1859 (a kísérletek kezdete)",
+        "R06": "1901 (az üvegház-metafora)",
+        "R10": "a rendszerváltás után (1989–90)",
+        "R11": "2019. július 22."
+      },
+      "dateLabel": "Dátum a szövegekben",
+      "linksLabel": "Linkek",
+      "mentionedIn": "Említés helye",
+      "source": "Forrás",
+      "wikipedia": "Wikipédia",
+      "passages": "A szövegekben",
+      "references": "Hivatkozások és fogalmak",
+      "works": "Művek",
+      "themes": "Témák",
+      "allWorks": "A kiállítás összes műve",
+      "goto": "ugrás a műhöz a digitális kiállításban",
+      "openTheme": "a téma megnyitása",
+      "textKind": {
+        "videos": "videók",
+        "prints": "nyomatok"
+      },
+      "supporters": "Támogatók, a közreműködők között",
+      "connections": "Kapcsolatok",
+      "exhibition": "a kiállítás a MAMŰ Galériában",
+      "netLabel": "A témák, hivatkozások, fogalmak és művek hálózata",
+      "netNote": "A kapcsolatok a rekonstruktőr szövegolvasatán alapulnak. A pontok helyének nincs jelentése.",
+      "netHelp": "Egy pont kapcsolatai akkor látszanak, amikor a mutató vagy a billentyűzetfókusz rajta áll. Az Enter vagy egy kattintás megnyitja a hivatkozás kártyáját vagy a témát, illetve a műhöz visz. Az Esc megszünteti a kiemelést.",
+      "legend": "Jelmagyarázat",
+      "legendTheme": "Téma: nagy kör",
+      "legendItem": "Hivatkozás vagy fogalom: kis kör",
+      "legendWork": "Mű: négyzet",
+      "legendItemTheme": "Hivatkozás és téma: folytonos vonal",
+      "legendItemWork": "Hivatkozás és mű: szaggatott vonal",
+      "legendThemeWork": "Téma és mű: pontozott vonal",
+      "nodeName": "{label}, {type}, {n} kapcsolat",
+      "nodeNameOne": "{label}, {type}, 1 kapcsolat",
+      "backToDiagram": "Vissza az ábrához"
     }
   },
   "meta": {
@@ -576,7 +652,8 @@
       {
         "h": "Más oldalakra mutató linkek",
         "p": [
-          "A művész honlapjára, a MAMŰ-re, az Instagramra, a Facebookra, a LinkedInre és az OpenStreetMapre mutató linkek ezeket az oldalakat nyitják meg, saját adatkezelési szabályaikkal."
+          "A művész honlapjára, a MAMŰ-re, az Instagramra, a Facebookra, a LinkedInre és az OpenStreetMapre mutató linkek ezeket az oldalakat nyitják meg, saját adatkezelési szabályaikkal.",
+          "A kiállítás szövegei és a Koncepció oldal a Wikipédiára és más külső oldalakra is mutatnak: a szövegekben említett forrásokra, kiadókra és szervezetekre. Ezek a linkek új lapon nyílnak meg, és mindegyik oldal a saját adatkezelési szabályait alkalmazza."
         ]
       },
       {
@@ -596,7 +673,7 @@
         ]
       }
     ],
-    "updated": "Utolsó frissítés: 2026. november 9."
+    "updated": "Utolsó frissítés: 2026. november 16."
   },
   "accessibility": {
     "title": "Akadálymentesség",

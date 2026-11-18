@@ -11,7 +11,7 @@
     "images": "node scripts/optimize-images.mjs",
     "textures": "node scripts/make_bricks.mjs",
     "plant": "node scripts/make_plant.mjs",
-    "check:a11y": "node tests/a11y/smoke.mjs && node tests/a11y/loader-weight.mjs && node tests/a11y/text-edition.mjs && node tests/a11y/reduced-motion.mjs && node tests/a11y/flash.mjs && node tests/a11y/keyboard.mjs && node tests/a11y/focus-mouse.mjs && node tests/a11y/axe.mjs && python3 tests/tools/hu-confirm.py"
+    "check:a11y": "node tests/a11y/smoke.mjs && node tests/a11y/loader-weight.mjs && node tests/a11y/text-edition.mjs && node tests/a11y/reduced-motion.mjs && node tests/a11y/flash.mjs && node tests/a11y/keyboard.mjs && node tests/a11y/focus-mouse.mjs && node tests/a11y/axe.mjs && node tests/a11y/concept.mjs && python3 tests/tools/hu-confirm.py"
   },
   "dependencies": {
     "postprocessing": "^6.39.5",
@@ -22,6 +22,7 @@
     "@gltf-transform/extensions": "^4.5.1",
     "@gltf-transform/functions": "^4.5.1",
     "axe-core": "^4.14.0",
+    "d3-force": "3.0.0",
     "ktx2-encoder": "^0.6.0",
     "meshoptimizer": "^0.22.0",
     "playwright": "^1.63.0",

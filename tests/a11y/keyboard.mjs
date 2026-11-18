@@ -93,6 +93,7 @@ step('1.4 When loading is done, focus is on Enter', 'button#enter', await focusN
 const PANELS = [
   ['#site-nav [data-nav="about"]', 'About'],
   ['#site-nav [data-nav="works"]', 'Works'],
+  ['#site-nav [data-nav="concept"]', 'Concept'],
   ['#site-nav [data-nav="bts"]', 'Behind the scenes'],
   ['#site-nav [data-nav="contact"]', 'Contact (navbar)'],
   ['#site-foot [data-nav="contact"]', 'Contact (footer)'],

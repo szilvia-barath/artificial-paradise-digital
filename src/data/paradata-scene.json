@@ -228,6 +228,7 @@
       "decision": "ap-d72",
       "why": "The exhibition text sheet in Room 2 (Exhibition text sheets in Rooms 1 and 2)."
     },
+    { "id": "roomsheet", "rooms": ["r2"], "decision": null, "why": "The A4 room sheet (plan and list of works) on the wall west of the toilet corridor (DSC_0048): no row covers it; PROGRESS.md, 17 November 2026." },
     {
       "id": "r2-light-pools",
       "rooms": [

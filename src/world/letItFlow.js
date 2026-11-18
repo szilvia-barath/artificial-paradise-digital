@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { photoTexture } from './textures.js';
 import RIVER from '../data/river.json';
 import { OBSTACLES } from './layout.js';
-import { createVideo } from './video.js';
+import { createVideo, BY_ROOM } from './video.js';
 
 // #16 Let it Flow (2024), Room 4, as in the documentation video and the installation photos.
 // A nearly black room lit only by its projections. On the end wall the video Siluett, bright
@@ -65,7 +65,7 @@ export function buildLetItFlow(manager) {
     near: 4.5,
     work: 'w16-let-it-flow',
   });
-  coverWall(wallVideo.tex, VIDEO_ASPECT);
+  for (const tex of wallVideo.textures) coverWall(tex, VIDEO_ASPECT);
   // The video's first frame stands in until it plays. Either is added as light over the wall
   // (a projector cannot darken), so the brick shows through.
   const projMat = new THREE.MeshBasicMaterial({
@@ -92,7 +92,7 @@ export function buildLetItFlow(manager) {
   // The frame is narrower than the room and scaled so that its river is the plastic's size,
   // so zooming it to the walls would pull the two apart. It stays put, and the strips
   // between its long edges and the side walls continue its specks in reflection.
-  floorVideo.tex.wrapT = THREE.MirroredRepeatWrapping;
+  for (const tex of floorVideo.textures) tex.wrapT = THREE.MirroredRepeatWrapping;
   const floorMat = new THREE.MeshBasicMaterial({
     color: FLOOR_TINT,
     transparent: true,
@@ -230,21 +230,26 @@ export function buildLetItFlow(manager) {
   // keep visitors off the installation
   for (const [x0, x1, z0, z1] of RIVER.obstacles) OBSTACLES.push({ x0, x1, z0, z1 });
 
-  // Videos play from Room 3 on, so they are running before the end wall comes into view; the
-  // projector lamp breathes a little.
+  // Videos play from Room 3 on, so they are running before the end wall comes into view
+  // (on phones and low-power devices they go by room, with a light version from Rooms 1 to
+  // 3: main.js, video.js); the projector lamp breathes a little.
   const update = (t, light, camPos) => {
-    const on = !camPos || camPos.x > 9.85;
-    wallVideo.want(on);
-    floorVideo.want(on);
-    if (wallVideo.ready && projMat.map !== wallVideo.tex) {
-      projMat.map = wallVideo.tex;
+    if (!BY_ROOM) {
+      const on = !camPos || camPos.x > 9.85;
+      wallVideo.want(on);
+      floorVideo.want(on);
+    }
+    const wallTex = wallVideo.shown();
+    if (wallTex && projMat.map !== wallTex) {
+      projMat.map = wallTex;
       projMat.needsUpdate = true;
     }
-    if (floorVideo.ready && floorMat.map !== floorVideo.tex) {
-      floorMat.map = floorVideo.tex;
+    const floorTex = floorVideo.shown();
+    if (floorTex && floorMat.map !== floorTex) {
+      floorMat.map = floorTex;
       floorMat.opacity = 1;
       floorMat.needsUpdate = true;
-      projUniform.value = floorVideo.tex;
+      projUniform.value = floorTex;
       projStrength.value = 1;
     }
     const f = 0.97 + 0.02 * Math.sin(t * 0.9) + 0.01 * Math.sin(t * 2.3);

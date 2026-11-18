@@ -44,7 +44,7 @@ for (const [path, name] of [['text/', 'Text edition, English'], ['text/hu/', 'Te
 }
 
 // ---------------- the walk
-const PANELS = ['about', 'works', 'bts', 'help', 'contact', 'accessibility', 'legal', 'privacy'];
+const PANELS = ['about', 'works', 'concept', 'bts', 'help', 'contact', 'accessibility', 'legal', 'privacy'];
 for (const lang of ['en', 'hu']) {
   const { page, ctx, errors } = await openWalk(browser, { lang });
   // Nothing from Google loads in this run: the full-video state below opens the Google Drive
@@ -60,6 +60,14 @@ for (const lang of ['en', 'hu']) {
     await page.evaluate(() => { for (const d of document.querySelectorAll('#panel details')) d.open = true; });
     await page.waitForTimeout(450);
     await scan(page, `Walk ${L}: panel "${name}" open (title screen)`);
+    await page.keyboard.press('Escape');
+  }
+  // the Concept page: each of its four views (Themes is the one scanned above as panel "concept")
+  for (const view of ['works', 'timeline', 'network']) {
+    await page.evaluate(() => window.__ap.ui.show('concept'));
+    await page.evaluate((v) => document.getElementById(`concept-tab-${v}`).click(), view);
+    await page.waitForTimeout(450);
+    await scan(page, `Walk ${L}: Concept page, ${view} view (title screen)`);
     await page.keyboard.press('Escape');
   }
   await page.focus('#enter');
@@ -82,7 +90,7 @@ for (const lang of ['en', 'hu']) {
   await scan(page, `Walk ${L}: measured or guessed view on, with its legend`);
   await page.click('[data-action="paradata"]');
   await page.waitForFunction(() => !window.__ap.paradata.state().on, null, { timeout: 60000 });
-  for (const [i, kind] of [[0, 'painting'], [6, 'video, with Pause button'], [3, 'video on a small screen']]) {
+  for (const [i, kind] of [[0, 'painting'], [1, 'painting with a Connections line'], [6, 'video, with Pause button'], [3, 'video on a small screen']]) {
     await page.evaluate((k) => window.__ap.viewer.open(window.__ap.data.works[k]), i);
     await page.evaluate(() => { for (const d of document.querySelectorAll('#viewer details')) d.open = true; });
     await page.waitForTimeout(900);

@@ -10,3 +10,12 @@ const mq = (q) => matchMedia(q).matches;
 const touchScreen = mq('(pointer: coarse)') || 'ontouchstart' in window;
 const mouse = mq('(any-pointer: fine)') && mq('(any-hover: hover)');
 export const isTouch = touchScreen && !mouse;
+
+// A phone or a low-power device: a phone or tablet as above, or any device that reports 4
+// processor threads or fewer (navigator.hardwareConcurrency; a browser that does not say
+// counts as 8). Safari reports 4 or 8 whatever the machine has, so some Macs are here too.
+// Memory (navigator.deviceMemory) is not asked: Safari and Firefox do not offer it.
+// It sets the lighter picture (main.js: no MSAA, smaller text sheets, fewer HD images) and
+// the videos by room (world/videoPlan.js). A laptop with a touch screen and more than 4
+// threads is neither.
+export const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;

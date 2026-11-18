@@ -9,7 +9,7 @@ import { buildLights } from './world/lights.js';
 import { buildGallery } from './world/gallery.js';
 import { buildParadiseFactory } from './world/paradiseFactory.js';
 import { buildLetItFlow } from './world/letItFlow.js';
-import { VIDEOS, enableVideoSound } from './world/video.js';
+import { VIDEOS, enableVideoSound, scheduleByRoom, videoState, BY_ROOM } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createParadataView, PD_CLASSES } from './world/paradataView.js';
 import { createPost } from './fx/post.js';
@@ -24,7 +24,7 @@ import { focusDialog, BEHIND } from './ui/dialog.js';
 import { localize, onLangChange, setText, t, titleLang } from './i18n.js';
 import { announce, unannounce, setForeign } from './ui/announce.js';
 import { reducedMotion, onMotionChange } from './motion.js';
-import { isTouch } from './device.js';
+import { isTouch, lowPower } from './device.js';
 
 localize(data);
 // The live region marks the English work titles on the Hungarian page, in every message
@@ -35,7 +35,7 @@ markTitles();
 // isTouch (device.js): a phone or a tablet, a touch screen with no mouse or trackpad. A laptop
 // with a touch screen is a computer here (D10): it keeps the keycaps, the footer, the mouse
 // and the computer's words, picture quality and field of view, and touch works on it as well.
-const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
+// lowPower (device.js) is a phone or tablet, or a device reporting 4 threads or fewer.
 document.body.classList.toggle('touch', isTouch);
 // On a phone or tablet the sound question names the Sound button at the bottom, not the M key,
 // and the hint inside says how to move by touch (the desktop words stay as they are).
@@ -160,6 +160,8 @@ const ui = setupPanels(data, {
   onOpenPanel: () => { blockers.panel = true; if (tour.active) tour.stop(); syncEnabled(); },
   // walking stays locked while the sound question is still open (it holds blockers.panel too)
   onClosePanel: () => { blockers.panel = soundAsking(); syncEnabled(); },
+  // a work's link on the Concept page: the panel has closed; go to the work, focus on the 3D view
+  onGotoWork: (w) => { gotoWork(w); focusScene(); },
   onJumpRoom: (id) => jumpToRoom(id),
   onGuide: () => showGuide(true),
   inside: () => entered,
@@ -172,6 +174,10 @@ const viewer = setupViewer(data, {
   onClose: () => { blockers.viewer = false; audio.setFocus(1); syncEnabled(); },
   onGoto: (w) => { gotoWork(w); focusScene(); },
   focusFallback,
+  connections: (w) => ui.connections(w),
+  // a theme in the viewer's Connections line: the viewer closes (focus goes back to what
+  // opened it, which then counts as the panel's opener) and the Concept page opens there
+  onTheme: (id) => { viewer.close(); ui.show('concept', { theme: id }); },
   // the viewer plays a video's sound itself, so the walk's mix steps aside
   onMedia: (isVideo) => audio.setFocus(isVideo ? 0 : 0.4),
   isMuted: () => audio.muted,
@@ -791,6 +797,7 @@ function frame() {
   audio.spotlight = tour.work;
   audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
+  scheduleByRoom(controls.pos.x, controls.pos.y); // phones and low-power devices only
   gallery.update(t, dt, camera, controls.zoom);
   letItFlow.update(t, lights.proj, camera.position);
   updateFront(dt);
@@ -861,4 +868,4 @@ onLangChange(() => {
 });
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap, paradata, setParadata };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap, paradata, setParadata, videoState, videosByRoom: BY_ROOM, lowPower };

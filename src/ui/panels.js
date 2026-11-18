@@ -1,7 +1,10 @@
-import { t, titleLang } from '../i18n.js';
+import { t, lang, titleLang } from '../i18n.js';
 import { focusDialog, shown } from './dialog.js';
+import refs from '../data/references.json';
+import { refHTML } from '../refhtml.js';
+import { setupConcept } from './concept.js';
 
-// About / Works / Behind-the-scenes panels and the "jump to room" menu.
+// About / Works / Concept / Behind-the-scenes panels and the "jump to room" menu.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 // A work's title, marked lang="en" on the Hungarian page (titleLang in i18n.js).
@@ -9,7 +12,8 @@ const langAttr = (w) => (titleLang(w) ? ` lang="${titleLang(w)}"` : '');
 
 // isTouch: the controls for a touch screen come first in Help. inside(): the visitor is in the
 // exhibition, so Help can bring the first-use card back (onGuide).
-export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, onGuide, inside, isTouch, focusFallback }) {
+// onGotoWork(work): the Concept page's links to a work (the panel is closed first).
+export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpenWork, onGotoWork, onGuide, inside, isTouch, focusFallback }) {
   const panel = document.getElementById('panel');
   const body = document.getElementById('panel-body');
   const roomsMenu = document.getElementById('rooms-menu');
@@ -19,9 +23,15 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   // Focus goes to the Close button on opening and back to the opener on closing.
   const dialog = focusDialog(panel, { initial: () => closeBtn, fallback: focusFallback });
   let current = null;
+  // The links laid over the texts (references.json), in the page's language.
+  const links = () => refHTML(refs, { t, lang: lang() });
+  // The Concept page (concept.js): a work's link closes the panel without handing focus
+  // back, and the 3D view takes it (main.js).
+  const concept = setupConcept(data, body, { onGotoWork: (w) => { close({ refocus: false }); onGotoWork?.(w); } });
 
   const aboutHTML = () => {
     const m = data.meta;
+    const R = links();
     return `
     <p class="eyebrow">${esc(m.artist)} · ${esc(m.venue)} · <span class="date">${esc(m.dates)}</span></p>
     <h2 id="panel-title">${esc(m.title)}</h2>
@@ -29,7 +39,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="note">${esc(data.textCredit)}</p>
     <h3>${esc(t('panels.credits'))}</h3>
     <dl class="credits">
-      ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
+      ${data.credits.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${R.credit(v, i)}</dd>`).join('')}
     </dl>
     <h3>${esc(t('panels.real'))}</h3>
     <p>${esc(t('panels.address', { venue: m.venue, address: m.address }))} ·
@@ -48,7 +58,9 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   `;
   };
 
-  // The opening speech, folded away under its title (it is long).
+  // The opening speech, folded away under its title (it is long). Its words are as in
+  // src/i18n; the links to what it mentions and the three footnotes of the original speech
+  // (markers in the text, the notes under it) are laid over them here.
   const speechHTML = () => {
     const s = data.openingSpeech;
     if (!s) return '';
@@ -56,7 +68,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <h3>${esc(t('panels.speech'))}</h3>
     <details class="speech">
       <summary>${esc(s.author)}: <em>${esc(s.title)}</em> · ${esc(t('panels.speechRead'))}</summary>
-      ${s.text.map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${links().paragraphs('openingSpeech', s.text).map((p) => `<p>${p}</p>`).join('')}
+      ${links().notes('h4')}
       ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
     </details>`;
   };
@@ -150,7 +163,7 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   `;
   };
 
-  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, help: helpHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy'), accessibility: noticeHTML('accessibility') };
+  const PAGES = { about: aboutHTML, works: worksHTML, concept: concept.html, bts: btsHTML, help: helpHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy'), accessibility: noticeHTML('accessibility') };
 
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));
@@ -163,20 +176,26 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   };
   // opts.opener: where focus goes back to on closing, if not the control that has focus now.
   // opts.work: the works list opens with focus on that work's row, scrolled into view.
+  // opts.theme: the Concept page opens at that theme, with focus on its heading.
   const show = (name, opts = {}) => {
     const wasOpen = !panel.hidden;
     current = name;
+    if (name === 'concept') concept.reset();
     body.innerHTML = PAGES[name]();
+    if (name === 'concept') concept.mount();
     panel.hidden = false;
     setRooms(false);
     markNav();
     panel.scrollTop = 0;
     if (!wasOpen) {
       onOpenPanel();
-      const row = opts.work && workButton(opts.work);
+      const row = (opts.work && workButton(opts.work)) || (name === 'concept' && opts.theme && concept.themeHeading(opts.theme)) || null;
       dialog.opened({ ...('opener' in opts ? { opener: opts.opener } : {}), ...(row ? { initial: () => row } : {}) });
-      row?.scrollIntoView({ block: 'nearest' });
-    } else dialog.rebuilt(); // moved from one panel to another through a link inside it
+      row?.scrollIntoView({ block: opts.theme ? 'start' : 'nearest' });
+    } else {
+      dialog.rebuilt(); // moved from one panel to another through a link inside it
+      if (name === 'concept' && opts.theme) concept.openTheme(opts.theme);
+    }
   };
   // refocus false: focus is not handed back (a work opened from the list takes it).
   const close = ({ refocus = true } = {}) => {
@@ -194,6 +213,16 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       show(n.dataset.nav);
       return;
     }
+    // A footnote's marker goes to its note, and the note's arrow back to the marker: the
+    // target is scrolled into view and takes focus (the address bar is left alone).
+    const fn = e.target.closest('[data-fn], [data-fnref]');
+    if (fn) {
+      e.preventDefault();
+      const to = body.querySelector(fn.dataset.fn ? `#fn-${fn.dataset.fn}` : `#fnref-${fn.dataset.fnref}`);
+      to?.scrollIntoView({ block: 'center' });
+      to?.focus({ preventScroll: true });
+      return;
+    }
     // Help's "show the short guide again": the panel closes (focus goes back as on any close)
     // and the first-use card shows
     if (e.target.closest('[data-guide]')) {
@@ -206,7 +235,12 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     onOpenWork(data.works.find((w) => w.id === b.dataset.work));
   });
   panel.addEventListener('click', (e) => { if (e.target === panel) close(); });
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  // Esc closes the panel. On the Concept page's diagram the first Esc clears the highlight.
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || panel.hidden) return;
+    if (current === 'concept' && concept.clearHighlight()) return;
+    close();
+  });
 
   // Each room with the works in it. The button's name is the room alone; the titles stand
   // beside it as its description (aria-describedby), and the row as a whole is the button's
@@ -269,11 +303,14 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       buildRoomsMenu();
       if (!current) return;
       body.innerHTML = PAGES[current]();
+      if (current === 'concept') concept.mount();
       dialog.rebuilt(); // if focus was on a control in the old text, it goes to Close
     },
     close,
     // the control focus goes back to when the open panel closes
     opener: () => dialog.opener(),
     isOpen: () => !panel.hidden,
+    // what touches a work (references, themes): the viewer's "Connections" line
+    connections: concept.connections,
   };
 }

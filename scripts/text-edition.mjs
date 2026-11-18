@@ -12,9 +12,10 @@ import { fileURLToPath } from 'node:url';
 import { ROOMS } from '../src/world/layout.js';
 import { visitOrder, isPart, placeOf } from '../src/world/route.js';
 import { localizeData, translator } from '../src/localize.js';
+import { refHTML } from '../src/refhtml.js';
 
 const SITE = 'https://artificial-paradise.netlify.app/';
-const SOURCES = ['../src/data/exhibition.json', '../src/i18n/en.json', '../src/i18n/hu.json', '../src/data/paradata-scene.json', '../src/data/paradata.json'].map((p) => fileURLToPath(new URL(p, import.meta.url)));
+const SOURCES = ['../src/data/exhibition.json', '../src/i18n/en.json', '../src/i18n/hu.json', '../src/data/paradata-scene.json', '../src/data/paradata.json', '../src/data/references.json'].map((p) => fileURLToPath(new URL(p, import.meta.url)));
 const readJSON = (file) => JSON.parse(readFileSync(file, 'utf8'));
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -40,6 +41,15 @@ dd{margin:0}
 .sub,.note{color:var(--muted)}
 .note{font-size:.95rem}
 nav ul{margin:.4rem 0;padding-left:1.2rem}
+a.ref{color:inherit;text-decoration-thickness:1px}
+.lang-mark{display:inline-block;margin-left:.2em;font-size:.7em;letter-spacing:.04em;vertical-align:.4em}
+sup{line-height:0}
+sup a{padding:0 .15em}
+.footnotes{padding-left:1.4rem;font-size:.95rem}
+.footnotes li{margin:.4rem 0}
+.footnotes li:target,.footnotes li:focus{outline:2px solid var(--link);outline-offset:3px}
+.fn-back{text-decoration-thickness:1px;padding:0 .2em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:30rem){dl{grid-template-columns:1fr;gap:0}dd{margin-bottom:.5rem}}
 `.trim();
 
@@ -53,6 +63,8 @@ function page(lang, raw) {
   const loc = raw[lang];
   const data = localizeData(structuredClone(raw.data), en, loc);
   const t = translator(loc, en);
+  // the links laid over the texts, the same as in the 3D view's panels (src/refhtml.js)
+  const R = refHTML(raw.refs, { t, lang });
   const works = visitOrder(data.works);
   const toWalk = lang === 'hu' ? '../../' : '../';
   // Titles are the official English ones; on the Hungarian page they are marked as English
@@ -109,7 +121,7 @@ function page(lang, raw) {
     }
     textAt[w.desc] = w;
     return `<h4>${esc(d.heading)}</h4>
-${d.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${d.note ? `\n<p class="note">${esc(d.note)}</p>` : ''}`;
+${R.paragraphs(`descriptions.${w.desc}`, d.text).map((p) => `<p>${p}</p>`).join('\n')}${d.note ? `\n<p class="note">${esc(d.note)}</p>` : ''}`;
   };
 
   const workHTML = (w) => {
@@ -158,10 +170,10 @@ ${artistText(w)}
       i === 0 ? t('textEdition.enterStairs') : t('textEdition.enterFrom', { room: roomName(ROOMS[i - 1].id) }),
       t('textEdition.roomCount', { n: inRoom.length }),
     ];
-    for (const sh of data.sheets || []) {
-      const p = placeOf({ hang: sh }, data.works);
-      if (p && p.room === r.id) lead.push(t('textEdition.sheet', { where: where({ hang: sh }, { order: false }) }));
-    }
+    // the sheets in this room (Room 2 has two: the exhibition text and the room sheet by the
+    // toilet corridor), in one sentence
+    const sheetsHere = (data.sheets || []).filter((sh) => placeOf({ hang: sh }, data.works)?.room === r.id);
+    if (sheetsHere.length) lead.push(t('textEdition.sheet', { where: sheetsHere.map((sh) => where({ hang: sh }, { order: false })).join(' ') }));
     return `<section id="room-${r.id}" aria-labelledby="room-${r.id}-h">
 <h2 id="room-${r.id}-h">${esc(data.rooms[r.id].name)}</h2>
 <p class="sub">${titled(data.rooms[r.id].subtitle)}</p>
@@ -251,7 +263,8 @@ ${data.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}
 <section id="opening-speech" aria-labelledby="opening-speech-h">
 <h2 id="opening-speech-h">${esc(t('panels.speech'))}</h2>
 <p>${esc(speech.author)}: <em>${esc(speech.title)}</em></p>
-${speech.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${speech.note ? `\n<p class="note">${esc(speech.note)}</p>` : ''}
+${R.paragraphs('openingSpeech', speech.text).map((p) => `<p>${p}</p>`).join('\n')}
+${R.notes('h3')}${speech.note ? `\n<p class="note">${esc(speech.note)}</p>` : ''}
 </section>` : ''}
 <section id="controls" aria-labelledby="controls-h">
 <h2 id="controls-h">${esc(t('panels.controls'))}</h2>
@@ -262,7 +275,7 @@ ${speech.text.map((p) => `<p>${esc(p)}</p>`).join('\n')}${speech.note ? `\n<p cl
 <section id="credits" aria-labelledby="credits-h">
 <h2 id="credits-h">${esc(t('panels.credits'))}</h2>
 <dl>
-${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('\n')}
+${data.credits.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${R.credit(v, i)}</dd>`).join('\n')}
 </dl>
 </section>
 <section id="accessibility" aria-labelledby="accessibility-h">
@@ -284,10 +297,10 @@ ${statementHTML}
 
 // The two pages: [{ file: 'text/index.html', html }, { file: 'text/hu/index.html', html }]
 export function buildTextEdition() {
-  const [data, en, hu, pdScene, pd] = SOURCES.map(readJSON);
+  const [data, en, hu, pdScene, pd, refs] = SOURCES.map(readJSON);
   // the curator's line is found by position, so make sure it is still there
   if (en.credits[1][0] !== 'Curator') throw new Error('text edition: the second line of "credits" in en.json is no longer the curator');
-  const raw = { data, en, hu, pdScene, pd };
+  const raw = { data, en, hu, pdScene, pd, refs };
   return [
     { file: 'text/index.html', html: page('en', raw) },
     { file: 'text/hu/index.html', html: page('hu', raw) },
