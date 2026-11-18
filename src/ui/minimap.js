@@ -11,11 +11,13 @@ const NORTH = [-0.829, -0.56];
 // The works on the map, in four groups by their `type` in exhibition.json. Each group has its
 // own shape and colour, so none is told by colour alone (A4): the map's magenta and cyan, the
 // light of text on glass, and an orange of its own for the other works (not the accent blue,
-// which is the visitor's dot). The prints count as paintings (the reconstructor, 18 November);
-// a type not listed goes to "Other works" (none at present). The key under the map (#map-key)
-// is drawn from this table with the same outlines.
+// which is the visitor's dot), and a yellow hexagon for the prints, which have a group of their
+// own in the key (the reconstructor, 18 November 2026, second batch); a type not listed goes to
+// "Other works" (none at present). The key under the map (#map-key) is drawn from this table
+// with the same outlines; a group with no works on the map is left out of it.
 export const MAP_GROUPS = [
-  { id: 'paintings', types: ['painting', 'print'], shape: 'circle', colour: '#ff4fa3' },
+  { id: 'paintings', types: ['painting'], shape: 'circle', colour: '#ff4fa3' },
+  { id: 'prints', types: ['print'], shape: 'hexagon', colour: '#ffe14d' },
   { id: 'videos', types: ['video', 'projection'], shape: 'square', colour: '#5fe7ff' },
   { id: 'installations', types: ['installation'], shape: 'triangle', colour: '#f2f1ed' },
   { id: 'other', types: [], shape: 'diamond', colour: '#ff9f40' },
@@ -29,11 +31,12 @@ export function markPath(shape) {
   if (shape === 'square') return 'M-2.5 -2.5H2.5V2.5H-2.5Z';
   if (shape === 'triangle') return 'M0 -3.6L3.3 2.2H-3.3Z';
   if (shape === 'diamond') return 'M0 -3.2L3.2 0L0 3.2L-3.2 0Z';
+  if (shape === 'hexagon') return 'M0 -3L2.6 -1.5V1.5L0 3L-2.6 1.5V-1.5Z';
   return 'M2.5 0A2.5 2.5 0 1 1 -2.5 0A2.5 2.5 0 1 1 2.5 0Z';
 }
 // The edge is a 2 px stroke under the fill: 1 px of it shows outside the colour all round.
 const SVG_NS = 'http://www.w3.org/2000/svg';
-function drawKey() {
+function drawKey(works) {
   for (const svg of document.querySelectorAll('#map-key svg[data-group]')) {
     const g = MAP_GROUPS.find((x) => x.id === svg.dataset.group);
     if (!g) continue;
@@ -46,12 +49,13 @@ function drawKey() {
     path.setAttribute('paint-order', 'stroke');
     svg.dataset.shape = g.shape;
     svg.replaceChildren(path);
+    svg.closest('.mk-item').hidden = !works.some((w) => groupOf(w.type) === g);
   }
 }
 
 export function setupMinimap(canvas, segments, works, onJump) {
   const ctx = canvas.getContext('2d');
-  drawKey();
+  drawKey(works);
   const paths = Object.fromEntries(MAP_GROUPS.map((g) => [g.shape, new Path2D(markPath(g.shape))]));
   const bounds = { x0: -1.0, x1: 26.2, z0: -0.6, z1: 7.6 };
   let W = 0;

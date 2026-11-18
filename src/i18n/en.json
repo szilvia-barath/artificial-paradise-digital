@@ -71,6 +71,7 @@
       "minimapHere": "Floor plan: you are in {room}",
       "mapKey": {
         "paintings": "Paintings",
+        "prints": "Prints",
         "videos": "Videos",
         "installations": "Installations",
         "other": "Other works"

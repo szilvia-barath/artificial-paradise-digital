@@ -515,7 +515,6 @@ canvas.addEventListener('pointerup', (e) => {
 
 // ---------------------------------------------------------------- rooms
 const roomName = document.querySelector('#room-label .room-name');
-const roomSub = document.querySelector('#room-label .room-sub');
 let currentRoom = null;
 let currentRoomId = 'r1';
 function updateRoom() {
@@ -526,7 +525,6 @@ function updateRoom() {
     currentRoom = key;
     currentRoomId = r.id;
     setText(roomName, `rooms.${r.id}.name`);
-    setText(roomSub, `rooms.${r.id}.subtitle`);
     nameMap();
     ui.setRoom(r.id); // the rooms menu marks it (aria-current)
     if (!first && entered) announceRoom();

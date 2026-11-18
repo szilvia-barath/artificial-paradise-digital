@@ -71,6 +71,7 @@
       "minimapHere": "Alaprajz. Jelenlegi hely: {room}",
       "mapKey": {
         "paintings": "Festmények",
+        "prints": "Nyomatok",
         "videos": "Videók",
         "installations": "Installációk",
         "other": "Egyéb művek"

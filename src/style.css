@@ -1358,3 +1358,12 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 /* A touch screen: no turn keys (the keyboard's ← and →) and no short help in the middle;
    the zoom buttons stay (the reconstructor, 18 November 2026) */
 body.touch #keypad, body.touch #click-to-look { display: none !important; }
+/* The floor plan and its key in one box, the key under the plan: slightly see-through, square
+   corners, no border; the room label likewise (the reconstructor, 18 November 2026) */
+#map-box { position: absolute; right: calc(14px + var(--safe-r)); top: calc(var(--nav-h) + 8px); display: flex; flex-direction: column; align-items: stretch; background: rgba(11, 12, 14, 0.7); border: 0; border-radius: 0; pointer-events: none; }
+#map-box #minimap, #map-box #map-key { position: static; background: none; border: 0; border-radius: 0; }
+#map-box #minimap { pointer-events: auto; }
+#map-box #map-key { padding: 2px 8px 6px; }
+#room-label { background: rgba(11, 12, 14, 0.7); border: 0; border-radius: 0; }
+@media (max-width: 820px) { #map-box { right: calc(10px + var(--safe-r)); top: calc(var(--nav-h) + 6px); } }
+@media (max-width: 480px) and (max-height: 400px), (max-width: 760px) and (max-height: 300px) { body:not(.touch) #map-box { display: none; } }
