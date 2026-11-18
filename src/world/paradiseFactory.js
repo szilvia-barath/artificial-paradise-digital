@@ -148,8 +148,6 @@ function chain(mat, a, b) {
 export function buildParadiseFactory(materials, manager) {
   const g = new THREE.Group();
   g.name = 'paradise-factory';
-  // parts for the paradata view (paradata-scene.json): the details unless named below
-  g.userData.paradata = 'pf-details';
   const rand = rng(31);
   const pvc = new THREE.MeshStandardMaterial({ color: 0xf3f3f0, roughness: 0.32 });
   const chainMat = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, roughness: 0.3, metalness: 0.9 });
@@ -170,7 +168,6 @@ export function buildParadiseFactory(materials, manager) {
     const line = new THREE.Group();
     line.position.copy(a).addScaledVector(dir, len / 2);
     line.rotation.y = yaw;
-    line.userData.paradata = 'pf-channel';
     g.add(line);
     // square-ish NFT channel (10 x 6 cm) with rounded corners and end caps
     const sec = new THREE.Shape();
@@ -211,11 +208,9 @@ export function buildParadiseFactory(materials, manager) {
     for (const sx of [-0.045, 0.045]) {
       const led = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.022, len - 0.06), materials.black);
       led.position.set(sx, 0.2, 0);
-      led.userData.paradata = 'pf-details';
       line.add(led);
       const diff = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.008, len - 0.1), materials.led);
       diff.position.set(sx, 0.186, 0);
-      diff.userData.paradata = 'pf-details';
       line.add(diff);
     }
     // chains to the ceiling: channel and lamp hang separately, near each end
@@ -251,7 +246,6 @@ export function buildParadiseFactory(materials, manager) {
         leaves.setColorAt(k++, tint);
       }
     }
-    leaves.userData.paradata = 'pf-details';
     line.add(leaves);
     // the seedlings stand in brown expanded-clay pebbles filling the channel (documentation video)
     {
@@ -277,7 +271,6 @@ export function buildParadiseFactory(materials, manager) {
           pebbles.setColorAt(n++, c);
         }
       }
-      pebbles.userData.paradata = 'pf-details';
       line.add(pebbles);
     }
     // keep visitors out from under the line: small boxes along its diagonal
@@ -295,7 +288,6 @@ export function buildParadiseFactory(materials, manager) {
     // (scripts/make_plant.mjs). It stands on the floor, centred on PLANT, front to the south.
     const rig = new THREE.Group();
     rig.position.set(x, 0, z);
-    rig.userData.paradata = 'pf-plant';
     g.add(rig);
     const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
     loadGzipped(loader, manager, `${import.meta.env.BASE_URL}models/paradise-factory-plant.glb`, (gltf) => {

@@ -11,7 +11,6 @@ import { buildParadiseFactory } from './world/paradiseFactory.js';
 import { buildLetItFlow } from './world/letItFlow.js';
 import { VIDEOS, enableVideoSound, scheduleByRoom, videoState, BY_ROOM } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
-import { createParadataView, PD_CLASSES } from './world/paradataView.js';
 import { createPost } from './fx/post.js';
 import { MAX_DPR, pixelCapFor, baseFovFor } from './fx/resolution.js';
 import { isOn } from './fx/switches.js';
@@ -249,49 +248,6 @@ function toggleTour() {
   syncEnabled();
 }
 
-// ---------------------------------------------------------------- measured or guessed
-// The paradata view: a toggle on the toolbar (in a narrow window, in the folded menu), with
-// its legend. Nothing in it moves, so it is the same with reduced motion.
-const paradata = createParadataView(scene, data.works);
-const pdButtons = document.querySelectorAll('[data-action="paradata"], [data-paradata]');
-const pdLegend = document.getElementById('pd-legend');
-let pdOn = false;
-async function fillLegend() {
-  const n = await paradata.counts();
-  const list = document.getElementById('pd-legend-list');
-  list.replaceChildren(...PD_CLASSES.map((k) => {
-    const li = document.createElement('li');
-    li.dataset.status = k;
-    const sw = document.createElement('span');
-    sw.className = `sw sw-${k}`;
-    sw.setAttribute('aria-hidden', 'true');
-    const name = document.createElement('span');
-    const b = document.createElement('b');
-    b.textContent = t(`paradata.status.${k}`);
-    const pt = document.createElement('span');
-    pt.className = 'pt';
-    pt.textContent = t(`paradata.pattern.${k}`);
-    name.append(b, ' ', pt);
-    const ct = document.createElement('span');
-    ct.className = 'ct';
-    ct.dataset.n = String(n[k]);
-    ct.textContent = t(n[k] === 1 ? 'paradata.countOne' : 'paradata.count', { n: n[k] });
-    li.append(sw, name, ct);
-    return li;
-  }));
-}
-async function setParadata(on) {
-  pdOn = on;
-  for (const b of pdButtons) b.setAttribute('aria-pressed', String(on));
-  document.body.classList.toggle('paradata', on);
-  if (on) await fillLegend();
-  if (pdOn !== on) return; // pressed again meanwhile
-  pdLegend.hidden = !on;
-  await paradata.set(on);
-  announce(t(on ? 'paradata.on' : 'paradata.off'), 'paradata');
-}
-document.querySelector('[data-paradata]').addEventListener('click', () => setParadata(!pdOn));
-
 const soundBtn = document.querySelector('[data-action="sound"]');
 function toggleSound() {
   setSound(audio.muted);
@@ -329,7 +285,6 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   if (a === 'rooms') ui.toggleRooms();
   else if (a === 'tour') toggleTour();
   else if (a === 'sound') toggleSound();
-  else if (a === 'paradata') setParadata(!pdOn);
   else if (a === 'help') ui.show('help');
   // Next work: the same jump as Page Down. Focus stays on the button (a mouse click or a tap
   // then hands it to the view, below), so pressed again it goes on to the next work. Only
@@ -996,4 +951,4 @@ onLangChange(() => {
 });
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap, paradata, setParadata, videoState, videosByRoom: BY_ROOM, lowPower };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data, visit, minimap, videoState, videosByRoom: BY_ROOM, lowPower };

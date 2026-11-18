@@ -312,7 +312,6 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       holder.position.set(f.x, hg.y, f.z);
       holder.rotation.y = f.rotY;
       holder.userData.work = work;
-      holder.userData.paradata = work.id; // its part in the paradata view (paradata-scene.json)
       const isScreen = work.type === 'video';
 
       // light pool (fake spotlight wash), additive, so it brightens the brick behind
@@ -330,7 +329,6 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       );
       pool.position.set(0, 0.12, 0.004);
       pool.renderOrder = 1;
-      pool.userData.paradata = `${work.room}-light-pools`;
       holder.add(pool);
 
       if (isScreen) {
@@ -478,7 +476,6 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;
     panel.userData.text = sh.kind;
-    panel.userData.paradata = sh.id;
     group.add(panel);
     hitMeshes.push(panel);
   }

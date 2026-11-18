@@ -1,12 +1,10 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { tagGeometry, pdOf } from './paradataTags.js';
 
 // Bake every plain (non-instanced) mesh into one merged mesh per material: a few
 // hundred small meshes of furniture become a couple of dozen draw calls. Meshes are kept
 // apart by `userData.status` as well (measured, inferred, invented), so a merged mesh never
-// mixes statuses; and by their part in the measured or guessed view (pdOf, paradataTags.js),
-// which each merged mesh carries per vertex and as its own tag. The geometry is baked relative
+// mixes statuses. The geometry is baked relative
 // to `group`, which may stand anywhere. With `strict`, transparent meshes (their drawing
 // order is sorted per mesh), meshes with several materials and meshes drawn in a set order
 // are left alone; props.js keeps its old, looser rule.
@@ -19,19 +17,18 @@ export function mergeStatic(group, { strict = false } = {}) {
     if (strict && (Array.isArray(o.material) || o.material.transparent || o.renderOrder !== 0 || !o.visible)) return;
     if (!byMat.has(o.material)) byMat.set(o.material, new Map());
     const byStatus = byMat.get(o.material);
-    const key = `${o.userData.status ?? ''}|${pdOf(o) ?? ''}`;
+    const key = o.userData.status;
     if (!byStatus.has(key)) byStatus.set(key, []);
     byStatus.get(key).push(o);
   });
-  const buckets = [...byMat].flatMap(([mat, byStatus]) => [...byStatus].map(([, meshes]) => ({ mat, status: meshes[0].userData.status, pd: pdOf(meshes[0]), meshes })));
+  const buckets = [...byMat].flatMap(([mat, byStatus]) => [...byStatus].map(([status, meshes]) => ({ mat, status, meshes })));
   const m4 = new THREE.Matrix4();
-  for (const { mat, status, pd, meshes } of buckets) {
+  for (const { mat, status, meshes } of buckets) {
     if (meshes.length < 2) continue;
     const geos = meshes.map((m) => {
       const geo = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone());
       geo.applyMatrix4(m4.multiplyMatrices(toGroup, m.matrixWorld));
       for (const k of Object.keys(geo.attributes)) if (!['position', 'normal', 'uv'].includes(k)) geo.deleteAttribute(k);
-      if (pd) tagGeometry(geo, pd);
       geo.morphAttributes = {};
       geo.clearGroups();
       return geo;
@@ -41,7 +38,6 @@ export function mergeStatic(group, { strict = false } = {}) {
     for (const m of meshes) m.parent.remove(m);
     const mesh = new THREE.Mesh(merged, mat);
     if (status !== undefined) mesh.userData.status = status;
-    if (pd) mesh.userData.paradata = pd;
     mesh.matrixAutoUpdate = false;
     group.add(mesh);
   }
