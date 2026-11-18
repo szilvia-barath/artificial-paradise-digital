@@ -81,12 +81,23 @@
             <div id="rooms-menu" hidden></div>
           </div>
           <button data-action="sound" title="Sound on/off (M)" aria-pressed="false" data-i18n-attr="title:hud.soundTitle"><span class="ico" aria-hidden="true"><svg class="snd-on" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11.2 5.6a3.4 3.4 0 0 1 0 4.8M13.1 3.7a6 6 0 0 1 0 8.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><svg class="snd-off" viewBox="0 0 16 16" focusable="false"><path d="M2 5.5h3L9 2.5v11l-4-3H2z" fill="currentColor"/><path d="M11 6l4 4M15 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
+          <!-- Measured or guessed: every part of the rooms drawn by its paradata status
+               (src/world/paradataView.js), with the legend below. aria-pressed gives its state. In a
+               narrow window it is in the folded menu instead, as Help is. -->
+          <button data-action="paradata" title="Show which parts are measured, inferred or invented" aria-pressed="false" data-i18n-attr="title:paradata.buttonTitle"><span class="ico" aria-hidden="true">&#9641;</span><span class="lbl" data-i18n="paradata.button">Measured or guessed</span></button>
           <!-- Next work: the same jump as Page Down, one per press or tap -->
           <button data-action="next" title="Next work (Page Down)" data-i18n-attr="title:hud.nextTitle"><span class="ico" aria-hidden="true">›</span><span class="lbl" data-i18n="hud.next">Next work</span></button>
           <!-- Help: the controls in a panel, and the first-use card again. In a narrow window it
                is in the folded menu instead (the navbar's Help), where there is room. -->
           <button data-action="help" title="How to move, and all the keys" data-i18n-attr="title:hud.helpTitle"><span class="ico" aria-hidden="true">?</span><span class="lbl" data-i18n="hud.help">Help</span></button>
         </nav>
+        <!-- The legend of the measured or guessed view: each status in words, its pattern and
+             the number of parts (main.js fills the list). Shown only while the view is on. -->
+        <section id="pd-legend" aria-labelledby="pd-legend-h" hidden>
+          <h2 id="pd-legend-h" data-i18n="paradata.legendTitle">Measured or guessed</h2>
+          <ul id="pd-legend-list"></ul>
+          <p data-i18n="paradata.legendNote">Each part of the rooms is drawn by how it was reconstructed, from the paradata. The works keep their images: a band round each one, or a pattern laid over it, shows its status.</p>
+        </section>
         <div id="tour-caption"></div>
         <div id="joystick"><div id="joystick-knob"></div></div>
         <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
@@ -139,6 +150,9 @@
         <button data-nav="contact" data-i18n="nav.contact">Contact</button>
         <!-- The folded menu only: Help, which a wide window has on the toolbar -->
         <button class="nav-narrow" data-nav="help" data-i18n="nav.help">Help</button>
+        <!-- The folded menu only, inside the exhibition: the measured or guessed view's switch,
+             which a wide window has on the toolbar -->
+        <button class="nav-narrow nav-pd" data-paradata aria-pressed="false" data-i18n="paradata.button">Measured or guessed</button>
         <!-- The folded menu only (narrow windows): what the footer holds, below a line, since
              the footer is put away inside the exhibition on a phone. Hidden in a wide window. -->
         <div class="nav-more">

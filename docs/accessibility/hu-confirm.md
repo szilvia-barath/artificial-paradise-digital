@@ -1,6 +1,6 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 64. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 130. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
@@ -112,6 +112,204 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.announce.viewerWork`
   - HU: {title}. {no}. mű a {total} közül.
   - EN: {title}. No. {no} of {total}.
+- `ui.paradata.button`
+  - HU: Mért vagy becsült
+  - EN: Measured or guessed
+- `ui.paradata.buttonTitle`
+  - HU: Megmutatja, mely részek mértek, kikövetkeztetettek vagy kitaláltak
+  - EN: Show which parts are measured, inferred or invented
+- `ui.paradata.legendTitle`
+  - HU: Mért vagy becsült
+  - EN: Measured or guessed
+- `ui.paradata.legendNote`
+  - HU: A termek minden része aszerint látszik, hogyan készült a rekonstrukciója, a paradata alapján. A művek képe nem változik: a körülöttük lévő keret vagy a rájuk fektetett minta mutatja az állapotukat.
+  - EN: Each part of the rooms is drawn by how it was reconstructed, from the paradata. The works keep their images: a band round each one, or a pattern laid over it, shows its status.
+- `ui.paradata.count`
+  - HU: {n} rész
+  - EN: {n} parts
+- `ui.paradata.countOne`
+  - HU: 1 rész
+  - EN: 1 part
+- `ui.paradata.status.measured`
+  - HU: Mért
+  - EN: Measured
+- `ui.paradata.status.inferred`
+  - HU: Kikövetkeztetett
+  - EN: Inferred
+- `ui.paradata.status.invented`
+  - HU: Kitalált
+  - EN: Invented
+- `ui.paradata.status.omitted`
+  - HU: Kihagyott
+  - EN: Omitted
+- `ui.paradata.status.not-recorded`
+  - HU: Nincs feljegyezve
+  - EN: Not recorded
+- `ui.paradata.pattern.measured`
+  - HU: teli
+  - EN: solid
+- `ui.paradata.pattern.inferred`
+  - HU: csíkos
+  - EN: stripes
+- `ui.paradata.pattern.invented`
+  - HU: pöttyös
+  - EN: dots
+- `ui.paradata.pattern.omitted`
+  - HU: rácsos
+  - EN: cross-hatch
+- `ui.paradata.pattern.not-recorded`
+  - HU: sima szürke
+  - EN: plain grey
+- `ui.paradata.on`
+  - HU: A mért vagy becsült nézet bekapcsolva. Jelmagyarázata az eszköztár után következik.
+  - EN: Measured or guessed view on. Its legend follows the toolbar.
+- `ui.paradata.off`
+  - HU: A mért vagy becsült nézet kikapcsolva.
+  - EN: Measured or guessed view off.
+- `ui.paradata.textIntro`
+  - HU: Mért vagy becsült: a terem egyes részeinek rekonstrukciója a paradata szerint.
+  - EN: Measured or guessed: how each part of this room was reconstructed, from the paradata.
+- `ui.paradata.textWorks`
+  - HU: a művek elhelyezése (sorszámuk: {nos})
+  - EN: the hanging of nos {nos}
+- `ui.paradata.textWork`
+  - HU: a mű elhelyezése (sorszáma: {nos})
+  - EN: the hanging of no. {nos}
+- `ui.paradata.textNo`
+  - HU: {n}.
+  - EN: {n}
+- `ui.paradata.textAnd`
+  - HU:  és 
+  - EN:  and 
+- `ui.paradata.el.r1-walls`
+  - HU: a lépcső és a pad felőli fal
+  - EN: the walls on the stair side and the bench side
+- `ui.paradata.el.r1-street-wall`
+  - HU: az utcai fal az ablakokkal és a radiátorokkal
+  - EN: the street wall with its windows and radiators
+- `ui.paradata.el.r1-doorway`
+  - HU: az 1. és a 2. terem közötti fal és ajtó a posztamensekkel
+  - EN: the wall and doorway between Rooms 1 and 2, with the plinths
+- `ui.paradata.el.r1-floor`
+  - HU: a padló
+  - EN: the floor
+- `ui.paradata.el.r1-ceiling`
+  - HU: a mennyezet
+  - EN: the ceiling
+- `ui.paradata.el.r1-stairs`
+  - HU: a lépcső
+  - EN: the stairs
+- `ui.paradata.el.stair-shaft`
+  - HU: a lépcső fölötti akna
+  - EN: the shaft above the stairs
+- `ui.paradata.el.r1-bench`
+  - HU: a pad
+  - EN: the bench
+- `ui.paradata.el.r1-fittings`
+  - HU: a villanydoboz, a csövek, a kábelek és a harmadik radiátor
+  - EN: the electric box, pipes, cables and the third radiator
+- `ui.paradata.el.track-lights`
+  - HU: a sínre szerelt lámpák
+  - EN: the track lights
+- `ui.paradata.el.text-r1`
+  - HU: a kiállítás szövegének lapja
+  - EN: the exhibition text sheet
+- `ui.paradata.el.r1-light-pools`
+  - HU: a művek mögötti fényfoltok
+  - EN: the pools of light behind the works
+- `ui.paradata.el.w03-screen`
+  - HU: a Paradise Factory monitorja
+  - EN: the Paradise Factory monitor
+- `ui.paradata.el.pf-plant`
+  - HU: Paradise Factory: a növény és az állványa
+  - EN: Paradise Factory: the plant and its rack
+- `ui.paradata.el.pf-channel`
+  - HU: Paradise Factory: a csatorna
+  - EN: Paradise Factory: the channel
+- `ui.paradata.el.pf-details`
+  - HU: Paradise Factory: lámpák, palánták, láncok, csepegtetőpalack és kártya
+  - EN: Paradise Factory: lamps, seedlings, chains, drip bottle and card
+- `ui.paradata.el.r2-walls`
+  - HU: a falak
+  - EN: the walls
+- `ui.paradata.el.r2-doorway`
+  - HU: a 2. és a 3. terem közötti fal és ajtó
+  - EN: the wall and doorway between Rooms 2 and 3
+- `ui.paradata.el.r2-floor`
+  - HU: a padló
+  - EN: the floor
+- `ui.paradata.el.r2-ceiling`
+  - HU: a mennyezet
+  - EN: the ceiling
+- `ui.paradata.el.r2-bar`
+  - HU: a bárpult
+  - EN: the bar
+- `ui.paradata.el.r2-furniture`
+  - HU: az asztal, a székek és a lámpák
+  - EN: the table, chairs and lamps
+- `ui.paradata.el.r2-storage`
+  - HU: a raktárfülke és a mosdó ajtaja
+  - EN: the storage alcove and the toilet door
+- `ui.paradata.el.text-r2`
+  - HU: a kiállítás szövegének lapja
+  - EN: the exhibition text sheet
+- `ui.paradata.el.r2-light-pools`
+  - HU: a képernyők mögötti derengés
+  - EN: the glow behind the screens
+- `ui.paradata.el.r3-walls`
+  - HU: a belépéskor jobb oldali fal
+  - EN: the right wall as you enter
+- `ui.paradata.el.r3-north-wall`
+  - HU: a belépéskor bal oldali fal a két befalazott nyílással
+  - EN: the left wall, with its two bricked-up openings
+- `ui.paradata.el.r3-closet`
+  - HU: a 4. terembe vezető átjáró melletti faltömb
+  - EN: the block beside the way through to Room 4
+- `ui.paradata.el.r3-floor`
+  - HU: a padló
+  - EN: the floor
+- `ui.paradata.el.r3-ceiling`
+  - HU: a mennyezet
+  - EN: the ceiling
+- `ui.paradata.el.r3-r4-opening`
+  - HU: a 3. és a 4. terem közötti átjáró a függönnyel
+  - EN: the way through between Rooms 3 and 4, with the curtain
+- `ui.paradata.el.r3-light-pools`
+  - HU: a művek mögötti fényfoltok
+  - EN: the pools of light behind the works
+- `ui.paradata.el.r4-walls`
+  - HU: a belépéskor jobb oldali fal
+  - EN: the right wall as you enter
+- `ui.paradata.el.r4-north-wall`
+  - HU: a belépéskor bal oldali fal a két befalazott nyílással és a párkánnyal
+  - EN: the left wall, with its two bricked-up openings and the ledge
+- `ui.paradata.el.r4-end-wall`
+  - HU: a szemközti végfal
+  - EN: the end wall
+- `ui.paradata.el.r4-vaults`
+  - HU: a boltozott mennyezet és a gerendái
+  - EN: the vaulted ceiling and its beams
+- `ui.paradata.el.r4-floor`
+  - HU: a padló
+  - EN: the floor
+- `ui.paradata.el.r4-projector`
+  - HU: a projektor
+  - EN: the projector
+- `ui.paradata.el.r4-fittings`
+  - HU: a csövek, a kábelcsatorna lámpái, a gázóra és a radiátor
+  - EN: the pipes, the lamps on the conduit, the gas meter and the radiator
+- `ui.paradata.el.r4-light-pools`
+  - HU: a képernyők mögötti derengés
+  - EN: the glow behind the screens
+- `ui.paradata.el.lif-river`
+  - HU: Let it Flow: a műanyag folyó
+  - EN: Let it Flow: the plastic river
+- `ui.paradata.el.lif-wall-projection`
+  - HU: Let it Flow: a falra vetített kép
+  - EN: Let it Flow: the wall projection
+- `ui.paradata.el.lif-floor-projection`
+  - HU: Let it Flow: a padlóra vetített kép
+  - EN: Let it Flow: the floor projection
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
