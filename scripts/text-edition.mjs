@@ -343,14 +343,17 @@ export function buildTextEdition(engine = [], sources) {
 // decoder that src/world/textures.js loads from public/basis/.
 function engineFiles(bundle) {
   const out = new Set();
-  const visit = (name) => {
+  // the entry, the exhibition it loads (its dynamic import) and their static imports; the parts
+  // the exhibition itself loads later on demand (the paradata view, the switches) are left out
+  const visit = (name, dynamic) => {
     const c = bundle[name];
     if (!c || c.type !== 'chunk' || out.has(c.fileName)) return;
     out.add(c.fileName);
     for (const css of c.viteMetadata?.importedCss || []) out.add(css);
-    for (const n of [...c.imports, ...c.dynamicImports]) visit(n);
+    for (const n of c.imports) visit(n, false);
+    if (dynamic) for (const n of c.dynamicImports) visit(n, false);
   };
-  for (const [name, c] of Object.entries(bundle)) if (c.type === 'chunk' && c.isEntry) visit(name);
+  for (const [name, c] of Object.entries(bundle)) if (c.type === 'chunk' && c.isEntry) visit(name, true);
   return [...out, 'basis/basis_transcoder.js', 'basis/basis_transcoder.wasm'];
 }
 

@@ -778,7 +778,10 @@ await guard(['F1.7'], async () => {
   await touch('touchMove', 240, 420);
   await touch('touchEnd');
   await p.waitForFunction(() => getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).catch(() => {});
+  // the menu opens a moment after the tap that follows the drag: wait for it, tap again once if not
+  const menuOpen = () => p.waitForFunction(() => document.getElementById('site-nav').classList.contains('open'), null, { timeout: 3000 }).then(() => true, () => false);
   await p.tap('.nav-toggle');
+  if (!(await menuOpen())) { await p.tap('.nav-toggle'); await menuOpen(); }
   await p.tap('#nav-links [data-nav="help"]');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   await p.tap('#panel-body [data-guide]');

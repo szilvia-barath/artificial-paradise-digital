@@ -185,7 +185,11 @@ export const BLOCKS = [
   // (its Room 2 face is warm like the rest of Room 2's walls; it was cold white until 17 November 2026)
   { x0: R1.recess, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick', faces: { px: 'warmBrick' }, pd: 'r1-doorway' },
   { x0: R1.recess, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' }, pd: 'r1-doorway' },
-  { x0: R1.east, x1: 5.85, z0: 5.0, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' }, pd: 'r1-doorway' },
+  // south of the doorway Room 2 reaches x 5.4 (R1.recess) up to its south wall, so the wall with
+  // the room sheet runs on 0.45 m further west and no corner stands beside the sheet (the
+  // reconstructor, 18 November 2026: "the corner next to the room sheet ... is invented")
+  { x0: R1.east, x1: R1.recess, z0: 5.0, z1: 5.73, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' }, pd: 'r1-doorway' },
+  { x0: R1.east, x1: 5.85, z0: 5.73, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' }, pd: 'r1-doorway' },
 
   // ---------- Room 2 ----------
   // north: wall in front of the storage alcove (not accessible), gated opening x 8.76–9.85
@@ -195,7 +199,7 @@ export const BLOCKS = [
   { x0: 5.85, x1: 10.2, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick', pd: 'r2-storage' },
   // south: the wall that carries the room sheet, then the mouth of the dark corridor to
   // the toilets, next to the bar (TOILET); a lintel over the mouth (its height invented)
-  { x0: 5.85, x1: TOILET.x0, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick', pd: 'r2-walls' },
+  { x0: R1.recess, x1: TOILET.x0, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick', pd: 'r2-walls' },
   { x0: TOILET.x0, x1: TOILET.x1, z0: 5.73, z1: 6.13, y0: DOOR, y1: 2.75, mat: 'warmBrick', reveal: 'dimBrick', faces: { pz: 'void' }, pd: 'r2-storage' },
   // the corridor: whitewashed brick left in the dark, a step up at the back of the wall,
   // the end wall (tiles, basin and mirror in props.js); not walkable, the step stops you
@@ -264,6 +268,7 @@ export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling', pd: 'r1-ceiling' },
   { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling', pd: 'r1-doorway' },
   { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling', pd: 'r2-ceiling' },
+  { x0: R1.recess, x1: 5.85, z0: 5.0, z1: 5.73, y: 2.75, mat: 'ceiling', pd: 'r2-ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling', pd: 'r2-storage' },
   { x0: TOILET.x0, x1: TOILET.x1, z0: 6.13, z1: TOILET.z1, y: TOILET.ceiling, mat: 'void', pd: 'r2-storage' },
   { x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling', pd: 'r3-ceiling' },
