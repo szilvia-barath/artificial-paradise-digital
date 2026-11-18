@@ -14,6 +14,7 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { launchOptions } from '../a11y/lib.mjs';
 
 const BASE = process.env.AP_URL || 'http://localhost:4173/';
 const OUT = process.argv.slice(2).find((a) => !a.startsWith('--'));
@@ -35,7 +36,7 @@ const folderSize = (dir) => readdirSync(dir).reduce((s, f) => s + statSync(join(
 const folders = Object.fromEntries(['img', 'tex', 'video', 'models', 'basis', 'brand'].map((d) => [d, folderSize(join('dist', d))]));
 
 // ---------------------------------------------------------------- browser
-const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await chromium.launch(launchOptions()); // the real GPU unless AP_SOFTWARE=1 (lib.mjs)
 const ctx = await browser.newContext({ viewport: { width: 1366, height: 768 } });
 const page = await ctx.newPage();
 const cdp = await ctx.newCDPSession(page);
