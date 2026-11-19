@@ -23,8 +23,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: A bal oldali karral lehet sétálni, húzással körülnézni, csippentéssel nagyítani, egy műre koppintva pedig megnyitni azt.
   - EN: Walk with the stick on the left, drag to look around, pinch to zoom, and tap a work to open it.
 - `ui.footer.rights`
-  - HU: Műalkotások: Szabó Kristóf (Kristoflab)
-  - EN: Artworks by Kristóf Szabó (Kristoflab)
+  - HU: Műalkotások: Szabó Kristóf (KristofLab)
+  - EN: Artworks by Kristóf Szabó (KristofLab)
 - `ui.footer.digital` (only the accent in the name changed, asked by the reconstructor)
   - HU: Digitális kiállítás: Baráth Szilvia
   - EN: Digital exhibition by Szilvia Baráth
