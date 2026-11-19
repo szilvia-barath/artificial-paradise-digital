@@ -79,16 +79,19 @@ await page.mouse.click(box.x + box.width * 0.55, box.y + box.height * 0.5); // R
 const jumpedTo3 = await page.waitForFunction(() => document.querySelector('#room-label .room-name').textContent === 'Room 3', null, { timeout: 30000 }).then(() => true, () => false);
 step('6 Click Room 3 on the map: jump there, and focus back on the view', jumpedTo3 && (await onView()), `room ${await page.textContent('#room-label .room-name')}; focus on ${await focusName(page)}`);
 
-await page.click('[data-action="rooms"]');
-const opened = await page.getAttribute('[data-action="rooms"]', 'aria-expanded');
-await page.click('[data-action="rooms"]');
+await page.click('#site-nav [data-nav="help"]');
+await page.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+await page.click('#panel [data-close]');
 await page.waitForTimeout(200);
-step('7 Rooms menu opened and closed with the mouse: focus back on the view', opened === 'true' && (await onView()), `opened: ${opened}; focus on ${await focusName(page)}`);
+step('7 Help (the navbar button) opened and closed with the mouse: focus back on the view', await onView(), `focus on ${await focusName(page)}`);
 
-await page.click('[data-action="rooms"]');
-await page.click('#rooms-menu [data-room="r2"]');
-await page.waitForTimeout(800);
-step('8 A room chosen in the menu with the mouse: focus on the view', await onView(), await focusName(page));
+await page.click('#site-nav [data-nav="help"]');
+await page.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+await page.click('#panel-body details.help-more summary');
+const foldOpen = await page.evaluate(() => document.querySelector('#panel-body details.help-more').open && document.getElementById('panel').contains(document.activeElement));
+await page.click('#panel [data-close]');
+await page.waitForTimeout(200);
+step('8 "In detail" in Help opened with the mouse: it opens and focus stays in the panel; Close clicked: focus on the view', foldOpen && (await onView()), `fold open and focus in panel: ${foldOpen}; then focus on ${await focusName(page)}`);
 
 await page.click('[data-lang="hu"]');
 await page.waitForTimeout(300);
@@ -183,20 +186,20 @@ step('13 After all that, M still works from the view', (await page.getAttribute(
 // ---------------- footer links: they open a new tab or leave the page
 // Nothing outside is fetched: the new tab's request is refused and the tab closed.
 await ctx.route(/instagram\.com|mamu\.hu/, (r) => r.abort());
-const [popup] = await Promise.all([ctx.waitForEvent('page', { timeout: 30000 }).catch(() => null), page.click('#site-foot a[href*="instagram"]')]);
+const [popup] = await Promise.all([ctx.waitForEvent('page', { timeout: 30000 }).catch(() => null), page.click('#site-foot a[href*="mamu.hu"]')]);
 if (popup) await popup.close();
 await page.bringToFront();
-step('14 Instagram in the footer clicked with the mouse (opens a new tab): focus is on the view on coming back', !!popup && (await onView()), `new tab opened: ${!!popup}; focus on ${await focusName(page)}`);
+step('14 The MAMŰ logo (a link to mamu.hu) in the footer clicked with the mouse (opens a new tab): focus is on the view on coming back', !!popup && (await onView()), `new tab opened: ${!!popup}; focus on ${await focusName(page)}`);
 
 // the accessible version opens in the same tab: the click is let through to the page's own
 // handlers, and only the leaving is stopped, so focus can be read
-await page.evaluate(() => document.querySelector('#site-foot a[href*="text/"]').addEventListener('click', (e) => e.preventDefault(), { once: true }));
-await page.click('#site-foot a[href*="text/"]');
-step('15 The accessible version in the footer clicked with the mouse: focus handed to the view before leaving', await onView(), await focusName(page));
-await page.evaluate(() => document.querySelector('#site-foot a[href*="text/"]').addEventListener('click', (e) => e.preventDefault(), { once: true }));
-await page.focus('#site-foot a[href*="text/"]');
+await page.evaluate(() => document.querySelector('#site-nav a.nav-a11y').addEventListener('click', (e) => e.preventDefault(), { once: true }));
+await page.click('#site-nav a.nav-a11y');
+step('15 The accessible version (navbar) clicked with the mouse: focus handed to the view before leaving', await onView(), await focusName(page));
+await page.evaluate(() => document.querySelector('#site-nav a.nav-a11y').addEventListener('click', (e) => e.preventDefault(), { once: true }));
+await page.focus('#site-nav a.nav-a11y');
 await page.keyboard.press('Enter');
-step('16 The same link by keyboard: focus stays on the link', await isOn('#site-foot a[href*="text/"]'), await focusName(page));
+step('16 The same link by keyboard: focus stays on the link', await isOn('#site-nav a.nav-a11y'), await focusName(page));
 
 // the walk above is done: close it, so the fresh pages below load at full speed
 await ctx.close();

@@ -1,5 +1,5 @@
 // axe-core on the text edition (both languages, light and dark) and on the walk in each of
-// its states: title screen, every panel, the sound question, the HUD (with the first-use card), the rooms menu, the
+// its states: title screen, every panel, the sound question, the HUD (with the first-use card), the Help panel with "In detail" open, the
 // artwork viewer, and the viewer with the full video's frame (YouTube and Google blocked, so
 // nothing from them loads). Fails on any serious or critical violation; lists every other one.
 // Writes its results to the system's temporary folder. With --write it writes them to
@@ -81,8 +81,11 @@ for (const lang of ['en', 'hu']) {
   await page.waitForTimeout(450);
   await scan(page, `Walk ${L}: panel "about" open (inside)`);
   await page.keyboard.press('Escape');
-  await page.click('[data-action="rooms"]');
-  await scan(page, `Walk ${L}: rooms menu open`);
+  await page.click('#site-nav [data-nav="help"]');
+  await page.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 });
+  await page.click('#panel-body details.help-more summary');
+  await page.waitForTimeout(450);
+  await scan(page, `Walk ${L}: Help panel open, "In detail" open`);
   await page.keyboard.press('Escape');
   for (const [i, kind] of [[0, 'painting'], [1, 'painting with a Connections line'], [6, 'video, with Pause button'], [3, 'video on a small screen']]) {
     await page.evaluate((k) => window.__ap.viewer.open(window.__ap.data.works[k]), i);

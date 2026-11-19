@@ -104,7 +104,6 @@ const PANELS = [
   ['#site-nav [data-nav="concept"]', 'Concept'],
   ['#site-nav [data-nav="bts"]', 'Behind the scenes'],
   ['#site-nav [data-nav="contact"]', 'Contact (navbar)'],
-  ['#site-foot [data-nav="contact"]', 'Contact (footer)'],
   ['#site-foot [data-nav="accessibility"]', 'Accessibility (footer)'],
   ['#site-foot [data-nav="legal"]', 'Legal notice (footer)'],
   ['#site-foot [data-nav="privacy"]', 'Privacy (footer)'],
@@ -212,29 +211,18 @@ step(`5.3 Enter on Works, Tab to no. 14 (${t3} Tabs), Enter, → to the next wor
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('panel').hidden);
 
-// ---------------------------------------------------------------- 6. toolbar: rooms menu, Enter on a button
-tabs = await tabTo('[data-action="rooms"]');
+// ---------------------------------------------------------------- 6. Help (navbar), Enter on a toolbar button
+// The Rooms button and its menu went on 18 November 2026; Help is the navbar's button.
+await page.focus('#site-nav [data-nav="help"]');
 await page.keyboard.press('Enter');
-await wait(200);
-const expanded = await page.getAttribute('[data-action="rooms"]', 'aria-expanded');
-await page.keyboard.press('Tab');
-at = await focusName(page);
+await until(() => !document.getElementById('panel').hidden);
+const helpTitle61 = await page.textContent('#panel-title');
+const helpOnClose61 = await isOn('#panel [data-close]');
 await page.keyboard.press('Escape');
-await wait(200);
-step('6.1 Rooms menu: Enter opens it, Tab goes into it, Esc closes it', 'aria-expanded true; focus on the first room; after Esc closed, focus on the Rooms button', `expanded: ${expanded}; Tab → ${at}; after Esc expanded: ${await page.getAttribute('[data-action="rooms"]', 'aria-expanded')}, focus on ${await focusName(page)}`, expanded === 'true' && at.includes('Room 1') && (await isOn('[data-action="rooms"]')));
-await page.keyboard.press('Enter');
-await page.keyboard.press('Tab');
-await page.keyboard.press('Tab');
-await page.keyboard.press('Tab');
-await said();
-await page.keyboard.press('Enter');
-await page.waitForFunction(() => document.querySelector('#room-label .room-name').textContent === 'Room 3', null, { timeout: 30000 }).catch(() => {});
-await wait(1200);
-heard = (await said()).join(' | ');
-step('6.2 Choose Room 3 in the menu', 'jump to Room 3, announced; menu closed; focus on the Rooms button', `announced: "${heard}"; room label "${await page.textContent('#room-label .room-name')}"; focus on ${await focusName(page)}`, heard.includes('Room 3.') && (await isOn('[data-action="rooms"]')));
-await page.keyboard.press('Shift+Tab'); // the Tour button
-await page.keyboard.press('Tab');
-await page.keyboard.press('Tab'); // the Sound button
+await until(() => document.getElementById('panel').hidden);
+const helpBack61 = await isOn('#site-nav [data-nav="help"]');
+step('6.1 Help (the navbar button): Enter opens the panel, focus on Close; Esc closes it, focus back on Help', 'the panel "Help" opens with focus on Close; after Esc the panel is closed and focus is on the Help button', `title "${helpTitle61}"; focus on Close: ${helpOnClose61}; after Esc focus on Help: ${helpBack61}`, helpTitle61 === EN.nav.help && helpOnClose61 && helpBack61);
+tabs = await tabTo('[data-action="sound"]');
 await page.keyboard.press('Enter');
 await wait(500);
 step('6.3 Enter on the Sound button', 'switches the sound; does not also open the work in view', `sound button pressed: ${await page.getAttribute('[data-action="sound"]', 'aria-pressed')}; viewer open: ${await open('#viewer')}`, (await page.getAttribute('[data-action="sound"]', 'aria-pressed')) === 'true' && !(await open('#viewer')));
@@ -328,7 +316,7 @@ step('9.1 Open the digital exhibition from a link to a work (?work=w11-artificia
 // others. (The first-use card has gone at the Esc that closes the viewer of 9.1.)
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'));
-tabs = await tabTo('[data-action="help"]');
+await page.focus('#site-nav [data-nav="help"]'); tabs = 0; // Help is the navbar's button since 18 November 2026
 await page.keyboard.press('Enter');
 await until(() => !document.getElementById('panel').hidden);
 at = await focusName(page);
@@ -336,7 +324,7 @@ const helpTitle = await page.evaluate(() => document.getElementById(document.get
 c = await cycle('#panel');
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('panel').hidden);
-step(`10.1 Tab from the 3D view to Help (${tabs} presses), Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('[data-action="help"]')}`, tabs > 0 && at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('[data-action="help"]')));
+step(`10.1 Focus on the navbar's Help button, Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('[data-action="help"]')}`, tabs > 0 && at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('[data-action="help"]')));
 
 // Next work on the toolbar: the same jump as Page Down, said the same way; focus stays on it,
 // and a held Enter jumps once.

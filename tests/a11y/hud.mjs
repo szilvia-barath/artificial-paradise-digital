@@ -58,8 +58,8 @@ const boxes = (p, sels) => p.evaluate((list) => Object.fromEntries(list.map((s) 
 })), sels);
 const show = (b) => (b ? `${Math.round(b.x)},${Math.round(b.y)} ${Math.round(b.w)}×${Math.round(b.h)}` : 'not shown');
 
-// ---------------- A4: the floor plan's key, under the map: four groups of works in two rows
-const GROUPS = ['paintings', 'videos', 'installations', 'other'];
+// ---------------- A4: the floor plan's key, under the map in the same box: five groups of works in three rows (19 November 2026: prints are their own group)
+const GROUPS = ['paintings', 'prints', 'videos', 'installations', 'other'];
 const keyWords = (l) => GROUPS.map((g) => UI[l].hud.mapKey[g]).join('|');
 const keyInfo = (p) => p.evaluate(() => {
   const k = document.getElementById('map-key');
@@ -77,7 +77,7 @@ const keyInfo = (p) => p.evaluate(() => {
   return {
     text: words.map((e) => e.textContent),
     hidden: k.getAttribute('aria-hidden'),
-    font: parseFloat(cs.fontSize), color: cs.color, glass: cs.backgroundColor,
+    font: parseFloat(cs.fontSize), color: cs.color, glass: (() => { for (let e = k; e; e = e.parentElement) { const c = getComputedStyle(e).backgroundColor; if (!/rgba\(0, 0, 0, 0\)|transparent/.test(c)) return c; } return 'rgb(0,0,0)'; })(),
     // rows: the words' distinct lines; a word broken over two lines adds one
     rows: new Set(words.map((e) => Math.round(e.getBoundingClientRect().top))).size + words.filter((e) => e.getClientRects().length > 1).length,
     under: Math.round(r.top - m.bottom), leftOf: Math.round(m.left - r.right), topLevel: Math.round(r.top - m.top), rightEdge: Math.round(m.right - r.right), inWindow: r.left >= 0 && r.right <= innerWidth,
@@ -97,8 +97,8 @@ const mapGroups = (p) => p.evaluate(() => {
   const c = worst(k.color, k.glass);
   const { groups, works } = await mapGroups(p);
   // four marks, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), the colour 4.5 to 7 px across
-  const marks = k.marks.length === 4 && new Set(k.marks.map((x) => x.shape)).size === 4 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 4.5 && x.w <= 7 && x.h >= 4.5 && x.h <= 7);
-  step(`A4.1 Desktop: the key is just under the map, right-aligned with it, in two rows: "${keyWords('en').replaceAll('|', '", "')}", at least 11 px, 4.5:1 at worst; four marks of four shapes, each with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en') && k.rows === 2 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shape, w: mw, h }) => ({ group, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
+  const marks = k.marks.length === 5 && new Set(k.marks.map((x) => x.shape)).size === 5 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 4.5 && x.w <= 7 && x.h >= 4.5 && x.h <= 7);
+  step(`A4.1 Desktop: the key is just under the map, right-aligned with it, in three rows: "${keyWords('en').replaceAll('|', '", "')}", at least 11 px, 4.5:1 at worst; five marks of five shapes, each with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en') && k.rows === 3 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shape, w: mw, h }) => ({ group, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
   // the key's marks are the map's own: the same shape, colour and edge as minimap.js draws each
   // group with (read from the page; fails if the key is missing or drifts from the map)
   const same = !k.missing && GROUPS.every((g, i) => {
@@ -108,10 +108,10 @@ const mapGroups = (p) => p.evaluate(() => {
   });
   step("A4.2 The key's marks are the map's own, group by group: the same shape and colour as minimap.js draws, and the same dark edge", same, `minimap.js: ${groups.map((g) => `${g.id} ${g.shape} ${g.colour}`).join('; ')}; the key: ${k.marks.map((m) => `${m.group} ${m.shape} ${m.fill} edge ${m.edge}`).join('; ')}`);
   // every work is in its group by its type in exhibition.json
-  const want = { painting: 'paintings', print: 'paintings', video: 'videos', projection: 'videos', installation: 'installations' };
+  const want = { painting: 'paintings', print: 'prints', video: 'videos', projection: 'videos', installation: 'installations' };
   const placed = works.every((x) => x.pin && x.group === (want[x.type] || 'other'));
   const byGroup = Object.fromEntries(GROUPS.map((g) => [g, works.filter((x) => x.group === g).map((x) => x.id)]));
-  step('A4.6 Each work has a mark on the map in its group by its type in exhibition.json (painting and print: Paintings; video: Videos; installation: Installations; any other type: Other works)', placed, `${JSON.stringify(byGroup)}; works without a mark: ${works.filter((x) => !x.pin).map((x) => x.id).join(', ') || 'none'}`);
+  step('A4.6 Each work has a mark on the map in its group by its type in exhibition.json (painting: Paintings; print: Prints; video: Videos; installation: Installations; any other type: Other works)', placed, `${JSON.stringify(byGroup)}; works without a mark: ${works.filter((x) => !x.pin).map((x) => x.id).join(', ') || 'none'}`);
   // each mark's colour against the map's glass over pure white (the worst case) and over black
   const markC = groups.map((g) => {
     const hex = [1, 3, 5].map((i) => parseInt(g.colour.slice(i, i + 2), 16));
@@ -119,10 +119,10 @@ const mapGroups = (p) => p.evaluate(() => {
     return { id: g.id, colour: g.colour, white: +white.toFixed(2), black: +black.toFixed(2) };
   });
   const colours = new Set(groups.map((g) => g.colour.toLowerCase()));
-  step("A4.7 Every mark is 3:1 or more against the map's glass, over pure white and over black; the four groups have four colours, none the accent blue of the visitor's dot", markC.every((x) => x.white >= 3 && x.black >= 3) && colours.size === 4 && !colours.has('#8fa8ff'), JSON.stringify(markC));
+  step("A4.7 Every mark is 3:1 or more against the map's glass, over pure white and over black; the five groups have five colours, none the accent blue of the visitor's dot", markC.every((x) => x.white >= 3 && x.black >= 3) && colours.size === 5 && !colours.has('#8fa8ff'), JSON.stringify(markC));
   await switchTo(p, 'hu');
   const kh = await keyInfo(p);
-  step(`A4.3 Switched to Hungarian: "${keyWords('hu').replaceAll('|', '", "')}", still two rows`, kh.text.join('|') === keyWords('hu') && kh.rows === 2 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
+  step(`A4.3 Switched to Hungarian: "${keyWords('hu').replaceAll('|', '", "')}", still three rows`, kh.text.join('|') === keyWords('hu') && kh.rows === 3 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#click-to-look', '#prompt', '#zoom-level']);
   step('A4.4 Desktop, Hungarian: the key lies over none of the map, the room label and the hint in the middle', !meets(b['#map-key'], b['#minimap']) && !meets(b['#map-key'], b['#room-label']) && !meets(b['#map-key'], b['#click-to-look']), Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; '));
   errors.push(...w.errors);
@@ -140,7 +140,7 @@ for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, '
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look']);
   const clear = ['#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look'].every((s) => !meets(b['#map-key'], b[s])) && !meets(b['#click-to-look'], b['#minimap']);
-  step(`A4.5 ${name}: the key shows, in two rows ${beside ? 'at the left of the map, level with its top' : 'under the map'}, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.rows === 2 && k.inWindow && (beside ? k.leftOf >= 0 && k.leftOf <= 8 && Math.abs(k.topLevel) <= 2 : k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.rows} rows, ${beside ? `${k.leftOf} px left of the map, top ${k.topLevel} px from its top` : `${k.under} px under the map`}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`A4.5 ${name}: the key shows, in three rows under the map, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.rows === 3 && k.inWindow && (k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.under} px under the map; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -186,17 +186,16 @@ async function asked(lang, opts) {
   await d.ctx.close();
   step(`D11.1 Sound question on a phone: "${want.en}" (in Hungarian "${want.hu}", also after a switch while it shows); the Sound button is at the bottom; on a computer the words with M stay`, got.en === want.en && got.hu === want.hu && got.switched === want.hu && got.button.label === UI.en.hud.sound && got.button.bottom && desk === UI.en.soundAsk.hint, `phone EN "${got.en}"; HU "${got.hu}"; switched "${got.switched}"; button ${JSON.stringify(got.button)}; computer "${desk}"`);
 }
+// Since 18 November 2026 a touch screen shows no hint in the middle and no turn keys (the zoom keys stay).
 for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 640 × 360, Hungarian', { ...PHONE, viewport: { width: 640, height: 360 } }, 'hu'], ['small, on its side 568 × 320, Hungarian', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu']]) {
   const w = await inside(lang, opts);
   const p = w.page;
-  const h = await hintState(p);
   const focus = await p.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
-  // zoomed in, so the zoom readout shows as well
   await p.evaluate(() => window.__ap.controls.zoomBy(2));
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
-  const b = await boxes(p, ['#click-to-look', '#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label']);
-  const clear = ['#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#click-to-look'], b[s]));
-  step(`D11.2 Phone ${name}, inside: the touch hint shows ("${UI[lang].hud.touchHint}"), hidden from screen readers, takes no focus (focus stays on the 3D view), over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key and the room label`, h.text === UI[lang].hud.touchHint && h.hidden === 'true' && h.visibility === 'visible' && !h.focusable && focus === 'scene' && clear && !!b['#click-to-look'], `${JSON.stringify(h)}; focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  const b = await boxes(p, ['#click-to-look', '#guide', '#keypad', '#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label']);
+  const zoomClear = ['#joystick', '#toolbar', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#zoompad'], b[s]));
+  step(`D11.2 Phone ${name}, inside: no hint in the middle, no first-use card and no keypad are shown; focus stays on the 3D view; the zoom keys show and lie over none of the stick, the toolbar, the map, its key and the room label`, !b['#click-to-look'] && !b['#guide'] && !b['#keypad'] && focus === 'scene' && !!b['#zoompad'] && zoomClear, `focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -233,36 +232,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   // the click, if the browser sends one, comes within a few frames: wait for it, up to 3 s
   const click = await p.waitForFunction(() => window.__clicks > 0, null, { timeout: 3000 }).then(() => true, () => false);
   const opened = await p.evaluate(() => (document.getElementById('viewer').hidden ? '(nothing)' : document.getElementById('viewer-title').textContent));
-  step('D11.3 Phone: the first touch on the 3D view takes the hint away; what it says works now: a drag looks round, the stick walks when pushed, a tap opens the work in the middle and it stays open. Since D2, pressing and holding the stick above its middle walks too, without a drag (so the hint says "hold")', hint0.visibility === 'visible' && gone && looked && held && pushed && opened === 'Human as Error I', `hint shown first: ${hint0.visibility}; gone at the touch: ${gone}; drag turned the view: ${looked}; stick held still walked: ${held}; stick pushed walked: ${pushed}; tap opened: ${opened} (the browser's click after the tap sent: ${click})`);
-  errors.push(...w.errors);
-  await w.ctx.close();
-}
-{
-  // left alone it goes by itself after about 8 seconds; and the language switched while it shows
-  const w = await inside('en', PHONE);
-  const p = w.page;
-  await p.evaluate(() => { window.__t0 = performance.now(); new MutationObserver(() => { if (document.body.classList.contains('looked') && !window.__t1) window.__t1 = performance.now(); }).observe(document.body, { attributes: true }); });
-  await switchTo(p, 'hu');
-  const hu = await hintState(p);
-  await p.waitForFunction(() => !!window.__t1 && getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).catch(() => {});
-  const secs = await p.evaluate(() => (window.__t1 ? (window.__t1 - window.__t0) / 1000 : null));
-  const after = await hintState(p);
-  step('D11.4 Phone: switched to Hungarian while the hint shows, it says the Hungarian words; untouched, it goes by itself some seconds after the sound question', hu.text === UI.hu.hud.touchHint && hu.visibility === 'visible' && secs !== null && secs > 3 && secs < 15 && after.visibility === 'hidden', `"${hu.text}"; gone after ${secs?.toFixed(1)} s (8 s from the answer); then ${after.visibility}`);
-  errors.push(...w.errors);
-  await w.ctx.close();
-}
-{
-  // reduced motion: it goes at once, with no fade
-  const w = await inside('en', { ...PHONE, reducedMotion: 'reduce' });
-  const p = w.page;
-  const touch = await finger(p);
-  const before = await hintState(p);
-  await touch('touchStart', 190, 420);
-  await p.waitForFunction(() => document.body.classList.contains('looked'), null, { timeout: 30000 }).catch(() => {});
-  const now = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('click-to-look')); return { opacity: cs.opacity, visibility: cs.visibility, transition: cs.transitionDuration }; });
-  await touch('touchMove', 260, 420);
-  await touch('touchEnd');
-  step('D11.5 Phone with reduced motion: the hint goes at once at the first touch, no fade', before.visibility === 'visible' && now.opacity === '0' && now.visibility === 'hidden' && /^0s(, 0s)*$/.test(now.transition), `before: ${before.visibility}; just after the touch: ${JSON.stringify(now)}`);
+  step('D11.3 Phone: a drag on the 3D view looks round, the stick walks when pushed and also when only pressed and held off its middle, a tap on the work in the middle opens it and it stays open (the hint that said so is gone)', looked && held && pushed && opened === 'Human as Error I', `drag turned the view: ${looked}; stick held still walked: ${held}; stick pushed walked: ${pushed}; tap opened: ${opened} (the browser's click after the tap sent: ${click})`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -270,7 +240,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   // on a computer the hint stays as it was: the mouse words, read by screen readers
   const w = await inside('en');
   const h = await hintState(w.page);
-  step('D11.6 Computer: the hint in the middle is unchanged ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
+  step('D11.6 Computer: the hint in the middle ("Drag the mouse to look around the room.") is as it was ("Drag the mouse to look around the room.", not hidden from screen readers)', h.text === UI.en.hud.clickToLook && h.hidden === null, JSON.stringify(h));
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -385,7 +355,7 @@ try {
   // a phone has no mouse: it is as it was (this step is a guard; it passed before D10 as well)
   const w = await inside('en', PHONE);
   const f = await face(w.page);
-  step(`D10.4 Phone 375 × 667 (touch, no mouse): unchanged: the stick shows, of the keycaps only the two turning keys, no footer inside, no first-use card; the touch hint ("${UI.en.hud.touchHint}"), hidden from screen readers, and the sound question's touch words`, f.touch && f.stick && f.caps === 2 && !f.foot && !f.card && f.hint === UI.en.hud.touchHint && f.hintHidden === 'true' && f.ask === UI.en.soundAsk.hintTouch, JSON.stringify(f));
+  step(`D10.4 Phone 375 × 667 (touch, no mouse): the stick shows, no keycaps (since 18 November 2026 not even the two turning keys), no footer inside, no first-use card; and the sound question's touch words`, f.touch && f.stick && f.caps === 0 && !f.foot && !f.card && f.ask === UI.en.soundAsk.hintTouch, JSON.stringify(f));
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -404,7 +374,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 ×
   // the zoom readout, moved for the two keys, over none of the map, its key, the room label, the toolbar or the zoom keys
   const readout = !!b['#zoom-level'] && ['#minimap', '#map-key', '#room-label', '#toolbar', '#zoompad', '#joystick', '#click-to-look'].every((s) => !meets(b['#zoom-level'], b[s]));
   const want = [UI[lang].hud.keys.left, UI[lang].hud.keys.right];
-  step(`D2.1 Phone ${name}: only the two turning keys show ("${want.join('", "')}"), each at least 44 × 44 px, inside the window, over none of the stick, the toolbar, the zoom keys, the zoom readout, the map, its key, the room label and the touch hint; the zoom readout over none of the map, its key, the room label, the toolbar, the zoom keys, the stick and the hint`, caps.length === 2 && caps.map((c) => c.title).join('|') === want.join('|') && caps.every((c) => c.w >= 44 && c.h >= 44 && c.inside) && clear && readout, `readout clear ${readout}; ${JSON.stringify(caps)}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`D2.1 Phone ${name}: no keycap shows (the turn keys went on 18 November 2026; "${want.join('", "')}" are only on a computer); the zoom readout over none of the map, its key, the room label, the toolbar, the zoom keys and the stick`, caps.length === 0 && readout, `readout clear ${readout}; ${JSON.stringify(caps)}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -424,13 +394,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['320 ×
   await p.waitForFunction(() => window.__ap.controls.joy.x === 0 && window.__ap.controls.joy.y === 0, null, { timeout: 10000 }).catch(() => {});
   // it glides to a stop: from one frame to the next it no longer moves (held, it would go on)
   const stopped = await p.waitForFunction(() => { const c = window.__ap.controls; const l = window.__lastPos; window.__lastPos = { x: c.pos.x, z: c.pos.y }; return !!l && Math.hypot(c.pos.x - l.x, c.pos.y - l.z) < 1e-4; }, null, { timeout: 15000, polling: 'raf' }).then(() => true, () => false);
-  const k = await p.evaluate(() => { const r = document.querySelector('#keypad .k-a').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
-  const y0 = (await at()).yaw;
-  await touch('touchStart', k.x, k.y);
-  const turned = await p.waitForFunction((y) => window.__ap.controls.yaw - y > 0.1, y0, { timeout: 20000 }).then(() => true, () => false);
-  await touch('touchEnd');
-  const released = await p.waitForFunction(() => !window.__ap.controls.isDown('ArrowLeft'), null, { timeout: 10000 }).then(() => true, () => false);
-  step('D2.2 Phone 375 × 667: the stick pressed and held above its middle walks forward at once, without a drag; released, it stops; the turn-left key held by a finger turns left, and lets go when the finger lifts', fwd && joy.y < -0.5 && stopped && turned && released, `walked: ${fwd} (stick at ${joy.x.toFixed(2)}, ${joy.y.toFixed(2)}); stopped after: ${stopped}; turn-left held turned: ${turned}; let go: ${released}`);
+  step('D2.2 Phone 375 × 667: the stick pressed and held above its middle walks forward at once, without a drag; released, it stops (the turn keys are gone from a phone)', fwd && joy.y < -0.5 && stopped, `walked: ${fwd} (stick at ${joy.x.toFixed(2)}, ${joy.y.toFixed(2)}); stopped after: ${stopped}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -681,113 +645,96 @@ for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: 
   step(`F1.9 index.html's English stand-in text matches en.json, the line before entering included ("${UI.en.loader.howtoDesk}")`, off.length === 0 && line === UI.en.loader.howtoDesk, off.length ? `differs: ${off.join(', ')}` : `all match; the line: "${line}"`);
 }
 await guard(['F1.3'], async () => {
-  // it goes at the first key, and that key works (walking is not blocked); a mouse press; the wheel
+  // since 18 November 2026 the card goes by itself 10 seconds after it appears; a key, a press or the wheel does not take it away
   const w = await insideByKeys('en');
   const p = w.page;
+  const t0 = Date.now();
+  const first = await guideInfo(p);
   const x0 = await p.evaluate(() => window.__ap.controls.pos.x);
   await p.keyboard.down('ArrowUp');
   const walked = await p.waitForFunction((x) => Math.abs(window.__ap.controls.pos.x - x) > 0.05, x0, { timeout: 30000 }).then(() => true, () => false);
   await p.keyboard.up('ArrowUp');
-  const byKey = await guideInfo(p);
-  await w.ctx.close();
-  const m = await insideByKeys('en');
-  await m.page.mouse.click(683, 250);
-  const byClick = await guideInfo(m.page);
-  await m.ctx.close();
-  const r = await insideByKeys('en');
-  await r.page.mouse.move(683, 300);
-  await r.page.mouse.wheel(0, -100);
-  const byWheel = await guideInfo(r.page);
+  await p.mouse.move(683, 300);
+  await p.mouse.wheel(0, -100);
+  const afterInput = await guideInfo(p);
+  const went = await p.waitForFunction(() => document.getElementById('guide').hidden, null, { timeout: 20000 }).then(() => true, () => false);
+  const secs = (Date.now() - t0) / 1000;
   // a new visit (the page loaded again): it shows again; nothing is stored but the language
-  await r.page.reload();
-  await r.page.waitForFunction(() => document.body.dataset.state === 'ready', null, { timeout: 90000 });
-  await r.page.focus('#enter');
-  await r.page.keyboard.press('Enter');
-  await r.page.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
-  await r.page.keyboard.press('Escape');
-  await r.page.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
-  const again = await guideInfo(r.page);
-  const stored = await r.page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage).length, cookies: document.cookie }));
-  step('F1.3 The card goes at the first key (↑, and walking starts at once), at a mouse press on the view, at a turn of the wheel; loaded again, it shows again; nothing stored but the language', walked && !byKey.shown && !byClick.shown && !byWheel.shown && again.shown && stored.local.every((k) => k === 'ap-lang') && !stored.session && !stored.cookies, `↑: walked ${walked}, card ${byKey.shown}; click: ${byClick.shown}; wheel: ${byWheel.shown}; after a reload: ${again.shown}; storage ${JSON.stringify(stored)}`);
-  errors.push(...w.errors, ...m.errors, ...r.errors);
-  await r.ctx.close();
+  await p.reload();
+  await p.waitForFunction(() => document.body.dataset.state === 'ready', null, { timeout: 90000 });
+  await p.focus('#enter');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  await p.keyboard.press('Escape');
+  await p.waitForFunction(() => document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
+  const again = await guideInfo(p);
+  const stored = await p.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage).length, cookies: document.cookie }));
+  step('F1.3 The short help card shows on entering and goes by itself after 10 seconds, not at a key, a press or the wheel (walking works at the first key); loaded again, it shows again; nothing stored but the language', first.shown && walked && afterInput.shown && went && secs > 8 && secs < 16 && again.shown && stored.local.every((k) => k === 'ap-lang') && !stored.session && !stored.cookies, `on entering: ${first.shown}; ↑ walked ${walked}; card after key and wheel: ${afterInput.shown}; went by itself: ${went} after about ${secs.toFixed(1)} s; after a reload: ${again.shown}; storage ${JSON.stringify(stored)}`);
+  errors.push(...w.errors);
+  await w.ctx.close();
 });
 await guard(['F1.4', 'F1.5', 'F1.6'], async () => {
-  // Help by keyboard, through the dialog path; it brings the card back
+  // Help: the navbar's button; the short list, then "In detail" folded; no "Show the short guide again"
   const w = await insideByKeys('en');
   const p = w.page;
   const on = (sel) => p.evaluate((x) => document.activeElement === document.querySelector(x), sel);
-  let tabs = 0;
-  for (let i = 1; i <= 12; i++) { await p.keyboard.press('Tab'); if (await on('[data-action="help"]')) { tabs = i; break; } }
-  const helpName = await axName(p, '[data-action="help"]'); // as the browser gives it: in capitals, as shown
-  const cardAfterTab = (await guideInfo(p)).shown;
+  await p.focus('#site-nav [data-nav="help"]');
+  const helpName = await axName(p, '#site-nav [data-nav="help"]');
   await p.keyboard.press('Enter');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  const open = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, close: document.activeElement === document.querySelector('#panel [data-close]'), inert: document.getElementById('stage').inert, paras: [...document.querySelectorAll('#panel-body p')].map((x) => x.textContent) }));
+  const open = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, close: document.activeElement === document.querySelector('#panel [data-close]'), inert: document.getElementById('stage').inert, items: [...document.querySelectorAll('#panel-body > ul li')].map((x) => x.textContent), folded: document.querySelector('#panel-body details.help-more')?.open === false, summary: document.querySelector('#panel-body details.help-more summary')?.textContent, again: !!document.querySelector('#panel-body [data-guide]') }));
+  // open the fold with the keyboard: the controls for a computer first, then for touch, both naming the Next work button
+  await p.keyboard.press('Tab');
+  const onSummary = await on('#panel-body details.help-more summary');
+  await p.keyboard.press('Enter');
+  const paras = await p.evaluate(() => [...document.querySelectorAll('#panel-body details.help-more p')].map((x) => x.textContent));
   const cycle = [];
   for (let i = 0; i < 4; i++) { await p.keyboard.press('Tab'); cycle.push(await p.evaluate(() => document.getElementById('panel').contains(document.activeElement))); }
   await p.keyboard.press('Escape');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  const back = await on('[data-action="help"]');
+  const back = await on('#site-nav [data-nav="help"]');
   const inertAfter = await p.evaluate(() => document.getElementById('stage').inert);
-  step(`F1.4 Help by keyboard: the guide card gone at the first Tab; Tab from the 3D view reaches the Help button (${tabs} presses); Enter opens the panel "${UI.en.nav.help}" with focus on Close, the page behind inert, the controls for a computer first, then for touch, both naming the ${UI.en.hud.next} button; Tab stays inside; Esc closes it and focus is back on Help`, tabs > 0 && !cardAfterTab && helpName.toLowerCase() === UI.en.hud.help.toLowerCase() && open.title === UI.en.nav.help && open.close && open.inert && open.paras[1] === UI.en.panels.controlsDesk && open.paras[2] === UI.en.panels.controlsTouch && open.paras.slice(1, 3).every((x) => x.includes(UI.en.hud.next)) && cycle.every(Boolean) && back && !inertAfter, `card after the Tabs: ${cardAfterTab}; ${tabs} Tabs to "${helpName}"; ${JSON.stringify({ ...open, paras: open.paras.map((x) => x.slice(0, 40)) })}; Tab stayed inside: ${cycle.join(',')}; focus back on Help: ${back}; stage inert after: ${inertAfter}`);
-  // again, then "Show the short guide again"
-  await p.keyboard.press('Enter');
+  step(`F1.4 Help by keyboard: Enter on the navbar's Help opens the panel "${UI.en.nav.help}" with focus on Close, the page behind inert, the short list of four lines, "${UI.en.panels.helpMore}" folded and no "show again" button; Tab reaches "${UI.en.panels.helpMore}", Enter opens it: the controls for a computer first, then for touch, both naming the ${UI.en.hud.next} button; Tab stays inside; Esc closes the panel and focus is back on Help`, helpName.toLowerCase() === UI.en.nav.help.toLowerCase() && open.title === UI.en.nav.help && open.close && open.inert && open.items.length === 4 && open.folded && open.summary === UI.en.panels.helpMore && !open.again && onSummary && paras[0] === UI.en.panels.controlsDesk && paras[1] === UI.en.panels.controlsTouch && paras.every((x) => x.includes(UI.en.hud.next)) && cycle.every(Boolean) && back && !inertAfter, `name "${helpName}"; ${JSON.stringify(open)}; Tab reached the fold: ${onSummary}; ${paras.length} paragraphs; Tab stayed inside: ${cycle.join(',')}; focus back on Help: ${back}; page inert after: ${inertAfter}`);
+  // the card does not come back with Help (it has no "show again"): Help is the whole of it
+  await p.waitForFunction(() => document.getElementById('guide').hidden, null, { timeout: 20000 }).catch(() => {});
+  await p.click('#site-nav [data-nav="help"]');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  let reached = false;
-  for (let i = 0; i < 6 && !reached; i++) { await p.keyboard.press('Tab'); reached = await on('#panel-body [data-guide]'); }
-  const label = await p.evaluate(() => document.querySelector('#panel-body [data-guide]')?.textContent);
-  await p.keyboard.press('Enter');
+  await p.click('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  const g = await guideInfo(p);
-  const onHelp = await on('[data-action="help"]');
-  await p.keyboard.press('Tab');
-  const gone = await guideInfo(p);
-  step(`F1.5 Help, "${UI.en.panels.helpGuide}" by keyboard: the panel closes, focus is back on Help, the card shows again, and goes at the next key`, reached && label === UI.en.panels.helpGuide && g.shown && onHelp && !gone.shown, `reached ${reached} ("${label}"); card shown ${g.shown}, focus on Help ${onHelp}; after Tab: ${gone.shown}`);
+  const card = await guideInfo(p);
+  step('F1.5 The card gone (after its 10 seconds), Help opened and closed: the card does not come back (no "show the short guide again" any more)', !card.shown, `card shown: ${card.shown}`);
   // by mouse: Close clicked, focus to the 3D view; the language switched while it is open
-  await p.click('[data-action="help"]');
+  await p.click('#site-nav [data-nav="help"]');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
+  await p.click('#panel-body details.help-more summary');
   await switchTo(p, 'hu');
-  const hu = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, guide: document.querySelector('#panel-body [data-guide]')?.textContent, close: document.getElementById('panel').contains(document.activeElement), paras: [...document.querySelectorAll('#panel-body p')].slice(1, 3).map((x) => x.textContent) }));
+  const hu = await p.evaluate(() => ({ title: document.getElementById('panel-title')?.textContent, summary: document.querySelector('#panel-body details.help-more summary')?.textContent, open: document.querySelector('#panel-body details.help-more')?.open, close: document.getElementById('panel').contains(document.activeElement), paras: [...document.querySelectorAll('#panel-body details.help-more p')].map((x) => x.textContent) }));
   await switchTo(p, 'en');
   await p.click('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   const view = await p.evaluate(() => document.activeElement === document.getElementById('scene'));
-  step('F1.6 Help by mouse: switched to Hungarian while open, it reads "Súgó", its button in Hungarian and both controls texts name "Következő mű", focus stays in the panel; Close clicked: focus on the 3D view', hu.title === UI.hu.nav.help && hu.guide === UI.hu.panels.helpGuide && hu.close && hu.paras.length === 2 && hu.paras.every((x) => x.includes(UI.hu.hud.next)) && view, `${JSON.stringify(hu)}; focus on the view after Close: ${view}`);
+  step('F1.6 Help by mouse: switched to Hungarian while open, it reads "Súgó", its fold "Részletesen" and both controls texts name "Következő mű", focus stays in the panel; Close clicked: focus on the 3D view', hu.title === UI.hu.nav.help && hu.summary === UI.hu.panels.helpMore && hu.paras.length === 2 && hu.paras.every((x) => x.includes(UI.hu.hud.next)) && hu.close && view, `${JSON.stringify(hu)}; focus on the view after Close: ${view}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
 await guard(['F1.7'], async () => {
-  // a phone: Help is in the folded menu, not on the toolbar; closing it puts focus on Menu (C7);
-  // its button brings the touch hint back
+  // a phone: Help is in the folded menu, not on the toolbar; it opens with the short line for touch, and "In detail" holds the touch controls first; closing it puts focus on Menu (C7)
   const w = await inside('en', PHONE);
   const p = w.page;
-  const onBar = await p.evaluate(() => document.querySelector('[data-action="help"]').getClientRects().length > 0);
+  const onBar = await p.evaluate(() => !!document.querySelector('#toolbar [data-action="help"]'));
   await p.tap('.nav-toggle');
   await p.waitForFunction(() => document.getElementById('site-nav').classList.contains('open'), null, { timeout: 30000 }).catch(() => {});
   const inMenu = await p.evaluate(() => document.querySelector('#nav-links [data-nav="help"]').getClientRects().length > 0);
   await p.tap('#nav-links [data-nav="help"]');
   await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  const first = await p.evaluate(() => document.querySelectorAll('#panel-body p')[1]?.textContent);
+  const short = await p.evaluate(() => document.querySelector('#panel-body > p:not(.eyebrow)')?.textContent);
+  await p.tap('#panel-body details.help-more summary');
+  const first = await p.evaluate(() => document.querySelector('#panel-body details.help-more p')?.textContent);
   await p.tap('#panel [data-close]');
   await p.waitForFunction(() => document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
   const onMenu = await p.evaluate(() => document.activeElement === document.querySelector('.nav-toggle'));
-  // the hint had gone (a touch on the view); Help's button brings it back
-  const touch = await finger(p);
-  await touch('touchStart', 190, 420);
-  await touch('touchMove', 240, 420);
-  await touch('touchEnd');
-  await p.waitForFunction(() => getComputedStyle(document.getElementById('click-to-look')).visibility === 'hidden', null, { timeout: 30000 }).catch(() => {});
-  // the menu opens a moment after the tap that follows the drag: wait for it, tap again once if not
-  const menuOpen = () => p.waitForFunction(() => document.getElementById('site-nav').classList.contains('open'), null, { timeout: 3000 }).then(() => true, () => false);
-  await p.tap('.nav-toggle');
-  if (!(await menuOpen())) { await p.tap('.nav-toggle'); await menuOpen(); }
-  await p.tap('#nav-links [data-nav="help"]');
-  await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
-  await p.tap('#panel-body [data-guide]');
-  const back = await p.waitForFunction(() => document.getElementById('panel').hidden && getComputedStyle(document.getElementById('click-to-look')).visibility === 'visible', null, { timeout: 30000 }).then(() => true, () => false);
   const card = await guideInfo(p);
-  step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch controls first, which name the Next work button; closed with a tap, focus is on Menu; its button brings the touch hint back (the card is for a computer and does not show)', !onBar && inMenu && first === UI.en.panels.controlsTouch && (first || '').includes(UI.en.hud.next) && onMenu && back && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; first paragraph "${(first || '').slice(0, 50)}…"; focus on Menu after Close: ${onMenu}; hint back: ${back}; card: ${card.shown}`);
+  step('F1.7 Phone 375 × 667: Help is not on the toolbar but in the folded menu; it opens with the touch line, "In detail" holds the touch controls first, which name the Next work button; closed with a tap, focus is on Menu; no card (the card is for a computer)', !onBar && inMenu && short === UI.en.loader.howtoTouch && first === UI.en.panels.controlsTouch && (first || '').includes(UI.en.hud.next) && onMenu && !card.shown, `on the toolbar: ${onBar}; in the menu: ${inMenu}; short line "${(short || '').slice(0, 40)}…"; first paragraph "${(first || '').slice(0, 40)}…"; focus on Menu after Close: ${onMenu}; card: ${card.shown}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
@@ -819,18 +766,18 @@ for (const [name, opts, lang] of E2SIZES) {
       if (f.name === 'scene') break;
     }
     const order = stops.map((x) => x.name);
-    const bar = ['tour', 'rooms', 'sound', 'next'].map((a) => order.indexOf(a));
+    const bar = ['tour', 'sound', 'prev', 'next'].map((a) => order.indexOf(a));
     // the footer's four links, in the folded menu (D3)
     await p.evaluate(() => document.querySelector('#site-nav .nav-toggle').click());
     await p.waitForFunction(() => document.querySelector('#site-nav .nav-more')?.getClientRects().length > 0, null, { timeout: 30000 }).catch(() => {});
     const more = await p.evaluate(() => [...document.querySelectorAll('#site-nav .nav-more a, #site-nav .nav-more button')].filter((x) => x.getClientRects().length).length);
-    step('E2.2 Computer 320 × 256: Tab from the 3D view goes through Tour, Rooms, Sound and Next work first, in that order, and every stop shows inside the window; the folded menu holds the footer\'s four links', bar.every((x, i) => x >= 0 && (i === 0 || x > bar[i - 1])) && bar[0] === 0 && stops.every((x) => x.ok) && more === 4, `${stops.map((x) => `${x.name}${x.ok ? '' : ' (off screen)'}`).join(' → ')}; links in the menu: ${more}`);
+    step('E2.2 Computer 320 × 256: Tab from the 3D view goes through Tour, Sound, Previous work and Next work first, in that order, and every stop shows inside the window; the folded menu holds the footer\'s three links (Accessibility, Legal notice, Privacy)', bar.every((x, i) => x >= 0 && (i === 0 || x > bar[i - 1])) && bar[0] === 0 && stops.every((x) => x.ok) && more === 3, `${stops.map((x) => `${x.name}${x.ok ? '' : ' (off screen)'}`).join(' → ')}; links in the menu: ${more}`);
     // with no card and no hint in this layer, Help offers no "Show the short guide again" that
     // would close the panel and show nothing; nor was the body marked as showing the card
-    await p.evaluate(() => document.querySelector('[data-action="help"]').click());
+    await p.evaluate(() => document.querySelector('#site-nav [data-nav="help"]').click());
     await p.waitForFunction(() => !document.getElementById('panel').hidden, null, { timeout: 30000 }).catch(() => {});
     const help = await p.evaluate(() => { const b = document.querySelector('#panel-body [data-guide]'); return { open: !document.getElementById('panel').hidden, button: !!b && b.getClientRects().length > 0 }; });
-    step('E2.3 Computer 320 × 256: right after entry the first-use card is not marked as shown (no "guiding", the card hidden), and Help opens without "Show the short guide again", which would show nothing here', !card.guiding && card.hidden && help.open && !help.button, `guiding ${card.guiding}, card hidden ${card.hidden}; Help open ${help.open}, the button shown ${help.button}`);
+    step('E2.3 Computer 320 × 256: right after entry the first-use card is not marked as shown (no "guiding", the card hidden), and Help opens, with no "Show the short guide again" (gone since 18 November 2026)', !card.guiding && card.hidden && help.open && !help.button, `guiding ${card.guiding}, card hidden ${card.hidden}; Help open ${help.open}, the button shown ${help.button}`);
   }
   errors.push(...w.errors);
   await w.ctx.close();
@@ -856,7 +803,7 @@ for (const [name, opts, lang] of [['1366 × 768, English', {}, 'en'], ['1280 × 
   const info = await p.evaluate(() => {
     const b = document.querySelector('[data-action="next"]');
     const bar = document.getElementById('toolbar').getBoundingClientRect();
-    const btns = [...document.querySelectorAll('#toolbar > button, #toolbar .rooms-wrap > button')].filter((x) => x.getClientRects().length).map((x) => { const r = x.getBoundingClientRect(); return Math.min(r.width, r.height); });
+    const btns = [...document.querySelectorAll('#toolbar > button')].filter((x) => x.getClientRects().length).map((x) => { const r = x.getBoundingClientRect(); return Math.min(r.width, r.height); });
     return { label: b?.querySelector('.lbl')?.textContent ?? null, title: b?.title ?? null, shown: !!b && b.getClientRects().length > 0, inside: bar.left >= 0 && bar.right <= innerWidth && bar.bottom <= innerHeight, smallest: Math.round(Math.min(...btns)) };
   });
   const b = await boxes(p, ['#toolbar', '#keypad', '#zoompad', '#joystick', '#minimap', '#map-key', '#room-label', '#guide']);
@@ -956,7 +903,7 @@ await guard(['H1.1'], async () => {
     const pressedShadow = style(tour).boxShadow;
     tour.setAttribute('aria-pressed', was);
     const offShadow = style(tour).boxShadow;
-    const here = document.querySelector('#rooms-menu button[aria-current]');
+    const here = null; // the rooms menu is gone (18 November 2026)
     const cap = document.querySelector('.cap.k-w');
     cap.style.transition = 'none'; // the colours it ends on, not a step of the 0.12 s change
     cap.classList.add('pressed');
@@ -975,9 +922,9 @@ await guard(['H1.1'], async () => {
   // the pressed keycap, over a white wall and over black: its own background (the glass), the
   // accent tint on that, then the letter
   const capWorst = Math.min(...[[255, 255, 255], [0, 0, 0]].map((under) => { const bg = over(rgba(r.capTint), over(rgba(r.capBg), under)); return ratio(over(rgba(r.capText), bg), bg); }));
-  step('H1.1 The accent is #8fa8ff and no green is left; accent text on glass ≥ 4.5 over white and black; a pressed toolbar button has a bar in the accent along its foot (none when not pressed); the current room in the rooms menu is bold with a bar in the accent; a pressed keycap letter ≥ 4.5',
-    r.accent === '#8fa8ff' && r.green.length === 0 && onGlass >= 4.5 && /inset/.test(r.pressedShadow) && /143,\s*168,\s*255/.test(r.pressedShadow) && !/143,\s*168,\s*255/.test(r.offShadow) && r.hereWeight >= 600 && /143,\s*168,\s*255/.test(r.hereBar) && capWorst >= 4.5,
-    `accent ${r.accent}; green on ${r.green.length ? r.green.join(', ') : 'nothing'}; zoom value ${onGlass.toFixed(2)}; pressed "${r.pressedShadow}", not pressed "${r.offShadow}"; current room weight ${r.hereWeight} bar ${r.hereBar}; pressed keycap letter ${capWorst.toFixed(2)} ("${r.capText}" on "${r.capTint}" on "${r.capBg}")`);
+  step('H1.1 The accent is #8fa8ff and no green is left; accent text on glass ≥ 4.5 over white and black; a pressed toolbar button has a bar in the accent along its foot (none when not pressed); a pressed keycap letter ≥ 4.5',
+    r.accent === '#8fa8ff' && r.green.length === 0 && onGlass >= 4.5 && /inset/.test(r.pressedShadow) && /143,\s*168,\s*255/.test(r.pressedShadow) && !/143,\s*168,\s*255/.test(r.offShadow) && capWorst >= 4.5,
+    `accent ${r.accent}; green on ${r.green.length ? r.green.join(', ') : 'nothing'}; zoom value ${onGlass.toFixed(2)}; pressed "${r.pressedShadow}", not pressed "${r.offShadow}"; pressed keycap letter ${capWorst.toFixed(2)} ("${r.capText}" on "${r.capTint}" on "${r.capBg}")`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
@@ -1065,12 +1012,12 @@ await guard(['H1.3'], async () => {
   const p = w.page;
   const r = await p.evaluate(() => {
     const style = (e, ps) => getComputedStyle(e, ps);
-    const chips = ['#room-label', '#minimap', '#map-key', '#toolbar', '#rooms-menu', '#tour-caption', '#click-to-look', '#guide', '#prompt', '#zoom-level', '.cap.k-w', '.cap.k-zin', '#keypad .wheel'].map((sel) => {
+    const chips = ['#room-label', '#map-box', '#toolbar', '#tour-caption', '#click-to-look', '#guide', '#prompt', '#zoom-level', '.cap.k-w', '.cap.k-zin', '#keypad .wheel'].map((sel) => {
       const e = document.querySelector(sel);
       const c = style(e);
       return { sel, bg: c.backgroundColor, edge: c.borderTopColor, edgeW: c.borderTopWidth, radius: parseFloat(c.borderTopLeftRadius) || 0 };
     });
-    const texts = ['#room-label .room-name', '#room-label .room-sub', '#map-key', '#keypad .wheel', '.cap.k-w i', '#toolbar [data-action="tour"] .lbl', '#rooms-menu button', '#rooms-menu small', '#click-to-look', '#guide', '#guide .g-note'].map((sel) => {
+    const texts = ['#room-label .room-name', '#map-key', '#keypad .wheel', '.cap.k-w i', '#toolbar [data-action="tour"] .lbl', '#click-to-look', '#guide'].map((sel) => {
       const e = document.querySelector(sel);
       return { sel, color: style(e).color };
     });
@@ -1086,26 +1033,19 @@ await guard(['H1.3'], async () => {
     cap.focus();
     const onCap = ring(cap);
     cap.style.transition = '';
-    document.querySelector('#toolbar [data-action="rooms"]').click();
-    const row = document.querySelector('#rooms-menu button');
-    row.focus();
-    const onRow = ring(row, '::after');
-    const rowHover = 'rgba(255, 255, 255, 0.1)'; // #rooms-menu .room-row:hover, as in style.css
-    document.querySelector('#toolbar [data-action="rooms"]').click();
     // the glass as the toolbar has it (the built stylesheet may write the token as a hex colour)
-    return { glass: getComputedStyle(document.getElementById('toolbar')).backgroundColor, chips, texts, onTour, onTourPressed, onCap, onRow, rowHover };
+    return { glass: getComputedStyle(document.getElementById('toolbar')).backgroundColor, chips, texts, onTour, onTourPressed, onCap };
   });
   const bad = [];
   let lowEdge = 99; let lowText = 99;
   for (const c of r.chips) {
     const e = worst(c.edge, c.bg);
     lowEdge = Math.min(lowEdge, e);
+    // the map's box and the room label: 70 % glass, square, no border (the reconstructor, 18 November 2026)
+    if (['#room-label', '#map-box'].includes(c.sel)) { if (rgba(c.bg)[3] < 0.7 || c.edgeW !== '0px' || c.radius !== 0) bad.push(`${c.sel}: glass ${c.bg}, edge ${c.edgeW}, radius ${c.radius}`); continue; }
     if (rgba(c.bg)[3] < 0.85 || c.edgeW !== '1px' || rgba(c.edge)[3] < 0.45 || e < 3 || c.radius < 6) bad.push(`${c.sel}: glass ${c.bg}, edge ${c.edgeW} ${c.edge} (${e.toFixed(2)}), radius ${c.radius}`);
   }
   for (const x of r.texts) { const c = worst(x.color, r.glass); lowText = Math.min(lowText, c); if (c < 4.5) bad.push(`${x.sel}: ${x.color} ${c.toFixed(2)}`); }
-  // the works named in the rooms menu, on a row under the mouse: the row's tint on the glass
-  const hoverLow = Math.min(...[[255, 255, 255], [0, 0, 0]].map((under) => { const bg = over(rgba(r.rowHover), over(rgba(r.glass), under)); return ratio(over(rgba(r.texts.find((x) => x.sel === '#rooms-menu small').color), bg), bg); }));
-  if (hoverLow < 4.5) bad.push(`rooms menu, works on a row under the mouse: ${hoverLow.toFixed(2)}`);
   const white = (x) => x.shown && x.line === 'solid' && x.width === '2px' && x.color === 'rgb(255, 255, 255)';
   const halo = (x) => /rgb\(11, 12, 14\) 0px 0px 0px 5px/.test(x.shadow);
   const ringOnGlass = worst('rgb(255, 255, 255)', r.glass);
@@ -1114,8 +1054,7 @@ await guard(['H1.3'], async () => {
   if (!white(r.onTour) || !halo(r.onTour)) bad.push(`Tour focused: ${JSON.stringify(r.onTour)}`);
   if (!white(r.onTourPressed) || !halo(r.onTourPressed) || !/inset/.test(r.onTourPressed.shadow)) bad.push(`Tour pressed and focused: ${JSON.stringify(r.onTourPressed)}`);
   if (!white(r.onCap) || !halo(r.onCap)) bad.push(`keycap focused: ${JSON.stringify(r.onCap)}`);
-  if (!(r.onRow.line === 'solid' && r.onRow.width === '2px' && r.onRow.color === 'rgb(255, 255, 255)' && parseFloat(r.onRow.offset) < 0)) bad.push(`rooms menu row focused: ${JSON.stringify(r.onRow)}`);
-  step('H1.3 Glass chips: each is the glass (0.85) with a 1 px edge of white at 45% (≥ 3 against the glass over white and black) and rounded corners; text on them ≥ 4.5, also the works on a rooms-menu row under the mouse; the focus ring on a toolbar button (pressed or not) and a keycap is white, 2 px, with a dark halo of 5 px round it; in the rooms menu it is white and inside the row; ring on glass ≥ 3, halo on a white wall ≥ 3',
+  step('H1.3 Glass chips: each is the glass (0.85) with a 1 px edge of white at 45% (the box round the map and the room label: 70 %, square, no border) (≥ 3 against the glass over white and black) and rounded corners; text on them ≥ 4.5; the focus ring on a toolbar button (pressed or not) and a keycap is white, 2 px, with a dark halo of 5 px round it; ring on glass ≥ 3, halo on a white wall ≥ 3',
     bad.length === 0 && lowEdge >= 3 && lowText >= 4.5 && ringOnGlass >= 3 && haloOnWall >= 3 && ringOnHalo >= 3,
     `${r.chips.length} chips, lowest edge ${lowEdge.toFixed(2)}; lowest text ${lowText.toFixed(2)}; works on a hovered row ${hoverLow.toFixed(2)}; ring on glass ${ringOnGlass.toFixed(2)}, halo on a white wall ${haloOnWall.toFixed(2)}, ring on its halo ${ringOnHalo.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
   errors.push(...w.errors);
@@ -1136,7 +1075,7 @@ await guard(['H1.4'], async () => {
   const bar = await p.evaluate(() => {
     const style = (e) => getComputedStyle(e);
     const look = (e) => { const c = style(e); return { family: c.fontFamily.split(',')[0].replace(/"/g, ''), weight: Number(c.fontWeight), size: parseFloat(c.fontSize), upper: c.textTransform, radius: parseFloat(c.borderTopLeftRadius) || 0, edge: c.borderTopColor, edgeW: c.borderTopWidth, shadow: c.boxShadow, bg: c.backgroundColor, color: c.color, h: e.getBoundingClientRect().height }; };
-    const buttons = [...document.querySelectorAll('#toolbar > button, #toolbar .rooms-wrap > button')].map((b) => ({ action: b.dataset.action, ...look(b) }));
+    const buttons = [...document.querySelectorAll('#toolbar > button')].map((b) => ({ action: b.dataset.action, ...look(b) }));
     const tour = document.querySelector('#toolbar [data-action="tour"]');
     tour.setAttribute('aria-pressed', 'true');
     const pressed = look(tour);
@@ -1150,7 +1089,7 @@ await guard(['H1.4'], async () => {
     sound.setAttribute('aria-pressed', 'false');
     const signOff = signs();
     sound.setAttribute('aria-pressed', was);
-    const rows = [...document.querySelectorAll('#rooms-menu button')].map((b) => ({ here: b.hasAttribute('aria-current'), weight: Number(style(b).fontWeight), bar: style(b.closest('.room-row')).borderLeftColor }));
+    const rows = []; // the rooms menu is gone (18 November 2026)
     const cap = document.querySelector('.cap.k-w');
     cap.style.transition = 'none';
     const capOff = { edge: style(cap).borderTopColor, move: style(cap).transform };
@@ -1208,7 +1147,6 @@ await guard(['H1.4'], async () => {
   if (acc.test(bar.off.edge) || acc.test(bar.off.shadow) || acc.test(bar.off.bg)) bad.push(`toolbar button not pressed: ${JSON.stringify(bar.off)}`);
   if (pressedText < 4.5 || pressedEdge < 3) bad.push(`pressed toolbar button: text ${pressedText.toFixed(2)}, edge ${pressedEdge.toFixed(2)}`);
   if (bar.signOn === bar.signOff) bad.push(`Sound keeps one sign: ${bar.signOn}`);
-  if (!bar.rows.some((x) => x.here) || !bar.rows.every((x) => (x.here ? x.weight >= 700 && acc.test(x.bar) : x.weight <= 400 && !acc.test(x.bar)))) bad.push(`rooms menu: ${JSON.stringify(bar.rows)}`);
   if (!(acc.test(bar.capOn.edge) && !acc.test(bar.capOff.edge) && bar.capOn.move !== bar.capOff.move)) bad.push(`keycap: ${JSON.stringify([bar.capOff, bar.capOn])}`);
   if (!bar.lang.every((x) => (x.pressed === 'true') === /underline/.test(x.line))) bad.push(`languages: ${JSON.stringify(bar.lang)}`);
   for (const [where, marks, name] of [['inside', navMark, 'contact'], ['title screen', navTitle, 'about']]) if (!marks.length || !marks.every((x) => (x.nav === name) === (x.current === 'true') && (x.current === 'true') === /underline/.test(x.line))) bad.push(`navbar (${where}): ${JSON.stringify(marks)}`);
@@ -1245,7 +1183,7 @@ const typeInfo = (p, root) => p.evaluate((sel) => {
   const bad = [];
   let n = 0; let low = 99; let wide = 0;
   const tag = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}${typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).join('.') : ''}`;
-  const always = ['#prompt', '#tour-caption', '#zoom-level .val', '#viewer-count', '.viewer-loading', '#progress-label', '#room-label .room-name', '#room-label .room-sub'];
+  const always = ['#prompt', '#tour-caption', '#zoom-level .val', '#viewer-count', '.viewer-loading', '#progress-label', '#room-label .room-name'];
   const scope = document.querySelector(sel);
   if (!scope) return { n: 0, low: 0, wide: 9, bad: [`${sel} is not there`] };
   for (const e of scope.querySelectorAll('*')) {
@@ -1270,7 +1208,6 @@ await guard(['A7.1'], async () => {
     const p = w.page;
     // the tour caption's two lines, as tour.js writes them
     await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = '<span class="t">1 / 17</span><span class="m">x</span>x'; });
-    await p.evaluate(() => document.querySelector('#toolbar [data-action="rooms"]').click());
     const got = [['page', await typeInfo(p, 'body')]];
     await p.evaluate(() => { document.getElementById('tour-caption').innerHTML = ''; });
     for (const name of ['about', 'works', 'bts', 'contact', 'help', 'accessibility', 'legal', 'privacy']) {
