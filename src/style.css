@@ -1177,7 +1177,9 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
   body:not(.touch) :is(#keypad, #zoompad, #minimap, #map-key, #click-to-look, #guide) { display: none; }
   /* with no card and no hint here, Help's "Show the short guide again" would show nothing */
   body:not(.touch) #panel-body p:has(> [data-guide]) { display: none; }
-  body:not(.touch) #toolbar { bottom: calc(8px + var(--safe-b)); }
+  body:not(.touch) #toolbar { bottom: calc(8px + var(--safe-b)); gap: 2px; }
+  /* four buttons (Previous work came in on 18 November) inside 320 px less a scrollbar */
+  body:not(.touch) #toolbar > button { padding: 4px 4px; }
   body:not(.touch) #tour-caption { bottom: calc(8px + var(--safe-b) + var(--bar-h) + 8px); }
   body:not(.touch) #room-label { top: calc(var(--nav-h) + 6px); max-width: calc(100% - 24px - 110px - var(--safe-l) - var(--safe-r)); padding: 4px 10px; }
   body:not(.touch) #zoom-level { left: auto; right: calc(12px + var(--safe-r)); top: calc(var(--nav-h) + 6px); transform: none; }
@@ -1286,9 +1288,9 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 }
 #panel-body details.help-more { margin: 14px 0 0; }
 #panel-body details.help-more summary { cursor: pointer; font-weight: 600; }
-/* A touch screen: no turn keys (the keyboard's ← and →) and no short help in the middle;
-   the zoom buttons stay (the reconstructor, 18 November 2026) */
-body.touch #keypad, body.touch #click-to-look { display: none !important; }
+/* A touch screen: no turn keys (the keyboard's ← and →), no short help in the middle and no
+   zoom buttons: a pinch zooms (the reconstructor, 18 and 19 November 2026). The zoom readout stays. */
+body.touch #keypad, body.touch #click-to-look, body.touch #zoompad { display: none !important; }
 /* The floor plan and its key in one box, the key under the plan: slightly see-through, square
    corners, no border; the room label likewise (the reconstructor, 18 November 2026) */
 #map-box { position: absolute; right: calc(14px + var(--safe-r)); top: calc(var(--nav-h) + 8px); display: flex; flex-direction: column; align-items: stretch; background: rgba(11, 12, 14, 0.7); border: 0; border-radius: 0; pointer-events: none; }
