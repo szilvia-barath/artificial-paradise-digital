@@ -52,17 +52,17 @@ export const PHOTO_STAINS = [
   { box: [9.82, 1.93, 1.82, 9.88, 2.12, 2.38], kind: 'marks', tint: [0.7, 0.71, 0.73], strength: 1, edge: 0.6, tide: 0, seed: 8 },
   // Room 3: yellow-brown damp along the foot of the north stub's west face (x 15.6, under #9)
   // (DSC_0095, also 0093, 0094, 0096; measured against #9 and the stub's 1.19 m width)
-  { box: [15.57, 0, 1.87, 15.63, 0.3, 2.92], kind: 'rising', tint: [0.88, 0.86, 0.76], strength: 0.9, edge: 0.7, tide: 0.25, seed: 9 },
+  { box: [15.72, 0, 1.87, 15.78, 0.3, 2.92], kind: 'rising', tint: [0.88, 0.86, 0.76], strength: 0.9, edge: 0.7, tide: 0.25, seed: 9 },
   // Room 3: dirty whitewash on the lowest four to five courses of the Room 2 / Room 3 north
   // pillar, its east face (x 10.2) and the doorway's jamb (z 2.557) (DSC_0085, 0084)
-  { box: [10.17, 0, 1.73, 10.23, 0.36, 2.557], kind: 'rising', tint: [0.92, 0.85, 0.74], strength: 1, edge: 0.5, tide: 0.15, seed: 10 },
-  { box: [9.85, 0, 2.527, 10.2, 0.34, 2.587], kind: 'rising', tint: [0.92, 0.85, 0.74], strength: 1, edge: 0.5, tide: 0.15, seed: 11 },
+  { box: [10.32, 0, 1.73, 10.38, 0.36, 2.557], kind: 'rising', tint: [0.92, 0.85, 0.74], strength: 1, edge: 0.5, tide: 0.15, seed: 10 },
+  { box: [9.85, 0, 2.527, 10.35, 0.34, 2.587], kind: 'rising', tint: [0.92, 0.85, 0.74], strength: 1, edge: 0.5, tide: 0.15, seed: 11 },
   // Room 3: a white chip in the grey paint of the north wall's pier, under #8's west edge
   // (DSC_0088; against the screen's corner and the pier's arris)
-  { box: [11.82, 0.8, 1.7, 11.9, 0.88, 1.76], kind: 'blotch', tint: [2.2, 2.2, 2.05], strength: 1, edge: 0.6, tide: 0, seed: 12 },
+  { box: [11.97, 0.8, 1.7, 12.05, 0.88, 1.76], kind: 'blotch', tint: [2.2, 2.2, 2.05], strength: 1, edge: 0.6, tide: 0, seed: 12 },
   // Room 4: dark specks high on the south wall's west end (z 5.73) (DSC_0125, also 0123,
   // 0124; height against the corner's wall height, along the wall only roughly, ±0.5 m)
-  { box: [16.3, 1.75, 5.7, 17.5, 2.25, 5.76], kind: 'specks', tint: [0.35, 0.33, 0.3], strength: 1, edge: 0.12, tide: 0, seed: 13 },
+  { box: [16.45, 1.75, 5.7, 17.65, 2.25, 5.76], kind: 'specks', tint: [0.35, 0.33, 0.3], strength: 1, edge: 0.12, tide: 0, seed: 13 },
 ];
 const STAIN_COUNT = Math.min(PHOTO_STAINS.length, MAX_STAINS);
 

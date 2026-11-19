@@ -40,9 +40,9 @@ export function buildLights(scene) {
   // Room 2: warm enamel pendants
   lights.r2 = spot(0xffd9a6, 9, 7.98, 1.95, 3.412, 9, 1.4, 0.45);
   // Room 3: cool gallery white from the track rail
-  lights.r3 = point(0xf4f6ff, 11, 12.85, 2.1, 3.744, 11);
+  lights.r3 = point(0xf4f6ff, 11, 13.00, 2.1, 3.744, 11);
   // Room 4: light thrown back off the projection wall (driven by letItFlow.update)
-  lights.proj = point(0xd2e4d0, 0.4, 23.4, 1.3, 3.725, 9);
+  lights.proj = point(0xd2e4d0, 0.4, 23.55, 1.3, 3.725, 9);
   // Cold light at the top of the stairs (invented). It stood in the invented shaft; since
   // 17 November 2026 the flight ends at a closed street door and this light, unchanged, stands
   // outside it (no shadows, so it lights Room 1 as before). Open question in PROGRESS.md.

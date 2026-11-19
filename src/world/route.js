@@ -9,8 +9,8 @@ import { ROOMS, roomById, roomAt, wallFrame } from './layout.js';
 // tour walks through them).
 export const DOORS = {
   'r1>r2': [[4.95, 4.12], [6.35, 4.12]],
-  'r2>r3': [[9.382, 3.317], [10.65, 3.317]],
-  'r3>r4': [[15.2, 3.792], [16.283, 3.792]],
+  'r2>r3': [[9.382, 3.317], [10.80, 3.317]],
+  'r3>r4': [[15.35, 3.792], [16.433, 3.792]],
 };
 
 // The works in visiting order: the catalogue order, which is also the tour's. The small

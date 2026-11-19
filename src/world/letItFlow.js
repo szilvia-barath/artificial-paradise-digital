@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { photoTexture } from './textures.js';
 import RIVER from '../data/river.json';
-import { OBSTACLES } from './layout.js';
+import { OBSTACLES, R34_SHIFT } from './layout.js';
 import { createVideo, BY_ROOM } from './video.js';
 
 // #16 Let it Flow (2024), Room 4, as in the documentation video and the installation photos.
@@ -19,7 +19,7 @@ import { createVideo, BY_ROOM } from './video.js';
 // the lens, so the same mapping lights the plastic, whose folds are shaded against the lens.
 
 const BASE = import.meta.env.BASE_URL;
-const WALL_X = 25.4;
+const WALL_X = 25.55;
 const Z0 = 1.73;
 const Z1 = 5.73;
 // Measured on DSC_0113 (the 4 m wall is 259 px/m): the picture stands on the floor, reaches
@@ -34,7 +34,16 @@ const WALL_GAIN = 1.3; // the file's trees are mid grey; a projector in the dark
 const WALL_TINT = new THREE.Color(0.88, 1, 1); // the lamp is cool in the photos
 const FLOOR_TINT = new THREE.Color(1, 1.12, 1.32);
 const FLOOR_PEAK = 0.34; // the black floor returns far less of the lamp than white plastic does
-const PJ = RIVER.projector;
+// river.json is written by the scripts in the frame Rooms 3 and 4 had until 19 November 2026;
+// they stand R34_SHIFT further east now, so its x values are shifted here as they are read
+// (the homography takes a floor point back by the same amount).
+const DX = R34_SHIFT;
+const PJ = {
+  ...RIVER.projector,
+  position: [RIVER.projector.position[0] + DX, RIVER.projector.position[1], RIVER.projector.position[2]],
+  quad: RIVER.projector.quad.map((q) => [q[0] + DX, ...q.slice(1)]),
+  floorToFrame: RIVER.projector.floorToFrame.map((r) => [r[0], r[1], r[2] - DX * r[0]]),
+};
 // the light comes from the projector's lens
 const LAMP = new THREE.Vector3(...PJ.position);
 const AMBIENT = 0.14; // the little room light the plastic gets besides the projection
@@ -222,7 +231,7 @@ export function buildLetItFlow(manager) {
         const v = j / (gh - 1);
         const val = h(i, j);
         slot[k] = positions.length / 3;
-        positions.push(RIVER.xTop - v * RIVER.lengthM, val ? ((val - 1) / 254) * RIVER.hmax + 0.002 : 0, RIVER.zLeft + u * RIVER.widthM);
+        positions.push(RIVER.xTop + DX - v * RIVER.lengthM, val ? ((val - 1) / 254) * RIVER.hmax + 0.002 : 0, RIVER.zLeft + u * RIVER.widthM);
         uvs.push(u, 1 - v);
       }
       return slot[k];
@@ -248,7 +257,7 @@ export function buildLetItFlow(manager) {
     group.add(river);
   });
   // keep visitors off the installation
-  for (const [x0, x1, z0, z1] of RIVER.obstacles) OBSTACLES.push({ x0, x1, z0, z1 });
+  for (const [x0, x1, z0, z1] of RIVER.obstacles) OBSTACLES.push({ x0: x0 + DX, x1: x1 + DX, z0, z1 });
 
   // Videos play from Room 3 on, so they are running before the end wall comes into view
   // (on phones and low-power devices they go by room, with a light version from Rooms 1 to

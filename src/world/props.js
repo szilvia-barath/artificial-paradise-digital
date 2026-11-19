@@ -635,7 +635,7 @@ export function buildProps(materials) {
   {
     // bar counter tops (dark laminate) over the brick half walls
     g.add(slab(materials.counterTop, 7.689, 9.87, 1.0, 1.05, 4.628, 5.179));
-    g.add(slab(materials.counterTop, 9.788, 10.29, 1.0, 1.05, 4.058, 4.761));
+    g.add(slab(materials.counterTop, 9.788, 10.44, 1.0, 1.05, 4.058, 4.761));
     // behind the bar: low cabinets, shelves with glasses, kettle, bottles
     g.add(slab(materials.white, 7.793, 9.808, 0, 0.88, 5.331, 5.72));
     g.add(slab(materials.counterTop, 7.772, 9.829, 0.88, 0.92, 5.312, 5.73));
@@ -732,7 +732,7 @@ export function buildProps(materials) {
     const lens = cyl(0.045, 0.045, 0.03, materials.led, 16);
     lens.rotation.z = Math.PI / 2;
     proj.add(place(lens, 0.19, 2.38, 0));
-    g.add(place(proj, 17.48, 0, 3.725));
+    g.add(place(proj, 17.63, 0, 3.725));
 
     // the north wall's pipes carry the wall's paint (DSC_0099 to DSC_0112; until 17 November
     // 2026 a light grey, 0x55575c)
@@ -740,30 +740,30 @@ export function buildProps(materials) {
     // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
     const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
-    g.add(place(low, 20.64, 0.42, 1.778));
-    dirtAlong(15.9, 0.42, 1.778, 25.38, 0.42, 1.778);
-    for (const [x, y0, r] of [[18.917, 0.42, 0.03], [24.184, 0.42, 0.03]]) {
+    g.add(place(low, 20.79, 0.42, 1.778));
+    dirtAlong(16.05, 0.42, 1.778, 25.53, 0.42, 1.778);
+    for (const [x, y0, r] of [[19.067, 0.42, 0.03], [24.334, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
       dirtAlong(x, y0, 1.75 + r, x, 2.9, 1.75 + r);
     }
     // a second low pipe above the first (DSC_0109)
     const low2 = cyl(0.028, 0.028, 9.48, pipeMat, 8);
     low2.rotation.z = Math.PI / 2;
-    g.add(place(low2, 20.64, 0.66, 1.776));
+    g.add(place(low2, 20.79, 0.66, 1.776));
     // the two big drain pipes coming down from the top pipe (DSC_0109, DSC_0111): one
     // straight down to an elbow into the wall at about 1 m, the other joining it at a slant
     {
       const r = 0.065;
       const z = 1.73 + r + 0.02;
       const V = (x, y) => new THREE.Vector3(x, y, z);
-      const parts = [[V(20.305, 2.9), V(20.305, 1.05)], [V(20.976, 2.9), V(20.976, 2.0)], [V(20.976, 2.0), V(20.37, 1.42)]];
+      const parts = [[V(20.455, 2.9), V(20.455, 1.05)], [V(21.126, 2.9), V(21.126, 2.0)], [V(21.126, 2.0), V(20.52, 1.42)]];
       for (const [a, b] of parts) g.add(rod(pipeMat, a, b, r, 12));
       // bottom elbow: a short bend turning into the wall
-      g.add(place(cyl(r, r, 0.12, pipeMat, 12).rotateX(Math.PI / 2), 20.305, 1.0, z - 0.05));
-      for (const y of [2.2, 1.65]) g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 20.305, y, z));
-      g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 20.976, 2.25, z));
-      dirtAlong(20.305, 1.0, z, 20.305, 2.9, z);
-      dirtAlong(20.976, 2.0, z, 20.976, 2.9, z);
+      g.add(place(cyl(r, r, 0.12, pipeMat, 12).rotateX(Math.PI / 2), 20.455, 1.0, z - 0.05));
+      for (const y of [2.2, 1.65]) g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 20.455, y, z));
+      g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 21.126, 2.25, z));
+      dirtAlong(20.455, 1.0, z, 20.455, 2.9, z);
+      dirtAlong(21.126, 2.0, z, 21.126, 2.9, z);
     }
     // Let it Flow's floor projector, high on the north wall just under the big pipe, above
     // Natural Life and at recess A's west arris (DSC_0108 to DSC_0112, 04-03). Until 17 November
@@ -773,17 +773,17 @@ export function buildProps(materials) {
     // photographed (size ±3 cm, place ±0.15 m along the wall); its lens is taken at the light
     // at its top (scripts/fit_projector.mjs, POS). Which way the lens faces is not seen: the
     // picture's place on the floor is fitted (scripts/fit_projector.mjs), the body is not turned to it.
-    g.add(place(box(0.12, 0.42, 0.17, materials.black), 21.82, 2.18, 1.86));
-    g.add(place(box(0.05, 0.025, 0.04, materials.led), 21.84, 2.375, 1.92));
+    g.add(place(box(0.12, 0.42, 0.17, materials.black), 21.97, 2.18, 1.86));
+    g.add(place(box(0.05, 0.025, 0.04, materials.led), 21.99, 2.375, 1.92));
     const plate = cyl(0.06, 0.06, 0.02, materials.black, 14);
     plate.rotation.x = Math.PI / 2;
-    g.add(place(plate, 21.66, 2.15, 1.74));
-    g.add(rod(materials.black, new THREE.Vector3(21.66, 2.15, 1.75), new THREE.Vector3(21.78, 2.2, 1.8), 0.015, 8));
+    g.add(place(plate, 21.81, 2.15, 1.74));
+    g.add(rod(materials.black, new THREE.Vector3(21.81, 2.15, 1.75), new THREE.Vector3(21.93, 2.2, 1.8), 0.015, 8));
     // a round pipe standing on recess A's sill against its east jamb, rising behind the big
     // pipe (DSC_0112, 04-03, w16-documentation.mp4 00:00); how far it stands from the back is
     // invented. Its top is hidden in every photograph: it runs on up into the wall over the
     // recess (from the vault's springing, 2.92 m), so no open end shows (inferred)
-    g.add(place(cyl(0.04, 0.04, 2.95 - 0.95, pipeMat, 10), 22.72, (2.95 + 0.95) / 2, 1.67));
+    g.add(place(cyl(0.04, 0.04, 2.95 - 0.95, pipeMat, 10), 22.87, (2.95 + 0.95) / 2, 1.67));
     // the pale pipe with collars above the projection, and the dark one along the top of the
     // north wall. This comment named "DSC_0113; height and thickness from the 4 m wall's
     // scale" as the source of both. By the reconstructor's account (PROGRESS.md, note of 15
@@ -807,7 +807,7 @@ export function buildProps(materials) {
     // wall's height in the photographs; the model's end wall is 2.92 m high), 2 cm off the wall
     // (invented); it comes out from behind the dark pipe's end and stops 5 cm short of the
     // south wall in a domed cap, tip at z 5.68
-    const PX = 25.3;
+    const PX = 25.45;
     const PR = 0.08;
     g.add(along(PR, 3.75, endPipe, PX, 2.58, 3.725));
     const cap = new THREE.Mesh(new THREE.SphereGeometry(PR, 14, 6, 0, Math.PI * 2, 0, Math.PI / 2), endPipe);
@@ -828,13 +828,13 @@ export function buildProps(materials) {
     // the dark conduit along the middle of the ceiling with four LED floodlights on it, the
     // projector hanging at its west end (DSC_0111, DSC_0113, DSC_0114)
     {
-      const x0 = 17.48;
-      const x1 = 23.9;
+      const x0 = 17.63;
+      const x1 = 24.05;
       // under the beams' bottom flanges (2.89 m; it hung at 2.665 to 2.72 under the old 2.75 m
       // springing and moved up with it on 17 November 2026)
       g.add(slab(materials.black, x0, x1, 2.835, 2.89, 3.69, 3.76));
       const lampFace = new THREE.MeshStandardMaterial({ color: 0x9a9b9e, roughness: 0.4, metalness: 0.3 });
-      for (const [x, tilt, side] of [[19.1, 0.7, 1], [20.4, 0.55, -1], [21.75, 0.7, 1], [23.0, 0.6, -1]]) {
+      for (const [x, tilt, side] of [[19.25, 0.7, 1], [20.55, 0.55, -1], [21.90, 0.7, 1], [23.15, 0.6, -1]]) {
         const f = new THREE.Group();
         f.add(place(box(0.13, 0.035, 0.11, materials.black), 0, 0, 0));
         f.add(place(box(0.11, 0.004, 0.09, lampFace), 0, -0.019, 0));
@@ -849,21 +849,21 @@ export function buildProps(materials) {
     const TOPY = 2.485;
     const top = cyl(0.085, 0.085, 9.5, palePipe, 12);
     top.rotation.z = Math.PI / 2;
-    g.add(place(top, 20.65, TOPY, 1.825));
-    for (const x of [17.2, 19.6, 22.0, 24.4]) {
+    g.add(place(top, 20.80, TOPY, 1.825));
+    for (const x of [17.35, 19.75, 22.15, 24.55]) {
       const c = cyl(0.1, 0.1, 0.09, palePipe, 12);
       c.rotation.z = Math.PI / 2;
       g.add(place(c, x, TOPY, 1.825));
     }
-    dirtAlong(15.9, TOPY, 1.825, 25.4, TOPY, 1.825);
+    dirtAlong(16.05, TOPY, 1.825, 25.55, TOPY, 1.825);
     // a whitewashed radiator standing on the concrete ledge by the entrance
-    radiator(17.1, 1.79, 0, 0.96, 0.55, 0.46, radiatorMat);
+    radiator(17.25, 1.79, 0, 0.96, 0.55, 0.46, radiatorMat);
 
     // gas meter by the partition (DSC_0098–0101)
-    g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));
-    g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.427, 1.83, 1.816));
-    g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
-    dirtAlong(16.331, 0, 1.787, 16.331, 1.45, 1.787);
+    g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.577, 1.62, 1.816));
+    g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.577, 1.83, 1.816));
+    g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.481, 0.72, 1.787));
+    dirtAlong(16.481, 0, 1.787, 16.481, 1.45, 1.787);
 
     // The curtain by the opening between Room 3 and Room 4. It does not hang in the opening
     // and does not divide the rooms: it closes the north side of the space between the two
@@ -876,8 +876,8 @@ export function buildProps(materials) {
     // past the cloth (under the roll and at its edges). No obstacle of its own: the block
     // behind it already stops the visitor.
     {
-      const x0 = 14.88; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
-      const x1 = 15.6; // the west face of the south stub
+      const x0 = 15.03; // the end of the wall that carries #14 stays bare, about 8 cm (DSC_0069)
+      const x1 = 15.75; // the west face of the south stub
       const zc = 4.64; // 2.6 cm in front of the block's north face (z 4.666)
       const top = 2.75; // Room 3's ceiling
       const rollR = 0.015;
@@ -911,7 +911,7 @@ export function buildProps(materials) {
     const rails = [
       { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: R1_CEILING },
       { x0: R1.west + 0.6, x1: R1.east - 0.45, z: R1.D * 0.74, y: R1_CEILING },
-      { x0: 10.45, x1: 15.25, z: 3.725, y: 2.75 },
+      { x0: 10.60, x1: 15.40, z: 3.725, y: 2.75 },
     ];
     const per = 4;
     const spotGeo = new THREE.CylinderGeometry(0.04, 0.055, 0.15, 12);

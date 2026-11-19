@@ -57,7 +57,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
   const ctx = canvas.getContext('2d');
   drawKey(works);
   const paths = Object.fromEntries(MAP_GROUPS.map((g) => [g.shape, new Path2D(markPath(g.shape))]));
-  const bounds = { x0: -1.0, x1: 26.2, z0: -0.6, z1: 7.6 };
+  const bounds = { x0: -1.0, x1: 26.4, z0: -0.6, z1: 7.6 };
   let W = 0;
   let H = 0;
   let s = 1;

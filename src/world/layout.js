@@ -27,6 +27,15 @@
 //   Room 3 (prints) | Room 4 (Let it Flow), 3 and 4 being one long room split only
 //   by two short wall stubs.
 
+// Rooms 3 and 4 stand 0.15 m further east than the plan drawing puts them (19 November 2026):
+// the wall between Rooms 2 and 3 is 0.50 m thick, two bricks (DSC_0064: the side of the bar's
+// pass-through; inferred, +-0.1 m; the reconstructor's decision), not the 0.35 m the plan
+// draws. Every x of Rooms 3 and 4 in this code is 0.15 more than before that date, and 0.15
+// more than the measurement reference gives after its own shift; x values quoted in comments
+// written earlier are in the old frame. The river's data (river.json, written by scripts in
+// the old frame) is shifted where it is read (letItFlow.js, gallery.js).
+export const R34_SHIFT = 0.15;
+
 export const EYE = 1.62;
 
 // Room 1 is 5.0 × 7.0 m (the gallery's measured plan). Change W and D here and the walls,
@@ -58,15 +67,15 @@ export const ROOMS = [
   },
   {
     id: 'r3',
-    x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73,
+    x0: 10.35, x1: 15.75, z0: 1.73, z1: 5.73,
     ceiling: 2.75,
-    spawn: { x: 10.85, z: 3.317, look: { x: 15.55, z: 3.792 } },
+    spawn: { x: 11.00, z: 3.317, look: { x: 15.70, z: 3.792 } },
   },
   {
     id: 'r4',
-    x0: 15.9, x1: 25.4, z0: 1.73, z1: 5.73,
+    x0: 16.05, x1: 25.55, z0: 1.73, z1: 5.73,
     ceiling: 3.06, // crown of the vaults (R4_VAULT)
-    spawn: { x: 16.714, z: 3.792, look: { x: 25.4, z: 3.697 } },
+    spawn: { x: 16.864, z: 3.792, look: { x: 25.55, z: 3.697 } },
   },
 ];
 
@@ -127,9 +136,9 @@ function room3NorthWall() {
   const z1 = 1.73;
   const g = (x0, x1, y0, y1, zFront = z1, faces) => ({ x0, x1, z0, z1: zFront, y0, y1, mat: 'greyBrick', faces });
   // the niches' sides stay in shade in the photos: they get the darker paint
-  const out = [g(10.2, 10.6, 0, 2.9, z1, { px: 'greyBrickReveal' })];
+  const out = [g(10.35, 10.75, 0, 2.9, z1, { px: 'greyBrickReveal' })];
   // [x0, x1, sill height, sill height at the east end, width of the steps]
-  for (const [x0, x1, sill, low, stepW] of [[10.6, 11.65, 1.27, 0.97, 0.18], [13.45, 15.05, 1.63, 1.08, 0.36]]) {
+  for (const [x0, x1, sill, low, stepW] of [[10.75, 11.80, 1.27, 0.97, 0.18], [13.60, 15.20, 1.63, 1.08, 0.36]]) {
     out.push(g(x0, x1, 0, 2.9, z1 - D)); // the bricked-up back
     const steps = Math.round((sill - low) / 0.077 / 2); // toothing: two courses a step
     const flat = x1 - stepW;
@@ -139,7 +148,7 @@ function room3NorthWall() {
       out.push(g(a, a + stepW / steps, 0, sill - ((k + 1) * (sill - low)) / steps, z1, { nx: 'greyBrickReveal' }));
     }
   }
-  out.push(g(11.65, 13.45, 0, 2.9, z1, { nx: 'greyBrickReveal', px: 'greyBrickReveal' }), g(15.05, 15.6, 0, 2.9, z1, { nx: 'greyBrickReveal' }));
+  out.push(g(11.80, 13.60, 0, 2.9, z1, { nx: 'greyBrickReveal', px: 'greyBrickReveal' }), g(15.20, 15.75, 0, 2.9, z1, { nx: 'greyBrickReveal' }));
   return out;
 }
 // Room 4's north wall, the one on the left as you walk in. Two old openings, bricked up
@@ -154,9 +163,9 @@ function room3NorthWall() {
 // of the frame (taken to the springing, as A and B); inferred, +-0.15 m, its depth as A and B.
 const R4_RECESSES = {
   back: 1.61, // z of the bricked-up backs (wall face 1.73)
-  C: { x0: 16.84, x1: 17.54, sill: 1.1 },
-  A: { x0: 21.86, x1: 22.78, sill: 0.95 },
-  B: { x0: 24.1, x1: 25.4 },
+  C: { x0: 16.99, x1: 17.69, sill: 1.1 },
+  A: { x0: 22.01, x1: 22.93, sill: 0.95 },
+  B: { x0: 24.25, x1: 25.55 },
   top: 2.92, // the vault springing (R4_VAULT.spring; 2.75 until 17 November 2026)
 };
 function room4NorthWall() {
@@ -166,7 +175,7 @@ function room4NorthWall() {
   const H = R4_VAULT.wallTop;
   const r = (x0, x1, y0, y1, zA = z0, zB = z1) => ({ x0, x1, z0: zA, z1: zB, y0, y1, mat: 'rawBrick' });
   const out = [
-    r(15.6, C.x0, 0, H), // the wall west of C
+    r(15.75, C.x0, 0, H), // the wall west of C
     r(C.x1, A.x0, 0, H), // the wall between C and A
     r(A.x1, B.x0, 0, H), // the pier between A and B
     r(C.x0, C.x1, 0, C.sill, back, z1), // C: the wall up to its flat sill
@@ -178,12 +187,12 @@ function room4NorthWall() {
   // A: wall face up to the sill, then the toothed fill standing 5 cm proud of the back
   // (the 5 cm is invented); [x0, x1, top of the step]
   out.push(r(A.x0, A.x1, 0, A.sill, back, z1));
-  for (const [x0, x1, y1] of [[21.86, 21.97, 1.49], [21.97, 22.07, 1.43], [22.07, 22.17, 1.38], [22.17, 22.32, 1.32], [22.32, 22.41, 1.25], [22.41, 22.46, 1.15]]) {
+  for (const [x0, x1, y1] of [[22.01, 22.12, 1.49], [22.12, 22.22, 1.43], [22.22, 22.32, 1.38], [22.32, 22.47, 1.32], [22.47, 22.56, 1.25], [22.56, 22.61, 1.15]]) {
     out.push(r(x0, x1, A.sill, y1, back, back + 0.05));
   }
   // B: the bottom steps down eastwards, filled out to the wall face; the last step is
   // hidden by the low pipes (inferred)
-  for (const [x0, x1, y1] of [[24.1, 24.4, 1.38], [24.4, 24.61, 1.15], [24.61, 24.83, 1.02], [24.83, 25.07, 0.88], [25.07, 25.18, 0.71], [25.18, 25.4, 0.51]]) {
+  for (const [x0, x1, y1] of [[24.25, 24.55, 1.38], [24.55, 24.76, 1.15], [24.76, 24.98, 1.02], [24.98, 25.22, 0.88], [25.22, 25.33, 0.71], [25.33, 25.55, 0.51]]) {
     out.push(r(x0, x1, 0, y1, back, z1));
   }
   return out;
@@ -255,7 +264,7 @@ export const BLOCKS = [
   { x0: 5.85, x1: 8.759, z0: 1.5, z1: 1.73, y1: 2.75, mat: 'warmBrick' },
   { x0: 8.759, x1: 9.85, z0: 1.5, z1: 1.73, y0: DOOR, y1: 2.75, mat: 'warmBrick' },
   // storage alcove shell (only glimpsed through the gate)
-  { x0: 5.85, x1: 10.2, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
+  { x0: 5.85, x1: 10.35, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
   // south: the wall that carries the room sheet, then the mouth of the dark corridor to
   // the toilets, next to the bar (TOILET); a lintel over the mouth (its height invented)
   { x0: R1.recess, x1: TOILET.x0, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
@@ -272,11 +281,11 @@ export const BLOCKS = [
   { x0: 7.481, x1: 7.772, z0: 5.264, z1: 5.73, y1: 2.75, mat: 'warmBrick' },
   { x0: TOILET.x1, x1: 9.85, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
   // Room 2 | Room 3 wall: pillar, doorway z 2.56–4.08, bar pass-through z 4.08–4.74, wall
-  { x0: 9.85, x1: 10.2, z0: -T, z1: 2.557, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
-  { x0: 9.85, x1: 10.2, z0: 2.557, z1: 4.077, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.2, z0: 4.742, z1: S_OUT, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.35, z0: -T, z1: 2.557, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
+  { x0: 9.85, x1: 10.35, z0: 2.557, z1: 4.077, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.35, z0: 4.077, z1: 4.742, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.35, z0: 4.077, z1: 4.742, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.35, z0: 4.742, z1: S_OUT, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
@@ -289,24 +298,24 @@ export const BLOCKS = [
   // A west of the pier, B running to the end wall (see room4NorthWall)
   ...room4NorthWall(),
   // the low concrete ledge along its western half, the radiator on it
-  { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },
+  { x0: 16.05, x1: 20.35, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },
   // south wall: white brick
-  { x0: 10.2, x1: 14.8, z0: 5.73, z1: S_OUT, y1: 2.9, mat: 'whiteBrick' },
-  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick' },
+  { x0: 10.35, x1: 14.95, z0: 5.73, z1: S_OUT, y1: 2.9, mat: 'whiteBrick' },
+  { x0: 16.05, x1: 25.55 + T, z0: 5.73, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick' },
   // closet block beside the south stub (#14 hangs on its west face). Its west face stands at
   // x 14.8 (was 14.5: the gap closed by the curtain was about 0.3 m too wide, 18 Nov 2026)
   // In the photographs this is a space between two thin walls, open to the north and closed
   // there by a curtain (props.js). What is inside is not known, so the block stays solid.
-  { x0: 14.8, x1: 15.6, z0: 4.666, z1: S_OUT, y1: 2.9, mat: 'plaster' },
+  { x0: 14.95, x1: 15.75, z0: 4.666, z1: S_OUT, y1: 2.9, mat: 'plaster' },
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
-  { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: R4_VAULT.wallTop, mat: 'plaster' },
-  { x0: 15.6, x1: 15.9, z0: 4.666, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'plaster' },
+  { x0: 15.75, x1: 16.05, z0: 1.73, z1: 2.918, y1: R4_VAULT.wallTop, mat: 'plaster' },
+  { x0: 15.75, x1: 16.05, z0: 4.666, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'plaster' },
   // (the header's underside at 2.35 m: on DSC_0064 it hangs about 0.39 m below Room 3's
   // ceiling, against no. 14's 0.75 m; S34 corridor_room3-4.jpg shows it too; inferred, +-0.1 m;
   // it was 2.45 m with no recorded source, 19 November 2026)
-  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.35, y1: R4_VAULT.wallTop, mat: 'plaster' },
+  { x0: 15.75, x1: 16.05, z0: 2.918, z1: 4.666, y0: 2.35, y1: R4_VAULT.wallTop, mat: 'plaster' },
   // projection wall (east end)
-  { x0: 25.4, x1: 25.4 + T, z0: N_OUT, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' } },
+  { x0: 25.55, x1: 25.55 + T, z0: N_OUT, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' } },
 ];
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.
@@ -319,8 +328,8 @@ export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
   { x0: 5.4, x1: 10, z0: 1.6, z1: 5.79, mat: 'floor' },
   // Room 3: the darker grey tiles of the MAMŰ photos (Kivonat, 2015)
-  { x0: 9.85, x1: 15.75, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
-  { x0: 15.75, x1: 25.43, z0: 1.6, z1: 5.79, mat: 'floorDark' },
+  { x0: 9.85, x1: 15.90, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
+  { x0: 15.90, x1: 25.58, z0: 1.6, z1: 5.79, mat: 'floorDark' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
   // the mouth of the toilet corridor, then its floor a step up
   { x0: TOILET.x0, x1: TOILET.x1, z0: 5.79, z1: S_OUT, mat: 'floor' },
@@ -333,7 +342,7 @@ export const CEILINGS = [
   { x0: R1.recess, x1: 5.85, z0: 5.0, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
   { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT, z1: TOILET.z1, y: TOILET.ceiling, mat: 'void' },
-  { x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
+  { x0: 10.35, x1: 15.75, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
 ];
 

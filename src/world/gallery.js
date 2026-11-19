@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { wallFrame, ROOMS } from './layout.js';
+import { wallFrame, ROOMS, R34_SHIFT } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
 import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
@@ -118,9 +118,9 @@ const HIT_BOXES = {
     [(PIPE.a.x + PIPE.b.x) / 2, 1.1, (PIPE.a.z + PIPE.b.z) / 2, 0.35, 0.6, PIPE_LEN, Math.atan2(PIPE.b.x - PIPE.a.x, PIPE.b.z - PIPE.a.z)],
   ],
   'w16-let-it-flow': [
-    [25.33, 1.15, 3.73, 0.12, 2.3, 4.0], // projection on the end wall
+    [25.48, 1.15, 3.73, 0.12, 2.3, 4.0], // projection on the end wall
     // the melted plastic river
-    [RIVER.xTop - RIVER.lengthM / 2, 0.06, RIVER.zLeft + RIVER.widthM / 2, RIVER.lengthM, 0.14, RIVER.widthM],
+    [RIVER.xTop + R34_SHIFT - RIVER.lengthM / 2, 0.06, RIVER.zLeft + RIVER.widthM / 2, RIVER.lengthM, 0.14, RIVER.widthM],
   ],
 };
 
