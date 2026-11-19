@@ -570,10 +570,8 @@ async function insideByKeys(lang, opts = {}) {
   // the line on the title screen, and what it says is so
   const w = await openWalk(browser, { lang: 'en', viewport: { width: 1366, height: 768 } });
   const p = w.page;
-  const line = await p.textContent('.howto .desk');
-  await switchTo(p, 'hu');
-  const lineHu = await p.textContent('.howto .desk');
-  await switchTo(p, 'en');
+  // no line under Enter since 19 November 2026 (the reconstructor)
+  const line = await p.evaluate(() => document.querySelector('.loader-card .howto')?.textContent ?? null);
   await p.focus('#enter');
   await p.keyboard.press('Enter');
   await p.waitForFunction(() => !document.getElementById('sound-ask').hidden, null, { timeout: 30000 });
@@ -599,7 +597,7 @@ async function insideByKeys(lang, opts = {}) {
   await p.mouse.move(760, 300, { steps: 4 });
   await p.mouse.up();
   const dragged = await changed(f, 'yaw');
-  step(`F1.1 Title screen on a computer: "${UI.en.loader.howtoDesk}" (HU "${UI.hu.loader.howtoDesk}"), naming ↑↓, ←→, Page Down, Enter and the drag, Page Down before the drag; and each key it names does that: ↑ ↓ walk, ← → turn, Page Down goes to no. 1, Enter opens it, a drag looks round`, line === UI.en.loader.howtoDesk && lineHu === UI.hu.loader.howtoDesk && ['↑↓', '←→', 'Page Down', 'Enter', 'drag'].every((x) => line.includes(x)) && line.indexOf('Page Down') < line.indexOf('drag') && up && down && left && right && front && opened === 'Wrong Data Landscape Dresden' && dragged, `"${line}" / "${lineHu}"; ↑ ${up}, ↓ ${down}, ← ${left}, → ${right}, Page Down named no. 1 ${front}, Enter opened "${opened}", drag ${dragged}`);
+  step(`F1.1 Title screen on a computer: no line under Enter; the keys still do what the Help panel says: ↑ ↓ walk, ← → turn, Page Down goes to no. 1, Enter opens it, a drag looks round`, line === null && up && down && left && right && front && opened === 'Wrong Data Landscape Dresden' && dragged, `line under Enter: ${line}; ↑ ${up}, ↓ ${down}, ← ${left}, → ${right}, Page Down named no. 1 ${front}, Enter opened "${opened}", drag ${dragged}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -642,7 +640,7 @@ for (const [name, opts, lang, mustShow] of [['320 × 568, English', { viewport: 
   const get = (k) => k.split('.').reduce((o, x) => (o && typeof o === 'object' ? o[x] : undefined), UI.en);
   const off = [...html.matchAll(/data-i18n="([^"]+)"[^>]*>([^<]*)</g)].filter(([, k, x]) => typeof get(k) === 'string' && unesc(x).trim() !== get(k).trim()).map(([, k]) => k);
   const line = html.match(/data-i18n="loader\.howtoDesk">([^<]*)</)?.[1];
-  step(`F1.9 index.html's English stand-in text matches en.json, the line before entering included ("${UI.en.loader.howtoDesk}")`, off.length === 0 && line === UI.en.loader.howtoDesk, off.length ? `differs: ${off.join(', ')}` : `all match; the line: "${line}"`);
+  step(`F1.9 index.html's English stand-in text matches en.json`, off.length === 0, off.length ? `differs: ${off.join(', ')}` : `all match; the line: "${line}"`);
 }
 await guard(['F1.3'], async () => {
   // since 18 November 2026 the card goes by itself 10 seconds after it appears; a key, a press or the wheel does not take it away

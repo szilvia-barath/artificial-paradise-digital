@@ -240,13 +240,8 @@ html.direct body:not([data-state="failed"]) #loader { visibility: hidden; opacit
 }
 .btn-enter:focus-visible { outline: 2px solid var(--ap-blue); outline-offset: 3px; }
 .hint { font-size: 13px; line-height: 1.5; opacity: 0.75; margin: 14px 0 0; }
-.howto { margin-top: 22px; font-size: 13px; opacity: 0.75; line-height: 1.6; }
 .text-link { font-size: 13px; margin: 14px 0 0; }
 .text-link a, .noscript a { color: inherit; text-underline-offset: 3px; }
-@media (pointer: coarse) {
-  /* a touch screen: no line under Enter (the reconstructor, 19 November 2026) */
-  .howto { display: none; }
-}
 
 /* ---------------- Navbar & footer ----------------
    Thin and quiet: blue on a pale band over the title screen, light text on a dark
