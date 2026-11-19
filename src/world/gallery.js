@@ -167,21 +167,74 @@ function sheetScale(tierMax) {
   return Math.max(1, Math.min(tierMax, need / 724));
 }
 
-// The exhibition text sheet. The type shrinks until the text fits the page, since the
-// Hungarian text runs longer than the English.
+// The exhibition text sheet, as the gallery printed it (DSC_0023, DSC_0058; the reconstructor,
+// 19 November 2026): bluish-white paper pinned at its top corners; at the top the key visual in
+// pale grey, with the three-line logotype in dark ink over it; the text below in small light
+// type. The text is still the placeholder from the announcement, in the visitor's language (the
+// gallery's sheets had the curator's text in Hungarian and English together, signed; it goes in
+// when the curator's original text, S28, comes). The type shrinks until the text fits the page,
+// since the Hungarian text runs longer than the English.
+const sheetArt = {}; // { key, logo }: images for the text sheets, set by buildGallery when they have loaded
+const PAPER = '#f2f2f5';
 function drawTextSheet(g, data) {
-  g.fillStyle = '#fbfaf7';
+  g.fillStyle = PAPER;
   g.fillRect(0, 0, 512, 724);
-  g.fillStyle = '#111';
-  g.font = '300 40px Helvetica, Arial, sans-serif';
-  g.fillText('ARTIFICIAL', 36, 78);
-  g.fillText('PARADISE', 36, 122);
-  g.font = '15px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#444';
-  g.fillText(t('wall.sheetMeta'), 36, 160);
-  let size = 16;
+  // the key visual: grey, faint, fading into the paper
+  const key = sheetArt.key;
+  if (key && key.complete && key.naturalWidth) {
+    const area = document.createElement('canvas');
+    area.width = 512;
+    area.height = 330;
+    const a = area.getContext('2d');
+    const r = Math.max(512 / key.naturalWidth, 330 / key.naturalHeight);
+    a.drawImage(key, (512 - key.naturalWidth * r) / 2, (330 - key.naturalHeight * r) / 2, key.naturalWidth * r, key.naturalHeight * r);
+    a.globalCompositeOperation = 'saturation';
+    a.fillStyle = '#808080';
+    a.fillRect(0, 0, 512, 330);
+    a.globalCompositeOperation = 'source-over';
+    const fade = a.createLinearGradient(0, 150, 0, 330);
+    fade.addColorStop(0, 'rgba(242,242,245,0)');
+    fade.addColorStop(1, PAPER);
+    a.fillStyle = fade;
+    a.fillRect(0, 0, 512, 330);
+    g.globalAlpha = 0.34;
+    g.drawImage(area, 0, 0);
+    g.globalAlpha = 1;
+  }
+  // the three-line logotype in dark ink
+  const logo = sheetArt.logo;
+  if (logo && logo.complete && logo.naturalWidth) {
+    const ink = document.createElement('canvas');
+    ink.width = 400;
+    ink.height = Math.round((400 * logo.naturalHeight) / logo.naturalWidth);
+    const k = ink.getContext('2d');
+    k.drawImage(logo, 0, 0, ink.width, ink.height);
+    k.globalCompositeOperation = 'source-in';
+    k.fillStyle = '#17171a';
+    k.fillRect(0, 0, ink.width, ink.height);
+    g.drawImage(ink, 176, 78, 230, (230 * ink.height) / ink.width);
+  } else {
+    g.fillStyle = '#17171a';
+    g.font = '28px "Courier New", monospace';
+    g.fillText('|Artificial|', 186, 130);
+    g.fillText('|Paradise|', 186, 164);
+    g.fillText('KristofLab', 186, 198);
+  }
+  // the pins
+  for (const [px, py] of [[14, 12], [498, 10]]) {
+    g.fillStyle = 'rgba(0,0,0,0.25)';
+    g.beginPath();
+    g.ellipse(px + 1.5, py + 2, 4, 3, 0, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = '#26262a';
+    g.beginPath();
+    g.arc(px, py, 3, 0, Math.PI * 2);
+    g.fill();
+  }
+  const top = 312;
+  let size = 15;
   const lines = (sz) => {
-    g.font = `500 ${sz}px Helvetica, Arial, sans-serif`;
+    g.font = `400 ${sz}px Helvetica, Arial, sans-serif`;
     let n = 0;
     for (const p of data.text) {
       let line = '';
@@ -191,14 +244,14 @@ function drawTextSheet(g, data) {
       }
       n++;
     }
-    return 200 + n * sz * 1.36 + data.text.length * 10 + 60;
+    return top + n * sz * 1.36 + data.text.length * 10 + 40;
   };
-  while (size > 10 && lines(size) > 712) size -= 0.5;
-  g.fillStyle = '#000';
-  g.font = `500 ${size}px Helvetica, Arial, sans-serif`;
-  let y = 200;
+  while (size > 8 && lines(size) > 712) size -= 0.25;
+  g.fillStyle = '#26262b';
+  g.font = `400 ${size}px Helvetica, Arial, sans-serif`;
+  let y = top;
   for (const p of data.text) y = wrapText(g, p, 36, y, 440, size * 1.36) + 10;
-  g.fillStyle = '#666';
+  g.fillStyle = '#6a6a70';
   g.font = `italic ${size - 1}px Helvetica, Arial, sans-serif`;
   wrapText(g, data.textCredit, 36, y + 4, 440, (size - 1) * 1.3);
 }
@@ -211,16 +264,36 @@ function fit(g, text, maxW) {
   return `${s.trimEnd()}…`;
 }
 
+// The works list on the room sheet beside the toilet corridor, as printed (DSC_0049, read at full
+// size, +-: a few characters are hard to read in the photograph; the artist's later changes, such
+// as the Wiena numbering, are not applied here). The reconstructor, 19 November 2026: the gallery's
+// order and wording.
+const ROOM_SHEET_LIST = [
+  { left: ['1 · Wrong Data Landscape Dresden, 140x160 cm, akril, 2023', '3 · Paradise Factory, installáció, 2024', '5 · Human as error I., 90x120 cm, akril, 2024'], right: ['2 · Human as error VI., 190x150 cm, akril, 2024', '4 · Human as error III., 90x120 cm, akril, 2024'] },
+  { left: ['6 · Artificial Paradise I., Full Hd, videó, 2025'], right: ['7 · Artificial Paradise II., Full Hd, videó, 2025'] },
+  { left: ['8 · Wiena Wrong Landscape II., 4k, videó, 2023', '10 · Wrong Data Landscape Warsaw II, 80x50 cm, akril, 2023', '12 · Artificial Paradise II., 50x50 cm, giclée print, 2025', '14 · Wrong Data Landscape Warsaw G24 II, 75x40 cm, akril, 2024'], right: ['9 · Wrong Data Landscape Warsaw G24 I, 75x40 cm, akril, 2024', '11 · Artificial Paradise I., 50x50 cm, giclée print, 2025', '13 · Artificial Paradise III., 50x50 cm, giclée print, 2025'] },
+  { left: ['15 · Wiena Wrong Landscape I., 4k, videó, 2023', '17 · Natural life, Full Hd, videó, 2024'], right: ['16 · Let it Flow, installáció, 2024'] },
+];
+
 // The room sheet beside the toilet corridor (DSC_0047 to DSC_0049): the heading, the plan with
 // the numbered places, the works list in two columns and the exhibition text in small type,
 // on an A4 page. Drawing code first written for the bar pillar's sheet (removed 9 November
 // 2026), now adjusted to A4 and to the text's length.
 function drawRoomSheet(g, data) {
-  g.fillStyle = '#fbfaf7';
+  g.fillStyle = PAPER;
   g.fillRect(0, 0, 512, 724);
   g.fillStyle = '#222';
   g.font = '20px "Courier New", monospace';
-  g.fillText('|Artificial Paradise|KristofLab|', 26, 38);
+  // the logotype line as printed: |Artificial at the left, Paradise|KristofLab| at the right
+  g.fillText('|Artificial', 26, 38);
+  g.textAlign = 'right';
+  g.fillText('Paradise|KristofLab|', 486, 38);
+  g.textAlign = 'left';
+  g.fillStyle = '#26262a';
+  g.beginPath();
+  g.arc(500, 16, 3, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = '#222';
   const x0 = Math.min(...ROOMS.map((r) => r.x0));
   const z0 = Math.min(...ROOMS.map((r) => r.z0));
   const x1 = Math.max(...ROOMS.map((r) => r.x1));
@@ -237,16 +310,31 @@ function drawRoomSheet(g, data) {
     if (!p || w.id.endsWith('-screen')) continue;
     g.fillText(String(w.no), ox + p.x * s - 3, oy + p.z * s + 3);
   }
-  const list = data.works.filter((w) => !w.id.endsWith('-screen'));
+  // The list as the gallery printed it (DSC_0049, read at full size; Hungarian medium words
+  // and all): in groups by room, the left column and the right column alternating by number,
+  // a dotted line between the groups.
   g.font = '8px Helvetica, Arial, sans-serif';
   g.fillStyle = '#222';
   let y = oy + Math.max(...ROOMS.map((r) => r.z1)) * s + 20;
-  const half = Math.ceil(list.length / 2);
-  list.forEach((w, i) => {
-    const bits = [w.title, w.size, (w.medium || '').split(':')[0], w.year].filter(Boolean);
-    g.fillText(fit(g, `${w.no} · ${bits.join(', ')}`, 228), i < half ? 26 : 262, y + (i % half) * 11);
-  });
-  y += half * 11 + 12;
+  const half = ROOM_SHEET_LIST.reduce((n, grp) => n + Math.max(grp.left.length, grp.right.length) + 0.6, 0);
+  g.strokeStyle = '#999';
+  g.lineWidth = 0.6;
+  g.setLineDash([1.5, 2]);
+  for (const grp of ROOM_SHEET_LIST) {
+    const n = Math.max(grp.left.length, grp.right.length);
+    grp.left.forEach((l, i) => { g.textAlign = 'left'; g.fillText(l, 26, y + i * 11); });
+    grp.right.forEach((l, i) => { g.textAlign = 'right'; g.fillText(l, 486, y + i * 11); });
+    g.textAlign = 'left';
+    y += n * 11 - 4;
+    g.beginPath();
+    g.moveTo(26, y);
+    g.lineTo(486, y);
+    g.stroke();
+    y += 11;
+  }
+  g.setLineDash([]);
+  y += 2;
+  void half;
   let size = 8;
   const count = (sz) => {
     g.font = `${sz}px Helvetica, Arial, sans-serif`;
@@ -289,6 +377,12 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     wallTexts.push(tex);
     return tex;
   };
+  for (const [name, file] of [['key', 'brand/key-visual.webp'], ['logo', 'brand/logo-blue.webp']]) {
+    const img = new Image();
+    img.onload = () => { for (const tex of wallTexts) tex.redraw(); };
+    img.src = BASE + file;
+    sheetArt[name] = img;
+  }
   const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.35, metalness: 0.4 });
   const untoned = isOn('tone'); // screens out of the tone mapping (switch, off)
 
