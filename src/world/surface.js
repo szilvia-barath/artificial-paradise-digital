@@ -32,9 +32,9 @@ export const PHOTO_STAINS = [
   // #4 Human as Error III below it). Hugs the south wall from the corner to above the east
   // half of #4 (x 1.9 ±0.3) and reaches 0.65 m (±0.2) out; the ellipse is centred on the wall
   // line, so only its inner half shows
-  { box: [-0.8, 2.97, 6.35, 1.9, 3.03, 7.65], kind: 'blotch', tint: [0.93, 0.9, 0.8], strength: 1, edge: 0.5, tide: 0.35, seed: 1 },
+  { box: [-0.8, 2.77, 6.35, 1.9, 2.83, 7.65], kind: 'blotch', tint: [0.93, 0.9, 0.8], strength: 1, edge: 0.5, tide: 0.35, seed: 1 },
   // ... and its faint yellowing on the top of the south wall by the corner (DSC_0030, 0031)
-  { box: [-0.15, 2.82, 6.97, 1.2, 3.0, 7.03], kind: 'hanging', tint: [0.95, 0.93, 0.85], strength: 0.8, edge: 0.6, tide: 0, seed: 2 },
+  { box: [-0.15, 2.62, 6.97, 1.2, 2.8, 7.03], kind: 'hanging', tint: [0.95, 0.93, 0.85], strength: 0.8, edge: 0.6, tide: 0, seed: 2 },
   // Room 1, east wall (south pier, x 4.85): dark mottled damp along the foot under the radiator
   // and a brown streak between the radiator's south end and its pipe (DSC_0023, 0024; heights
   // against the radiator, 0.85 m tall from 0.1 m)

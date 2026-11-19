@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE, R1_CEILING } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres, R4_NORTH_PIPE, R4_END_PIPE } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
@@ -899,8 +899,8 @@ export function buildProps(materials) {
   // ================================================================ track lights
   {
     const rails = [
-      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: 3.0 },
-      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: R1.D * 0.74, y: 3.0 },
+      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: R1_CEILING },
+      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: R1.D * 0.74, y: R1_CEILING },
       { x0: 10.45, x1: 15.25, z: 3.725, y: 2.75 },
     ];
     const per = 4;

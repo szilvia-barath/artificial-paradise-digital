@@ -6,7 +6,7 @@ import { reducedMotion } from '../motion.js';
 // and the visitor as a view cone. Click a room on the map to jump there.
 
 // Unit vector pointing to true north in plan coordinates (x right, z down).
-const NORTH = [-0.829, -0.56];
+const NORTH = [0.559, -0.829];
 
 // The works on the map, in four groups by their `type` in exhibition.json. Each group has its
 // own shape and colour, so none is told by colour alone (A4): the map's magenta and cyan, the
@@ -142,8 +142,9 @@ export function setupMinimap(canvas, segments, works, onJump) {
       ctx.fillStyle = r.id === roomId ? '#f2f1ed' : 'rgba(255,255,255,0.85)';
       ctx.fillText(r.id.replace('r', ''), X(r.x0) + 3, Y(r.z0) + 13);
     }
-    // compass: true north in plan coordinates (the rooms run from the Damjanich utca
-    // front towards bearing 146°, measured on the OpenStreetMap outline of no. 39)
+    // compass: true north in plan coordinates (the rooms run from the Murányi utca front
+    // towards bearing 56°, parallel to Damjanich utca: the OpenStreetMap outline of no. 39 and
+    // Street View; corrected 19 November 2026, it was drawn for bearing 146°)
     {
       const cx = W - 16;
       const cy = H - 16;

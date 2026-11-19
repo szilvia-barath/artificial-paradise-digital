@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
-import { OBSTACLES, R1 } from './layout.js';
+import { OBSTACLES, R1, R1_CEILING } from './layout.js';
 import { mergeStatic } from './merge.js';
 
 // #3 Paradise Factory (2024), modelled from the Room 1 panorama and DSC_0011–0015:
@@ -26,7 +26,7 @@ export const PIPE = { a: A, b: B, y: 1.0 };
 export const PLANT = P(1.8, 3.42);
 export const BARS = [P(1.9, 3.14), P(2.0, 3.7)];
 export const BAR_BOTTOM = 0.64; // the LED bars end level with the top of the plant's box
-const CEIL = 3.0;
+const CEIL = R1_CEILING; // Room 1's ceiling (layout.js)
 
 function rng(seed) {
   let s = seed >>> 0;

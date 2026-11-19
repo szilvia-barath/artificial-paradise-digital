@@ -3,13 +3,19 @@
 // DSC_0049: Room 1 5.0 × 7.0 m, Room 2 4.0 m wide, Room 3 5.4 m and Room 4 9.5 m long,
 // Rooms 2–4 4.0 m deep. Openings, recesses and where things stand were checked against
 // the photos: the Room 1 panorama (camera solved from the corner bearings), brick
-// courses, floor tiles and the listed canvas sizes. Cross-check with OpenStreetMap:
-// the gallery is in the basement of Damjanich utca 39, a corner building whose wing
-// along Murányi utca is 26.5 m from the street front to the back; this basement
-// measures 26.35 m from the outer face of Room 1's west wall to the outer face of
-// Room 4's end wall.
-// +x (Room 1 -> Room 4) points to bearing 146° (south-east); Room 1's window wall
-// faces Damjanich utca.
+// courses, floor tiles and the listed canvas sizes. The inner room sizes agree with the
+// measurement reference of 18 and 19 November 2026 (MAMU_measurement_reference.md, with the
+// Blender reference model; its frame is this one shifted: x here = x there - 0.15, z here =
+// z there in Room 1 and z there + 0.05 in Rooms 2 to 4).
+// Orientation (corrected 19 November 2026): the gallery is in the basement of Damjanich
+// utca 39, a corner building. The street door and both Room 1 windows are on the Murányi
+// utca front (Street View, confirmed by the reconstructor), so Room 1's 7 m window wall lies
+// along Murányi utca and +x (Room 1 -> Room 4) points to bearing 56° into the block,
+// parallel to Damjanich utca; +z (plan south) points to bearing 146°. OpenStreetMap (way
+// 257583285): Murányi front 26.46 m, the south party wall runs 31.6 m into the block; the
+// basement's length along +x has to fit that 31.6 m, and does. (Until 19 November this
+// comment had +x at bearing 146° and compared the basement's length with the 26.5 m front,
+// the wrong pair.)
 //
 // Room 1 is the exception: its walls come from the panorama measurement (see BLOCKS).
 //
@@ -28,11 +34,18 @@ export const EYE = 1.62;
 export const R1 = { W: 5.0, D: 7.0, east: 4.85, recess: 5.4 };
 R1.west = R1.east - R1.W;
 
+// Ceilings. No source records a height; all are photo estimates, +-0.2 m (inferred):
+// Room 1 2.80 m (the 190 cm canvas in DSC_0018 gives 2.7 to 2.8, the 90 x 120 canvas in
+// DSC_0026 at least 2.70, the doorway in DSC_0021 2.75 to 2.95; the measurement reference of
+// 19 November 2026; 3.0 until then, with no source), Rooms 2 and 3 2.75 m, Room 4's vaults
+// spring at 2.92 m (R4_VAULT, measured on DSC_0113 against the end wall's 4.00 m width).
+export const R1_CEILING = 2.8;
+
 export const ROOMS = [
   {
     id: 'r1',
     x0: R1.west, x1: R1.east, z0: 0, z1: R1.D,
-    ceiling: 3.0,
+    ceiling: R1_CEILING,
     // In the open middle of the room, east of Paradise Factory (the foot of the stairs is
     // too tight between the flight and the walls), looking across the plant to the stairs.
     spawn: { x: 3.4, z: 4.4, look: { x: 1.0, z: 2.4 } },
@@ -64,7 +77,7 @@ export const ROOMS = [
 // 2.75 m. The walls run up to 3.1 m, behind the vaults.
 export const R4_VAULT = { spring: 2.92, rise: 0.14, wallTop: 3.1 };
 
-export const CEILING = 3.0; // tallest room (used for shafts / light rigs)
+export const CEILING = 3.06; // tallest room: the crown of Room 4's vaults
 
 // Opening heights
 const DOOR = 2.1;
@@ -263,8 +276,8 @@ export const FLOORS = [
   { x0: TOILET.x0, x1: TOILET.x1, z0: 6.2, z1: TOILET.z1, mat: 'void', y: TOILET.step },
 ];
 export const CEILINGS = [
-  { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling' },
-  { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
+  { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: R1_CEILING, mat: 'ceiling' },
+  { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: R1.recess, x1: 5.85, z0: 5.0, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
