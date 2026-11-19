@@ -158,7 +158,8 @@
       "helpMore": "Részletesen"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31."
+      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31.",
+      "medium": { "acrylic": "akril", "giclee": "giclée print", "video": "videó", "installation": "installáció" }
     },
     "textEdition": {
       "name": "Akadálymentes változat",

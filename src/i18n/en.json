@@ -158,7 +158,8 @@
       "helpMore": "In detail"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025"
+      "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025",
+      "medium": { "acrylic": "acrylic", "giclee": "giclée print", "video": "video", "installation": "installation" }
     },
     "textEdition": {
       "name": "Accessible version",

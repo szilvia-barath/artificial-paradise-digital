@@ -269,10 +269,10 @@ function fit(g, text, maxW) {
 // as the Wiena numbering, are not applied here). The reconstructor, 19 November 2026: the gallery's
 // order and wording.
 const ROOM_SHEET_LIST = [
-  { left: ['1 · Wrong Data Landscape Dresden, 140x160 cm, akril, 2023', '3 · Paradise Factory, installáció, 2024', '5 · Human as error I., 90x120 cm, akril, 2024'], right: ['2 · Human as error VI., 190x150 cm, akril, 2024', '4 · Human as error III., 90x120 cm, akril, 2024'] },
-  { left: ['6 · Artificial Paradise I., Full Hd, videó, 2025'], right: ['7 · Artificial Paradise II., Full Hd, videó, 2025'] },
-  { left: ['8 · Wiena Wrong Landscape II., 4k, videó, 2023', '10 · Wrong Data Landscape Warsaw II, 80x50 cm, akril, 2023', '12 · Artificial Paradise II., 50x50 cm, giclée print, 2025', '14 · Wrong Data Landscape Warsaw G24 II, 75x40 cm, akril, 2024'], right: ['9 · Wrong Data Landscape Warsaw G24 I, 75x40 cm, akril, 2024', '11 · Artificial Paradise I., 50x50 cm, giclée print, 2025', '13 · Artificial Paradise III., 50x50 cm, giclée print, 2025'] },
-  { left: ['15 · Wiena Wrong Landscape I., 4k, videó, 2023', '17 · Natural life, Full Hd, videó, 2024'], right: ['16 · Let it Flow, installáció, 2024'] },
+  { left: ['1 · Wrong Data Landscape Dresden, 140x160 cm, {acrylic}, 2023', '3 · Paradise Factory, {installation}, 2024', '5 · Human as error I., 90x120 cm, {acrylic}, 2024'], right: ['2 · Human as error VI., 190x150 cm, {acrylic}, 2024', '4 · Human as error III., 90x120 cm, {acrylic}, 2024'] },
+  { left: ['6 · Artificial Paradise I., Full Hd, {video}, 2025'], right: ['7 · Artificial Paradise II., Full Hd, {video}, 2025'] },
+  { left: ['8 · Wiena Wrong Landscape II., 4k, {video}, 2023', '10 · Wrong Data Landscape Warsaw II, 80x50 cm, {acrylic}, 2023', '12 · Artificial Paradise II., 50x50 cm, {giclee}, 2025', '14 · Wrong Data Landscape Warsaw G24 II, 75x40 cm, {acrylic}, 2024'], right: ['9 · Wrong Data Landscape Warsaw G24 I, 75x40 cm, {acrylic}, 2024', '11 · Artificial Paradise I., 50x50 cm, {giclee}, 2025', '13 · Artificial Paradise III., 50x50 cm, {giclee}, 2025'] },
+  { left: ['15 · Wiena Wrong Landscape I., 4k, {video}, 2023', '17 · Natural life, Full Hd, {video}, 2024'], right: ['16 · Let it Flow, {installation}, 2024'] },
 ];
 
 // The room sheet beside the toilet corridor (DSC_0047 to DSC_0049): the heading, the plan with
@@ -310,8 +310,8 @@ function drawRoomSheet(g, data) {
     if (!p || w.id.endsWith('-screen')) continue;
     g.fillText(String(w.no), ox + p.x * s - 3, oy + p.z * s + 3);
   }
-  // The list as the gallery printed it (DSC_0049, read at full size; Hungarian medium words
-  // and all): in groups by room, the left column and the right column alternating by number,
+  // The list as the gallery printed it (DSC_0049, read at full size; its Hungarian medium words
+  // are {keys} here that follow the language, 19 November 2026): in groups by room, the left column and the right column alternating by number,
   // a dotted line between the groups.
   g.font = '8px Helvetica, Arial, sans-serif';
   g.fillStyle = '#222';
@@ -322,8 +322,10 @@ function drawRoomSheet(g, data) {
   g.setLineDash([1.5, 2]);
   for (const grp of ROOM_SHEET_LIST) {
     const n = Math.max(grp.left.length, grp.right.length);
-    grp.left.forEach((l, i) => { g.textAlign = 'left'; g.fillText(l, 26, y + i * 11); });
-    grp.right.forEach((l, i) => { g.textAlign = 'right'; g.fillText(l, 486, y + i * 11); });
+    // the medium words follow the visitor's language (acrylic / akril, video / videó, installation / installáció)
+    const words = (l) => l.replace(/{(w+)}/g, (_, k) => t(`wall.medium.${k}`));
+    grp.left.forEach((l, i) => { g.textAlign = 'left'; g.fillText(words(l), 26, y + i * 11); });
+    grp.right.forEach((l, i) => { g.textAlign = 'right'; g.fillText(words(l), 486, y + i * 11); });
     g.textAlign = 'left';
     y += n * 11 - 4;
     g.beginPath();
