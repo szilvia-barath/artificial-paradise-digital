@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS, R4_VAULT } from './layout.js';
+import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, STAIRS, R1_WEST_OUTER, ROOMS, R4_VAULT } from './layout.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
 // plus Room 4's brick vaults and the opening to the street door. UVs are world metres (u along the
@@ -144,17 +144,17 @@ export function buildArchitecture(materials) {
   }
 
   // ---------------------------------------------------------------- street door
-  // The flight's landing (1.24 m, props.js) runs through Room 1's west wall to the street
-  // door in the wall's outer face, closed and dark (S34 room_1_stairs_important.webp,
-  // DSC_0014, DSC_0015). The opening in the wall's thickness rises above Room 1's ceiling
-  // to the door's head at 3.45 m (a door about 2.2 m tall: inferred from DSC_0015 and the
-  // door's proportions in S34 main_entrance.webp); its sides and head are invented.
-  // PROGRESS.md, decision log, 17 November 2026 (Decision 1b). Until then a 2 m deep shaft,
-  // 5.6 m tall, ran west of the wall (invented).
+  // The flight's top step (STAIRS.landing, 1.62 m; props.js) runs through Room 1's west wall
+  // to the street door in the wall's outer face, closed and dark (S34
+  // room_1_stairs_important.webp, DSC_0014, DSC_0015). The opening in the wall's thickness
+  // rises above Room 1's ceiling to the door's head, 2.2 m above the top step (a door about
+  // 2.2 m tall: inferred from DSC_0015 and the door's proportions in S34 main_entrance.webp);
+  // its sides and head are invented. PROGRESS.md, decision log, 17 November 2026 (Decision
+  // 1b) and 19 November 2026 (the reference's stairs).
   {
     const s = STAIRWELL;
-    const top = 3.45;
-    const landing = 1.24;
+    const landing = STAIRS.landing;
+    const top = landing + 2.2;
     wallQuad('shaft', '+z', s.z0, s.x0, s.x1, 3.0, top);
     wallQuad('shaft', '-z', s.z1, s.x0, s.x1, 3.0, top);
     wallQuad('shaft', '-x', s.x1, s.z0, s.z1, 3.0, top);

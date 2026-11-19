@@ -82,24 +82,48 @@ export const CEILING = 3.06; // tallest room: the crown of Room 4's vaults
 // Opening heights
 const DOOR = 2.1;
 const ARCH = 2.15;
+// the doorway between Rooms 1 and 2: 2.20 m (DSC_0021; the reconstructor's answer 2, 19 November 2026)
+const R1_DOOR = 2.2;
 
 // ---------------------------------------------------------------- solid blocks
 // Every wall is a solid axis-aligned block. `mat` is the default material; `faces`
 // overrides one side: px = face looking east (+x), nx = west, pz = south, nz = north.
 // Blocks lower than 1.2 m still collide (counters, half walls); y0 > 1.2 (lintels) don't.
-const T = 0.4; // outer wall thickness
+// Outer wall thickness: 0.64 m, two and a half bricks (0.40 until 19 November 2026, a
+// placeholder). Inferred, +-0.1 m: in DSC_0048 the side of the toilet corridor's mouth in Room
+// 2's south wall shows one brick's length of whitewashed reveal (0.25 to 0.30 m) and behind it
+// the dark lined door frame, as deep again; OpenStreetMap gives a 5.2 m wide wing for the 4.0 m
+// deep rooms, 0.6 m a wall. The walls grow outward: the rooms' inner sizes are unchanged.
+const T = 0.64;
+const N_OUT = 1.73 - T; // outer face of the north wall of Rooms 3 and 4
+const S_OUT = 5.73 + T; // outer face of the south wall of Rooms 2 to 4
 
-// Room 1's street wall (_artificial paradise 01 - 02): each high window sits at the back of a
-// niche that runs from the floor to a lintel at 2.6 m, its radiator below it. Measured on the
-// photo against the radiators and the 30 cm floor tiles.
+// The stairs (props.js) and their opening in the street wall, as the measurement reference of
+// 19 November 2026 has them (the reconstructor's answer 3: keep them so): 9 risers of 0.18 m,
+// treads 0.288 m deep, the foot 2.59 m from the street wall, the top step level with the
+// street door at 1.62 m (Street View: the pavement is about 1.6 m above the basement floor).
+// The opening in the wall is 1.04 m wide (z 0.43 to 1.47, scaled from the plan), open above
+// the top step. The ceiling is not cut over the flight.
+export const STAIRS = { rise: 0.18, run: 0.288, steps: 9, footFromWall: 2.59, z0: 0.43, z1: 1.47 };
+STAIRS.landing = STAIRS.rise * STAIRS.steps;
+
+// Room 1's street wall: each high window sits at the back of a niche under a lintel at 2.6 m.
+// Places: the windows' centres at z 3.45 and 5.85 (Street View, the Murányi utca front, +-0.2 m;
+// confirmed by the reconstructor, answer 4, 19 November 2026; they were 3.58 and 5.97). The
+// window is 0.80 m wide inside and stands from 1.75 to 2.60 m; the niche is 1.05 m wide (the
+// reference's photo estimates). Re-measured on DSC_0030 (the south window, against its radiator's
+// five 8 cm sections): the niche is about 1.0 m wide and 0.25 to 0.30 m deep at the window, and it
+// does not run down to the floor: under the window the wall climbs in plastered steps from a
+// ledge just above the radiator (about 0.92 m) back to the window's foot. Inferred, +-0.08 m; the
+// north niche is taken to be the same (not seen as well).
 export const R1_NICHES = [
-  { z0: 2.98, z1: 4.08, win: { z: 3.58, w: 0.92 } }, // the one with the round vent
-  { z0: 5.52, z1: 6.54, win: { z: 5.97, w: 0.84 } }, // above the small radiator by the bench
+  { z0: 2.925, z1: 3.975, win: { z: 3.45, w: 0.8 } }, // the one with the round vent
+  { z0: 5.325, z1: 6.375, win: { z: 5.85, w: 0.8 } }, // above the small radiator by the bench
 ];
-export const NICHE = { depth: 0.22, top: 2.6, sill: 1.7 };
+export const NICHE = { depth: 0.28, top: 2.6, sill: 1.75, ledge: 0.92 };
 function room3NorthWall() {
-  const D = 0.22; // depth of the niches
-  const z0 = 1.33;
+  const D = 0.22; // depth of the niches (DSC_0086 to 0093; checked by eye on DSC_0089, 19 November 2026)
+  const z0 = N_OUT;
   const z1 = 1.73;
   const g = (x0, x1, y0, y1, zFront = z1, faces) => ({ x0, x1, z0, z1: zFront, y0, y1, mat: 'greyBrick', faces });
   // the niches' sides stay in shade in the photos: they get the darker paint
@@ -131,7 +155,7 @@ const R4_RECESSES = {
   top: 2.92, // the vault springing (R4_VAULT.spring; 2.75 until 17 November 2026)
 };
 function room4NorthWall() {
-  const z0 = 1.33;
+  const z0 = N_OUT;
   const z1 = 1.73;
   const { back, A, B, top } = R4_RECESSES;
   const H = R4_VAULT.wallTop;
@@ -159,14 +183,22 @@ function room4NorthWall() {
 }
 function streetWall(z0, z1) {
   const out = [];
+  const w = (za, zb, y0, y1, x1 = R1.west) => out.push({ x0: R1.west - T, x1, z0: za, z1: zb, y0, y1, mat: 'whiteBrick' });
   let z = z0;
   for (const n of R1_NICHES) {
-    out.push({ x0: R1.west - T, x1: R1.west, z0: z, z1: n.z0, y1: 3.0, mat: 'whiteBrick' });
-    out.push({ x0: R1.west - T, x1: R1.west - NICHE.depth, z0: n.z0, z1: n.z1, y1: NICHE.top, mat: 'whiteBrick' });
-    out.push({ x0: R1.west - T, x1: R1.west, z0: n.z0, z1: n.z1, y0: NICHE.top, y1: 3.0, mat: 'whiteBrick' });
+    w(z, n.z0, 0, 3.0);
+    // under the window: the wall up to the ledge, then five plastered steps back to the window's foot
+    w(n.z0, n.z1, 0, NICHE.ledge);
+    const steps = 5;
+    for (let k = 0; k < steps; k++) {
+      const y0 = NICHE.ledge + (k * (NICHE.sill - NICHE.ledge)) / steps;
+      w(n.z0, n.z1, y0, y0 + (NICHE.sill - NICHE.ledge) / steps, R1.west - (NICHE.depth * (k + 1)) / (steps + 1));
+    }
+    w(n.z0, n.z1, NICHE.sill, NICHE.top, R1.west - NICHE.depth); // the niche's back, behind the window
+    w(n.z0, n.z1, NICHE.top, 3.0);
     z = n.z1;
   }
-  out.push({ x0: R1.west - T, x1: R1.west, z0: z, z1: z1, y1: 3.0, mat: 'whiteBrick' });
+  w(z, z1, 0, 3.0);
   return out;
 }
 
@@ -175,26 +207,35 @@ function streetWall(z0, z1) {
 // runs south to a tiled end wall with a basin; the toilet itself is through a dark door
 // on its west side. x0/x1: its side walls, z1: its end wall, step: its floor above Room 2's,
 // ceiling: its height. Width and length measured on DSC_0047 (±0.1 m, ±0.3 m).
-export const TOILET = { x0: 6.63, x1: 7.408, z1: 7.68, step: 0.1, ceiling: 2.6 };
+// Its place (19 November 2026): the south side is closed from x 6.98 eastwards (the measurement
+// reference's x 7.13; the reconstructor's answer 10: keep it so), so the mouth's east side is
+// there and the mouth, 0.78 m wide as measured, runs from x 6.20; it was x 6.63 to 7.408. The
+// wall with the room sheet is west of it (DSC_0048, DSC_0049).
+export const TOILET = { x0: 6.2, x1: 6.98, z1: 7.68, step: 0.1, ceiling: 2.6 };
 
 export const BLOCKS = [
   // ---------- Room 1 ----------
   // Layout from the 360° panorama (camera solved from the corners, the four canvases of
   // known size and the floor line); overall size from R1 above.
   // west wall (street side), with the opening the stairs climb through and the two window niches
-  ...streetWall(1.95, R1.D + T),
-  { x0: R1.west - T, x1: R1.west, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
+  // (the stairs' opening: solid up to the top step, open above it; STAIRS)
+  { x0: R1.west - T, x1: R1.west, z0: -T, z1: STAIRS.z0, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.west - T, x1: R1.west, z0: STAIRS.z0, z1: STAIRS.z1, y1: STAIRS.landing, mat: 'whiteBrick' },
+  ...streetWall(STAIRS.z1, R1.D + T),
   // north wall
   { x0: R1.west - T, x1: R1.east, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
   // south wall
   { x0: R1.west - T, x1: R1.east, z0: R1.D, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick' },
   // Room 1 | Room 2 wall: 1 m thick piers north (Human as Error VI) and south (text,
   // radiator); between them a 55 cm recess holding the doorway and two plinths
-  // (DSC_0019–0023 and the panorama), doorway z 3.70–4.55
+  // (DSC_0019–0023 and the panorama), doorway z 3.75–4.55, 2.20 m high (DSC_0021: the view
+  // through it passes north of the bar and ends on the Room 3|4 north stub; the plan drawing
+  // puts it 0.8 m further south, and the photograph wins: answer 2, 19 November 2026; it was
+  // z 3.70–4.55 and 2.10 m)
   { x0: R1.east, x1: 5.85, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: R1.recess, x1: 5.85, z0: 3.2, z1: 3.7, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.recess, x1: 5.85, z0: 3.2, z1: 3.75, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
   // (its Room 2 face is warm like the rest of Room 2's walls; it was cold white until 17 November 2026)
-  { x0: R1.recess, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.recess, x1: 5.85, z0: 3.75, z1: 4.55, y0: R1_DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick', faces: { px: 'warmBrick' } },
   { x0: R1.recess, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
   // south of the doorway Room 2 reaches x 5.4 (R1.recess) up to its south wall, so the wall with
   // the room sheet runs on 0.45 m further west and no corner stands beside the sheet (the
@@ -210,25 +251,25 @@ export const BLOCKS = [
   { x0: 5.85, x1: 10.2, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
   // south: the wall that carries the room sheet, then the mouth of the dark corridor to
   // the toilets, next to the bar (TOILET); a lintel over the mouth (its height invented)
-  { x0: R1.recess, x1: TOILET.x0, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.73, z1: 6.13, y0: DOOR, y1: 2.75, mat: 'warmBrick', reveal: 'dimBrick', faces: { pz: 'void' } },
+  { x0: R1.recess, x1: TOILET.x0, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.73, z1: S_OUT, y0: DOOR, y1: 2.75, mat: 'warmBrick', reveal: 'dimBrick', faces: { pz: 'void' } },
   // the corridor: whitewashed brick left in the dark, a step up at the back of the wall,
   // the end wall (tiles, basin and mirror in props.js); not walkable, the step stops you
-  { x0: TOILET.x0 - 0.2, x1: TOILET.x0, z0: 6.13, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
-  { x0: TOILET.x1, x1: TOILET.x1 + 0.2, z0: 6.13, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
+  { x0: TOILET.x0 - 0.2, x1: TOILET.x0, z0: S_OUT, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
+  { x0: TOILET.x1, x1: TOILET.x1 + 0.2, z0: S_OUT, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
   { x0: TOILET.x0, x1: TOILET.x1, z0: TOILET.z1, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.13, z1: 6.2, y1: TOILET.step, mat: 'void', faces: { nz: 'floor' } },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT, z1: S_OUT + 0.07, y1: TOILET.step, mat: 'void', faces: { nz: 'floor' } },
   // bar: low brick counter (you see over it from the Room 1 doorway, DSC_0021),
   // a brick pillar at its back corner and the back wall
   { x0: 7.772, x1: 9.85, z0: 4.694, z1: 5.122, y1: 1.0, mat: 'warmBrick' },
   { x0: 7.481, x1: 7.772, z0: 5.264, z1: 5.73, y1: 2.75, mat: 'warmBrick' },
-  { x0: 7.408, x1: 9.85, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
+  { x0: TOILET.x1, x1: 9.85, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
   // Room 2 | Room 3 wall: pillar, doorway z 2.56–4.08, bar pass-through z 4.08–4.74, wall
   { x0: 9.85, x1: 10.2, z0: -T, z1: 2.557, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
   { x0: 9.85, x1: 10.2, z0: 2.557, z1: 4.077, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick', faces: { nx: 'warmBrick' } },
   { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
   { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.2, z0: 4.742, z1: 6.13, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.2, z0: 4.742, z1: S_OUT, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
@@ -243,26 +284,26 @@ export const BLOCKS = [
   // the low concrete ledge along its western half, the radiator on it
   { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },
   // south wall: white brick
-  { x0: 10.2, x1: 14.8, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'whiteBrick' },
-  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'dimBrick' },
+  { x0: 10.2, x1: 14.8, z0: 5.73, z1: S_OUT, y1: 2.9, mat: 'whiteBrick' },
+  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick' },
   // closet block beside the south stub (#14 hangs on its west face). Its west face stands at
   // x 14.8 (was 14.5: the gap closed by the curtain was about 0.3 m too wide, 18 Nov 2026)
   // In the photographs this is a space between two thin walls, open to the north and closed
   // there by a curtain (props.js). What is inside is not known, so the block stays solid.
-  { x0: 14.8, x1: 15.6, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster' },
+  { x0: 14.8, x1: 15.6, z0: 4.666, z1: S_OUT, y1: 2.9, mat: 'plaster' },
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
   { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: R4_VAULT.wallTop, mat: 'plaster' },
-  { x0: 15.6, x1: 15.9, z0: 4.666, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'plaster' },
+  { x0: 15.6, x1: 15.9, z0: 4.666, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'plaster' },
   { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.45, y1: R4_VAULT.wallTop, mat: 'plaster' },
   // projection wall (east end)
-  { x0: 25.4, x1: 25.4 + T, z0: 1.33, z1: 6.13, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' } },
+  { x0: 25.4, x1: 25.4 + T, z0: N_OUT, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' } },
 ];
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.
-// The stairs' landing passes through Room 1's west wall to the street door, in the opening
-// z 0 to 1.95. Room 1's ceiling is closed over the flight (DSC_0014, DSC_0015; PROGRESS.md,
+// The stairs' top step passes through Room 1's west wall to the street door, in the opening
+// STAIRS.z0 to z1 (it was z 0 to 1.95 until 19 November 2026). Room 1's ceiling is closed over the flight (DSC_0014, DSC_0015; PROGRESS.md,
 // 17 November 2026): until then it had a hole x -0.15 to 1.25 for an invented shaft.
-export const STAIRWELL = { x0: R1.west - T, x1: R1.west, z0: 0, z1: 1.95 };
+export const STAIRWELL = { x0: R1.west - T, x1: R1.west, z0: STAIRS.z0, z1: STAIRS.z1 };
 export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the street door)
 export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
@@ -272,8 +313,8 @@ export const FLOORS = [
   { x0: 15.75, x1: 25.43, z0: 1.6, z1: 5.79, mat: 'floorDark' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
   // the mouth of the toilet corridor, then its floor a step up
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.79, z1: 6.13, mat: 'floor' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.2, z1: TOILET.z1, mat: 'void', y: TOILET.step },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.79, z1: S_OUT, mat: 'floor' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT + 0.07, z1: TOILET.z1, mat: 'void', y: TOILET.step },
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: R1_CEILING, mat: 'ceiling' },
@@ -281,7 +322,7 @@ export const CEILINGS = [
   { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: R1.recess, x1: 5.85, z0: 5.0, z1: 5.73, y: 2.75, mat: 'ceiling' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 6.13, z1: TOILET.z1, y: TOILET.ceiling, mat: 'void' },
+  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT, z1: TOILET.z1, y: TOILET.ceiling, mat: 'void' },
   { x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
 ];

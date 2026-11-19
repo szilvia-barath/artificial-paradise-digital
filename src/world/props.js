@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1, R1_NICHES, NICHE, R1_CEILING } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE, R1_CEILING, STAIRS, STAIRWELL, R1_WEST_OUTER } from './layout.js';
 import { dirtAlong } from './surface.js';
 import { uvMetres, R4_NORTH_PIPE, R4_END_PIPE } from './materials.js';
 import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
@@ -143,34 +143,40 @@ export function buildProps(materials) {
   // on the wall side a brick laid flat on a grey rendered base, with open floor between the
   // wall-side parapet and the north wall. The slope, the number of steps and the landing's
   // height are from all the stair photographs, DSC_0014 to DSC_0016 and the S34 photographs
-  // (PROGRESS.md, decision log, 17 November 2026, Decision 1b): 8 risers, the bottom one 0.12 m
-  // and seven of 0.16 m, treads 0.29 m deep, the eighth step the landing at 1.24 m, the street
-  // door's level.
+  // (PROGRESS.md, decision log, 17 November 2026, Decision 1b). Since 19 November 2026 the
+  // flight's size is the measurement reference's (the reconstructor's answer 3; STAIRS in
+  // layout.js): 9 risers of 0.18 m, treads 0.288 m deep, the foot 2.59 m from the street wall,
+  // the ninth step the top one at 1.62 m, the street door's level. Until then 8 risers (0.12 m
+  // and seven of 0.16 m), treads 0.29 m, the top at 1.24 m.
   {
-    const run = 0.29;
-    const rise = 0.16;
-    const foot = EX - 2.54; // bottom riser; the last step ends ~50 cm before Wrong Data Landscape Dresden
-    const steps = 8; // the last one is the landing
-    // the bottom riser measures 0.11-0.12 m: the flight sits 0.04 m lower than rise x steps
-    const sunk = 0.04;
+    const run = STAIRS.run;
+    const rise = STAIRS.rise;
+    const foot = WX + STAIRS.footFromWall; // bottom riser
+    const steps = STAIRS.steps; // the last one is the top step, level with the street door
+    const sunk = 0; // every riser 0.18 m (the reference); until 19 November the bottom one was 0.12 m
     const tread = (i) => rise * (i + 1) - sunk; // top of step i (0 = the bottom step)
     // across the flight, z from the north wall face (measured at the foot in DSC_0016)
     const backOut = 0.25; // wall-side parapet, back face (0.25 thick, as wide as the coping brick; was 0.37 with the brick overhanging the gap, 18 November 2026)
     const backIn = 0.5; // wall-side parapet, face towards the treads
     const openIn = 1.69; // open-side parapet, face towards the treads (0.23 thick: inferred)
     const openOut = 1.92; // open-side parapet, face towards the room
-    const pierX0 = foot + 0.08; // the pier: 0.12 m E-W, 0.21 m N-S
-    const pierX1 = foot + 0.2;
-    const pierZ0 = openOut - 0.21;
-    const pierTop = 0.19;
-    const capTop = pierTop + 0.012;
+    // The pier at the foot of the open side, re-measured on DSC_0016 at full size (19 November
+    // 2026): seen from the south, its south face is one brick long (0.22 to 0.25 m) and shows two
+    // courses of bricks set on edge, about 0.13 m each with the joint, a third partly under the
+    // tiles; it is as thick as the parapet it ends; a lump of grey cement caps it. It was 0.12 m
+    // E-W, 0.21 m N-S and 0.19 m high in three flat courses.
+    const pierX0 = foot + 0.02;
+    const pierX1 = foot + 0.27;
+    const pierZ0 = openIn;
+    const pierTop = 0.27;
+    const capTop = pierTop + 0.03;
     const baseX1 = foot + 0.17; // wall-side base: 0.17 m E-W, 0.25 m high
     const baseTop = 0.17; // level with the start of the sloping coping (was 0.25, a block standing proud of it)
     // the parapets rise with the steps up to the landing's nosing, then run level to the wall
     const inRoom = steps;
     const xTop = foot - run * (steps - 1); // the landing's nosing (top riser)
     const landing = tread(steps - 1);
-    const WO = WX - 0.4; // outer face of the west wall: the street door
+    const WO = R1_WEST_OUTER; // outer face of the west wall: the street door
     // two tones: the front face (+x, towards the foot) of each step is the darker riser
     // material, every other face the tread concrete (BoxGeometry groups: +x, -x, +y, -y, +z, -z)
     const treadMats = [materials.stairRiser, materials.stair, materials.stair, materials.stair, materials.stair, materials.stair];
@@ -183,15 +189,15 @@ export function buildProps(materials) {
     for (let i = 0; i < steps; i++) {
       const h = tread(i);
       const x1 = foot - run * i;
-      // the landing runs from its nosing through the wall to the street door
-      const x0 = i === steps - 1 ? WO : x1 - run;
+      // the top step runs from its nosing to the wall (through the wall: below)
+      const x0 = i === steps - 1 ? WX - 0.002 : x1 - run;
       m.compose(new THREE.Vector3((x0 + x1) / 2, h / 2, (tz0 + tz1) / 2), q0, new THREE.Vector3(x1 - x0 + 0.002, h, tz1 - tz0));
       inst.setMatrixAt(i, m);
     }
     g.add(inst);
-    // in the wall's thickness the landing fills the whole opening (z 0 to 1.95)
-    g.add(slab(materials.stair, WO, WX, 0, landing, 0, tz0));
-    g.add(slab(materials.stair, WO, WX, 0, landing, tz1, 1.95));
+    // in the wall's thickness the top step is the opening's floor (z 0.43 to 1.47; the wall
+    // below it is a block in layout.js), to the street door
+    g.add(slab(materials.stair, WO, WX, landing - 0.02, landing + 0.002, STAIRWELL.z0, STAIRWELL.z1));
     // behind the wall-side parapet: open floor at the foot (DSC_0016); further up nobody has
     // seen it (folding chairs stood there, higher up the flight), so it is filled in steps
     // 0.30 m below the treads (invented). The stacked folding chairs themselves (DSC_0014 to
@@ -365,15 +371,14 @@ export function buildProps(materials) {
         brickGeo.computeVertexNormals();
       }
       const extra = [
-        // [x, bed y, z, tilt]: the two level bricks at the foot of the open side
-        [foot + 0.04, tread(0) + 0.06 + 0.02, zOpen, 0.0],
+        // [x, bed y, z, tilt]: the level brick at the foot of the open side, on the pier's cap
         [(pierX0 + pierX1) / 2 + 0.01, capTop, zOpen, -0.06],
       ];
       // the level bricks along the landing, on both sides
       for (let x = xTop - 0.07; x > WX + 0.01; x -= 0.077) {
         extra.push([x, landing + 0.06 + 0.02, zOpen, 0], [x, landing + 0.06 + 0.02, zBack, 0]);
       }
-      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1 + 3);
+      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, count(sides[0][2]) + count(sides[1][2]) + extra.length + 1);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
       const c = new THREE.Color();
@@ -410,23 +415,26 @@ export function buildProps(materials) {
       m.compose(new THREE.Vector3(baseX1 - 0.07, baseTop + 0.035, backIn - 0.06), q0, new THREE.Vector3(0.14 / 0.065, 0.07 / 0.12, 0.12 / 0.25));
       bricks.setMatrixAt(k, m);
       bricks.setColorAt(k++, tint(207));
-      // the pier's three bricks, laid flat, one per course (joints at 0.045 and 0.12 m, the
-      // lowest partly under the tiles): the copings' brick, scaled, in their tints and their
-      // pale mortar. Until 18 November 2026 (second batch) the pier was one block in the
-      // stairBrick texture, darker and cleaner than the bricks above it (reconstructor; DSC_0016).
+      // the pier's bricks (DSC_0016, see pierX0 above): two courses set on edge, one brick long
+      // on the face towards the room, in the copings' own material and texture (one canvas on
+      // every face, as on the copings' long faces) and in the deeper of their tints, with a
+      // mortar joint between; plain boxes, since the copings' nicked edges, scaled up, opened
+      // wide pale gaps (the version of 18 November). Until 18 November 2026 one block in the
+      // stairBrick texture.
       {
         const cx = (pierX0 + pierX1) / 2;
         const cz = (pierZ0 + openOut) / 2;
-        const core = box(pierX1 - pierX0 - 0.006, pierTop, openOut - pierZ0 - 0.006, mortarMat);
+        const core = box(pierX1 - pierX0 - 0.004, pierTop, openOut - pierZ0 - 0.004, mortarMat);
         core.position.set(cx, pierTop / 2, cz);
         g.add(core);
-        const courses = [[-0.03, 0.045], [0.045, 0.12], [0.12, pierTop]];
+        const courses = [[0, 0.131], [0.139, pierTop]];
+        const pier = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), brickMat, courses.length);
         courses.forEach(([y0, y1], i) => {
-          const h = y1 - y0 - 0.004;
-          m.compose(new THREE.Vector3(cx, (y0 + y1) / 2, cz), q0, new THREE.Vector3((pierX1 - pierX0) / 0.065, h / 0.12, (openOut - pierZ0) / 0.25));
-          bricks.setMatrixAt(k, m);
-          bricks.setColorAt(k++, tint(211 + i * 7));
+          m.compose(new THREE.Vector3(cx, (y0 + y1) / 2, cz), q0, new THREE.Vector3(pierX1 - pierX0, y1 - y0, openOut - pierZ0));
+          pier.setMatrixAt(i, m);
+          pier.setColorAt(i, c.setHSL(0.035 + i * 0.006, 0.36, 0.5 + i * 0.03, THREE.SRGBColorSpace));
         });
+        g.add(pier);
       }
       g.add(bricks);
       obstacle(pierX0 - 0.02, pierX1 + 0.02, pierZ0 - 0.02, openOut + 0.02);
@@ -444,13 +452,13 @@ export function buildProps(materials) {
     // the slope past the first post to the end of the flight (DSC_0015, DSC_0016: the rail
     // runs on a little below the lowest post), level over the landing and through the wall
     const railFoot = foot + 0.02;
-    const railEnd = WO + 0.05;
+    const railEnd = WX + 0.03; // at the street wall (the opening is narrower than the flight)
     for (let x = firstPost; x > railEnd; x -= 0.75) {
       g.add(rod(materials.black, new THREE.Vector3(x, top(x), zRail), new THREE.Vector3(x, top(x) + railH, zRail), 0.014));
     }
     g.add(rod(materials.black, new THREE.Vector3(railFoot, top(railFoot) + railH, zRail), new THREE.Vector3(xTop, top(xTop) + railH, zRail), 0.02));
     g.add(rod(materials.black, new THREE.Vector3(xTop, top(xTop) + railH, zRail), new THREE.Vector3(railEnd, top(railEnd) + railH, zRail), 0.02));
-    obstacle(WX - 0.4, foot + 0.02, 0, openOut + 0.02);
+    obstacle(WO, foot + 0.02, 0, openOut + 0.02);
   }
 
   // Grey bench along the south wall, turning up the west wall (the L on the plan): a dark
@@ -517,10 +525,13 @@ export function buildProps(materials) {
     place(r, x, y, z, ry);
     g.add(r);
   };
-  // the two on the street wall stand in the window niches
-  const NX = WX - NICHE.depth; // back of the niches
-  radiator(NX + 0.07, 3.53, Math.PI / 2, 0.94);
-  radiator(NX + 0.07, SZ - 1.09, Math.PI / 2, 0.42);
+  // the two on the street wall stand against the wall under the windows (DSC_0030: the south
+  // one, five 8 cm sections, 0.42 m wide and about 0.78 m tall, its top just under the niche's
+  // ledge, its middle 0.06 m north of the window's; the north one as before, moved with its
+  // window; 19 November 2026: until then they stood inside niches that ran down to the floor)
+  const NX = WX - NICHE.depth; // back of the niches, behind the windows
+  radiator(WX + 0.07, R1_NICHES[0].win.z - 0.05, Math.PI / 2, 0.94);
+  radiator(WX + 0.07, R1_NICHES[1].win.z - 0.06, Math.PI / 2, 0.42, 0.78);
   radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
 
   // High basement windows at the back of the niches (_artificial paradise 01 - 02 and the
@@ -551,8 +562,7 @@ export function buildProps(materials) {
     // the boxed lintel across the top of the niche, standing a little proud of the wall
     g.add(slab(materials.white, WX - 0.25, WX + 0.04, NICHE.top - 0.03, NICHE.top + 0.13, nz0 - 0.03, nz1 + 0.03));
     // the sill: two shallow steps out to the face of the wall
-    g.add(slab(materials.white, NX, WX - 0.08, y0 - 0.04, y0, z - w / 2 - 0.02, z + w / 2 + 0.02));
-    g.add(slab(materials.white, NX, WX, y0 - 0.09, y0 - 0.04, z - w / 2 - 0.02, z + w / 2 + 0.02));
+    g.add(slab(materials.white, NX, NX + 0.09, y0 - 0.04, y0, z - w / 2 - 0.02, z + w / 2 + 0.02));
   }
   // the round vent in the window by the stairs: a blue mesh disc in a white ring
   {
