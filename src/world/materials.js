@@ -145,74 +145,6 @@ function bareBrickCanvases(seed = 41) {
   return { colour, bump };
 }
 
-// Damp stains on the whitewashed wall the stairs run along, just above the treads (the
-// close-up of the flight): faint grey water marks spreading up from where each tread meets
-// the wall, darker at their lower edge and tide lines, grey grime, a few spots where the
-// paint has flaked to the render. Transparent, laid over the wall; one tile is 2 x 0.6 m,
-// the bottom of the tile at the treads.
-function stairStainCanvas(seed = 57) {
-  const W = 1024;
-  const H = 308;
-  const rand = rng(seed);
-  const c = canvas(W);
-  c.height = H;
-  const g = c.getContext('2d');
-  g.clearRect(0, 0, W, H);
-  // soft grey damp rising from the bottom edge, uneven along the wall
-  for (let i = 0; i < 26; i++) {
-    const x = rand() * W;
-    const r = 30 + rand() * 90;
-    const h = H * (0.25 + rand() * 0.55);
-    const grd = g.createRadialGradient(x, H, 2, x, H, Math.max(r, h));
-    const a = 0.1 + rand() * 0.12;
-    grd.addColorStop(0, `rgba(112,108,102,${a})`);
-    grd.addColorStop(0.55, `rgba(128,124,118,${a * 0.6})`);
-    grd.addColorStop(1, 'rgba(140,136,130,0)');
-    g.fillStyle = grd;
-    g.beginPath();
-    g.ellipse(x, H, r * 1.3, h, 0, Math.PI, Math.PI * 2);
-    g.fill();
-  }
-  // tide lines: thin, wavy brown edges where the damp dried
-  for (let i = 0; i < 9; i++) {
-    let x = rand() * W;
-    const y0 = H * (0.35 + rand() * 0.45);
-    g.strokeStyle = `rgba(100,96,90,${0.08 + rand() * 0.1})`;
-    g.lineWidth = 1 + rand() * 1.5;
-    g.beginPath();
-    g.moveTo(x, y0);
-    const len = 60 + rand() * 160;
-    for (let k = 0; k < 12; k++) {
-      x += len / 12;
-      g.lineTo(x, y0 + Math.sin(k * 1.3 + i) * 6 + (rand() - 0.5) * 4);
-    }
-    g.stroke();
-  }
-  // grey grime at the foot, along the treads
-  const foot = g.createLinearGradient(0, H, 0, H * 0.7);
-  foot.addColorStop(0, 'rgba(80,78,74,0.2)');
-  foot.addColorStop(1, 'rgba(80,78,74,0)');
-  g.fillStyle = foot;
-  g.fillRect(0, H * 0.7, W, H * 0.3);
-  // a few spots of flaked paint showing the ochre render
-  for (let i = 0; i < 6; i++) {
-    const x = rand() * W;
-    const y = H * (0.55 + rand() * 0.4);
-    for (let k = 0; k < 7; k++) {
-      g.fillStyle = `rgba(${150 + rand() * 15},${147 + rand() * 12},${140 + rand() * 12},${0.2 + rand() * 0.2})`;
-      g.beginPath();
-      g.ellipse(x + (rand() - 0.5) * 30, y + (rand() - 0.5) * 12, 4 + rand() * 12, 3 + rand() * 6, rand() * 3, 0, Math.PI * 2);
-      g.fill();
-    }
-  }
-  // dark specks
-  for (let i = 0; i < 700; i++) {
-    g.fillStyle = `rgba(85,82,78,${0.06 + rand() * 0.16})`;
-    g.fillRect(rand() * W, H * (0.4 + rand() * 0.6), 1 + rand() * 2, 1 + rand() * 2);
-  }
-  return c;
-}
-
 function tex(c, srgb, repeatMetres = 1, maxAniso = 4) {
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -278,9 +210,6 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   const concrete = tex(concreteCanvas(), true, 2, aniso);
   const planks = tex(planksCanvas(), true, 1, aniso);
   const worn = tex(wornConcreteCanvas(), true, 1, aniso);
-  const stainMap = tex(stairStainCanvas(), true, 1, aniso);
-  stainMap.repeat.set(0.5, 1 / 0.6);
-  stainMap.wrapT = THREE.ClampToEdgeWrapping;
   const bare = bareBrickCanvases();
   const bareMap = tex(bare.colour, true, 1, aniso);
   const bareBump = tex(bare.bump, false, 1, aniso);
@@ -363,11 +292,6 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // brightness in DSC_0016 (risers 0.30); at 0x8e8b86 they rendered at 0.24 of it, now at
     // about 0.45 (15 November 2026).
     stair: new THREE.MeshStandardMaterial({ color: 0xd6d2cb, map: worn, roughness: 0.9 }), // worn; renders at about 0.45 of the whitewash
-    // the risers, the front faces of the steps: the same worn concrete, darker. In DSC_0014 to
-    // DSC_0016 they are 0.15 to 0.25 of the whitewash, the lit lower tread tops 0.33 to 0.47
-    // (Decision 1a, 17 November 2026; PROGRESS.md)
-    stairRiser: new THREE.MeshStandardMaterial({ color: 0xb0aca5, map: worn, roughness: 0.9 }),
-    stairStain: new THREE.MeshStandardMaterial({ map: stainMap, transparent: true, depthWrite: false, roughness: 1, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }),
     stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),

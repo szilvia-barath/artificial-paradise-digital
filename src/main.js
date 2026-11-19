@@ -96,7 +96,8 @@ manager.onProgress = (_url, loaded, total) => {
 const materials = createMaterials(renderer, manager, { lowPower });
 const arch = buildArchitecture(materials);
 scene.add(arch.group);
-const props = buildProps(materials);
+// the stairs' model loads through the loading screen, its textures filtered like the rooms'
+const props = buildProps(materials, manager, { anisotropy: Math.min(lowPower ? 4 : 16, renderer.capabilities.getMaxAnisotropy()) });
 scene.add(props.group);
 scene.add(buildParadiseFactory(materials, manager));
 const letItFlow = buildLetItFlow(manager);

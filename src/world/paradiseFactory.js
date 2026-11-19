@@ -110,8 +110,9 @@ function bladeGeometry(w, h, cup, arch) {
 // does not compress a .glb, and this one shrinks from 1,005 KB to 436 KB. The
 // browser unzips it with DecompressionStream. In dev, without DecompressionStream, or if
 // anything goes wrong, the plain .glb is loaded instead. If a server has already unzipped it
-// (Content-Encoding: gzip), the bytes are a glb and are parsed as they are.
-function loadGzipped(loader, manager, url, onLoad) {
+// (Content-Encoding: gzip), the bytes are a glb and are parsed as they are. The stairs'
+// model (props.js) loads the same way.
+export function loadGzipped(loader, manager, url, onLoad) {
   const plain = () => loader.load(url, onLoad);
   if (!import.meta.env.PROD || typeof DecompressionStream === 'undefined') return plain();
   const gz = `${url}.gz`;
