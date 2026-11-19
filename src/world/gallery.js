@@ -141,9 +141,17 @@ function wrapText(g, text, x, y, maxW, lh) {
 // A phone or tablet is measured both upright and on its side. The result is a scale of the
 // sheet's 512 x 724 layout, never above the tier's old fixed scale (4 on a computer, 2.5 on
 // low power), so no screen gets a softer sheet than it can show at that distance. Zoomed in
-// further than that, the letters soften a little. SHEET_HEIGHT is the sheets' height in
-// metres: keep it equal to the PlaneGeometry in buildGallery.
-const SHEET_HEIGHT = 0.707;
+// further than that, the letters soften a little. SHEET_HEIGHT is the exhibition text sheets'
+// height in metres: it is the one the PlaneGeometry in buildGallery uses (SHEET_SIZE.text).
+//
+// Sheet sizes (the reconstructor, 19 November 2026): the two text sheets (Rooms 1 and 2) are 0.40 m
+// tall, measured on DSC_0023 and DSC_0058 against the brick courses (7.7 cm): 5.2 and 5.15
+// courses, so 0.40 m, +-0.03 m. The width could not be measured (the wall is seen at an angle, so
+// the sheet's width on the photograph is foreshortened by an unknown amount; 0.64 of the height
+// on DSC_0058 is a lower bound), so it keeps the A ratio, 0.707 of the height. The room sheet by
+// the toilet corridor stays A4 (3.9 courses, 0.30 m, DSC_0048).
+const SHEET_SIZE = { text: [0.283, 0.4], plan: [0.21, 0.297] };
+const SHEET_HEIGHT = SHEET_SIZE.text[1];
 const NEAREST = 0.27;
 function sheetScale(tierMax) {
   const ratio = Math.min(window.devicePixelRatio || 1, MAX_DPR);
@@ -462,7 +470,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     }
   }
 
-  // Exhibition texts, pinned up as in the photos: A4 sheets (21 x 29.7 cm) drawn at 4x on desktop
+  // Exhibition texts, pinned up as in the photos: the text sheets 28.3 x 40 cm, the room sheet A4 (21 x 29.7 cm), drawn at 4x on desktop
   // so their small type stays sharp
   for (const sh of data.sheets || []) {
     const k = SHEET_SCALE;
@@ -471,7 +479,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       if (sh.draw === 'plan') drawRoomSheet(g, data);
       else drawTextSheet(g, data);
     }, 16);
-    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.21, 0.297), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(...(sh.draw === 'plan' ? SHEET_SIZE.plan : SHEET_SIZE.text)), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;
