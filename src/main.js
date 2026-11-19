@@ -934,7 +934,6 @@ onLangChange(() => {
   viewer.refresh();
   tour.refresh();
   gallery.relabel();
-  if (pdOn) fillLegend();
   hovered = null;
   front = null;
 });
