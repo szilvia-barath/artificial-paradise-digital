@@ -23,6 +23,10 @@ const P = (x, z) => ({ x: R1.west + x * sx, z: z * sz });
 const A = P(0.84, 4.51); // south-west end of the channel, by the monitor
 const B = P(1.64, 2.72); // north-east end, beside the plant
 export const PIPE = { a: A, b: B, y: 1.0 };
+// The plant stands at x 2.08, z 3.66, the middle of the work's 2.5 x 2.5 m floor area: the
+// measurement reference's flagged marker (0.4 x 0.4 x 1.8 m there), accepted by the
+// reconstructor on 19 November 2026 (answer 8) as UNVERIFIED: its size and exact spot are not
+// established.
 export const PLANT = P(1.8, 3.42);
 export const BARS = [P(1.9, 3.14), P(2.0, 3.7)];
 export const BAR_BOTTOM = 0.64; // the LED bars end level with the top of the plant's box

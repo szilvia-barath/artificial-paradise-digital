@@ -148,8 +148,13 @@ function room3NorthWall() {
 // part; B (x 24.10 to the end wall) has a bottom that steps down towards the end wall, as
 // Room 3's openings do. Positions from the end-wall corner by cross-ratio (A west arris,
 // A east arris, B west arris, corner) on DSC_0112, the 04-03 photograph and the video.
+// C (19 November 2026): a third one by the gas meter at the west end, above the radiator,
+// measured on DSC_0101 and DSC_0102 against the gas meter (0.22 m wide): its west arris 0.41 m
+// east of the meter's middle, about 0.70 m wide, its flat sill about 1.1 m up, running up out
+// of the frame (taken to the springing, as A and B); inferred, +-0.15 m, its depth as A and B.
 const R4_RECESSES = {
   back: 1.61, // z of the bricked-up backs (wall face 1.73)
+  C: { x0: 16.84, x1: 17.54, sill: 1.1 },
   A: { x0: 21.86, x1: 22.78, sill: 0.95 },
   B: { x0: 24.1, x1: 25.4 },
   top: 2.92, // the vault springing (R4_VAULT.spring; 2.75 until 17 November 2026)
@@ -157,14 +162,16 @@ const R4_RECESSES = {
 function room4NorthWall() {
   const z0 = N_OUT;
   const z1 = 1.73;
-  const { back, A, B, top } = R4_RECESSES;
+  const { back, A, B, C, top } = R4_RECESSES;
   const H = R4_VAULT.wallTop;
   const r = (x0, x1, y0, y1, zA = z0, zB = z1) => ({ x0, x1, z0: zA, z1: zB, y0, y1, mat: 'rawBrick' });
   const out = [
-    r(15.6, A.x0, 0, H), // the wall west of A
+    r(15.6, C.x0, 0, H), // the wall west of C
+    r(C.x1, A.x0, 0, H), // the wall between C and A
     r(A.x1, B.x0, 0, H), // the pier between A and B
+    r(C.x0, C.x1, 0, C.sill, back, z1), // C: the wall up to its flat sill
   ];
-  for (const R of [A, B]) {
+  for (const R of [C, A, B]) {
     out.push(r(R.x0, R.x1, 0, H, z0, back)); // the bricked-up back
     out.push(r(R.x0, R.x1, top, H, back, z1)); // the wall above, where the vault springs
   }
@@ -294,7 +301,10 @@ export const BLOCKS = [
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
   { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: R4_VAULT.wallTop, mat: 'plaster' },
   { x0: 15.6, x1: 15.9, z0: 4.666, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'plaster' },
-  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.45, y1: R4_VAULT.wallTop, mat: 'plaster' },
+  // (the header's underside at 2.35 m: on DSC_0064 it hangs about 0.39 m below Room 3's
+  // ceiling, against no. 14's 0.75 m; S34 corridor_room3-4.jpg shows it too; inferred, +-0.1 m;
+  // it was 2.45 m with no recorded source, 19 November 2026)
+  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.35, y1: R4_VAULT.wallTop, mat: 'plaster' },
   // projection wall (east end)
   { x0: 25.4, x1: 25.4 + T, z0: N_OUT, z1: S_OUT, y1: R4_VAULT.wallTop, mat: 'dimBrick', faces: { nx: 'projWall' } },
 ];

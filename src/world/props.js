@@ -601,7 +601,7 @@ export function buildProps(materials) {
     const Y = 0.005; // lying on the floor
     const black = materials.black;
     const white = materials.white;
-    const screenZ = 5.23;
+    const screenZ = 5.1; // the monitor's place (exhibition.json, w03-screen)
     const ad = [0.62, 4.98]; // the screen's adapter
     const p1 = [1.02, 4.62]; // power strips
     const p2 = [1.42, 4.3];
