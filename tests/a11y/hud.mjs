@@ -58,21 +58,26 @@ const boxes = (p, sels) => p.evaluate((list) => Object.fromEntries(list.map((s) 
 })), sels);
 const show = (b) => (b ? `${Math.round(b.x)},${Math.round(b.y)} ${Math.round(b.w)}×${Math.round(b.h)}` : 'not shown');
 
-// ---------------- A4: the floor plan's key, under the map in the same box: five groups of works in three rows (19 November 2026: prints are their own group)
+// ---------------- A4: the floor plan's key, under the map in the same box: five groups of works (prints their own group), of
+// which the key shows those with works on the map, two to a row; "Other works" has none at present, so the key shows four
+// groups in two rows (minimap.js drawKey, 18 November 2026)
 const GROUPS = ['paintings', 'prints', 'videos', 'installations', 'other'];
-const keyWords = (l) => GROUPS.map((g) => UI[l].hud.mapKey[g]).join('|');
+const keyWords = (l, groups = GROUPS) => groups.map((g) => UI[l].hud.mapKey[g]).join('|');
+// the groups the key shows: those with at least one work (set in the first A4 block, from the page)
+let KEYED = GROUPS;
 const keyInfo = (p) => p.evaluate(() => {
   const k = document.getElementById('map-key');
   if (!k) return { text: [], marks: [], rows: 0, color: 'rgb(0,0,0)', glass: 'rgb(0,0,0)', missing: true };
   const cs = getComputedStyle(k);
   const r = k.getBoundingClientRect();
   const m = document.getElementById('minimap').getBoundingClientRect();
-  const words = [...k.querySelectorAll('[data-i18n]')];
+  // the words of the groups shown (a group with no works is hidden: minimap.js drawKey)
+  const words = [...k.querySelectorAll('.mk-item:not([hidden]) [data-i18n]')];
   // each mark: the group it names, its shape, colour and edge, and its size on screen
   const marks = [...k.querySelectorAll('svg[data-group]')].map((svg) => {
     const path = svg.querySelector('path');
     const b = (path || svg).getBoundingClientRect();
-    return { group: svg.dataset.group, shape: svg.dataset.shape, fill: path?.getAttribute('fill'), edge: path?.getAttribute('stroke'), edgeW: path?.getAttribute('stroke-width'), order: path?.getAttribute('paint-order'), w: Math.round(b.width * 10) / 10, h: Math.round(b.height * 10) / 10 };
+    return { group: svg.dataset.group, shown: !svg.closest('[hidden]'), shape: svg.dataset.shape, fill: path?.getAttribute('fill'), edge: path?.getAttribute('stroke'), edgeW: path?.getAttribute('stroke-width'), order: path?.getAttribute('paint-order'), w: Math.round(b.width * 10) / 10, h: Math.round(b.height * 10) / 10 };
   });
   return {
     text: words.map((e) => e.textContent),
@@ -96,9 +101,11 @@ const mapGroups = (p) => p.evaluate(() => {
   const k = await keyInfo(p);
   const c = worst(k.color, k.glass);
   const { groups, works } = await mapGroups(p);
-  // four marks, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), the colour 4.5 to 7 px across
-  const marks = k.marks.length === 5 && new Set(k.marks.map((x) => x.shape)).size === 5 && k.marks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 4.5 && x.w <= 7 && x.h >= 4.5 && x.h <= 7);
-  step(`A4.1 Desktop: the key is just under the map, right-aligned with it, in three rows: "${keyWords('en').replaceAll('|', '", "')}", at least 11 px, 4.5:1 at worst; five marks of five shapes, each with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en') && k.rows === 3 && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shape, w: mw, h }) => ({ group, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
+  KEYED = GROUPS.filter((g) => works.some((x) => x.group === g));
+  // a mark for each group shown, each its own shape, each with the 1 px dark edge (a 2 px stroke under the fill), the colour 4.5 to 7 px across
+  const shownMarks = k.marks.filter((x) => x.shown);
+  const marks = shownMarks.map((x) => x.group).join('|') === KEYED.join('|') && new Set(shownMarks.map((x) => x.shape)).size === KEYED.length && shownMarks.every((x) => x.edgeW === '2' && x.order === 'stroke' && x.w >= 4.5 && x.w <= 7 && x.h >= 4.5 && x.h <= 7);
+  step(`A4.1 Desktop: the key is just under the map, right-aligned with it, and shows the groups with works on the map, in ${Math.ceil(KEYED.length / 2)} rows: "${keyWords('en', KEYED).replaceAll('|', '", "')}" (a group with none is left out), at least 11 px, 4.5:1 at worst; one mark for each, each its own shape with a dark edge; hidden from screen readers`, k.text.join('|') === keyWords('en', KEYED) && k.rows === Math.ceil(KEYED.length / 2) && k.font >= 11 && c >= 4.5 && k.under >= 0 && k.under <= 8 && Math.abs(k.rightEdge) <= 1 && k.inWindow && marks && k.hidden === 'true', `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.font} px, ${k.color} on ${k.glass}: ${c.toFixed(2)}:1 at worst; ${k.under} px under the map, right edges ${k.rightEdge} px apart; marks ${JSON.stringify(k.marks.map(({ group, shown, shape, w: mw, h }) => ({ group, shown, shape, w: mw, h })))}; aria-hidden ${k.hidden}`);
   // the key's marks are the map's own: the same shape, colour and edge as minimap.js draws each
   // group with (read from the page; fails if the key is missing or drifts from the map)
   const same = !k.missing && GROUPS.every((g, i) => {
@@ -122,7 +129,7 @@ const mapGroups = (p) => p.evaluate(() => {
   step("A4.7 Every mark is 3:1 or more against the map's glass, over pure white and over black; the five groups have five colours, none the accent blue of the visitor's dot", markC.every((x) => x.white >= 3 && x.black >= 3) && colours.size === 5 && !colours.has('#8fa8ff'), JSON.stringify(markC));
   await switchTo(p, 'hu');
   const kh = await keyInfo(p);
-  step(`A4.3 Switched to Hungarian: "${keyWords('hu').replaceAll('|', '", "')}", still three rows`, kh.text.join('|') === keyWords('hu') && kh.rows === 3 && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
+  step(`A4.3 Switched to Hungarian: "${keyWords('hu', KEYED).replaceAll('|', '", "')}", still ${Math.ceil(KEYED.length / 2)} rows`, kh.text.join('|') === keyWords('hu', KEYED) && kh.rows === Math.ceil(KEYED.length / 2) && kh.inWindow, `${JSON.stringify(kh.text)}, ${kh.rows} rows`);
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#click-to-look', '#prompt', '#zoom-level']);
   step('A4.4 Desktop, Hungarian: the key lies over none of the map, the room label and the hint in the middle', !meets(b['#map-key'], b['#minimap']) && !meets(b['#map-key'], b['#room-label']) && !meets(b['#map-key'], b['#click-to-look']), Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; '));
   errors.push(...w.errors);
@@ -140,7 +147,7 @@ for (const [name, opts, lang, beside] of [['phone 375 × 667, English', PHONE, '
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const b = await boxes(p, ['#map-key', '#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look']);
   const clear = ['#minimap', '#room-label', '#joystick', '#zoompad', '#zoom-level', '#toolbar', '#click-to-look'].every((s) => !meets(b['#map-key'], b[s])) && !meets(b['#click-to-look'], b['#minimap']);
-  step(`A4.5 ${name}: the key shows, in three rows under the map, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.rows === 3 && k.inWindow && (k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.under} px under the map; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`A4.5 ${name}: the key shows, in ${Math.ceil(KEYED.length / 2)} rows under the map, inside the window, over none of the other controls, and the hint in the middle not over the map (zoomed in, so the zoom readout shows too)`, !!b['#map-key'] && k.rows === Math.ceil(KEYED.length / 2) && k.inWindow && (k.under >= 0 && k.under <= 8) && k.font >= 11 && clear, `${JSON.stringify(k.text)}, ${k.rows} rows, ${k.under} px under the map; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -186,7 +193,8 @@ async function asked(lang, opts) {
   await d.ctx.close();
   step(`D11.1 Sound question on a phone: "${want.en}" (in Hungarian "${want.hu}", also after a switch while it shows); the Sound button is at the bottom; on a computer the words with M stay`, got.en === want.en && got.hu === want.hu && got.switched === want.hu && got.button.label === UI.en.hud.sound && got.button.bottom && desk === UI.en.soundAsk.hint, `phone EN "${got.en}"; HU "${got.hu}"; switched "${got.switched}"; button ${JSON.stringify(got.button)}; computer "${desk}"`);
 }
-// Since 18 November 2026 a touch screen shows no hint in the middle and no turn keys (the zoom keys stay).
+// Since 18 November 2026 a touch screen shows no hint in the middle and no turn keys; since 19 November no zoom keys
+// either (a pinch zooms; the zoom readout stays: 6151eb8).
 for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 × 667, Hungarian', PHONE, 'hu'], ['320 × 640, Hungarian', { ...PHONE, viewport: { width: 320, height: 640 } }, 'hu'], ['on its side 667 × 375, Hungarian', PHONE_SIDE, 'hu'], ['on its side 640 × 360, Hungarian', { ...PHONE, viewport: { width: 640, height: 360 } }, 'hu'], ['small, on its side 568 × 320, Hungarian', { ...PHONE, viewport: { width: 568, height: 320 } }, 'hu']]) {
   const w = await inside(lang, opts);
   const p = w.page;
@@ -194,8 +202,7 @@ for (const [name, opts, lang] of [['375 × 667, English', PHONE, 'en'], ['375 ×
   await p.evaluate(() => window.__ap.controls.zoomBy(2));
   await p.waitForFunction(() => !document.getElementById('zoom-level').hidden, null, { timeout: 30000 }).catch(() => {});
   const b = await boxes(p, ['#click-to-look', '#guide', '#keypad', '#joystick', '#toolbar', '#zoompad', '#zoom-level', '#minimap', '#map-key', '#room-label']);
-  const zoomClear = ['#joystick', '#toolbar', '#minimap', '#map-key', '#room-label'].every((s) => !meets(b['#zoompad'], b[s]));
-  step(`D11.2 Phone ${name}, inside: no hint in the middle, no first-use card and no keypad are shown; focus stays on the 3D view; the zoom keys show and lie over none of the stick, the toolbar, the map, its key and the room label`, !b['#click-to-look'] && !b['#guide'] && !b['#keypad'] && focus === 'scene' && !!b['#zoompad'] && zoomClear, `focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
+  step(`D11.2 Phone ${name}, inside: no hint in the middle, no first-use card, no keypad and no zoom keys are shown (a pinch zooms, since 19 November 2026); focus stays on the 3D view`, !b['#click-to-look'] && !b['#guide'] && !b['#keypad'] && !b['#zoompad'] && focus === 'scene', `focus on ${focus}; ${Object.entries(b).map(([s, x]) => `${s} ${show(x)}`).join('; ')}`);
   errors.push(...w.errors);
   await w.ctx.close();
 }
@@ -1054,7 +1061,7 @@ await guard(['H1.3'], async () => {
   if (!white(r.onCap) || !halo(r.onCap)) bad.push(`keycap focused: ${JSON.stringify(r.onCap)}`);
   step('H1.3 Glass chips: each is the glass (0.85) with a 1 px edge of white at 45% (the box round the map and the room label: 70 %, square, no border) (≥ 3 against the glass over white and black) and rounded corners; text on them ≥ 4.5; the focus ring on a toolbar button (pressed or not) and a keycap is white, 2 px, with a dark halo of 5 px round it; ring on glass ≥ 3, halo on a white wall ≥ 3',
     bad.length === 0 && lowEdge >= 3 && lowText >= 4.5 && ringOnGlass >= 3 && haloOnWall >= 3 && ringOnHalo >= 3,
-    `${r.chips.length} chips, lowest edge ${lowEdge.toFixed(2)}; lowest text ${lowText.toFixed(2)}; works on a hovered row ${hoverLow.toFixed(2)}; ring on glass ${ringOnGlass.toFixed(2)}, halo on a white wall ${haloOnWall.toFixed(2)}, ring on its halo ${ringOnHalo.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
+    `${r.chips.length} chips, lowest edge ${lowEdge.toFixed(2)}; lowest text ${lowText.toFixed(2)}; ring on glass ${ringOnGlass.toFixed(2)}, halo on a white wall ${haloOnWall.toFixed(2)}, ring on its halo ${ringOnHalo.toFixed(2)}; ${bad.length ? bad.slice(0, 8).join(' | ') : 'nothing wrong'}`);
   errors.push(...w.errors);
   await w.ctx.close();
 });
