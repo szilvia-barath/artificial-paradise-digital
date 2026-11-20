@@ -5,7 +5,7 @@
 // comes, stands over the 3D view at the work.
 //   A. No exhibition tab: the accessible version opened on its own; the link loads the
 //      exhibition in its tab, at no. 6.
-//   B. Exhibition tab not yet entered: its skip link opens the accessible version in a new tab;
+//   B. Exhibition tab not yet entered: from Enter, Shift+Tab to its skip link, which opens the accessible version in a new tab;
 //      the link to no. 6 sends the exhibition's tab to the work, with no reload.
 //   C. Exhibition tab entered without sound: the link to no. 14, no reload, no question.
 //   D. Exhibition tab entered with sound: the link to no. 3, no reload, the sound kept; then the
@@ -174,10 +174,15 @@ async function openTextTab(ctx, p, key) {
   const id = 'w06-artificial-paradise-singapore';
   const { ctx, page: p } = await context();
   await p.goto(`${BASE}?lang=en`);
-  await until(p, () => !!document.getElementById('enter'), null, 30000);
+  // The title card ready, focus on Enter (the reconstructor's decision). The skip link stays the
+  // page's first focusable element, so from Enter it is behind the navbar, by Shift+Tab. (While
+  // the page is still loading nothing has focus and one Tab reaches it; the old B.1 passed only
+  // by pressing Tab before the app put focus on Enter.)
+  await until(p, () => document.body.dataset.state === 'ready' && document.activeElement === document.getElementById('enter'), null, 90000);
   const mark = await p.evaluate(() => window.__seen.mark);
-  const o = await openTextTab(ctx, p, 'Tab');
-  step('B.1 Title card: Tab reaches the skip link, named as opening in a new tab; Enter opens the accessible version in a second tab, whose links to a work and back point at the exhibition\'s tab', o.tabs > 0 && o.skip.name === `${EN.textEdition.skip} ${EN.textEdition.newTab}` && o.pages === 2 && /\/text\//.test(o.url) && o.wired.target, `${o.tabs} Tab: ${o.skip.role} "${o.skip.name}"; ${o.pages} tabs, the new one at ${o.url}; links pointed at the exhibition's tab: ${o.wired.target}`);
+  const o = await openTextTab(ctx, p, 'Shift+Tab');
+  const first = await p.evaluate(() => document.querySelector('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')?.classList.contains('skip-link'));
+  step('B.1 Title card ready, focus on Enter: Shift+Tab goes back through the navbar to the skip link at the top (the page\'s first focusable element), named as opening in a new tab; Enter opens the accessible version in a second tab, whose links to a work and back point at the exhibition\'s tab', o.tabs > 0 && first && o.skip.name === `${EN.textEdition.skip} ${EN.textEdition.newTab}` && o.pages === 2 && /\/text\//.test(o.url) && o.wired.target, `${o.tabs} Shift+Tab from Enter: ${o.skip.role} "${o.skip.name}", first focusable: ${first}; ${o.pages} tabs, the new one at ${o.url}; links pointed at the exhibition's tab: ${o.wired.target}`);
   const t = o.t;
   const tabs = await tabTo(t, `a[data-work="${id}"]`);
   const link = await ax(t);
