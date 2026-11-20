@@ -283,6 +283,13 @@ html.direct body:not([data-state="failed"]) #loader { visibility: hidden; opacit
 #site-nav .nav-a11y:hover, #site-nav .nav-a11y:focus-visible { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
 #site-nav .nav-a11y:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 body.entered #site-nav .nav-a11y, body.overlay #site-nav .nav-a11y { opacity: 1; }
+/* its label: in full on the loading page, short once the 3D view is entered (the hidden one
+   is out of the accessibility tree too, so the link's name follows) */
+body.entered #site-nav .nav-a11y-full, body:not(.entered) #site-nav .nav-a11y-short { display: none; }
+/* in Hungarian the short label on the loading page too: the full one does not fit the navbar
+   at 1280 px or the folded menu at 320 px (the reconstructor, 20 November 2026) */
+html:lang(hu) body:not(.entered) #site-nav .nav-a11y-full { display: none; }
+html:lang(hu) body:not(.entered) #site-nav .nav-a11y-short { display: inline; }
 #site-nav button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 .brand { margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .brand b { font-weight: 600; }

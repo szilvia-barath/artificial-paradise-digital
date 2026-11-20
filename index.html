@@ -140,7 +140,9 @@
         <button data-nav="concept" data-i18n="nav.concept">Concept</button>
         <button data-nav="bts" data-i18n="nav.build">Behind the scenes</button>
         <button data-nav="help" data-i18n="nav.help">Help</button>
-        <a class="nav-a11y" href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span data-i18n="textEdition.name">Accessible version</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>
+        <!-- Named in full on the loading page, short inside the 3D view (CLAUDE.md naming; the
+             reconstructor, 20 November 2026): CSS shows one of the two by body.entered. -->
+        <a class="nav-a11y" href="./text/" target="ap-text" data-i18n-attr="href:textEdition.href"><span class="nav-a11y-full" data-i18n="textEdition.nameFull">Accessible version (text format)</span><span class="nav-a11y-short" data-i18n="textEdition.name">Accessible version</span> <span class="sr-only" data-i18n="textEdition.newTab">(opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>
         <button data-nav="contact" data-i18n="nav.contact">Contact</button>
         <!-- The folded menu only (narrow windows): what the footer holds, below a line, since
              the footer is put away inside the exhibition on a phone. Hidden in a wide window. -->
