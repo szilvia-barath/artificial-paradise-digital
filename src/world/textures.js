@@ -18,6 +18,9 @@ export function initTextures(renderer, manager) {
   webp = new THREE.TextureLoader(manager);
 }
 
+// The loading screen's KTX2 loader, for glTF models with KHR_texture_basisu textures (the stairs).
+export const ktx2Loader = () => ktx2;
+
 // A KTX2 loader outside the loading screen's count, for images that stream in while one walks
 // (switch "ktx2art", gallery.js). Made on first use, so it costs nothing while the switch is off.
 export function lazyKTX2() {

@@ -137,7 +137,9 @@ vec4 antiTile(sampler2D s, vec2 uv) {
 
 // Replaces three's map_fragment; AO_KIND (0 floor, 1 wall, 2 ceiling) comes from ao.js.
 export const SURFACE_FRAG = /* glsl */ `
-#ifdef USE_MAP
+#if defined(USE_MAP) && defined(SURF_UNWRAPPED)
+  diffuseColor *= texture2D(map, vMapUv); // a model's own unwrapped texture: no anti-tiling
+#elif defined(USE_MAP)
   diffuseColor *= antiTile(map, vMapUv);
 #endif
 {

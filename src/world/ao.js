@@ -103,10 +103,11 @@ const AO_POS = /* glsl */ `
   vAoPos = (modelMatrix * aoLocal).xyz;
 `;
 
-function patch(material, kind, uniforms, { tileBump }) {
+function patch(material, kind, uniforms, { tileBump, unwrapped = false }) {
   const surf = material.userData.surface || { offset: [0, 0] };
   material.defines = { ...material.defines, AO_KIND: KIND[kind] };
   if (surf.wash) material.defines.SURF_WASH = '';
+  if (unwrapped) material.defines.SURF_UNWRAPPED = '';
   const own = { surfOffset: { value: new THREE.Vector2(...surf.offset) } };
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms, own);
@@ -119,6 +120,19 @@ function patch(material, kind, uniforms, { tileBump }) {
     if (tileBump) frag = frag.replace('#include <bumpmap_pars_fragment>', antiTileBump(THREE.ShaderChunk.bumpmap_pars_fragment));
     shader.fragmentShader = frag;
   };
+}
+
+// Set by applyPlanAO, for materials that arrive later (patchPlanAO).
+let planAO = null;
+const waiting = [];
+
+// The same patch for a material loaded after applyPlanAO ran: the walls of the stairs' model
+// (props.js) take the 'wall' group's AO and overlays. Their textures are unwrapped on the
+// model, not tiled, so they are sampled as they are, without the anti-tiling.
+export function patchPlanAO(material, kind) {
+  if (!planAO) return void waiting.push([material, kind]);
+  patch(material, kind, planAO.uniforms, { tileBump: planAO.tileBump, unwrapped: true });
+  material.needsUpdate = true;
 }
 
 // Bake once the walls and furniture exist, then patch the room materials.
@@ -134,4 +148,6 @@ export function applyPlanAO(materials, segments, { lowPower = false } = {}) {
     ceiling: ['ceiling', 'planks'],
   };
   for (const [kind, keys] of Object.entries(groups)) for (const key of keys) patch(materials[key], kind, uniforms, { tileBump: !lowPower });
+  planAO = { uniforms, tileBump: !lowPower };
+  for (const [m, kind] of waiting.splice(0)) patchPlanAO(m, kind);
 }
