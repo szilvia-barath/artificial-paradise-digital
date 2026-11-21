@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-18: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 36 of 36 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-20: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 32 of 34 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
@@ -14,60 +14,55 @@ Written by `tests/a11y/keyboard.mjs` on 2026-11-18: Chromium (Playwright, headle
 
 ## PASS: 1.3 Tab, Enter on its first link goes back to the digital exhibition's tab
 
-- Expected: first link "Go to the digital exhibition (in the tab where it is open)"; the exhibition's tab not reloaded; the accessible version's tab stays
-- What happened: a "Go to the digital exhibition (in the tab where it is open)"; same page: true; tabs: 2, /text/?lang=en
+- Expected: first link "Go to the digital exhibition"; the exhibition's tab not reloaded; the accessible version's tab stays
+- What happened: a "Go to the digital exhibition"; same page: true; tabs: 2, /text/?lang=en
 
 ## PASS: 1.4 When loading is done, focus is on Enter
 
 - Expected: button#enter
 - What happened: button#enter "| Enter |"
 
-## PASS: 2. Panel About: Tab to it (11 presses), Enter, Tab round, Esc
+## PASS: 2. Panel About: Tab to it (8 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Artificial Paradise"; 13 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Artificial Paradise"; 12 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Works: Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "List of works"; 19 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "List of works"; 18 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Concept: Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "The concept of Artificial Paradise"; 8 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "The concept of Artificial Paradise"; 7 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Behind the scenes: Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "How it's built"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "How it's built"; 1 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
-## PASS: 2. Panel Contact (navbar): Tab to it (1 presses), Enter, Tab round, Esc
-
-- Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Contact"; 14 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
-
-## PASS: 2. Panel Contact (footer): Tab to it (7 presses), Enter, Tab round, Esc
+## PASS: 2. Panel Contact (navbar): Tab to it (3 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Contact"; 14 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Contact"; 13 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
-## PASS: 2. Panel Accessibility (footer): Tab to it (2 presses), Enter, Tab round, Esc
+## PASS: 2. Panel Accessibility (footer): Tab to it (6 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Accessibility"; 3 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Accessibility"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Legal notice (footer): Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Legal notice"; 5 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Legal notice"; 4 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
 ## PASS: 2. Panel Privacy (footer): Tab to it (1 presses), Enter, Tab round, Esc
 
 - Expected: focus on Close inside the panel; Tab stays inside; Esc closes; focus back on the control that opened it
-- What happened: opened with focus on button "Close"; dialog named "Privacy"; 6 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
+- What happened: opened with focus on button "Close"; dialog named "Privacy"; 5 controls in the Tab round, stayed inside: true; closed: true; focus back on opener: true
 
-## PASS: 3.1 Tab to Enter (10 presses), press Enter: the sound question opens
+## PASS: 3.1 Tab to Enter (12 presses), press Enter: the sound question opens
 
 - Expected: focus on "Without sound"; Tab moves between its two buttons only
 - What happened: focus on button "Without sound"; 2 controls in the Tab round, stayed inside: true
@@ -117,30 +112,25 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: goes back to the last work
 - What happened: Room 4. Let it Flow, installation. No. 17, Natural Life. Press Enter to open.
 
-## PASS: 5.1 Works panel (15 Tabs), Tab to no. 6 (7 Tabs), Enter: the viewer opens on a video work
+## PASS: 5.1 Works panel (13 Tabs), Tab to no. 6 (6 Tabs), Enter: the viewer opens on a video work
 
 - Expected: viewer open on "Artificial Paradise – Singapore", focus on Close; Tab stays inside (the video's native controls are not in the round); Esc closes; the works list is back with focus on no. 6
-- What happened: "Artificial Paradise – Singapore", focus on button "Close"; 10 controls in the Tab round, stayed inside: true; closed: true; list open: true; focus now on button "6 Artificial Paradise – SingaporeVideo, Full HD, 2025 · Room"
+- What happened: "Artificial Paradise – Singapore", focus on button "Close"; 9 controls in the Tab round, stayed inside: true; closed: true; list open: true; focus now on button "6 Artificial Paradise – SingaporeVideo, Full HD, 2025 · Room"
 
 ## PASS: 5.2 Esc on the works list that came back
 
 - Expected: the list closes; focus back on the Works button
 - What happened: list open before Esc: true; after: false; focus on button[data-nav=works] "Works"
 
-## PASS: 5.3 Enter on Works, Tab to no. 14 (15 Tabs), Enter, → to the next work, Enter on Close
+## PASS: 5.3 Enter on Works, Tab to no. 14 (14 Tabs), Enter, → to the next work, Enter on Close
 
 - Expected: the viewer moves on to no. 15; Close closes it; the list is back with focus on no. 15, in view
 - What happened: viewer showed "Wiena Wrong Landscape II", focus on Close: true; list open: true; focus on row {"work":"w15-wiena-wrong-landscape-ii","inView":true}
 
-## PASS: 6.1 Rooms menu: Enter opens it, Tab goes into it, Esc closes it
+## PASS: 6.1 Help (the navbar button): Enter opens the panel, focus on Close; Esc closes it, focus back on Help
 
-- Expected: aria-expanded true; focus on the first room; after Esc closed, focus on the Rooms button
-- What happened: expanded: true; Tab → button "Room 1"; after Esc expanded: false, focus on button[data-action=rooms] "⌖Rooms"
-
-## PASS: 6.2 Choose Room 3 in the menu
-
-- Expected: jump to Room 3, announced; menu closed; focus on the Rooms button
-- What happened: announced: "Room 3. Paintings, prints, video."; room label "Room 3"; focus on button[data-action=rooms] "⌖Rooms"
+- Expected: the panel "Help" opens with focus on Close; after Esc the panel is closed and focus is on the Help button
+- What happened: title "Help"; focus on Close: true; after Esc focus on Help: true
 
 ## PASS: 6.3 Enter on the Sound button
 
@@ -157,7 +147,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: focus on the 3D view; M switches the sound; + zooms; W is taken as walking
 - What happened: focus on the view: true; sound after M: true; zoom after +: 1.25; W registered: true
 
-## PASS: 7.1 Tab back to the 3D view (29 presses); T starts the tour
+## PASS: 7.1 Tab back to the 3D view (27 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
 - What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. Room 1. Paintings, Paradise Factory. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
@@ -187,15 +177,15 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: no title card; the sound question has focus at once; Enter answers it and No. 11 opens in the viewer, focus in it
 - What happened: title card hidden; viewer: "Artificial Paradise I", focus button "Close"
 
-## PASS: 10.1 Tab from the 3D view to Help (6 presses), Enter, Tab round, Esc
+## FAIL: 10.1 Focus on the navbar's Help button, Enter, Tab round, Esc
 
 - Expected: the panel "Help" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help
-- What happened: opened with focus on button "Close"; dialog named "Help"; 3 controls in the Tab round, stayed inside: true; closed: true; focus back on Help: true
+- What happened: opened with focus on button "Close"; dialog named "Help"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on Help: false
 
-## PASS: 10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)
+## FAIL: 10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)
 
 - Expected: focus on Next work; Enter: "No. 12, Artificial Paradise II." said, without "Press Enter to open" (Enter here goes on to the next work), focus stays on the button; held: one more jump only, "No. 13, Artificial Paradise III."
-- What happened: focus on Next work: true; said "No. 12, Artificial Paradise II."; focus stays: true; held: "No. 13, Artificial Paradise III."; then ""
+- What happened: focus on Next work: false; said ""; focus stays: false; held: ""; then ""
 
 ## PASS: Console errors during the whole run
 
