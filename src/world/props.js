@@ -123,6 +123,8 @@ function wireChair(materials, gridMat, cushion = false) {
 
 // The stairs model's wall materials, which take the plan AO (ao.js)
 const STAIR_WALLS = ['M_Stair_Whitewash', 'M_Stair_NearWall_Whitewash', 'M_Stair_Render_Peeling'];
+// Room 2's model: which of its materials take the plan AO, and as what (ao.js)
+const R2_AO = { M_R2_Whitewash_Brick: 'wall', M_R2_Floor_Tiles30: 'floor', M_R2_Ceiling_Boards: 'ceiling' };
 
 export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
   const g = new THREE.Group();
@@ -343,6 +345,29 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
   for (const z of [4.6, 4.66]) g.add(place(cyl(0.017, 0.017, 2.9, materials.white, 8), RX - 0.03, 1.45, z));
 
   // ================================================================ Room 2
+  // Since 21 November 2026 Room 2 is the Blender agent's model, v9 (models/r2-room.glb;
+  // README_room2.md beside the source in the private photo folder), accepted by the
+  // reconstructor on 20 and 21 November 2026: walls, floor, boarded ceiling, the bar and the
+  // kitchen behind it, the toilet corridor, the storage room and its gate, the tables and
+  // chairs, the switched-off screens of nos 6 and 7 and two blank sheets. It is in this world's
+  // frame and stands at the origin. Its walls, floor and ceiling take the plan AO like the
+  // stairs' walls.
+  {
+    const room2 = new THREE.Group();
+    room2.name = 'room2';
+    g.add(room2);
+    const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).setKTX2Loader(ktx2Loader());
+    loadGzipped(loader, manager, `${import.meta.env.BASE_URL}models/r2-room.glb`, (gltf) => {
+      gltf.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        for (const mat of Array.isArray(o.material) ? o.material : [o.material]) {
+          for (const k of ['map', 'normalMap']) if (mat[k]) mat[k].anisotropy = anisotropy;
+          if (R2_AO[mat.name]) patchPlanAO(mat, R2_AO[mat.name]);
+        }
+      });
+      room2.add(gltf.scene);
+    });
+  }
   {
     // bar counter tops (dark laminate) over the brick half walls
     g.add(slab(materials.counterTop, 7.689, 9.87, 1.0, 1.05, 4.628, 5.179));
