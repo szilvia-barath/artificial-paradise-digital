@@ -436,10 +436,15 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       holder.add(pool);
 
       if (isScreen) {
-        // slim-bezel flat screen, or the bare panel in its photographed frame
-        const bez = new THREE.Mesh(new THREE.BoxGeometry(w + (work.monitor ? 0 : 0.024), h + (work.monitor ? 0 : 0.024), 0.04), bezelMat);
-        bez.position.z = 0.022;
-        holder.add(bez);
+        // slim-bezel flat screen, or the bare panel in its photographed frame. A screen that
+        // hangs on a model's own screen (hang.onModel: nos 6 and 7 on Room 2's model, 21 November
+        // 2026) has no bezel of its own: the model's frame is the bezel, and the picture lies
+        // 1 mm in front of the frame's face, 5 cm from the wall (props.js hides the model's dark face)
+        const bez = hg.onModel ? null : new THREE.Mesh(new THREE.BoxGeometry(w + (work.monitor ? 0 : 0.024), h + (work.monitor ? 0 : 0.024), 0.04), bezelMat);
+        if (bez) {
+          bez.position.z = 0.022;
+          holder.add(bez);
+        }
         if (work.monitor) {
           // monitor.png: 2238 x 3217 px, its opening (the screen) 1863 x 2243 px, centred
           // 16 px left of and 9.5 px above the image's centre; the opening is fitted to the
@@ -478,7 +483,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
           }
         }
         const screen = new THREE.Mesh(screenGeo, mat);
-        screen.position.z = 0.0425;
+        screen.position.z = hg.onModel ? 0.051 : 0.0425;
         screen.userData.work = work;
         holder.add(screen);
         hitMeshes.push(screen);

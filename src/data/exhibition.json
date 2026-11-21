@@ -450,10 +450,11 @@
       "hang": {
         "face": "+x",
         "at": 5.85,
-        "along": 2.794,
+        "along": 2.744,
         "y": 1.55,
-        "w": 0.94,
-        "h": 0.53
+        "w": 0.8,
+        "h": 0.46,
+        "onModel": true
       },
       "video": {
         "loop": "video/w06-artificial-paradise-singapore.mp4",
@@ -534,10 +535,11 @@
       "hang": {
         "face": "+z",
         "at": 1.73,
-        "along": 7.201,
+        "along": 7.351,
         "y": 1.5,
-        "w": 0.94,
-        "h": 0.53
+        "w": 0.8,
+        "h": 0.46,
+        "onModel": true
       },
       "video": {
         "loop": "video/w07-artificial-paradise-eden-project.mp4",
@@ -1335,9 +1337,9 @@
       "kind": "text",
       "draw": "plan",
       "face": "-z",
-      "at": 5.73,
-      "along": 6.015,
-      "y": 1.22
+      "at": 4.55,
+      "along": 6.75,
+      "y": 1.5
     }
   ],
   "contacts": [

@@ -364,6 +364,9 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
           for (const k of ['map', 'normalMap']) if (mat[k]) mat[k].anisotropy = anisotropy;
           if (R2_AO[mat.name]) patchPlanAO(mat, R2_AO[mat.name]);
         }
+        // the switched-off panels of the screens of nos 6 and 7: the works' own screens
+        // (gallery.js, hang.onModel) play in their place; frame, cable and power strip stay
+        if (o.material.name === 'M_R2_Screen_Off') o.visible = false;
       });
       room2.add(gltf.scene);
     });
