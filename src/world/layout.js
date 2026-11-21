@@ -248,11 +248,13 @@ export const BLOCKS = [
   // through it passes north of the bar and ends on the Room 3|4 north stub; the plan drawing
   // puts it 0.8 m further south, and the photograph wins: answer 2, 19 November 2026; it was
   // z 3.70–4.55 and 2.10 m)
-  { x0: R1.east, x1: 5.85, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: R1.recess, x1: 5.85, z0: 3.2, z1: 3.75, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  // (its Room 2 face is warm like the rest of Room 2's walls; it was cold white until 17 November 2026)
-  { x0: R1.recess, x1: 5.85, z0: 3.75, z1: 4.55, y0: R1_DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick', faces: { px: 'warmBrick' } },
-  { x0: R1.recess, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  // Since 21 November 2026 Room 2's side of this wall, x 5.40 to 5.85 with the doorway, is
+  // Room 2's model (props.js, README_room2.md): the north pier stops at x 5.40 (it ran to 5.85)
+  // and the blocks of the recess's back wall and the doorway's lintel are gone. Kept of them:
+  // x 5.40-5.85, z 4.80-5.00, which the model does not cover (it ends at z 4.80, the back of
+  // the wall with the room sheet).
+  { x0: R1.east, x1: R1.recess, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.recess, x1: 5.85, z0: 4.8, z1: 5.0, y1: 3.0, mat: 'whiteBrick' },
   // south of the doorway Room 2 reaches x 5.4 (R1.recess) up to its south wall, so the wall with
   // the room sheet runs on 0.45 m further west and no corner stands beside the sheet (the
   // reconstructor, 18 November 2026: "the corner next to the room sheet ... is invented")
@@ -260,32 +262,10 @@ export const BLOCKS = [
   { x0: R1.east, x1: 5.85, z0: 5.73, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
 
   // ---------- Room 2 ----------
-  // north: wall in front of the storage alcove (not accessible), gated opening x 8.76–9.85
-  { x0: 5.85, x1: 8.759, z0: 1.5, z1: 1.73, y1: 2.75, mat: 'warmBrick' },
-  { x0: 8.759, x1: 9.85, z0: 1.5, z1: 1.73, y0: DOOR, y1: 2.75, mat: 'warmBrick' },
-  // storage alcove shell (only glimpsed through the gate)
-  { x0: 5.85, x1: 10.35, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
-  // south: the wall that carries the room sheet, then the mouth of the dark corridor to
-  // the toilets, next to the bar (TOILET); a lintel over the mouth (its height invented)
-  { x0: R1.recess, x1: TOILET.x0, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.73, z1: S_OUT, y0: DOOR, y1: 2.75, mat: 'warmBrick', reveal: 'dimBrick', faces: { pz: 'void' } },
-  // the corridor: whitewashed brick left in the dark, a step up at the back of the wall,
-  // the end wall (tiles, basin and mirror in props.js); not walkable, the step stops you
-  { x0: TOILET.x0 - 0.2, x1: TOILET.x0, z0: S_OUT, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
-  { x0: TOILET.x1, x1: TOILET.x1 + 0.2, z0: S_OUT, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: TOILET.z1, z1: TOILET.z1 + 0.2, y1: 2.75, mat: 'void' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT, z1: S_OUT + 0.07, y1: TOILET.step, mat: 'void', faces: { nz: 'floor' } },
-  // bar: low brick counter (you see over it from the Room 1 doorway, DSC_0021),
-  // a brick pillar at its back corner and the back wall
-  { x0: 7.772, x1: 9.85, z0: 4.694, z1: 5.122, y1: 1.0, mat: 'warmBrick' },
-  { x0: 7.481, x1: 7.772, z0: 5.264, z1: 5.73, y1: 2.75, mat: 'warmBrick' },
-  { x0: TOILET.x1, x1: 9.85, z0: 5.73, z1: S_OUT, y1: 2.75, mat: 'warmBrick' },
-  // Room 2 | Room 3 wall: pillar, doorway z 2.56–4.08, bar pass-through z 4.08–4.74, wall
-  { x0: 9.85, x1: 10.35, z0: -T, z1: 2.557, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
-  { x0: 9.85, x1: 10.35, z0: 2.557, z1: 4.077, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.35, z0: 4.077, z1: 4.742, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.35, z0: 4.077, z1: 4.742, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.85, x1: 10.35, z0: 4.742, z1: S_OUT, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  // Since 21 November 2026 Room 2 is the Blender agent's model (props.js, README_room2.md):
+  // its north wall and gated opening, the storage alcove, the south side with the wall that
+  // carries the room sheet, the toilet corridor, the bar, the pillar (there is none), the
+  // back wall and the Room 2 | Room 3 wall (both of its faces) were blocks here until then.
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
@@ -326,22 +306,15 @@ export const STAIRWELL = { x0: R1.west - T, x1: R1.west, z0: STAIRS.z0, z1: STAI
 export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the street door)
 export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
-  { x0: 5.4, x1: 10, z0: 1.6, z1: 5.79, mat: 'floor' },
+  // (Room 2's floor, the storage room's and the toilet corridor's are in Room 2's model)
   // Room 3: the darker grey tiles of the MAMŰ photos (Kivonat, 2015)
   { x0: 9.85, x1: 15.90, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
   { x0: 15.90, x1: 25.58, z0: 1.6, z1: 5.79, mat: 'floorDark' },
-  { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
-  // the mouth of the toilet corridor, then its floor a step up
-  { x0: TOILET.x0, x1: TOILET.x1, z0: 5.79, z1: S_OUT, mat: 'floor' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT + 0.07, z1: TOILET.z1, mat: 'void', y: TOILET.step },
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: R1_CEILING, mat: 'ceiling' },
   { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
-  { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
-  { x0: R1.recess, x1: 5.85, z0: 5.0, z1: 5.73, y: 2.75, mat: 'ceiling' },
-  { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
-  { x0: TOILET.x0, x1: TOILET.x1, z0: S_OUT, z1: TOILET.z1, y: TOILET.ceiling, mat: 'void' },
+  // (Room 2's ceiling, the storage room's and the corridor's are in Room 2's model)
   { x0: 10.35, x1: 15.75, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
 ];

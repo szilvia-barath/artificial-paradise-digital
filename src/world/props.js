@@ -369,59 +369,8 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
     });
   }
   {
-    // bar counter tops (dark laminate) over the brick half walls
-    g.add(slab(materials.counterTop, 7.689, 9.87, 1.0, 1.05, 4.628, 5.179));
-    g.add(slab(materials.counterTop, 9.788, 10.44, 1.0, 1.05, 4.058, 4.761));
-    // behind the bar: low cabinets, shelves with glasses, kettle, bottles
-    g.add(slab(materials.white, 7.793, 9.808, 0, 0.88, 5.331, 5.72));
-    g.add(slab(materials.counterTop, 7.772, 9.829, 0.88, 0.92, 5.312, 5.73));
-    for (const y of [1.42, 1.78]) g.add(slab(materials.wood, 7.876, 9.694, y, y + 0.025, 5.502, 5.72));
-    const glassGeo = new THREE.CylinderGeometry(0.035, 0.028, 0.12, 10);
-    const n = 22;
-    const glasses = new THREE.InstancedMesh(glassGeo, materials.glass, n);
-    const m = new THREE.Matrix4();
-    for (let i = 0; i < n; i++) {
-      const row = i < 9 ? 0 : i < 18 ? 1 : 2;
-      const k = row === 2 ? i - 18 : i % 9;
-      const x = row === 2 ? 8.707 + k * 0.1 : 8.032 + k * 0.17;
-      const y = row === 0 ? 1.505 : row === 1 ? 1.865 : 1.11;
-      const z = row === 2 ? 4.837 + (k % 2) * 0.08 : 5.6;
-      m.makeTranslation(x, y, z);
-      glasses.setMatrixAt(i, m);
-    }
-    g.add(glasses);
-    // wine bottles where the white roll stood: dark green glass, dark foil on the neck
-    const wineMat = new THREE.MeshStandardMaterial({ color: 0x1d3a22, roughness: 0.15, metalness: 0.1 });
-    const foilMat = new THREE.MeshStandardMaterial({ color: 0x5a1420, roughness: 0.4, metalness: 0.5 });
-    for (let i = 0; i < 3; i++) {
-      const bx = 8.05 + i * 0.085;
-      g.add(place(cyl(0.037, 0.037, 0.22, wineMat, 14), bx, 1.03, 5.502));
-      g.add(place(cyl(0.014, 0.034, 0.05, wineMat, 12), bx, 1.165, 5.502));
-      g.add(place(cyl(0.014, 0.014, 0.07, foilMat, 10), bx, 1.225, 5.502));
-    }
-    const bottleMat = new THREE.MeshStandardMaterial({ color: 0x3a1f16, roughness: 0.2, metalness: 0.1 });
-    for (let i = 0; i < 3; i++) {
-      g.add(place(cyl(0.035, 0.035, 0.24, bottleMat, 10), 9.331 + i * 0.09, 1.04, 5.51));
-      g.add(place(cyl(0.012, 0.02, 0.08, bottleMat, 8), 9.331 + i * 0.09, 1.2, 5.51));
-    }
-    obstacle(7.481, 9.87, 4.628, 5.73);
-
-    // round black café table and the folding wire chairs under Artificial Paradise – The Eden project (no. 7)
-    const table = new THREE.Group();
-    // (DSC_0059, DSC_0083: a glossy black round top on a single black column and round foot)
-    const gloss = new THREE.MeshStandardMaterial({ color: 0x0d0d0f, roughness: 0.22, metalness: 0.2 });
-    table.add(place(cyl(0.3, 0.3, 0.02, gloss, 40), 0, 0.75, 0));
-    table.add(place(cyl(0.3, 0.29, 0.012, materials.black, 40), 0, 0.734, 0));
-    table.add(place(cyl(0.022, 0.022, 0.7, gloss, 14), 0, 0.38, 0));
-    table.add(place(cyl(0.022, 0.06, 0.05, gloss, 14), 0, 0.04, 0));
-    table.add(place(cyl(0.21, 0.23, 0.018, gloss, 32), 0, 0.009, 0));
-    g.add(place(table, 8.292, 0, 2.272));
-    obstacle(7.98, 8.603, 1.987, 2.557);
-    g.add(place(wireChair(materials, gridMat, true), 7.169, 0, 2.063, 0.1));
-    obstacle(6.92, 7.419, 1.844, 2.291);
-    g.add(place(wireChair(materials, gridMat, true), 8.967, 0, 2.557, -1.9));
-    obstacle(8.707, 9.227, 2.319, 2.794);
-
+    // (the bar, the kitchen behind it, the tables and chairs, the storage gate and what stands
+    // behind it are in Room 2's model since 21 November 2026; the lamps are the lighting)
     // enamel pendant lamps (DSC_0083)
     for (const [x, z] of [[7.408, 3.127], [8.603, 3.649]]) {
       const lamp = new THREE.Group();
@@ -434,28 +383,6 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
       lamp.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), materials.warmBulb), 0, 2.13, 0));
       g.add(place(lamp, x, 0, z));
     }
-
-    // The mouth of the toilet corridor (layout.js, TOILET) shows only darkness: its walls,
-    // floor and ceiling are the black 'void' material and nothing is built inside (the
-    // fittings drawn here on 17 November 2026 were invented and are gone, 18 November 2026).
-
-    // grille in front of the storage alcove (DSC_0058–0060): dark galvanised steel, round
-    // rods ending in points above the top bar, three flat bars; lumber stored behind
-    {
-      const steel = new THREE.MeshStandardMaterial({ color: 0x4a4c50, roughness: 0.55, metalness: 0.6 });
-      for (let x = 8.86; x < 9.82; x += 0.16) {
-        g.add(rod(steel, new THREE.Vector3(x, 0.06, 1.59), new THREE.Vector3(x, 2.0, 1.59), 0.008, 6));
-        g.add(place(new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.05, 6), steel), x, 2.025, 1.59));
-      }
-      for (const y of [0.25, 1.05, 1.86]) g.add(slab(steel, 8.78, 9.83, y, y + 0.035, 1.575, 1.582));
-    }
-    for (let i = 0; i < 5; i++) {
-      const b = box(0.12, 2.0, 0.025, materials.wood);
-      place(b, 8.915 + i * 0.17, 1.0, 0.25 + i * 0.06);
-      b.rotation.x = -0.12;
-      g.add(b);
-    }
-    obstacle(8.759, 9.85, 1.5, 1.62);
   }
 
   // ================================================================ Room 4
