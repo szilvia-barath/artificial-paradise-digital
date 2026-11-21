@@ -370,6 +370,11 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
       });
       room2.add(gltf.scene);
     });
+    // the model's two bistro tables and two folding chairs (README_room2.md: places inferred),
+    // their footprints read off the model; one box for the east table and the chair beside it
+    obstacle(7.85, 8.45, 1.85, 2.45);
+    obstacle(8.5, 9.48, 1.8, 2.685);
+    obstacle(7.333, 7.767, 1.873, 2.327);
   }
   {
     // (the bar, the kitchen behind it, the tables and chairs, the storage gate and what stands

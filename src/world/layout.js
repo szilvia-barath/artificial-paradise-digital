@@ -61,7 +61,10 @@ export const ROOMS = [
   },
   {
     id: 'r2',
-    x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73,
+    // south: z 5.122 at the corridor and behind the bar (its inner edge); west of the corridor
+    // the wall with the room sheet stands at z 4.55 inside this box (Room 2's model, 21
+    // November 2026; it was z 5.73)
+    x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.122,
     ceiling: 2.75,
     spawn: { x: 6.629, z: 4.124, look: { x: 8.292, z: 1.73 } },
   },
@@ -266,6 +269,26 @@ export const BLOCKS = [
   // its north wall and gated opening, the storage alcove, the south side with the wall that
   // carries the room sheet, the toilet corridor, the bar, the pillar (there is none), the
   // back wall and the Room 2 | Room 3 wall (both of its faces) were blocks here until then.
+  // What stays here is where one walks into them (collide: drawn by the model; architecture.js
+  // makes only their collision lines, which the floor plan also draws). From the model's faces:
+  // the north wall with the storage opening and its gate (one block: the gate is closed)
+  { x0: 5.85, x1: 9.85, z0: 1.5, z1: 1.73, y1: 2.75, collide: true },
+  // Room 2's side of the wall to Room 1, north of the doorway (z 3.75 to 4.55 is open)
+  { x0: R1.recess, x1: 5.85, z0: 1.73, z1: 3.75, y1: 2.75, collide: true },
+  // the wall with the room sheet, from the doorway's south end, face z 4.55
+  { x0: R1.recess, x1: 6.98, z0: 4.55, z1: 4.8, y1: 2.75, collide: true },
+  // the toilet corridor: its west wall, the 0.10 m step across its mouth (not walkable, the
+  // step stops you, as before), its east wall
+  { x0: 6.73, x1: 6.98, z0: 4.8, z1: 7.88, y1: 2.75, collide: true },
+  { x0: 6.98, x1: 7.76, z0: 5.122, z1: 5.2, y1: 0.1, collide: true },
+  { x0: 7.76, x1: 8.06, z0: 5.122, z1: 7.88, y1: 2.75, collide: true },
+  // the bar counter, from the corner of the corridor's east wall through the pass-through
+  // 0.20 m into Room 3 (README_room2.md: x 8.06 to 10.55, z 4.69 to 5.12)
+  { x0: 8.06, x1: 10.55, z0: 4.69, z1: 5.122, y1: 1.0, collide: true },
+  // the Room 2 | Room 3 wall: the north pier, and south of the doorway (z 2.557 to 4.60) the
+  // wall under the pass-through's sill and beyond
+  { x0: 9.85, x1: 10.35, z0: 1.5, z1: 2.557, y1: 2.75, collide: true },
+  { x0: 9.85, x1: 10.35, z0: 4.6, z1: 6.37, y1: 2.75, collide: true },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)

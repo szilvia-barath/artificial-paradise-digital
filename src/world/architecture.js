@@ -73,6 +73,14 @@ export function buildArchitecture(materials) {
   for (const b of BLOCKS) {
     const y0 = b.y0 ?? 0;
     const y1 = b.y1;
+    // a block with collide: true is drawn by a model (Room 2's, props.js): only its collision
+    // segments are made, which the walking, the floor plan and the plan AO read
+    if (b.collide) {
+      if (y0 < 1.2) {
+        segments.push([[b.x0, b.z0], [b.x1, b.z0]], [[b.x1, b.z0], [b.x1, b.z1]], [[b.x1, b.z1], [b.x0, b.z1]], [[b.x0, b.z1], [b.x0, b.z0]]);
+      }
+      continue;
+    }
     const f = b.faces || {};
     wallQuad(f.px || b.mat, '+x', b.x1, b.z0, b.z1, y0, y1);
     wallQuad(f.nx || b.mat, '-x', b.x0, b.z0, b.z1, y0, y1);
