@@ -16,7 +16,7 @@ const NORTH = [0.559, -0.829];
 // "Other works" (none at present). The key under the map (#map-key) is drawn from this table
 // with the same outlines; a group with no works on the map is left out of it.
 export const MAP_GROUPS = [
-  { id: 'paintings', types: ['painting'], shape: 'circle', colour: '#ff4fa3' },
+  { id: 'paintings', types: ['painting'], shape: 'circle', colour: '#ff80c0' }, // lighter than the accent magenta #ff4fa3, so it is 3:1 on the map's 70% glass over white (3.24:1; the reconstructor, 21 November 2026)
   { id: 'prints', types: ['print'], shape: 'hexagon', colour: '#ffe14d' },
   { id: 'videos', types: ['video', 'projection'], shape: 'square', colour: '#5fe7ff' },
   { id: 'installations', types: ['installation'], shape: 'triangle', colour: '#f2f1ed' },
