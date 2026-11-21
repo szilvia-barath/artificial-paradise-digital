@@ -142,11 +142,9 @@ const clickTo = async (p, sel, title) => {
   const marks = () => p.evaluate(() => {
     const viewer = document.getElementById('viewer-title');
     const list = [...document.querySelectorAll('#panel-body .works-list em')];
-    const menu = [...document.querySelectorAll('#rooms-menu small span')];
     return {
       viewer: viewer.getAttribute('lang'),
       list: `${list.filter((e) => e.lang === 'en').length}/${list.length}`,
-      menu: `${menu.filter((e) => e.lang === 'en').length}/${menu.length}`,
     };
   });
   await openWork(p, 'w08-wiena-wrong-landscape-i');
@@ -155,7 +153,8 @@ const clickTo = async (p, sel, title) => {
   await p.evaluate(() => window.__ap.ui.works());
   await p.waitForFunction(() => !!document.querySelector('#panel:not([hidden]) .works-list'), null, { timeout: 30000 });
   const l = await marks();
-  step('B6.1 Hungarian page: the viewer\'s title, the 17 titles in the works list and the 17 in the rooms menu carry lang="en"', v.viewer === 'en' && l.list === '17/17' && l.menu === '17/17', `viewer: ${v.viewer}; works list: ${l.list}; rooms menu: ${l.menu}`);
+  // (the rooms menu, which also listed the titles, was removed on 18 November 2026)
+  step('B6.1 Hungarian page: the viewer\'s title and the 17 titles in the works list carry lang="en"', v.viewer === 'en' && l.list === '17/17', `viewer: ${v.viewer}; works list: ${l.list}`);
   // switched to English while the list shows, then the viewer: the marks go
   await p.click('#site-nav [data-lang="en"]');
   await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
@@ -168,7 +167,7 @@ const clickTo = async (p, sel, title) => {
   await p.click('#site-nav [data-lang="en"]');
   await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
   const ve = await marks();
-  step('B6.2 The language switched while they show: in English no title carries lang (works list, rooms menu, viewer); back in Hungarian the viewer\'s title has it again', le.list === '0/17' && le.menu === '0/17' && vh.viewer === 'en' && ve.viewer === null, `English list: ${le.list}, menu: ${le.menu}; viewer in HU: ${vh.viewer}, in EN: ${ve.viewer}`);
+  step('B6.2 The language switched while they show: in English no title carries lang (works list, viewer); back in Hungarian the viewer\'s title has it again', le.list === '0/17' && vh.viewer === 'en' && ve.viewer === null, `English list: ${le.list}; viewer in HU: ${vh.viewer}, in EN: ${ve.viewer}`);
   await p.click('#site-nav [data-lang="hu"]');
   await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
 
