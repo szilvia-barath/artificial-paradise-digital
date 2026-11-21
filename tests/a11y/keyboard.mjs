@@ -316,7 +316,7 @@ step('9.1 Open the digital exhibition from a link to a work (?work=w11-artificia
 // others. (The first-use card has gone at the Esc that closes the viewer of 9.1.)
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('viewer').hidden && document.activeElement === document.getElementById('scene'));
-await page.focus('#site-nav [data-nav="help"]'); tabs = 0; // Help is the navbar's button since 18 November 2026
+await page.focus('#site-nav [data-nav="help"]'); // Help is the navbar's button since 18 November 2026
 await page.keyboard.press('Enter');
 await until(() => !document.getElementById('panel').hidden);
 at = await focusName(page);
@@ -324,12 +324,15 @@ const helpTitle = await page.evaluate(() => document.getElementById(document.get
 c = await cycle('#panel');
 await page.keyboard.press('Escape');
 await until(() => document.getElementById('panel').hidden);
-step(`10.1 Focus on the navbar's Help button, Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('[data-action="help"]')}`, tabs > 0 && at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('[data-action="help"]')));
+step(`10.1 Focus on the navbar's Help button, Enter, Tab round, Esc`, `the panel "${EN.nav.help}" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help`, `opened with focus on ${at}; dialog named "${helpTitle}"; ${c.count} controls in the Tab round, stayed inside: ${c.stayed}; closed: ${!(await open('#panel'))}; focus back on Help: ${await isOn('#site-nav [data-nav="help"]')}`, at.includes('Close') && helpTitle === EN.nav.help && c.stayed && !(await open('#panel')) && (await isOn('#site-nav [data-nav="help"]')));
 
 // Next work on the toolbar: the same jump as Page Down, said the same way; focus stays on it,
-// and a held Enter jumps once.
-await page.keyboard.press('Shift+Tab');
-const onNext = await isOn('[data-action="next"]');
+// and a held Enter jumps once. Help is in the navbar now, away from the toolbar (18 November
+// 2026), so the step starts from the 3D view and Tabs to Next work (Tour, Sound, Previous
+// work, Next work).
+await page.focus('#scene');
+const toNext = await tabTo('[data-action="next"]', 8);
+const onNext = toNext > 0;
 const nextUp = await page.evaluate(() => { const { visit } = window.__ap; const w = visit[visit.findIndex((k) => k.id === 'w11-artificial-paradise-i-print') + 1]; const v = visit[visit.findIndex((k) => k.id === 'w11-artificial-paradise-i-print') + 2]; return [w, v].map((k) => `No. ${k.no}, ${k.title}.`); });
 // From the keyboard Enter presses the button again and opens nothing, so the message must not
 // say "Press Enter to open".
@@ -344,7 +347,7 @@ await page.keyboard.up('Enter');
 const heard2 = await hear([nextUp[1]]);
 await wait(1500);
 const heard3 = (await said()).join(' | ');
-step('10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)', `focus on Next work; Enter: "${nextUp[0]}" said, without "Press Enter to open" (Enter here goes on to the next work), focus stays on the button; held: one more jump only, "${nextUp[1]}"`, `focus on Next work: ${onNext}; said "${heard}"; focus stays: ${stays}; held: "${heard2}"; then "${heard3}"`, onNext && heard.includes(nextUp[0]) && noEnter(heard) && stays && heard2.includes(nextUp[1]) && noEnter(heard2) && !/No\. \d+, /.test(heard3));
+step('10.2 Tab from the 3D view to Next work, Enter; then Enter held (four repeats)', `focus on Next work; Enter: "${nextUp[0]}" said, without "Press Enter to open" (Enter here goes on to the next work), focus stays on the button; held: one more jump only, "${nextUp[1]}"`, `focus on Next work: ${onNext} (${toNext} Tabs); said "${heard}"; focus stays: ${stays}; held: "${heard2}"; then "${heard3}"`, onNext && heard.includes(nextUp[0]) && noEnter(heard) && stays && heard2.includes(nextUp[1]) && noEnter(heard2) && !/No\. \d+, /.test(heard3));
 
 step('Console errors during the whole run', 'none', errors.length ? errors.join(' | ') : 'none', errors.length === 0);
 await browser.close();

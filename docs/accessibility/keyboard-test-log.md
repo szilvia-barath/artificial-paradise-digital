@@ -1,6 +1,6 @@
 # Keyboard test log
 
-Written by `tests/a11y/keyboard.mjs` on 2026-11-20: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 32 of 34 steps passed.
+Written by `tests/a11y/keyboard.mjs` on 2026-11-21: Chromium (Playwright, headless, software WebGL), window 1366 × 768, English. Every step was driven by key presses only. 34 of 34 steps passed.
 
 ## PASS: 1.1 From page load, the first Tab reaches the skip link
 
@@ -150,7 +150,7 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 ## PASS: 7.1 Tab back to the 3D view (27 presses); T starts the tour
 
 - Expected: Tour button reads as pressed; the first and the second work's captions are announced, with no opening line before them
-- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. Room 1. Paintings, Paradise Factory. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024."
+- What happened: aria-pressed: true; announced: "No. 1, Wrong Data Landscape Dresden. Acrylic on canvas, 140 × 160 cm, 2023. | No. 2, Human as Error VI. Acrylic on canvas, 190 × 150 cm, 2024. Room 1. Paintings, Paradise Factory."
 
 ## PASS: 7.2 Esc stops the tour
 
@@ -177,15 +177,15 @@ ok  17  announced: "No. 17, Natural Life. Press Enter to open." · Enter opened:
 - Expected: no title card; the sound question has focus at once; Enter answers it and No. 11 opens in the viewer, focus in it
 - What happened: title card hidden; viewer: "Artificial Paradise I", focus button "Close"
 
-## FAIL: 10.1 Focus on the navbar's Help button, Enter, Tab round, Esc
+## PASS: 10.1 Focus on the navbar's Help button, Enter, Tab round, Esc
 
 - Expected: the panel "Help" opens with focus on Close; Tab stays inside; Esc closes it; focus back on Help
-- What happened: opened with focus on button "Close"; dialog named "Help"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on Help: false
+- What happened: opened with focus on button "Close"; dialog named "Help"; 2 controls in the Tab round, stayed inside: true; closed: true; focus back on Help: true
 
-## FAIL: 10.2 Shift+Tab from Help to Next work, Enter; then Enter held (four repeats)
+## PASS: 10.2 Tab from the 3D view to Next work, Enter; then Enter held (four repeats)
 
 - Expected: focus on Next work; Enter: "No. 12, Artificial Paradise II." said, without "Press Enter to open" (Enter here goes on to the next work), focus stays on the button; held: one more jump only, "No. 13, Artificial Paradise III."
-- What happened: focus on Next work: false; said ""; focus stays: false; held: ""; then ""
+- What happened: focus on Next work: true (4 Tabs); said "No. 12, Artificial Paradise II."; focus stays: true; held: "No. 13, Artificial Paradise III."; then ""
 
 ## PASS: Console errors during the whole run
 
