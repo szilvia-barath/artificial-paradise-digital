@@ -328,10 +328,12 @@ export const BLOCKS = [
 export const STAIRWELL = { x0: R1.west - T, x1: R1.west, z0: STAIRS.z0, z1: STAIRS.z1 };
 export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the street door)
 export const FLOORS = [
-  { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
+  // Room 1's floor ends where Room 2's model's floor begins (x 5.40) and Room 3's begins where
+  // it ends (x 10.35): they overlapped at y 0 and flickered (texture joins S1, 22 November 2026)
+  { x0: R1.west - 0.1, x1: R1.recess, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
   // (Room 2's floor, the storage room's and the toilet corridor's are in Room 2's model)
   // Room 3: the darker grey tiles of the MAMŰ photos (Kivonat, 2015)
-  { x0: 9.85, x1: 15.90, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
+  { x0: 10.35, x1: 15.90, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
   { x0: 15.90, x1: 25.58, z0: 1.6, z1: 5.79, mat: 'floorDark' },
 ];
 export const CEILINGS = [
