@@ -338,7 +338,10 @@ export const FLOORS = [
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: R1_CEILING, mat: 'ceiling' },
-  { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
+  // runs 0.20 m over Room 2's model (to x 5.60), above its boards (2.78), so the 2 cm gap between
+  // the model's wall tops and this ceiling at x 5.40 shows ceiling, not the void. A stop-gap until
+  // the model is closed there in Blender (texture joins S6 / B3, 22 November 2026)
+  { x0: R1.east, x1: 5.6, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
   // (Room 2's ceiling, the storage room's and the corridor's are in Room 2's model)
   { x0: 10.35, x1: 15.75, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
