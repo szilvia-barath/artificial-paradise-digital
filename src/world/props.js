@@ -126,8 +126,10 @@ const STAIR_WALLS = ['M_Stair_Whitewash', 'M_Stair_NearWall_Whitewash', 'M_Stair
 // Room 2's model: which of its materials take the plan AO, and as what (ao.js)
 const R2_AO = { M_R2_Whitewash_Brick: 'wall', M_R2_Floor_Tiles30: 'floor', M_R2_Ceiling_Boards: 'ceiling' };
 // Room 2's brick against the code's (texture joins, 22 November 2026): the v shift that puts its
-// courses level with brick-white's (S2)
+// courses level with brick-white's (S2), and the colour its whitewash patches wash to, the code
+// whiteBrick's tint (S5; the model's material colour is white, its tint is baked in its image)
 const R2_BRICK_V = 0.0082;
+const R2_WASH_TO = new THREE.Color(0xf4f2ec);
 
 export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
   const g = new THREE.Group();
@@ -369,6 +371,8 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
             // its courses sat 2.0-2.4 cm lower than the code's brick-white beside it (measured on
             // screen at x 5.40, z 4.80); +0.0082 of its 2.75 m image lifts them 2.3 cm (texture joins S2)
             for (const k of ['map', 'normalMap']) if (mat[k]) mat[k].offset.y = R2_BRICK_V;
+            // the code walls' whitewash patches, washing to their colour #f4f2ec (S5)
+            mat.userData.surface = { offset: [0, 0], wash: true, washTo: R2_WASH_TO };
           }
           if (R2_AO[mat.name]) patchPlanAO(mat, R2_AO[mat.name]);
         }

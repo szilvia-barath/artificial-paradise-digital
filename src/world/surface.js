@@ -155,7 +155,12 @@ export const SURFACE_FRAG = /* glsl */ `
     #ifdef SURF_WASH
       // whitewash: thick coats hide the brick under the plain colour, thin ones let it show
       float wash = sFbm(sp * vec2(0.9, 1.3) + 11.0);
-      diffuseColor.rgb = mix(diffuseColor.rgb, diffuse, 0.55 * (1.0 - smoothstep(0.3, 0.45, wash)));
+      #ifdef SURF_WASH_TO
+        vec3 washTo = SURF_WASH_TO;
+      #else
+        vec3 washTo = diffuse;
+      #endif
+      diffuseColor.rgb = mix(diffuseColor.rgb, washTo, 0.55 * (1.0 - smoothstep(0.3, 0.45, wash)));
       diffuseColor.rgb *= mix(vec3(1.0), vec3(0.84, 0.79, 0.72), 0.75 * smoothstep(0.55, 0.72, wash));
     #endif
     // damp rising from the floor: uneven edge, darker and browner below, a tide line on it

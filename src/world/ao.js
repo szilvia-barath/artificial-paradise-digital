@@ -107,6 +107,8 @@ function patch(material, kind, uniforms, { tileBump, unwrapped = false }) {
   const surf = material.userData.surface || { offset: [0, 0] };
   material.defines = { ...material.defines, AO_KIND: KIND[kind] };
   if (surf.wash) material.defines.SURF_WASH = '';
+  // a model's material whose tint is baked in its image washes to this colour, not its own (white)
+  if (surf.washTo) material.defines.SURF_WASH_TO = `vec3(${surf.washTo.r.toFixed(4)}, ${surf.washTo.g.toFixed(4)}, ${surf.washTo.b.toFixed(4)})`;
   if (unwrapped) material.defines.SURF_UNWRAPPED = '';
   const own = { surfOffset: { value: new THREE.Vector2(...surf.offset) } };
   material.onBeforeCompile = (shader) => {
