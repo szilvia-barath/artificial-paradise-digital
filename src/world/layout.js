@@ -253,11 +253,11 @@ export const BLOCKS = [
   // z 3.70–4.55 and 2.10 m)
   // Since 21 November 2026 Room 2's side of this wall, x 5.40 to 5.85 with the doorway, is
   // Room 2's model (props.js, README_room2.md): the north pier stops at x 5.40 (it ran to 5.85)
-  // and the blocks of the recess's back wall and the doorway's lintel are gone. Kept of them:
-  // x 5.40-5.85, z 4.80-5.00, which the model does not cover (it ends at z 4.80, the back of
-  // the wall with the room sheet).
+  // and the blocks of the recess's back wall and the doorway's lintel are gone. The block kept at
+  // x 5.40-5.85, z 4.80-5.00 is collision only since 22 November 2026: the model's wall now runs
+  // on to z 5.00 (Blender fix B4).
   { x0: R1.east, x1: R1.recess, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick' },
-  { x0: R1.recess, x1: 5.85, z0: 4.8, z1: 5.0, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.recess, x1: 5.85, z0: 4.8, z1: 5.0, y1: 3.0, collide: true },
   // south of the doorway Room 2 reaches x 5.4 (R1.recess) up to its south wall, so the wall with
   // the room sheet runs on 0.45 m further west and no corner stands beside the sheet (the
   // reconstructor, 18 November 2026: "the corner next to the room sheet ... is invented")
@@ -338,10 +338,7 @@ export const FLOORS = [
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: R1_CEILING, mat: 'ceiling' },
-  // runs 0.20 m over Room 2's model (to x 5.60), above its boards (2.78), so the 2 cm gap between
-  // the model's wall tops and this ceiling at x 5.40 shows ceiling, not the void. A stop-gap until
-  // the model is closed there in Blender (texture joins S6 / B3, 22 November 2026)
-  { x0: R1.east, x1: 5.6, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
+  { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: R1_CEILING, mat: 'ceiling' },
   // (Room 2's ceiling, the storage room's and the corridor's are in Room 2's model)
   { x0: 10.35, x1: 15.75, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
