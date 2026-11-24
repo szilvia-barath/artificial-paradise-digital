@@ -1,7 +1,7 @@
 // Floor plan of the MAMŰ basement, in metres, traced from the gallery's measured plan
 // ("Alaprajz_ok new.jpg") at 0.026 m per plan pixel, not from the room sheet seen in
 // DSC_0049: Room 1 5.0 × 7.0 m, Room 2 4.0 m wide, Room 3 5.4 m and Room 4 9.5 m long,
-// Rooms 2–4 4.0 m deep. Openings, recesses and where things stand were checked against
+// Rooms 2-4 4.0 m deep. Openings, recesses and where things stand were checked against
 // the photos: the Room 1 panorama (camera solved from the corner bearings), brick
 // courses, floor tiles and the listed canvas sizes. The inner room sizes agree with the
 // measurement reference of 18 and 19 November 2026 (MAMU_measurement_reference.md, with the
@@ -247,10 +247,10 @@ export const BLOCKS = [
   { x0: R1.west - T, x1: R1.east, z0: R1.D, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick' },
   // Room 1 | Room 2 wall: 1 m thick piers north (Human as Error VI) and south (text,
   // radiator); between them a 55 cm recess holding the doorway and two plinths
-  // (DSC_0019–0023 and the panorama), doorway z 3.75–4.55, 2.20 m high (DSC_0021: the view
+  // (DSC_0019-0023 and the panorama), doorway z 3.75-4.55, 2.20 m high (DSC_0021: the view
   // through it passes north of the bar and ends on the Room 3|4 north stub; the plan drawing
   // puts it 0.8 m further south, and the photograph wins: answer 2, 19 November 2026; it was
-  // z 3.70–4.55 and 2.10 m)
+  // z 3.70-4.55 and 2.10 m)
   // Since 21 November 2026 Room 2's side of this wall, x 5.40 to 5.85 with the doorway, is
   // Room 2's model (props.js, README_room2.md): the north pier stops at x 5.40 (it ran to 5.85)
   // and the blocks of the recess's back wall and the doorway's lintel are gone. The block kept at
@@ -292,7 +292,7 @@ export const BLOCKS = [
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
-  // Room 3's north wall (DSC_0086–0093): two old openings bricked up 22 cm back, one
+  // Room 3's north wall (DSC_0086-0093): two old openings bricked up 22 cm back, one
   // either side of the pier that carries #8; they run up to the ceiling and their sills
   // drop in toothed steps towards the east
   ...room3NorthWall(),

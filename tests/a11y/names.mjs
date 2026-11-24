@@ -182,8 +182,8 @@ const clickTo = async (p, sel, title) => {
   let h = await hear(p, ['Human as Error I.']);
   const html5 = h.html;
   await p.keyboard.press('PageDown'); // no. 6, Room 2: its subtitle names no title
-  h = await hear(p, ['Artificial Paradise – Singapore']);
-  const workOk = html5.includes('<span lang="en">Human as Error I</span>.') && h.html.includes('<span lang="en">Artificial Paradise – Singapore</span>') && h.html.includes('2. terem');
+  h = await hear(p, ['Artificial Paradise - Singapore']);
+  const workOk = html5.includes('<span lang="en">Human as Error I</span>.') && h.html.includes('<span lang="en">Artificial Paradise - Singapore</span>') && h.html.includes('2. terem');
   await p.evaluate(() => window.__ap.jumpToRoom('r4')); // Room 4: "Let it Flow · videó"
   h = await hear(p, ['4. terem']);
   const roomOk = h.html.includes('<span lang="en">Let it Flow</span>') && !/lang="en">[^<]*terem/.test(h.html);
@@ -350,9 +350,9 @@ const clickTo = async (p, sel, title) => {
   const loop = await videoName();
   await openWork(p, 'w03-paradise-factory');
   const doc = await videoName();
-  const wantLoop = fill(UI.en.viewer.videoLoopName, { title: 'Artificial Paradise – Singapore' });
+  const wantLoop = fill(UI.en.viewer.videoLoopName, { title: 'Artificial Paradise - Singapore' });
   const wantDoc = fill(UI.en.viewer.videoDocName, { title: 'Paradise Factory' });
-  step('B17.1 The video in the viewer has a name: "Video loop: Artificial Paradise – Singapore"; no. 3\'s documentation: "Video documentation: Paradise Factory"', loop.ok(wantLoop) && doc.ok(wantDoc), [loop, doc].map((v) => `label "${v.label}", in the tree "${v.ax}"${v.failed ? ' (the video failed to play here)' : ''}`).join('; '));
+  step('B17.1 The video in the viewer has a name: "Video loop: Artificial Paradise - Singapore"; no. 3\'s documentation: "Video documentation: Paradise Factory"', loop.ok(wantLoop) && doc.ok(wantDoc), [loop, doc].map((v) => `label "${v.label}", in the tree "${v.ax}"${v.failed ? ' (the video failed to play here)' : ''}`).join('; '));
 
   await openWork(p, 'w06-artificial-paradise-singapore');
   const before = asked.length;
@@ -362,13 +362,13 @@ const clickTo = async (p, sel, title) => {
   await fr.locator('button').waitFor({ timeout: 30000 });
   const loaded = asked.length;
   const frameName = await axName(p, '#viewer-frame');
-  const want = fill(UI.en.viewer.frameTitleYoutube, { title: 'Artificial Paradise – Singapore' });
+  const want = fill(UI.en.viewer.frameTitleYoutube, { title: 'Artificial Paradise - Singapore' });
   await p.click('#site-nav [data-lang="hu"]');
   await p.waitForFunction(() => document.documentElement.lang === 'hu', null, { timeout: 30000 });
   const frameHu = await p.getAttribute('#viewer-frame', 'title');
   await p.click('#site-nav [data-lang="en"]');
   await p.waitForFunction(() => document.documentElement.lang === 'en', null, { timeout: 30000 });
-  step('B17.2 "Full video" pressed: the player\'s frame is named "Full video: Artificial Paradise – Singapore, YouTube player"; in Hungarian "Teljes videó: …, YouTube-lejátszó"; it loaded only after the press', frameName === want && frameHu === fill(UI.hu.viewer.frameTitleYoutube, { title: 'Artificial Paradise – Singapore' }) && before === 0 && loaded > 0, `"${frameName}"; HU "${frameHu}"; requests to Google or YouTube before the press: ${before}, after it: ${loaded} (answered by the stand-in)`);
+  step('B17.2 "Full video" pressed: the player\'s frame is named "Full video: Artificial Paradise - Singapore, YouTube player"; in Hungarian "Teljes videó: …, YouTube-lejátszó"; it loaded only after the press', frameName === want && frameHu === fill(UI.hu.viewer.frameTitleYoutube, { title: 'Artificial Paradise - Singapore' }) && before === 0 && loaded > 0, `"${frameName}"; HU "${frameHu}"; requests to Google or YouTube before the press: ${before}, after it: ${loaded} (answered by the stand-in)`);
 
   // Esc with focus inside the player's frame: the page never hears it, so the viewer stays open
   const inFrame = () => p.evaluate(() => document.activeElement === document.getElementById('viewer-frame'));

@@ -4,7 +4,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { OBSTACLES, R1, R1_CEILING } from './layout.js';
 import { mergeStatic } from './merge.js';
 
-// #3 Paradise Factory (2024), modelled from the Room 1 panorama and DSC_0011–0015:
+// #3 Paradise Factory (2024), modelled from the Room 1 panorama and DSC_0011-0015:
 //  - a white hydroponic (NFT) channel of lettuce seedlings hanging on chains under an
 //    LED tube. It runs diagonally, from beside the monitor on the window wall towards
 //    the middle of the room: in the panorama both of its ends sit at the same height,
@@ -224,7 +224,7 @@ export function buildParadiseFactory(materials, manager) {
       g.add(chain(chainMat, world(0, 0.03, z), world(0.02, CEIL - PIPE.y, z + 0.05)));
       g.add(chain(chainMat, world(0, 0.212, z + 0.06), world(-0.02, CEIL - PIPE.y, z + 0.1)));
     }
-    // lettuce seedlings: a small rosette of 4–6 leaves in each planting slot
+    // lettuce seedlings: a small rosette of 4-6 leaves in each planting slot
     const slots = Math.round(len / 0.085);
     const leafGeo = bladeGeometry(0.034, 0.05, 0.35, 0.6);
     const per = 6;

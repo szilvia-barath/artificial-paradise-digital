@@ -341,7 +341,7 @@
       "evidence_class": "",
       "source_ids": "",
       "related_ids": "ap-h07, 08, 09, 16, 20",
-      "related_titles": "Artificial Paradise – Singapore; Artificial Paradise – The Eden project; Wiena Wrong Landscape I; Wiena Wrong Landscape II; Natural Life",
+      "related_titles": "Artificial Paradise - Singapore; Artificial Paradise - The Eden project; Wiena Wrong Landscape I; Wiena Wrong Landscape II; Natural Life",
       "log_ref": "src/data/exhibition.json"
     },
     {
@@ -413,7 +413,7 @@
       "evidence_class": "C1",
       "source_ids": "S13; S07",
       "related_ids": "ap-w06; ap-w07",
-      "related_titles": "Artificial Paradise – Singapore; Artificial Paradise – The Eden project",
+      "related_titles": "Artificial Paradise - Singapore; Artificial Paradise - The Eden project",
       "log_ref": "Instruction from Szilvia Szerena Barath, 12 Nov 2026"
     },
     {
@@ -629,7 +629,7 @@
       "evidence_class": "C1",
       "source_ids": "S07",
       "related_ids": "ap-w06; ap-w07; ap-w17; ap-h18",
-      "related_titles": "Artificial Paradise – Singapore; Artificial Paradise – The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
+      "related_titles": "Artificial Paradise - Singapore; Artificial Paradise - The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
       "log_ref": "PROGRESS.md line 13 (5040a8f); scripts/make_videos.sh (main 7ebc13f)"
     },
     {
@@ -653,7 +653,7 @@
       "evidence_class": "C4",
       "source_ids": "",
       "related_ids": "ap-w06; ap-w07; ap-w17; ap-h18",
-      "related_titles": "Artificial Paradise – Singapore; Artificial Paradise – The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
+      "related_titles": "Artificial Paradise - Singapore; Artificial Paradise - The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
       "log_ref": "PROGRESS.md line 13"
     },
     {
@@ -941,7 +941,7 @@
       "evidence_class": "C4",
       "source_ids": "",
       "related_ids": "ap-w06; ap-w07; ap-w17; ap-h18",
-      "related_titles": "Artificial Paradise – Singapore; Artificial Paradise – The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
+      "related_titles": "Artificial Paradise - Singapore; Artificial Paradise - The Eden project; Natural Life; Let it Flow (wall projection 'Siluett')",
       "log_ref": "commit ceba631 (added); main 7ebc13f (removed)"
     },
     {

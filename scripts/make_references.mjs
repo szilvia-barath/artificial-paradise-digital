@@ -53,7 +53,7 @@ const fail = (msg) => { console.error(`make_references: ${msg}`); process.exit(1
 const TEXTS = {
   'Opening speech': { key: 'openingSpeech', row: 'Opening speech' },
   'Human as Error': { key: 'descriptions.human-as-error', title: 'Human as Error', row: 'Human as Error' },
-  'Artificial Paradise videos': { key: 'descriptions.artificial-paradise-videos', title: 'Artificial Paradise', kind: 'videos', row: 'Artificial Paradise – Singapore / The Eden project' },
+  'Artificial Paradise videos': { key: 'descriptions.artificial-paradise-videos', title: 'Artificial Paradise', kind: 'videos', row: 'Artificial Paradise - Singapore / The Eden project' },
   'Artificial Paradise prints': { key: 'descriptions.artificial-paradise-prints', title: 'Artificial Paradise', kind: 'prints', row: '' },
   'Paradise Factory': { key: 'descriptions.paradise-factory', title: 'Paradise Factory', row: '' },
   'Let it Flow': { key: 'descriptions.let-it-flow', title: 'Let it Flow', row: 'Let it Flow' },
@@ -82,7 +82,7 @@ const RULES = {
   // page, url_primary on the Hungarian page, no language mark.
   R20: { fixed: { en: 'https://www.mma.hu/en/web/en', hu: null } },
 };
-// The supporters (R19–R21) have no anchor in the table: they are not in a text but in the
+// The supporters (R19-R21) have no anchor in the table: they are not in a text but in the
 // credits line "Supported by", three names in this order. Each name as a whole is the
 // link; `word` is checked to be in the name, in both languages.
 const SUPPORTERS = [

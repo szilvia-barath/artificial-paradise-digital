@@ -2,7 +2,7 @@
   "_readme": "English texts. 'ui' holds the interface strings; everything else is exhibition content copied onto src/data/exhibition.json at runtime (works are matched by id). The English of the opening speech and of Human as Error was supplied by the artist, in the same Google Docs as the Hungarian. Work captions are descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise: Digital Exhibition",
-    "docDescription": "The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10–31 January 2025.",
+    "docDescription": "The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10-31 January 2025.",
     "sceneLabel": "3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link.",
     "nav": {
       "main": "Main",
@@ -158,13 +158,13 @@
       "helpMore": "In detail"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31 January 2025",
+      "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31 January 2025",
       "medium": { "acrylic": "acrylic", "giclee": "giclée print", "video": "video", "installation": "installation" }
     },
     "textEdition": {
       "name": "Accessible version",
       "docTitle": "Artificial Paradise: accessible version (text format)",
-      "docDescription": "Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.",
+      "docDescription": "Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.",
       "intro": "This page gives the exhibition as text: the four rooms in visiting order and the {count} works, each with where it hung. It needs no 3D graphics and works without JavaScript.",
       "positionsNote": "The positions given here follow the 3D reconstruction and its decision log.",
       "toWalk": "Go to the digital exhibition",
@@ -260,7 +260,7 @@
       "dates": {
         "R01": "1859 (experiments begin)",
         "R06": "1901 (greenhouse metaphor)",
-        "R10": "after the change of regime (1989–90)",
+        "R10": "after the change of regime (1989-90)",
         "R11": "2019-07-22"
       },
       "dateLabel": "Date in the texts",
@@ -318,12 +318,12 @@
   "meta": {
     "artist": "Kristóf Szabó / KristofLab",
     "venue": "MAMŰ Gallery, Budapest",
-    "dates": "10–31 January 2025",
+    "dates": "10-31 January 2025",
     "medium": "Acrylic paintings, giclée prints, video, installation",
     "address": "Damjanich utca 39, H-1071 Budapest, entrance from Murányi utca",
     "subtitle": "Digital Exhibition",
     "opening": "Opening: 10 January 2025, 7 pm",
-    "hours": "On view until 31 January 2025, Wednesday, Thursday and Friday, 3–6 pm"
+    "hours": "On view until 31 January 2025, Wednesday, Thursday and Friday, 3-6 pm"
   },
   "text": [
     "Kristóf Szabó aka KristofLab presents his most critical project yet, Artificial Paradise. His practice explores the relationship between nature and civilisation, wilderness and urbanisation, and man's artificially created habitat: the city and its symbol, the tower block.",
@@ -483,7 +483,7 @@
     "artificial-paradise-prints": {
       "heading": "About the series",
       "text": [
-        "The Artificial Paradise series explores the phenomenon of artificially constructed natural environments within contemporary urban spaces. Monumental parks, vertical gardens and architectural structures found in cities around the world – integrating nature into the urban infrastructure – appear both as attempts to reconnect with nature and as artificial substitutes for it.",
+        "The Artificial Paradise series explores the phenomenon of artificially constructed natural environments within contemporary urban spaces. Monumental parks, vertical gardens and architectural structures found in cities around the world - integrating nature into the urban infrastructure - appear both as attempts to reconnect with nature and as artificial substitutes for it.",
         "The series envisions a possible future in which urbanisation, climate change and human activity increasingly displace natural environments, leaving humanity to encounter nature primarily through artificially constructed and carefully controlled ecosystems. In this context, Paradise does not necessarily represent an ideal state, but rather a paradoxical utopia: a symbol of both the preservation and the gradual loss of nature."
       ]
     },
@@ -568,7 +568,7 @@
       {
         "h": "About this site",
         "p": [
-          "A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025)."
+          "A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10-31 January 2025)."
         ]
       },
       {

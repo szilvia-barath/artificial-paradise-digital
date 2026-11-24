@@ -2,7 +2,7 @@
   "_readme": "Hungarian texts, same shape as en.json (anything missing falls back to English). The exhibition text is the official one by Cserhalmi Luca; the opening speech is Zemlényi-Kovács Barnabás's. Work captions are still descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise digitális kiállítás",
-    "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10–31. között volt megtekinthető.",
+    "docDescription": "Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.",
     "sceneLabel": "3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása megtalálható az akadálymentes változatban, ahová az oldal első hivatkozása visz.",
     "nav": {
       "main": "Fő menü",
@@ -158,13 +158,13 @@
       "helpMore": "Részletesen"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10–31.",
+      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. január 10-31.",
       "medium": { "acrylic": "akril", "giclee": "giclée print", "video": "videó", "installation": "installáció" }
     },
     "textEdition": {
       "name": "Akadálymentes változat",
       "docTitle": "Artificial Paradise: akadálymentes változat (szöveges formátum)",
-      "docDescription": "Szabó Kristóf / KristofLab: Artificial Paradise (MAMŰ Galéria, Budapest, 2025. január 10–31.) szövegként: a négy terem a látogatás sorrendjében, a 17 mű és az, hogy melyik hol volt. 3D grafika nélkül is olvasható.",
+      "docDescription": "Szabó Kristóf / KristofLab: Artificial Paradise (MAMŰ Galéria, Budapest, 2025. január 10-31.) szövegként: a négy terem a látogatás sorrendjében, a 17 mű és az, hogy melyik hol volt. 3D grafika nélkül is olvasható.",
       "intro": "Ez az oldal szövegként adja vissza a kiállítást: a négy termet a látogatás sorrendjében és a {count} művet, mindegyiknél azt is, hol volt. Nem kell hozzá 3D grafika, és JavaScript nélkül is működik.",
       "positionsNote": "Az itt megadott helyek a 3D rekonstrukciót és annak döntési naplóját követik.",
       "toWalk": "Tovább a digitális kiállításhoz",
@@ -260,7 +260,7 @@
       "dates": {
         "R01": "1859 (a kísérletek kezdete)",
         "R06": "1901 (az üvegház-metafora)",
-        "R10": "a rendszerváltás után (1989–90)",
+        "R10": "a rendszerváltás után (1989-90)",
         "R11": "2019. július 22."
       },
       "dateLabel": "Dátum a szövegekben",
@@ -318,12 +318,12 @@
   "meta": {
     "artist": "Szabó Kristóf / KristofLab",
     "venue": "MAMŰ Galéria, Budapest",
-    "dates": "2025. január 10–31.",
+    "dates": "2025. január 10-31.",
     "medium": "Akrilfestmények, giclée nyomatok, videó, installáció",
     "address": "H-1071 Budapest, Damjanich u. 39., bejárat a Murányi utcából",
     "subtitle": "Digitális kiállítás",
     "opening": "Megnyitó: 2025. január 10., 19:00",
-    "hours": "Megtekinthető 2025. január 31-ig, szerda, csütörtök, péntek 15–18 óra között"
+    "hours": "Megtekinthető 2025. január 31-ig, szerda, csütörtök, péntek 15-18 óra között"
   },
   "text": [
     "Szabó Kristóf aka KristofLab eddigi legkritikusabb hangvételű projektjét mutatja be Artificial Paradise című önálló kiállításán. Művészeti praxisában természet és civilizáció, vadon és ember kapcsolata eddig főként az urbanizáció, az ember mesterségesen kialakított élőhelye, a város és annak szimbóluma, a toronyház képében jelent meg. Az Artificial Paradise ezt a gondolatot szövi tovább, a mesterségesen létrehozott természeti területek, a domesztikált, valamint az iparosított természet jelenségének kérdéskörével. A pár évtizeddel ezelőtt egészen utópisztikusnak tűnő jövőképek természet és ember új viszonyának, a teljes kontrollálásnak a lehetőségeiről, napjainkra hétköznapi gyakorlatokká váltak. A kontrollált, iparosított természet a definiciót is kérdésessé teszi: vajon még mindig természetről beszélhetünk-e a mesterségesen kialakított és életben tartott, művi, látványelemként funkcionáló növényzet kapcsán is? Hogyan hat mindez az ökológiára és a természetről kialakított képünkre?",
@@ -459,14 +459,14 @@
     "paradise-factory": {
       "heading": "A műről",
       "text": [
-        "Paradise Factory a természet és a civilizáció közti viszony új, mégis egyre ismerősebb formáit vizsgálja. A technológiai fejlődés és az iparosítás hatására az ember és természet közötti hierarchia tovább mélyült – az emberi beavatkozás a tájban, a mesterségesen életben tartott városi növényzet, vagy a napfényt sosem látott, zárt rendszerben termelt növények révén. Az installáció egyik eleme egy hidropóniás termesztőrendszer, amelyet egy átalakított monitor egészít ki – rajta manipulált videó fut a növények mesterséges neveléséről. Ez az ambivalens tárgy-együttes egyszerre kritizálja és tematizálja azokat az újfajta természet-konstrukciókat, amelyek a klímaváltozás, a termőföldek eróziója vagy az élelmiszerválság idején egyre inkább realitássá válnak. A munka központi kérdése: hol húzódik ma a határ a természetes és a mesterséges között – és egyáltalán: mit értünk természet alatt?"
+        "Paradise Factory a természet és a civilizáció közti viszony új, mégis egyre ismerősebb formáit vizsgálja. A technológiai fejlődés és az iparosítás hatására az ember és természet közötti hierarchia tovább mélyült - az emberi beavatkozás a tájban, a mesterségesen életben tartott városi növényzet, vagy a napfényt sosem látott, zárt rendszerben termelt növények révén. Az installáció egyik eleme egy hidropóniás termesztőrendszer, amelyet egy átalakított monitor egészít ki - rajta manipulált videó fut a növények mesterséges neveléséről. Ez az ambivalens tárgy-együttes egyszerre kritizálja és tematizálja azokat az újfajta természet-konstrukciókat, amelyek a klímaváltozás, a termőföldek eróziója vagy az élelmiszerválság idején egyre inkább realitássá válnak. A munka központi kérdése: hol húzódik ma a határ a természetes és a mesterséges között - és egyáltalán: mit értünk természet alatt?"
       ]
     },
     "let-it-flow": {
       "heading": "A műről",
       "text": [
         "A Let it Flow egy olyan helyspecifikus installáció, amely az újrahasznosítás és a hulladékból létrehozott tárgyi kultúra kérdésein keresztül vizsgálja az ember és a természet közötti sérült anyagáramlásokat. A munka alapanyaga részben a Tisza folyóból származó műanyag hulladék, amely a PET Kupa folyótisztító akciói során került begyűjtésre, részben pedig a művész saját háztartásában keletkezett műanyag maradékok.",
-        "A tárgyegyüttes a „folyás” és a „hulladékáramlás” kettősségére épül: a Tisza mint természetes vízfolyam és a műanyag mint mesterségesen létrehozott, de már kontrollálhatatlan anyagi folyamat egymásra rétegződik. A hulladék nem eltűnik, hanem új formát keres – a hőpisztollyal történő olvasztás során a talált tárgyak részben elveszítik eredeti funkciójukat, miközben új, átmeneti plasztikai állapotba kerülnek. Így a „használhatatlan” anyagok új műtárgyként értelmeződnek újra.",
+        "A tárgyegyüttes a „folyás” és a „hulladékáramlás” kettősségére épül: a Tisza mint természetes vízfolyam és a műanyag mint mesterségesen létrehozott, de már kontrollálhatatlan anyagi folyamat egymásra rétegződik. A hulladék nem eltűnik, hanem új formát keres - a hőpisztollyal történő olvasztás során a talált tárgyak részben elveszítik eredeti funkciójukat, miközben új, átmeneti plasztikai állapotba kerülnek. Így a „használhatatlan” anyagok új műtárgyként értelmeződnek újra.",
         "A Let it Flow így nem csupán egy installáció, hanem egy anyagkörforgást követő vizuális protokoll: a szennyezésből származó tárgyak újrakontextualizálása, amelyben a természetes és mesterséges rendszerek határai elmosódnak."
       ]
     },
@@ -481,7 +481,7 @@
     "artificial-paradise-prints": {
       "heading": "A sorozatról",
       "text": [
-        "Az Artificial Paradise című sorozat a nagyvárosi környezetben létrehozott mesterséges természeti terek jelenségét vizsgálja. A világ különböző pontjain található monumentális parkok, vertikális kertek és építészeti struktúrák – amelyek a természetet a városi infrastruktúra részévé teszik – egyszerre jelennek meg a természethez való visszatérés kísérleteiként és annak mesterséges helyettesítőiként.",
+        "Az Artificial Paradise című sorozat a nagyvárosi környezetben létrehozott mesterséges természeti terek jelenségét vizsgálja. A világ különböző pontjain található monumentális parkok, vertikális kertek és építészeti struktúrák - amelyek a természetet a városi infrastruktúra részévé teszik - egyszerre jelennek meg a természethez való visszatérés kísérleteiként és annak mesterséges helyettesítőiként.",
         "A sorozat egy lehetséges jövőképet vetít előre, amelyben az urbanizáció, a klímaváltozás és az emberi tevékenység következtében a természetes környezet egyre inkább háttérbe szorul, és az ember már csak mesterségesen létrehozott, gondosan szabályozott ökoszisztémákkal találkozik. Ebben az összefüggésben a Paradise nem feltétlenül egy ideális állapotot jelöl, hanem egy ellentmondásos utópiát: a természet megőrzésének és egyúttal elvesztésének szimbólumát."
       ]
     },
@@ -543,8 +543,8 @@
       "Ha Tyndall problémája az volt, hogy a füst bizonyos értelemben megmarad, akkor a másik szerzőé éppen az, hogy menthetetlenül elszáll. Charles Baudelaire 1860-ban publikálja Mesterséges mennyországok című tanulmányát: az ezen kiállítás címéül is szolgáló fogalom nála a különféle bódító szerek, mint a hasis és az ópium okozta alternatív vágyvalóságokat és efemer utópiákat jelenti. A jelentős részben saját szerhasználatára reflektáló, személyes hangú írásában Baudelaire e bódult boldogság és pszichedelikus fantáziavilág alapvető ambivalenciáját járja körbe, amelynek alapja, hogy ez az állapot, a valódi társadalmi mozgalmakkal szemben csak átmeneti üdvöt tud nyújtani, amint a szer hatása elmúlik, a szerhasználó visszahullik egy ezután még kietlenebbnek ható rögvalóságba. Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól.",
       "Szabó Kristóf munkáiban ez a két, 165 éve íródott munka ötvöződik: kiállításában a globális felmelegedésre adott válaszként épülő gigantikus üvegházak, fenntarthatónak tervezett miniökoszférák, mesterségesen létrehozott mikroédenkertek, illetve ahogy maga is hívja, „mesterséges mennyországok” állnak. Mindezek egyszerre a klímahelyzetre adott konkrét tudományos-technológiai válaszok, ugyanakkor magukon messze túlmutató metaforák, illetve egy fenntartható jövő utópia- vagy vágyképei is egyben. És itt derül ki, hogy Baudelaire messze nem csak a cím révén van jelen: bár egyfelől a jelenlegi mezőgazdasági tömegtermelésnél valóban környezetbarátabbak, akárcsak az ő mesterséges mennyországai, Szabó Kristóf kiállításában ezek az utópisztikus „mesterséges természetek” is olyan fantáziákként lepleződnek le, amelyek fenntarthatósága több mint kérdéses, látszólagos válságválaszokként pedig részben a valódi kérdéseket látszanak elfedni.",
       "John Tyndall még nem használta az üvegház-metaforát az üvegházhatású gázok esetében, ezt a svéd Nils Ekholm vezette be 1901-ben. A Szabó Kristóf által elemzett mesterséges ökoszférák alapja éppen az üvegház, amelyben rejlik némi sötét irónia, tekintve, hogy egy olyan klímaválságra adott válaszként jelennek meg, amelyben az egész bolygó egy túlfűtött globális üvegházzá változott. Az üvegház mint a mesterséges, emberileg kontrollált környezet archetípusa az ókorig nyúlik vissza, már a Rómaiak is kísérleteztek vele. Az üvegház egy ökológiai paradoxon, amelyben annál ideálisabb a természet, minél mesterségesebb körülmények között jön létre. Ahol a természet mesterséges, ott a mesterséges természetes. Ezt az ideális, érintetlennek ható környezetet, amelynek dokumentumfelvételei Szabó Kristóf munkáiban is megjelennek, egy mindenre kiterjedő emberi kontroll teszi lehetővé, azaz ugyanaz a logika, amely a jelenlegi állapothoz is vezetett.",
-      "Baudelaire nemcsak korának egyik legnagyobb hatású, proto-avantgárd költője volt, de a korszak meghatározó művészetkritikusa és teoretikusa is, aki az elsők között fogalmazta meg a kialakulóban lévő modern művészet szellemi alapjait. 1863-ban, két évvel a Mesterséges mennyországok után Baudelaire megírja A modern élet festője című esszéjét, amely a modern művészet talán első manifesztuma. „Az átmeneti, a múlékony, az esetleges – alkotja a művészet egyik felét, a másik fele örök és változhatatlan” – írja Baudelaire. „[a művész] azt a valamit keresi, amit szabad legyen modernségnek neveznünk (…) Vagyis az a dolga, hogy kihámozza a divatból mindazt a történelmi poézist, ami csak megtalálható benne, az átmenetiből kiszűrje a maradandót”. Baudelaire avantgárd művészetdefiníciója a modernitás minden válsága ellenére ma is a kurrens művészet alapkereteit jelenti. Szabó Kristóf is fél lábbal a tradícióban, fél lábbal pedig az efemer jelenben áll, elég csak a tájkép tradicionális zsánerével folytatott tudatos párbeszédére utalni. Tyndall és Baudelaire idején a képzőművészek hozták létre a mesterséges ideáltájakat; a kiállítás idézi is ezeket a 19. századi, romantikus, akademikus vagy épp impresszionista tájeszményeket. Amit egykor a képzőművészet, azt ma az ipar és a technológia hozza létre, Szabó Kristóf pedig ebben a helyzetben a művész egy lehetséges feladatát a szintetikus módon előállított harmonikus természet denaturalizálásában, mesterséges voltának felfedésében, a hibátlannak beállított vízió képhibákként is megjelenő errorjaiban, glitcheiben és vakfoltjaiban látja.",
-      "Szintén az 1850-es és hatvanas évek fordulóján, 1859-ben jelenik meg egy harmadik könyv egy harmadik, az előző kettőnél tíz évvel idősebb úriembertől: A fajok eredete Charles Darwintól. Szabó Kristóf A fajok eredetét a fajok vége felől, a természetes szelekciót a mesterséges szelekció felől közelíti meg. Munkái azt állítják, hogy az ember nemcsak, hogy nem a teremtés koronája, de még csak nem is az evolúció csúcsa – ami azt illeti: hiba. Human as Error. Kérdés, mit jelent ennek a hibának a kijavítása: a kapitalizmus radikális átalakítása vagy felszámolása mellett a poszthumán és posztantropocentrikus elméletek alapján, ha nem akarjuk önmagunkat felszámolni, éppen az emberközpontúságunkat kell meghaladni ahhoz, hogy fennmaradhassunk.",
+      "Baudelaire nemcsak korának egyik legnagyobb hatású, proto-avantgárd költője volt, de a korszak meghatározó művészetkritikusa és teoretikusa is, aki az elsők között fogalmazta meg a kialakulóban lévő modern művészet szellemi alapjait. 1863-ban, két évvel a Mesterséges mennyországok után Baudelaire megírja A modern élet festője című esszéjét, amely a modern művészet talán első manifesztuma. „Az átmeneti, a múlékony, az esetleges - alkotja a művészet egyik felét, a másik fele örök és változhatatlan” - írja Baudelaire. „[a művész] azt a valamit keresi, amit szabad legyen modernségnek neveznünk (…) Vagyis az a dolga, hogy kihámozza a divatból mindazt a történelmi poézist, ami csak megtalálható benne, az átmenetiből kiszűrje a maradandót”. Baudelaire avantgárd művészetdefiníciója a modernitás minden válsága ellenére ma is a kurrens művészet alapkereteit jelenti. Szabó Kristóf is fél lábbal a tradícióban, fél lábbal pedig az efemer jelenben áll, elég csak a tájkép tradicionális zsánerével folytatott tudatos párbeszédére utalni. Tyndall és Baudelaire idején a képzőművészek hozták létre a mesterséges ideáltájakat; a kiállítás idézi is ezeket a 19. századi, romantikus, akademikus vagy épp impresszionista tájeszményeket. Amit egykor a képzőművészet, azt ma az ipar és a technológia hozza létre, Szabó Kristóf pedig ebben a helyzetben a művész egy lehetséges feladatát a szintetikus módon előállított harmonikus természet denaturalizálásában, mesterséges voltának felfedésében, a hibátlannak beállított vízió képhibákként is megjelenő errorjaiban, glitcheiben és vakfoltjaiban látja.",
+      "Szintén az 1850-es és hatvanas évek fordulóján, 1859-ben jelenik meg egy harmadik könyv egy harmadik, az előző kettőnél tíz évvel idősebb úriembertől: A fajok eredete Charles Darwintól. Szabó Kristóf A fajok eredetét a fajok vége felől, a természetes szelekciót a mesterséges szelekció felől közelíti meg. Munkái azt állítják, hogy az ember nemcsak, hogy nem a teremtés koronája, de még csak nem is az evolúció csúcsa - ami azt illeti: hiba. Human as Error. Kérdés, mit jelent ennek a hibának a kijavítása: a kapitalizmus radikális átalakítása vagy felszámolása mellett a poszthumán és posztantropocentrikus elméletek alapján, ha nem akarjuk önmagunkat felszámolni, éppen az emberközpontúságunkat kell meghaladni ahhoz, hogy fennmaradhassunk.",
       "A problémánk ma is Baudelaire-é és Tyndallé: az utópia füstje elszáll, de a disztópia füstje itt marad."
     ]
   },
@@ -566,7 +566,7 @@
       {
         "h": "Az oldalról",
         "p": [
-          "Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be."
+          "Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10-31.) mutatja be."
         ]
       },
       {
@@ -715,7 +715,7 @@
           "A tárlatvezetés feliratai maguktól váltanak: 5 másodperc után, a hangos videóknál 14 másodperc után. A tárlatvezetés leállítható (T vagy Esc), de nem szüneteltethető és nem lassítható.",
           "A 3D nézet fölötti kontrasztot Chromiumban készült képernyőképeken mértem, a legvilágosabb fal előtt, nem minden fal előtt. A tárlatvezetés felirata, a nézet közepén lévő művet megnevező sor, a körülnézésről szóló és az érintéses tipp, az első használatkor megjelenő kártya és a nagyítás kijelzője ugyanazon a sötét, áttetsző alapon áll, de ezeket nem mértem. Az 1. és a 2. terem falán lévő kiállítási szövegek lapjait nem mértem.",
           "Érintőképernyős laptopon, amelyhez egér vagy érintőpad is tartozik, a digitális kiállítás a számítógépes kezelőfelületet mutatja (a képernyőn megjelenő billentyűket és a láblécet), az egérrel körül lehet nézni és műveket lehet megnyitni, és az érintés is működik. Ezt olyan Chromiumban ellenőriztem, amelyet úgy állítottam be, hogy egy ilyen laptop válaszait adja, valódi gépen nem. Egy ilyen laptopon a gombok megtartják a számítógépes méretüket, mert a böngésző az egeret jelzi fő mutatóeszközként: az eszköztár gombjai 32 képpont magasak, nem 44 × 44 képpontosak, mint telefonon vagy táblagépen.",
-          "Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak.",
+          "Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17-20 képpont magasak.",
           "Amíg a fókusz a YouTube- vagy a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab ismételt lenyomásával ki lehet lépni a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt."
         ]
       },

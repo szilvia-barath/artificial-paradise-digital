@@ -1,9 +1,12 @@
 # Hungarian strings to check
 
-Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 147. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
+Every string in `src/i18n/hu.json` that is new or changed since the last check by a Hungarian reader: 156. The assistant wrote them (unless the note beside one says otherwise), impersonal, with the names in `CLAUDE.md`. They are live as they stand; nothing in the interface marks them. The last check was on 14 November 2026, when the reconstructor had worded or confirmed every string then in the file.
 
 To check: read each line against its English, correct it in `src/i18n/hu.json` if needed, then run `python3 tests/tools/hu-confirm.py --checked`, which empties this list. `python3 tests/tools/hu-confirm.py --write` rewrites the list; it also checks that both language files have the same keys and that no string carries a `[HU: confirm]` mark.
 
+- `ui.docDescription`
+  - HU: Szabó Kristóf - KristofLab Artificial Paradise című kiállítása fotókból rekonstruálva, a böngészőben bejárható digitális kiállításként. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.
+  - EN: The exhibition Artificial Paradise by Kristóf Szabó - KristofLab, reconstructed from photographs as a digital exhibition that can be walked through in the browser. It was on view at MAMŰ Gallery, Budapest, 10-31 January 2025.
 - `ui.sceneLabel`
   - HU: 3D nézet. A Page Down és a Page Up műről műre visz, az Enter megnyitja a nézet közepén lévő művet, a nyílbillentyűkkel lehet sétálni és fordulni. Minden billentyű leírása megtalálható az akadálymentes változatban, ahová az oldal első hivatkozása visz.
   - EN: 3D view. Page Down and Page Up go from work to work, Enter opens the work in front, the arrow keys walk and turn. All keys are in the accessible version, the first link.
@@ -122,8 +125,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Részletesen
   - EN: In detail
 - `ui.wall.sheetMeta`
-  - HU: KristofLab · MAMŰ Galéria · 2025. január 10–31.
-  - EN: KristofLab · MAMŰ Gallery · 10–31 January 2025
+  - HU: KristofLab · MAMŰ Galéria · 2025. január 10-31.
+  - EN: KristofLab · MAMŰ Gallery · 10-31 January 2025
 - `ui.wall.medium.acrylic`
   - HU: akril
   - EN: acrylic
@@ -133,6 +136,9 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.wall.medium.installation`
   - HU: installáció
   - EN: installation
+- `ui.textEdition.docDescription`
+  - HU: Szabó Kristóf / KristofLab: Artificial Paradise (MAMŰ Galéria, Budapest, 2025. január 10-31.) szövegként: a négy terem a látogatás sorrendjében, a 17 mű és az, hogy melyik hol volt. 3D grafika nélkül is olvasható.
+  - EN: Kristóf Szabó / KristofLab, Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) as text: the four rooms in visiting order, the 17 works and where each one hung. No 3D graphics needed.
 - `ui.textEdition.openInWalk`
   - HU: Megnyitás a digitális kiállításban
   - EN: Open in the digital exhibition
@@ -218,8 +224,8 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: 1901 (az üvegház-metafora)
   - EN: 1901 (greenhouse metaphor)
 - `ui.concept.dates.R10`
-  - HU: a rendszerváltás után (1989–90)
-  - EN: after the change of regime (1989–90)
+  - HU: a rendszerváltás után (1989-90)
+  - EN: after the change of regime (1989-90)
 - `ui.concept.dates.R11`
   - HU: 2019. július 22.
   - EN: 2019-07-22
@@ -340,21 +346,42 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
 - `ui.describe.space`
   - HU: A terem leírásának meghallgatása
   - EN: Listen to the description of the room
+- `meta.dates`
+  - HU: 2025. január 10-31.
+  - EN: 10-31 January 2025
+- `meta.hours`
+  - HU: Megtekinthető 2025. január 31-ig, szerda, csütörtök, péntek 15-18 óra között
+  - EN: On view until 31 January 2025, Wednesday, Thursday and Friday, 3-6 pm
 - `credits[5][1]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia
   - EN: Szilvia Baráth
 - `rooms.r4.subtitle`
   - HU: Let it Flow · installáció
   - EN: Let it Flow · installation
+- `descriptions.paradise-factory.text[0]`
+  - HU: Paradise Factory a természet és a civilizáció közti viszony új, mégis egyre ismerősebb formáit vizsgálja. A technológiai fejlődés és az iparosítás hatására az ember és természet közötti hierarchia tovább mélyült - az emberi beavatkozás a tájban, a mesterségesen életben tartott városi növényzet, vagy a napfényt sosem látott, zárt rendszerben termelt növények révén. Az installáció egyik eleme egy hidropóniás termesztőrendszer, amelyet egy átalakított monitor egészít ki - rajta manipulált videó fut a növények mesterséges neveléséről. Ez az ambivalens tárgy-együttes egyszerre kritizálja és tematizálja azokat az újfajta természet-konstrukciókat, amelyek a klímaváltozás, a termőföldek eróziója vagy az élelmiszerválság idején egyre inkább realitássá válnak. A munka központi kérdése: hol húzódik ma a határ a természetes és a mesterséges között - és egyáltalán: mit értünk természet alatt?
+  - EN: Paradise Factory explores new yet increasingly familiar configurations of the relationship between nature and civilization. Through rapid technological advancement and industrialization, the hierarchy between humans and nature has deepened, manifesting in altered landscapes, artificially sustained urban vegetation, and food crops grown entirely without sunlight in closed systems. The installation features a hydroponic cultivation setup alongside a repurposed monitor displaying manipulated footage of the growing process. This ambivalent assemblage simultaneously questions and reflects on emerging nature-constructs that, in an era of climate change, soil degradation, and food insecurity, may soon become the norm. At its core, the work poses a pressing question: where do we draw the line between the natural and the artificial today, and what do we even mean by "nature"?
+- `descriptions.let-it-flow.text[1]`
+  - HU: A tárgyegyüttes a „folyás” és a „hulladékáramlás” kettősségére épül: a Tisza mint természetes vízfolyam és a műanyag mint mesterségesen létrehozott, de már kontrollálhatatlan anyagi folyamat egymásra rétegződik. A hulladék nem eltűnik, hanem új formát keres - a hőpisztollyal történő olvasztás során a talált tárgyak részben elveszítik eredeti funkciójukat, miközben új, átmeneti plasztikai állapotba kerülnek. Így a „használhatatlan” anyagok új műtárgyként értelmeződnek újra.
+  - EN: The assemblage is built upon the duality of “flow” and “waste circulation”: the Tisza as a natural watercourse and plastic as an artificially produced yet now uncontrollable material process become layered onto one another. Waste does not disappear; instead, it searches for a new form. Through melting with a heat gun, the found objects partially lose their original function while entering a new, transitional plastic state. In this way, “useless” materials are reinterpreted as artworks.
+- `descriptions.artificial-paradise-prints.text[0]`
+  - HU: Az Artificial Paradise című sorozat a nagyvárosi környezetben létrehozott mesterséges természeti terek jelenségét vizsgálja. A világ különböző pontjain található monumentális parkok, vertikális kertek és építészeti struktúrák - amelyek a természetet a városi infrastruktúra részévé teszik - egyszerre jelennek meg a természethez való visszatérés kísérleteiként és annak mesterséges helyettesítőiként.
+  - EN: The Artificial Paradise series explores the phenomenon of artificially constructed natural environments within contemporary urban spaces. Monumental parks, vertical gardens and architectural structures found in cities around the world - integrating nature into the urban infrastructure - appear both as attempts to reconnect with nature and as artificial substitutes for it.
 - `accessDescriptions._readme`
   - HU: Helyek a később érkező leírásoknak; most minden mező üres, és semmi sem jelenik meg belőlük. 'visual': mit mutat a 17 mű, műazonosító szerint. 'videoText': a videók írott leírása (a 3. mű kis képernyőjének videója 'w03-screen'; a 16. mű a padlóra vetített videó). 'videoDocText': a 3. és a 16. mű videódokumentációja, amelyet a műnéző lejátszik. 'space': az egyes termek audionarrációja, r1-től r4-ig. A szöveg az idézőjelek közé kerül; több bekezdéshez szöveglista írható a helyére: ["…", "…"]. Ugyanez a hely az en.json-ban az angol szövegé. A kitöltött szöveg megjelenik a műnézőben (a címe alatt: Leírás, A videó leírása, A videódokumentáció leírása, A terem leírásának meghallgatása) és az akadálymentes változatban, és a Felolvasás felolvassa.
   - EN: Places for descriptions still to come; every field is empty for now and shows nothing. 'visual': what each of the 17 works shows, by work id. 'videoText': a written description of each video (no. 3's video on the small screen is 'w03-screen'; no. 16 is the projection on the floor). 'videoDocText': the video documentation the artwork viewer plays for nos. 3 and 16. 'space': the audio description of each room, r1 to r4. Paste a text between the quotation marks; for several paragraphs put a list of strings in its place, ["…", "…"]. Fill the same place in hu.json with the Hungarian. A filled text shows in the artwork viewer (under its heading: Description, Video description, Description of the video documentation, Listen to the description of the room) and in the accessible version, and Read aloud reads it.
+- `openingSpeech.text[4]`
+  - HU: Baudelaire nemcsak korának egyik legnagyobb hatású, proto-avantgárd költője volt, de a korszak meghatározó művészetkritikusa és teoretikusa is, aki az elsők között fogalmazta meg a kialakulóban lévő modern művészet szellemi alapjait. 1863-ban, két évvel a Mesterséges mennyországok után Baudelaire megírja A modern élet festője című esszéjét, amely a modern művészet talán első manifesztuma. „Az átmeneti, a múlékony, az esetleges - alkotja a művészet egyik felét, a másik fele örök és változhatatlan” - írja Baudelaire. „[a művész] azt a valamit keresi, amit szabad legyen modernségnek neveznünk (…) Vagyis az a dolga, hogy kihámozza a divatból mindazt a történelmi poézist, ami csak megtalálható benne, az átmenetiből kiszűrje a maradandót”. Baudelaire avantgárd művészetdefiníciója a modernitás minden válsága ellenére ma is a kurrens művészet alapkereteit jelenti. Szabó Kristóf is fél lábbal a tradícióban, fél lábbal pedig az efemer jelenben áll, elég csak a tájkép tradicionális zsánerével folytatott tudatos párbeszédére utalni. Tyndall és Baudelaire idején a képzőművészek hozták létre a mesterséges ideáltájakat; a kiállítás idézi is ezeket a 19. századi, romantikus, akademikus vagy épp impresszionista tájeszményeket. Amit egykor a képzőművészet, azt ma az ipar és a technológia hozza létre, Szabó Kristóf pedig ebben a helyzetben a művész egy lehetséges feladatát a szintetikus módon előállított harmonikus természet denaturalizálásában, mesterséges voltának felfedésében, a hibátlannak beállított vízió képhibákként is megjelenő errorjaiban, glitcheiben és vakfoltjaiban látja.
+  - EN: Baudelaire was not only one of the most influential, proto-avant-garde poets of his time but also a defining art critic and theorist of the period, one of the first to formulate the intellectual foundations of the emerging modern art. In 1863, two years after Artificial Paradises, Baudelaire wrote his essay The Painter of Modern Life, perhaps the first manifesto of modern art. “The transitory, the fugitive, the contingent make up one half of art; the other half is the eternal and the immutable,” Baudelaire writes. “[The artist] is looking for that quality which we may call modernity (…) His task is to extract from fashion whatever poetry within history it may contain, to distil the eternal from the transitory.” Despite all the crises of modernity, Baudelaire's avant-garde definition of art still sets the basic frame of art today. Kristóf Szabó, too, stands with one foot in tradition and the other in the ephemeral present; it is enough to mention his conscious dialogue with the traditional genre of the landscape. In the time of Tyndall and Baudelaire, it was artists who created artificial ideal landscapes, and the exhibition also quotes these 19th-century romantic, academic or impressionist landscape ideals. What art once produced is produced today by industry and technology, and in this situation Kristóf Szabó sees one possible task of the artist in denaturalising this synthetically produced, harmonious nature: in revealing its artificiality, in the errors, glitches and blind spots of the flawlessly staged vision, which also appear as faults in the image.
+- `openingSpeech.text[5]`
+  - HU: Szintén az 1850-es és hatvanas évek fordulóján, 1859-ben jelenik meg egy harmadik könyv egy harmadik, az előző kettőnél tíz évvel idősebb úriembertől: A fajok eredete Charles Darwintól. Szabó Kristóf A fajok eredetét a fajok vége felől, a természetes szelekciót a mesterséges szelekció felől közelíti meg. Munkái azt állítják, hogy az ember nemcsak, hogy nem a teremtés koronája, de még csak nem is az evolúció csúcsa - ami azt illeti: hiba. Human as Error. Kérdés, mit jelent ennek a hibának a kijavítása: a kapitalizmus radikális átalakítása vagy felszámolása mellett a poszthumán és posztantropocentrikus elméletek alapján, ha nem akarjuk önmagunkat felszámolni, éppen az emberközpontúságunkat kell meghaladni ahhoz, hogy fennmaradhassunk.
+  - EN: Also at the turn of the 1850s and 1860s, in 1859, a third book appeared from a third gentleman, ten years older than the other two: On the Origin of Species by Charles Darwin. Kristóf Szabó approaches the origin of species from the end of species, natural selection from artificial selection. His works claim that man is not only not the crown of creation but not even the peak of evolution; in fact, an error. Human as Error. The question is what correcting this error would mean: besides the radical transformation or abolition of capitalism, posthuman and post-anthropocentric theories argue that, if we do not want to abolish ourselves, it is precisely our human-centredness that we have to overcome in order to survive.
 - `legal.sections[0].p[0]` (only the accent in the name changed, asked by the reconstructor)
   - HU: Baráth Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás).
   - EN: Szilvia Baráth, who made this digital exhibition (3D reconstruction, design and programming).
-- `legal.sections[1].p[0]` (legal notice; the reconstructor asked for "digitális kiállítás" in place of "bejárható 3D-rekonstrukcióként")
-  - HU: Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be.
-  - EN: A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025).
+- `legal.sections[1].p[0]`
+  - HU: Nem kereskedelmi célú, a böngészőben bejárható digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10-31.) mutatja be.
+  - EN: A non-commercial digital exhibition that can be walked through in the browser. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10-31 January 2025).
 - `legal.sections[3].h`
   - HU: Videólejátszók
   - EN: Video players
@@ -440,7 +467,7 @@ To check: read each line against its English, correct it in `src/i18n/hu.json` i
   - HU: Érintőképernyős laptopon, amelyhez egér vagy érintőpad is tartozik, a digitális kiállítás a számítógépes kezelőfelületet mutatja (a képernyőn megjelenő billentyűket és a láblécet), az egérrel körül lehet nézni és műveket lehet megnyitni, és az érintés is működik. Ezt olyan Chromiumban ellenőriztem, amelyet úgy állítottam be, hogy egy ilyen laptop válaszait adja, valódi gépen nem. Egy ilyen laptopon a gombok megtartják a számítógépes méretüket, mert a böngésző az egeret jelzi fő mutatóeszközként: az eszköztár gombjai 32 képpont magasak, nem 44 × 44 képpontosak, mint telefonon vagy táblagépen.
   - EN: On a laptop with a touch screen and a mouse or trackpad, the digital exhibition shows the computer's controls (the on-screen keys and the footer), the mouse looks around and opens works, and touch works as well. I checked this in Chromium set up to answer like such a laptop, not on a real one. On such a laptop the buttons keep their computer size, since the browser reports the mouse as the main pointer: the toolbar's are 32 pixels high, not the 44 by 44 pixels they have on a phone or tablet.
 - `accessibility.sections[3].p[9]`
-  - HU: Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17–20 képpont magasak.
+  - HU: Érintőképernyőn néhány hivatkozás még kicsi. 760 képpontnál szélesebb ablakban (például táblagépen) a lábléc hivatkozásai 13 képpont magasak, a panelek szövegében lévő hivatkozások pedig bármilyen ablakszélességnél soronként 17-20 képpont magasak.
   - EN: On a touch screen some links are still small. In a window wider than 760 pixels (a tablet, say) the footer's links are 13 pixels tall, and the links in the text of the panels are 17 to 20 pixels tall per line, at any width.
 - `accessibility.sections[3].p[10]`
   - HU: Amíg a fókusz a YouTube- vagy a Google Drive-lejátszóban van, az Esc nem zárja be a műnézőt, mert a böngésző a billentyűket a lejátszó keretében tartja: a Tab vagy a Shift+Tab ismételt lenyomásával ki lehet lépni a lejátszóból, és utána az Esc működik, vagy a Bezárás gomb bezárja a műnézőt.

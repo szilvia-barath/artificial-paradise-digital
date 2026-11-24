@@ -92,7 +92,7 @@ function cable(mat, pts, r = 0.004) {
   return new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(12, pts.length * 10), r, 5, false), mat);
 }
 
-// Folding wire chair as in Room 2 (DSC_0056–0059). Faces +z at ry = 0.
+// Folding wire chair as in Room 2 (DSC_0056-0059). Faces +z at ry = 0.
 function wireChair(materials, gridMat, cushion = false) {
   const c = new THREE.Group();
   const seat = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.4), gridMat);
@@ -420,7 +420,7 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
     // the north wall's pipes carry the wall's paint (DSC_0099 to DSC_0112; until 17 November
     // 2026 a light grey, 0x55575c)
     const pipeMat = new THREE.MeshStandardMaterial({ color: R4_NORTH_PIPE, roughness: 0.6 });
-    // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
+    // low heating pipe along the north wall + big drain pipes coming down (DSC_0104-0109)
     const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
     g.add(place(low, 20.79, 0.42, 1.778));
@@ -542,7 +542,7 @@ export function buildProps(materials, manager, { anisotropy = 4 } = {}) {
     // a whitewashed radiator standing on the concrete ledge by the entrance
     radiator(17.25, 1.79, 0, 0.96, 0.55, 0.46, radiatorMat);
 
-    // gas meter by the partition (DSC_0098–0101)
+    // gas meter by the partition (DSC_0098-0101)
     g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.577, 1.62, 1.816));
     g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.577, 1.83, 1.816));
     g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.481, 0.72, 1.787));

@@ -111,7 +111,7 @@ export function buildArchitecture(materials) {
   for (const fl of FLOORS) { flat(fl.mat, fl, fl.y ?? 0, true); }
   for (const c of CEILINGS) { flat(c.mat, c, c.y, false, c.hole); }
 
-  // Room 4: shallow brick vaults between steel beams, as in DSC_0110–0116
+  // Room 4: shallow brick vaults between steel beams, as in DSC_0110-0116
   {
     const r = ROOMS.find((rm) => rm.id === 'r4');
     const { spring, rise } = R4_VAULT;
@@ -142,7 +142,7 @@ export function buildArchitecture(materials) {
       geo.computeVertexNormals();
       push('vault', geo);
     }
-    // beams (bottom flange + web) spanning north–south; none against the end wall
+    // beams (bottom flange + web) spanning north-south; none against the end wall
     for (let i = 0; i < bays; i++) {
       const x = r.x0 + i * L;
       const beam = new THREE.BoxGeometry(0.16, 0.2, r.z1 - r.z0);

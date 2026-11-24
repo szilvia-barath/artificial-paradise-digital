@@ -1,6 +1,6 @@
 # Artificial Paradise: Digital Exhibition
 
-A walkable 3D reconstruction of **Artificial Paradise**, the solo exhibition by Kristóf Szabó (KristofLab) at MAMŰ Gallery, Budapest, 10–31 January 2025.
+A walkable 3D reconstruction of **Artificial Paradise**, the solo exhibition by Kristóf Szabó (KristofLab) at MAMŰ Gallery, Budapest, 10-31 January 2025.
 
 The rooms, the hang and the wall surfaces are rebuilt from installation photographs and the gallery's measured floor plan: 17 works (acrylic paintings, giclée prints, videos and two installations) hang where they hung, at their real sizes, in the artist's own reproductions, and the screens play the artist's videos.
 

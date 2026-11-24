@@ -190,7 +190,7 @@ html.direct body:not([data-state="failed"]) #loader { visibility: hidden; opacit
   margin: clamp(18px, 3vw, 26px) 0 clamp(20px, 3vw, 28px);
   line-height: 1.7;
 }
-/* The dates never break inside ("10–" / "31"). In a narrow window they take a line of
+/* The dates never break inside ("10-" / "31"). In a narrow window they take a line of
    their own and the dot before them is put away, so no line ends in "·". */
 .loader-meta .date, .eyebrow .date { white-space: nowrap; }
 @media (max-width: 480px) {
@@ -1091,10 +1091,18 @@ sup.fn a { font-family: var(--mono); font-size: 12px; padding: 0 3px; text-decor
 
 @media (max-width: 820px) {
   #viewer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 55vh) minmax(0, 1fr); }
-  .viewer-media { padding: calc(var(--nav-h) + 40px) calc(12px + var(--safe-r)) 12px calc(12px + var(--safe-l)); }
-  .viewer-media img { max-height: calc(55vh - 60px); }
-  .viewer-media video, .viewer-media iframe { max-height: calc(55vh - 60px); }
-  .viewer-info { border-left: 0; border-top: 1px solid var(--line); padding: 18px calc(16px + var(--safe-r)) calc(18px + var(--safe-b)) calc(16px + var(--safe-l)); }
+  /* The picture fits inside the upper half: 55 % of the screen less the top bar, the room
+     for Close (40 px) and the 12 px under it. svh is the height with the browser's bars
+     showing, so a phone's address bar does not push it down; vh is the fallback. The half
+     clips anything left over, and the text column paints above it, so a work never lies
+     over its text. */
+  #viewer { grid-template-rows: minmax(0, 55vh) minmax(0, 1fr); grid-template-rows: minmax(0, 55svh) minmax(0, 1fr); }
+  .viewer-media { overflow: hidden; padding: calc(var(--nav-h) + 40px) calc(12px + var(--safe-r)) 12px calc(12px + var(--safe-l)); }
+  .viewer-media img, .viewer-media video, .viewer-media iframe {
+    max-height: calc(55vh - var(--nav-h) - 52px);
+    max-height: calc(55svh - var(--nav-h) - 52px);
+  }
+  .viewer-info { position: relative; z-index: 1; border-left: 0; border-top: 1px solid var(--line); padding: 18px calc(16px + var(--safe-r)) calc(18px + var(--safe-b)) calc(16px + var(--safe-l)); }
   .viewer-info h2 { font-size: 24px; }
   #minimap { width: 150px; height: 102px; right: calc(10px + var(--safe-r)); top: calc(var(--nav-h) + 6px); }
   #map-key { right: calc(10px + var(--safe-r)); top: calc(var(--nav-h) + 6px + 102px + 4px); }
