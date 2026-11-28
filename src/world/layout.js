@@ -282,13 +282,16 @@ export const BLOCKS = [
   { x0: 6.73, x1: 6.98, z0: 4.8, z1: 7.88, y1: 2.75, collide: true },
   { x0: 6.98, x1: 7.76, z0: 5.122, z1: 5.2, y1: 0.1, collide: true },
   { x0: 7.76, x1: 8.06, z0: 5.122, z1: 7.88, y1: 2.75, collide: true },
-  // the bar counter, from the corner of the corridor's east wall through the pass-through
-  // 0.20 m into Room 3 (README_room2.md: x 8.06 to 10.55, z 4.69 to 5.12)
-  { x0: 8.06, x1: 10.55, z0: 4.69, z1: 5.122, y1: 1.0, collide: true },
-  // the Room 2 | Room 3 wall: the north pier, and south of the doorway (z 2.557 to 4.60) the
-  // wall under the pass-through's sill and beyond
-  { x0: 9.85, x1: 10.35, z0: 1.5, z1: 2.557, y1: 2.75, collide: true },
-  { x0: 9.85, x1: 10.35, z0: 4.6, z1: 6.37, y1: 2.75, collide: true },
+  // the bar counter, from the corner of the corridor's east wall to the Room 2 | Room 3 wall
+  // (README_room2.md v12: x 8.06 to 9.85, z 4.69 to 5.12; until 28 November 2026 it ran on
+  // through a pass-through into Room 3)
+  { x0: 8.06, x1: 9.85, z0: 4.69, z1: 5.122, y1: 1.0, collide: true },
+  // the Room 2 | Room 3 wall, from the photographs (DSC_0129, scaled on no. 10; model v12,
+  // 28 November 2026): the north pier to z 2.35, the doorway z 2.35 to 3.86, the pass-through
+  // z 3.86 to 4.46 over a 1.06 m low wall, and solid wall from z 4.46, where no. 10 hangs
+  { x0: 9.85, x1: 10.35, z0: 1.5, z1: 2.35, y1: 2.75, collide: true },
+  { x0: 9.85, x1: 10.35, z0: 3.86, z1: 4.46, y1: 1.06, collide: true },
+  { x0: 9.85, x1: 10.35, z0: 4.46, z1: 6.37, y1: 2.75, collide: true },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
